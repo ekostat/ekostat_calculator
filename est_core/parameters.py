@@ -5,22 +5,7 @@ Created on Fri Jul  7 16:07:18 2017
 @author: a001985
 
 Python3
-"""         
-        
-###############################################################################
-class ParameterGetInformation(object):
-    """
-    Holds various information about get-methodes in the Parameter objects. 
-    Information can be different for differnet parameter types. 
-    Permanent information is:
-        information_source
-        status = None
-    """
-    def __init__(self, information_source): 
-        self.information_source = information_source
-        self.status = None
-    
-    
+"""            
 
 ###############################################################################
 class ParameterBase(object):
@@ -48,8 +33,9 @@ class ParameterBase(object):
     #==========================================================================
     def set_data_handler(self, data_handler): 
         """
-        Set pandas dataframe to work with. 
-        Not sure how this should be handled. 
+        Set data_handler to work with. 
+        This is not the data that will be looked in by the get-methodes. 
+        To create this data 
         Data might look different depending on the source. 
         """
         self.data_handler = data_handler 
@@ -62,6 +48,7 @@ class ParameterBase(object):
         
     #==========================================================================
     def get_data(self, **kwargs): 
+        # TODO: Filter data
         """
         Loads data from DataHandler object and stores result in self.data. 
         This method is overwritten in subclasses. 
@@ -88,10 +75,7 @@ class ParameterBasePhysicalChemical(ParameterBase):
     def __init__(self):
         super().__init__() 
         
-    
-    def get_data(self, depth_interval):
-        pass
-        
+
         
     
 ###############################################################################

@@ -10,4 +10,5 @@ from .lists import StationList
 from .lists import ParameterList
 from .lists import AreaList
 
-from .settings import FilterSettings
+from .filters import DataFilter
+from .filters import ToleranceFilter
