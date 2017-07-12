@@ -2,7 +2,9 @@
 
 from .parameters import ParameterNTRA 
 
-from .indicators import IndicatorNP
+from .indicators import IndicatorDINwinter
+
+from .quality_factors import QualityFactorNP
 
 from .data_handlers import DataHandler
 

@@ -34,29 +34,31 @@ class DataFilter(FilterBase):
         
     #==========================================================================
     def _initate_filter_items(self):
-        self.filter_items = ['DEPTH_INTERVAL', 'TYPE_AREA']
+        self.filter_list = ['DEPTH_INTERVAL', 'TYPE_AREA', 'MONTHS']
         
         
     #==========================================================================
-    def load_settings_from_file(self, file_path):
+    def load_data_filter_file(self, file_path):
         """
         Filter items are saved in self (dict). 
         """ 
         self._pop_all_self()
         self.filter_list = []
         self.file_path = file_path 
+        # TODO: Decide structure of data filter file and load filter
         
     #==========================================================================
-    def write_settings_to_file(self, file_path):
+    def save_data_filter_file(self, file_path):
         self.file_path = file_path
         
     #==========================================================================
     def set_filter(self, filter_type, value): 
         filter_type = filter_type.upper().replace(' ', '_')
         if filter_type not in self.filter_list:
-            return
+            return False
         # TODO: Make checks for different kinds of filters. 
         self[filter_type] = value
+        return True
         
     #==========================================================================
     def load_dummy_settings(self): 
@@ -64,7 +66,7 @@ class DataFilter(FilterBase):
         Temporary method to have attributes to play with during development. 
         """
         self._pop_all_self()
-        for item in self.filter_items:
+        for item in self.filter_list:
             self[item] = None
         self['DEPTH_INTERVAL'] = [0, 10]
         self['TYPE_AREA'] = '7' 

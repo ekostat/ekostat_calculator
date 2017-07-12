@@ -40,6 +40,7 @@ class ParameterBase(object):
         """
         self.data_handler = data_handler 
         self.data_handler_source = data_handler.source 
+        return True
         
     #==========================================================================
     def drop_data_handler(self): 
@@ -47,25 +48,29 @@ class ParameterBase(object):
         self.data_handler_source = None 
         
     #==========================================================================
+    def drop_data(self): 
+        self.data = None
+        
+    #==========================================================================
+    def reset_all_data(self): 
+        self.drop_data()
+        self.drop_data_handler()
+        
+    #==========================================================================
+    def filter_data(self, data_filter_object):
+        print('filter_data')
+        self.data = self.data_handler.filter_data(data_filter_object)
+        # TODO: Check if all is ok
+        return True
+        
+    #==========================================================================
     def get_data(self, **kwargs): 
-        # TODO: Filter data
         """
-        Loads data from DataHandler object and stores result in self.data. 
+        Loads data from DataHandler object self.data and returns result. 
         This method is overwritten in subclasses. 
         """
         if not self.data: 
-            return 
-        
-    #==========================================================================
-    def get_station_list(self):
-        """
-        Returns a list of all stations that has data of the current parameter (self.internal_name). 
-        """
-        if not self.internal_name or not self.data:
-            return False
-        
-        return sorted(set(self.data.loc[self.data.index[~self.data[self.internal_name].isnull()], 'STATN']))
-            
+            return             
     
 ###############################################################################
 class ParameterBasePhysicalChemical(ParameterBase):

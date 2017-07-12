@@ -8,8 +8,10 @@ Created on Mon Jul 10 15:27:01 2017
 import os
 import sys
 import est_core
-#input('first')
-#
+
+    
+    
+    
 ###############################################################################
 if __name__ == '__main__':
     print('='*50)
@@ -30,6 +32,8 @@ if __name__ == '__main__':
     #--------------------------------------------------------------------------
     # Filters 
     first_filter = est_core.DataFilter('First filter')
+    winter_filter = est_core.DataFilter('winter_filter')
+    winter_filter.set_filter('MONTHS', [12, 1, 2])
     
     
     #--------------------------------------------------------------------------
@@ -37,7 +41,6 @@ if __name__ == '__main__':
     # Handler
     raw_data = est_core.DataHandler('raw')
     raw_data.add_txt_file(raw_data_file_path, data_type='column') 
-    
     
     
     filtered_data = raw_data.filter_data(first_filter)
@@ -49,15 +52,17 @@ if __name__ == '__main__':
     # Load filtered data (first filter)
     loaded_filtered_data = est_core.DataHandler('first_filtered')
     loaded_filtered_data.load_data(first_filter_directory)
+
+
+    # Create and fill QualityFactor
+    qf_NP = est_core.QualityFactorNP()
+    qf_NP.set_data_handler(data_handler=loaded_filtered_data)
     
+    # Filter parameters in QualityFactorNP 
+    qf_NP.filter_data(filter_data_object=first_filter, indicator='DIN_summer')
+    qf_NP.filter_data(filter_data_object=winter_filter, indicator='DIN_winter')
     
-    
-    
-    
-    # Indicator
-    data_handlers
-    indicator_NP = est_core.IndicatorNP()
-    indicator_NP.set_data_handlers(loaded_filtered_data)
     
     # Parameter
     print('done')
+    

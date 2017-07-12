@@ -21,6 +21,7 @@ class DataHandler(object):
     def add_txt_file(self, file_path, data_type): 
         data = pd.read_csv(file_path, sep='\t', encoding='cp1252')
         self.add_df(data, data_type)
+        # TODO: Check if all is ok
     
     #==========================================================================
     def add_df(self, pd_df, data_type):
@@ -35,13 +36,13 @@ class DataHandler(object):
 #        print(self.data_phys_chem.head()) 
 
     #==========================================================================
-    def filter_data(self, data_filter_object):
+    def filter_data(self, data_filter_object, filter_id=''):
         """
         Filters data according to data_filter_object. 
         data_filter_object is a est_core.filters.DataFilter-object. 
         Returns a DataHandler object with the filtered data. 
         """
-        new_data_handler = DataHandler(self.source + '_filtered')
+        new_data_handler = DataHandler(self.source + '_filtered_%s' % filter_id)
         if len(self.column_data):
             df = self._filter_column_data(self.column_data, data_filter_object)
             new_data_handler.add_df(df, 'column')
@@ -57,14 +58,31 @@ class DataHandler(object):
         Filters column file data and retuns resulting dataframe
         """
         df = self._filter_column_data_on_depth_interval(df, data_filter_object)
+        df = self._filter_column_data_on_months(df, data_filter_object)
         return df
         
     #==========================================================================
     def _filter_column_data_on_depth_interval(self, df, data_filter_object): 
-        if 'DEPTH_INTERVAL' not in data_filter_object.keys():
-            return
+        """
+        Keeps data from the depth interval in the list [from, to] under data_filter_object['DEPTH_INTERVAL']
+        """
+        if 'DEPTH_INTERVAL' not in data_filter_object.keys() or not data_filter_object['DEPTH_INTERVAL']:
+            df
         min_depth, max_depth = map(float, data_filter_object['DEPTH_INTERVAL'])
         df = df.loc[df.index[(df['DEPH'] >= min_depth) & (df['DEPH'] <= max_depth)], :] 
+        return df
+    
+    #==========================================================================
+    def _filter_column_data_on_months(self, df, data_filter_object): 
+        """
+        Keeps data from all months in the list under data_filter_object['MONTHS']
+        """
+        if 'MONTHS' not in data_filter_object.keys() or not data_filter_object['MONTHS']:
+            return df
+        print('_filter_column_data_on_months')
+        month_list = map(float, data_filter_object['MONTHS'])
+        df = df.loc[df.index[df['MONTH'].isin(month_list)], :] 
+        # TODO: Fix date and month column
         return df
         
     #==========================================================================
@@ -73,7 +91,6 @@ class DataHandler(object):
         
         return new_df
         
-    
     
     #==========================================================================
     def _filter_row_data(self, data_filter_object):
@@ -102,5 +119,15 @@ class DataHandler(object):
         self.row_data.to_csv(row_file_path, sep='\t', encoding='cp1252', index=False)
     
     
+    #==========================================================================
+    def get_station_list(self):
+        """
+        Returns a list of all stations that has data of the current parameter (self.internal_name). 
+        """
+        if not self.internal_name or not self.data:
+            return False
+        
+        # TODO: Does this work for row data as well?
+        return sorted(set(self.data.loc[self.data.index[~self.data[self.internal_name].isnull()], 'STATN']))
     
     
