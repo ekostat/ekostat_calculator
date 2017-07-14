@@ -6,6 +6,7 @@ Created on Mon Jul 10 15:49:03 2017
 """
 
 import pandas as pd
+import numpy as np
 
 ###############################################################################
 class DataHandler(object): 
@@ -28,13 +29,19 @@ class DataHandler(object):
         """
         Adds data to the internal data structure. 
         """
-        # TODO: check 
+        # Add columns (time etc.)
+        self._add_columns(pd_df)
+        
         if 'col' in data_type:
             self.column_data = self.column_data.append(pd_df)
         elif 'row' in data_type:
             self.row_data = self.row_data.append(pd_df)
 #        print(self.data_phys_chem.head()) 
 
+    #==========================================================================
+    def _add_columns(self, df): 
+        df['TIME'] = pd.Series(pd.to_datetime(df['SDATE'], format='%Y-%m-%d'))
+        
     #==========================================================================
     def filter_data(self, data_filter_object, filter_id=''):
         """
@@ -58,8 +65,11 @@ class DataHandler(object):
         Filters column file data and retuns resulting dataframe
         """
         df = self._filter_column_data_on_depth_interval(df, data_filter_object)
-        df = self._filter_column_data_on_months(df, data_filter_object)
+        df = self._filter_column_data_on_month(df, data_filter_object)
+        df = self._filter_column_data_on_year(df, data_filter_object)
         return df
+    
+        
         
     #==========================================================================
     def _filter_column_data_on_depth_interval(self, df, data_filter_object): 
@@ -67,22 +77,33 @@ class DataHandler(object):
         Keeps data from the depth interval in the list [from, to] under data_filter_object['DEPTH_INTERVAL']
         """
         if 'DEPTH_INTERVAL' not in data_filter_object.keys() or not data_filter_object['DEPTH_INTERVAL']:
-            df
+            return df
         min_depth, max_depth = map(float, data_filter_object['DEPTH_INTERVAL'])
         df = df.loc[df.index[(df['DEPH'] >= min_depth) & (df['DEPH'] <= max_depth)], :] 
         return df
     
     #==========================================================================
-    def _filter_column_data_on_months(self, df, data_filter_object): 
+    def _filter_column_data_on_month(self, df, data_filter_object): 
         """
-        Keeps data from all months in the list under data_filter_object['MONTHS']
+        Keeps data from all months in the list under data_filter_object['MONTH']
         """
-        if 'MONTHS' not in data_filter_object.keys() or not data_filter_object['MONTHS']:
+        if 'MONTH' not in data_filter_object.keys() or not data_filter_object['MONTH']:
             return df
         print('_filter_column_data_on_months')
-        month_list = map(float, data_filter_object['MONTHS'])
+        month_list = map(float, data_filter_object['MONTH'])
         df = df.loc[df.index[df['MONTH'].isin(month_list)], :] 
-        # TODO: Fix date and month column
+        return df
+    
+    #==========================================================================
+    def _filter_column_data_on_year(self, df, data_filter_object): 
+        """
+        Keeps data from all months in the list under data_filter_object['MYEAR']
+        """
+        if 'MYEAR' not in data_filter_object.keys() or not data_filter_object['MYEAR']:
+            return df
+        print('_filter_column_data_on_year')
+        month_list = map(float, data_filter_object['MYEAR'])
+        df = df.loc[df.index[df['MYEAR'].isin(month_list)], :] 
         return df
         
     #==========================================================================

@@ -1,6 +1,9 @@
 #
 
 from .parameters import ParameterNTRA 
+from .parameters import ParameterNTRI 
+from .parameters import ParameterAMON  
+from .parameters import ParameterDIN
 
 from .indicators import IndicatorDINwinter
 

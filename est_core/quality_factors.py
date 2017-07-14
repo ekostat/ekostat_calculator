@@ -63,11 +63,6 @@ class QualityFactorBase(object):
             for key in self.parameter_list:
                 attr = getattr(self, key.lower())
                 attr.filter_data(filter_data_object)
-#        elif filter_data_object_dict:
-#            for key in filter_data_object_dict.keys():
-#                if key in self.parameter_list: 
-#                    attr = getattr(self, key.lower())
-#                    attr.filter_data(filter_data_object_dict[key]) 
         return True
         
         

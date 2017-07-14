@@ -33,11 +33,6 @@ class IndicatorBase(object):
             for key in self.parameter_list:
                 attr = getattr(self, key.lower())
                 attr.set_data_handler(data_handler)
-#        elif data_handler_dict:
-#            for key in data_handler_dict.keys():
-#                if key in self.parameter_list: 
-#                    attr = getattr(self, key.lower())
-#                    attr.set_data_handler(data_handler_dict[key]) 
         return True
     
     
@@ -54,19 +49,17 @@ class IndicatorBase(object):
             print('parameter', parameter)
             if not parameter in self.parameter_list:
                 return False
+            if not hasattr(self, parameter.lower()):
+                return False
             attr = getattr(self, parameter.lower())
             all_ok = attr.filter_data(filter_data_object)
             return all_ok
         if filter_data_object:
             for key in self.parameter_list:
                 print('key', key)
-                attr = getattr(self, key.lower())
-                attr.filter_data(filter_data_object)
-#        elif filter_data_object_dict:
-#            for key in filter_data_object_dict.keys():
-#                if key in self.parameter_list: 
-#                    attr = getattr(self, key.lower())
-#                    attr.filter_data(filter_data_object_dict[key]) 
+                if hasattr(self, key.lower()):
+                    attr = getattr(self, key.lower())
+                    attr.filter_data(filter_data_object)
         return True
         
         
@@ -105,7 +98,7 @@ class IndicatorDINwinter(IndicatorBase):
         self.name = 'DIN'
         
         # Parameter list contains all parameters that is used by the indicator class
-        self.parameter_list = ['NTRA']
+        self.parameter_list = ['NTRA', 'NTRI', 'AMON', 'DIN']
         
         self._load_data_objects()
         
@@ -116,6 +109,38 @@ class IndicatorDINwinter(IndicatorBase):
         Initiates data to work with. Typically parameter class objects. 
         """
         self.ntra = est_core.ParameterNTRA()
+        self.ntri = est_core.ParameterNTRI()
+        self.amon = est_core.ParameterAMON()
+        self.din = None
+        
+    #==========================================================================
+    def filter_data(self, filter_data_object=None, parameter=None):
+        """
+        Override from Parent class IndicatorBase. 
+        After filtering of parameterrs the calculated din-parameter is created. 
+        """
+        print('parameter', parameter)
+        if filter_data_object and parameter:
+            print('parameter', parameter)
+            if not parameter in self.parameter_list:
+                return False
+            if not hasattr(self, parameter.lower()):
+                return False
+            attr = getattr(self, parameter.lower())
+            all_ok = attr.filter_data(filter_data_object)
+            return all_ok
+        if filter_data_object:
+            for key in self.parameter_list:
+                print('key', key)
+                if hasattr(self, key.lower()):
+                    attr = getattr(self, key.lower())
+                    attr.filter_data(filter_data_object)
+        
+        # Load CalculatedParameterDIN if possible
+        # TODO: Option to load pre-calculated DIN (DIN in dataset). This 
+        if all([self.ntra.data, self.ntri.data, self.amon.data]):
+            self.din = est_core.ParameterDIN()
+        return True
 
             
 ###############################################################################

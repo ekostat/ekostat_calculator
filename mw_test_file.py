@@ -14,14 +14,16 @@ import est_core
     
 ###############################################################################
 if __name__ == '__main__':
-    print('='*50)
+    nr_marks = 60
+    print('='*nr_marks)
     print('Running module "mw_test_file.py"')
-    print('-'*50)
+    print('-'*nr_marks)
     print('')
     
     #--------------------------------------------------------------------------
     # Directories an file paths
-    raw_data_file_path = 'D:/Utveckling/g_EKOSTAT_tool/test_data/raw_data/data.txt'
+#    raw_data_file_path = 'D:/Utveckling/g_EKOSTAT_tool/test_data/raw_data/data.txt'
+    raw_data_file_path = 'D:/Utveckling/g_EKOSTAT_tool/test_data/raw_data/data_BAS_2000-2009.txt'
     first_filter_directory = 'D:/Utveckling/g_EKOSTAT_tool/test_data/filtered_data' 
     
     indicator_save_directory = 'D:/Utveckling/g_EKOSTAT_tool/test_data/indicator_saves' 
@@ -32,9 +34,14 @@ if __name__ == '__main__':
     #--------------------------------------------------------------------------
     # Filters 
     first_filter = est_core.DataFilter('First filter')
-    winter_filter = est_core.DataFilter('winter_filter')
-    winter_filter.set_filter('MONTHS', [12, 1, 2])
     
+    winter_filter_1 = est_core.DataFilter('winter_filter')
+    winter_filter_1.set_filter('MONTH', [12, 1, 2])
+    winter_filter_1.set_filter('MYEAR', [2005]) 
+    
+    winter_filter_2 = est_core.DataFilter('winter_filter')
+    winter_filter_2.set_filter('MONTH', [1])
+    winter_filter_2.set_filter('MYEAR', [2005]) 
     
     #--------------------------------------------------------------------------
     #--------------------------------------------------------------------------
@@ -59,10 +66,13 @@ if __name__ == '__main__':
     qf_NP.set_data_handler(data_handler=loaded_filtered_data)
     
     # Filter parameters in QualityFactorNP 
-    qf_NP.filter_data(filter_data_object=first_filter, indicator='DIN_summer')
-    qf_NP.filter_data(filter_data_object=winter_filter, indicator='DIN_winter')
+    qf_NP.filter_data(filter_data_object=first_filter, indicator='DIN_summer') 
+    qf_NP.filter_data(filter_data_object=winter_filter_1, indicator='DIN_winter') 
+    qf_NP.filter_data(filter_data_object=winter_filter_1, indicator='DIN_winter') 
     
     
     # Parameter
+    print('-'*nr_marks)
     print('done')
+    print('-'*nr_marks)
     

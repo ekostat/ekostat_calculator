@@ -34,7 +34,7 @@ class DataFilter(FilterBase):
         
     #==========================================================================
     def _initate_filter_items(self):
-        self.filter_list = ['DEPTH_INTERVAL', 'TYPE_AREA', 'MONTHS']
+        self.filter_list = ['DEPTH_INTERVAL', 'TYPE_AREA', 'MONTH', 'MYEAR']
         
         
     #==========================================================================
