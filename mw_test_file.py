@@ -34,14 +34,15 @@ if __name__ == '__main__':
     #--------------------------------------------------------------------------
     # Filters 
     first_filter = est_core.DataFilter('First filter')
+    first_filter.set_filter('MYEAR', [2000])
     
     winter_filter_1 = est_core.DataFilter('winter_filter')
     winter_filter_1.set_filter('MONTH', [12, 1, 2])
-    winter_filter_1.set_filter('MYEAR', [2005]) 
+#    winter_filter_1.set_filter('MYEAR', [2000]) 
     
     winter_filter_2 = est_core.DataFilter('winter_filter')
     winter_filter_2.set_filter('MONTH', [1])
-    winter_filter_2.set_filter('MYEAR', [2005]) 
+#    winter_filter_2.set_filter('MYEAR', [2000]) 
     
     #--------------------------------------------------------------------------
     #--------------------------------------------------------------------------

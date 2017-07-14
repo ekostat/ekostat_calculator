@@ -31,8 +31,11 @@ class IndicatorBase(object):
             return all_ok
         elif data_handler:
             for key in self.parameter_list:
-                attr = getattr(self, key.lower())
-                attr.set_data_handler(data_handler)
+                try:
+                    attr = getattr(self, key.lower())
+                    attr.set_data_handler(data_handler)
+                except AttributeError as e:
+                    print(e)
         return True
     
     
@@ -108,6 +111,9 @@ class IndicatorDINwinter(IndicatorBase):
         """
         Initiates data to work with. Typically parameter class objects. 
         """
+        
+        self.salt = est_core.ParameterSALT
+        
         self.ntra = est_core.ParameterNTRA()
         self.ntri = est_core.ParameterNTRI()
         self.amon = est_core.ParameterAMON()
@@ -131,17 +137,26 @@ class IndicatorDINwinter(IndicatorBase):
             return all_ok
         if filter_data_object:
             for key in self.parameter_list:
-                print('key', key)
-                if hasattr(self, key.lower()):
+                try:
                     attr = getattr(self, key.lower())
                     attr.filter_data(filter_data_object)
+                except AttributeError as e:
+                    print(e)
         
         # Load CalculatedParameterDIN if possible
         # TODO: Option to load pre-calculated DIN (DIN in dataset). This 
         if all([self.ntra.data, self.ntri.data, self.amon.data]):
-            self.din = est_core.ParameterDIN()
+            self.din = est_core.CalculatedParameterDIN(ntra=self.ntra.data, 
+                                                       ntri=self.ntri.data, 
+                                                       amon=self.amon.data)
         return True
 
+    #==========================================================================
+    def get_ek_value(self):
+        pass
+    
+    
+    
             
 ###############################################################################
 if __name__ == '__main__':

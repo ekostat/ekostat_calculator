@@ -40,7 +40,7 @@ class DataHandler(object):
 
     #==========================================================================
     def _add_columns(self, df): 
-        df['TIME'] = pd.Series(pd.to_datetime(df['SDATE'], format='%Y-%m-%d'))
+        df['TIME'] = pd.Series(pd.to_datetime(df['SDATE'] + df['STIME'], format='%Y-%m-%d%H:%M'))
         
     #==========================================================================
     def filter_data(self, data_filter_object, filter_id=''):
@@ -89,7 +89,7 @@ class DataHandler(object):
         """
         if 'MONTH' not in data_filter_object.keys() or not data_filter_object['MONTH']:
             return df
-        print('_filter_column_data_on_months')
+#        print('_filter_column_data_on_months')
         month_list = map(float, data_filter_object['MONTH'])
         df = df.loc[df.index[df['MONTH'].isin(month_list)], :] 
         return df
@@ -101,7 +101,7 @@ class DataHandler(object):
         """
         if 'MYEAR' not in data_filter_object.keys() or not data_filter_object['MYEAR']:
             return df
-        print('_filter_column_data_on_year')
+#        print('_filter_column_data_on_year')
         month_list = map(float, data_filter_object['MYEAR'])
         df = df.loc[df.index[df['MYEAR'].isin(month_list)], :] 
         return df

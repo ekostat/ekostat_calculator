@@ -8,6 +8,7 @@ Python3
 """ 
 import pandas as pd
 import numpy as np
+import datetime
 
 import est_core        
 
@@ -64,7 +65,7 @@ class ParameterBase(object):
         
     #==========================================================================
     def filter_data(self, data_filter_object):
-        print('filter_data')
+#        print('filter_data')
         self.data = self.data_handler.filter_data(data_filter_object)
         # TODO: Check if all is ok
         return True
@@ -78,6 +79,7 @@ class ParameterBase(object):
         if not self.data: 
             return             
     
+    
 ###############################################################################
 class ParameterBasePhysicalChemical(ParameterBase):
     """
@@ -85,6 +87,28 @@ class ParameterBasePhysicalChemical(ParameterBase):
     """
     def __init__(self):
         super().__init__() 
+        
+    #==========================================================================
+    def get_closest_profile_in_time(self, datetime_object=None, tolerance_filter=None):
+        # Look for data in self.data.column_data
+        if not all([datetime_object, tolerance_filter, self.data]):
+            return None
+        
+        time_delta = (self.data.column_data['TIME'] - datetime_object).apply(abs)
+        min_time_delta = min(time_delta)
+        
+        if 'TIME_DELTA' in tolerance_filter and tolerance_filter['TIME_DELTA'] < min_time_delta.seconds/3600:
+            print('TIME_DELTA < %s' % min_time_delta.seconds/3600)
+            return None
+
+        boolean = time_delta == min_time_delta
+        return self.data.column_data.loc[self.data.column_data.index[boolean], :]
+        
+    #==========================================================================
+    def get_data(self, **kwargs): 
+        if not self.data:
+            return False
+        
         
 
 ###############################################################################
@@ -113,17 +137,19 @@ class CalculatedParameterDIN(CalculatedParameterPhysicalChemical):
         self.ntri = ntri 
         self.amon = amon 
         
-        if all([ntra.data, ntri.data, amon.data]):
+        if all([ntra, ntri, amon]):
             self._calculate_din()
         
     #==========================================================================
     def _calculate_din(self):
+        
         #----------------------------------------------------------------------
-        # Merge ntra, ntri and amon on index
-        ntra = pd.Series(self.ntra.loc[:, 'NTRA'])
-        ntri = pd.Series(self.ntri.loc[:, 'NTRI'])
-        amon = pd.Series(self.amon.loc[:, 'AMON'])
-        df = pd.DataFrame({'NTRA':ntra, 'NTRI':ntri, 'AMON':amon}) 
+        # Merge ntra, ntri and amon on index 
+        # All data is found in column data
+        ntra = pd.Series(self.ntra.column_data.loc[:, 'NTRA']) 
+        ntri = pd.Series(self.ntri.column_data.loc[:, 'NTRI']) 
+        amon = pd.Series(self.amon.column_data.loc[:, 'AMON']) 
+        df = pd.DataFrame({'NTRA':ntra, 'NTRI':ntri, 'AMON':amon})
         
         #----------------------------------------------------------------------
         # Calculate DIN 
@@ -139,14 +165,22 @@ class CalculatedParameterDIN(CalculatedParameterPhysicalChemical):
                     din += nh4
             din_list.append(din)
         
+        df_din = pd.DataFrame({'DIN':din_list}, index=df.index) 
+        
+        # Use data handler for NTRA as base for the DIN data handler
+        din_df = self.ntra.column_data.copy(deep=True)
+        new_df = pd.concat([din_df, df_din], axis=1)
+#        new_df = pd.concat([self.ntra.column_data, df_din], axis=1)
+        
+        
         #----------------------------------------------------------------------
         # Create data handler and add df 
         # self.data will be a copy of self.data_handler 
-        self.data_handler = est_core.DataHandler()
-        self.data_handler.add_df(df)
+        self.data_handler = est_core.DataHandler('calculated_din')
+        self.data_handler.add_df(new_df, 'col')
         
-        self.data = est_core.DataHandler()
-        self.data.add_df(df) 
+        self.data = est_core.DataHandler('calculated_din')
+        self.data.add_df(new_df, 'col') 
             
 ###############################################################################
 class ParameterDIN(ParameterBasePhysicalChemical):
@@ -196,6 +230,18 @@ class ParameterAMON(ParameterBasePhysicalChemical):
         self.external_name = 'Ammonium' 
         self.unit = 'umol/l'
         
+        
+###############################################################################
+class ParameterSALT(ParameterBasePhysicalChemical):
+    """
+    Class to describe and handle Ammonium. 
+    """
+    def __init__(self):
+        super().__init__()
+        
+        self.internal_name = 'SALT'
+        self.external_name = 'Salinity' 
+        self.unit = 'psu'
 
 
 

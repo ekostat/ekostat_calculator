@@ -1,0 +1,3 @@
+variable	value	type	dtype	comment
+MIN_NR_VALUES	3		int	
+TIME_DELTA	5		float	In hours

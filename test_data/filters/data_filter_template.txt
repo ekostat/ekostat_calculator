@@ -1,0 +1,3 @@
+variable	value	dtype	comment
+DEPTH_INTERVAL	0-10	int	
+TYPE_AREA	7	str	

@@ -1,9 +1,11 @@
 #
 
+from .parameters import ParameterSALT
 from .parameters import ParameterNTRA 
 from .parameters import ParameterNTRI 
 from .parameters import ParameterAMON  
 from .parameters import ParameterDIN
+from .parameters import CalculatedParameterDIN
 
 from .indicators import IndicatorDINwinter
 
