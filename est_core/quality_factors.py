@@ -49,20 +49,20 @@ class QualityFactorBase(object):
     
     
     #==========================================================================
-    def filter_data(self, filter_data_object=None, indicator=None, parameter=None):
+    def filter_data(self, data_filter_object=None, indicator=None, parameter=None):
         """
         Filters data in Indicator objects
-        filter_data_object is of type est_core.settings.FilterData
-        If "filter_data_object" is given all indicators will be filtered using this filter. 
-        If "filter_data_object_dict" is given the corresponding filter under its key will be used. 
+        data_filter_object is of type est_core.settings.FilterData
+        If "data_filter_object" is given all indicators will be filtered using this filter. 
+        If "data_filter_object_dict" is given the corresponding filter under its key will be used. 
         """
-        if all([filter_data_object, indicator]):
+        if all([data_filter_object, indicator]):
             attr = getattr(self, indicator.lower())
-            attr.filter_data(filter_data_object=filter_data_object, parameter=parameter)
-        elif filter_data_object:
+            attr.filter_data(data_filter_object=data_filter_object, parameter=parameter)
+        elif data_filter_object:
             for key in self.parameter_list:
                 attr = getattr(self, key.lower())
-                attr.filter_data(filter_data_object)
+                attr.filter_data(data_filter_object)
         return True
         
         
@@ -74,7 +74,7 @@ class QualityFactorNP(QualityFactorBase):
     def __init__(self):
         super().__init__() 
         self.name = 'NP'
-        self.indicator_list = ['DIN_winter', 'DIN_summer']
+        self.indicator_list = ['DIN_winter', 'DIN_summer', 'TN_winter']
         self._load_indicators()
         
     #==========================================================================
@@ -84,22 +84,23 @@ class QualityFactorNP(QualityFactorBase):
         (not case sensitive)
         """        
         self.din_winter = est_core.IndicatorDINwinter() 
-        self.din_summer = est_core.IndicatorDINwinter() # Temp, should not be winter!
+        self.din_summer = est_core.IndicatorDINwinter() # Temp, should not be winter! 
+        self.tn_winter = est_core.IndicatorTN() # 
         
     #==========================================================================
-    def get_quality_factor(self):
+    def calculate_quality_factor(self):
         pass
-        
-        
-        
-        
-        
-        
-        
-        
-        
-        
-        
-    #==========================================================================
-    def _calculate_quality_factor(self):
-        pass
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    

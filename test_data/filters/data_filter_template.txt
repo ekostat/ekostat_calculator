@@ -1,3 +1,5 @@
-variable	value	dtype	comment
-DEPTH_INTERVAL	0-10	int	
-TYPE_AREA	7	str	
+variable	parameter	value	dtype	comment
+DEPTH_INTERVAL	DEPH	0-10	int	#
+MONTH_LIST	MONTH	12,1,2	int	#
+YEAR_INTERVAL	MYEAR	2000-2002	int	#
+TYPE_AREA		22	str	#
