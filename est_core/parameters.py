@@ -95,29 +95,29 @@ class ParameterBasePhysicalChemical(ParameterBase):
     def __init__(self):
         super().__init__() 
        
-    #==========================================================================
-    def _get_closest_match_in_time(self, datetime_object=None, tolerance_filter=None, boolean=True, df=False):
-        """
-        Look for data in self.data.column_data if df not given
-        """ 
-        if not df:
-            df = self.data.column_data
-            
-        if not all([datetime_object, tolerance_filter]):
-            return None
-            
-        time_delta = (df['time'] - datetime_object).apply(abs)
-        min_time_delta = min(time_delta)
-        
-        if 'TIME_DELTA' in tolerance_filter and tolerance_filter['TIME_DELTA'].value < min_time_delta.seconds/3600:
-            print('No match: TIME_DELTA < %s' % (min_time_delta.seconds/3600.))
-            return None
-        
-        b = time_delta == min_time_delta
-        if boolean:
-            return b
-        else:
-            return df.loc[df.index[b], :]
+#    #==========================================================================
+#    def _get_closest_match_in_time(self, datetime_object=None, tolerance_filter=None, boolean=True, df=False):
+#        """
+#        Look for data in self.data.column_data if df not given
+#        """ 
+#        if not df:
+#            df = self.data.column_data
+#            
+#        if not all([datetime_object, tolerance_filter]):
+#            return None
+#            
+#        time_delta = (df['time'] - datetime_object).apply(abs)
+#        min_time_delta = min(time_delta)
+#        
+#        if 'TIME_DELTA' in tolerance_filter and tolerance_filter['TIME_DELTA'].value < min_time_delta.seconds/3600:
+#            print('No match: TIME_DELTA < %s' % (min_time_delta.seconds/3600.))
+#            return None
+#        
+#        b = time_delta == min_time_delta
+#        if boolean:
+#            return b
+#        else:
+#            return df.loc[df.index[b], :]
             
     #==========================================================================
     def _get_closest_match_in_pos(self, lat=None, lon=None, tolerance_filter=None, boolean=True, df=False): 
@@ -580,17 +580,17 @@ if __name__ == '__main__':
     t = pd.Timestamp(datetime.datetime(2000, 1, 17, 9))
     df_row['time'] = t
     
-    m = tn._get_closest_match_in_time(datetime_object=t, tolerance_filter=tolerance_filter)
+#    m = tn._get_closest_match_in_time(datetime_object=t, tolerance_filter=tolerance_filter)
     
     value_row = tn.get_closest_matching_data(df_row=df_row, tolerance_filter=tolerance_filter) 
     
     if type(value_row) != bool:
         print('='*50)
-        print(value_row.index)
+#        print(value_row.name)
         print('TIME', t)
         print('-'*50)
-        for col in sorted(value_row.columns):
-            print(col.ljust(20), value_row[col].values[0])
+        for col in sorted(value_row.index):
+            print(col.ljust(20), value_row[col])
     #    print('VALUE:', value_row)
         print('-'*50)
     else:

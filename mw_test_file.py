@@ -58,7 +58,7 @@ if __name__ == '__main__':
     raw_data.add_txt_file(raw_data_file_path, data_type='column') 
     
     
-    filtered_data = raw_data.filter_data(first_filter)
+    filtered_data = raw_data.filter_data(first_filter) 
     
     # Save filtered data (first filter)
     filtered_data.save_data(first_filter_directory)
@@ -82,13 +82,13 @@ if __name__ == '__main__':
     
     tolerance_filters = {'SALT': tolerance_filter}
     
-    qf_NP.tn_winter.get_ek_value(tolerance_filters)
+    qf_NP.tn_winter.get_status(tolerance_filters)
     
     
-    date = datetime.datetime(2000, 1, 17, 17, 20)
-    
-    prof = qf_NP.din_winter.ntra.get_closest_profile_in_time(datetime_object=date, 
-                                                             tolerance_filter=tolerance_filter)
+#    date = datetime.datetime(2000, 1, 17, 17, 20)
+#    
+#    prof = qf_NP.din_winter.ntra.get_closest_profile_in_time(datetime_object=date, 
+#                                                             tolerance_filter=tolerance_filter)
     
     
     

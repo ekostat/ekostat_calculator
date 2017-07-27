@@ -9,6 +9,38 @@ import numpy as np
 import est_core 
 
 ###############################################################################
+class ClassificationResult(dict):
+    """
+    Class to hold result from a clasification. 
+    """ 
+    def __init__(self):
+        super().__init__() 
+        
+        self['parameter'] = None 
+        self['salt_parameter'] = None
+        self['type_area'] = None
+        self['all_data'] = None
+        self['mean_by_occasion'] = None
+        self['mean_by_year'] = None 
+        self['nr_years'] = None
+        self['mean_total'] = None
+        self['all_ok'] = False
+        self['num_class'] = None
+        
+        self._set_attributes()
+        
+    #========================================================================== 
+    def _set_attributes(self):
+        for key in self.keys():
+            setattr(self, key, self[key])
+            
+    #========================================================================== 
+    def add_info(self, key, value): 
+        self[key] = value
+        setattr(self, key, value)
+        
+
+###############################################################################
 class IndicatorBase(object): 
     """
     Class to calculate status for a specific indicator. 
@@ -82,11 +114,10 @@ class IndicatorBase(object):
         meter ska EK-värde beräknas för varje mätning och ett medel–EK skapas för de tre
         djupen.
         """
-        return_dict = {'parameter': par, 
-                       'salt_parameter': salt_par, 
-                       'type_area': self.data_filter_object.TYPE_AREA.value}
-        
-        
+        class_result = ClassificationResult()
+        class_result.add_info('paramter', par)
+        class_result.add_info('salt_parameter', salt_par)
+        class_result.add_info('type_area', self.data_filter_object.TYPE_AREA.value)
         
         """
         1) Beräkna EK för varje enskilt prov utifrån referensvärden i tabellerna 6.2-6.7.
@@ -99,14 +130,19 @@ class IndicatorBase(object):
 #        self.ref_object = ref_object
         par_object = getattr(self, par.lower())
         salt_object = getattr(self, salt_par.lower())
+        self.par_object = par_object
+        self.salt_object = salt_object
+        
         df = par_object.data.column_data.copy(deep=True)
-#        self.df = df
+        salt_df = salt_object.data.column_data
+        
         df['salt_value_ori'] = np.nan 
         df['salt_value'] = np.nan 
         df['salt_index'] = np.nan 
         df['ref_value'] = np.nan 
         df['ek_value_calc'] = np.nan 
         df['ek_value'] = np.nan 
+        
         for i in df.index:
 #            self.i = i
             df_row = df.loc[i, :]
@@ -115,10 +151,11 @@ class IndicatorBase(object):
                 ref_value = np.nan
                 ek_value_calc = np.nan
             else:
-                if salt_par in df_row and not np.isnan(df_row[salt_par]): 
-                    salt_value_ori = df_row[salt_par]
-                    salt_index = df_row.name
+                if i in salt_df.index and not np.isnan(salt_df.loc[1, salt_par]): 
+                    salt_value_ori = salt_df.loc[1, salt_par]
+                    salt_index = i
                 else:
+                    # TODO: If not allowed to continue
                     matching_salt_data = salt_object.get_closest_matching_data(df_row=df_row, 
                                                                              tolerance_filter=tolerance_filter)
                     if matching_salt_data.empty:
@@ -172,30 +209,29 @@ class IndicatorBase(object):
         """
         by_year = by_occasion.groupby('MYEAR').mean_ek_value.agg(['count', 'min', 'max', 'mean'])
 #        by_year.to_csv('d:/Ny mapp/pandas/by_year.txt', sep='\t')
+    
+        class_result.add_info('all_data', df)
+        class_result.add_info('mean_by_occasion', by_occasion)
+        class_result.add_info('mean_by_year', by_year)
+        class_result.add_info('nr_years', len(by_year))
 
-        return_dict['all_data'] = df
-        return_dict['mean_by_occasion'] = by_occasion
-        return_dict['mean_by_year'] = by_year 
-        return_dict['nr_years'] = len(by_year)
-        return_dict['mean_total'] = None
-        return_dict['all_ok'] = False
         
         """
         3) Medelvärdet av EK för varje parameter och vattenförekomst beräknas för minst
         en treårsperiod.
         """
         if len(by_year) >= tolerance_filter.MIN_NR_YEARS.value:
-            return_dict['mean_total'] = np.mean(by_year['mean'])
-            return_dict['all_ok'] = True
+            class_result.add_info('mean_total', np.mean(by_year['mean']))
+            class_result.add_info('all_ok', True)
         else:
-            return return_dict
+            return class_result
         
         """
         4) Statusklassificeringen för respektive parameter görs genom att medelvärdet av
         EK jämförs med de angivna EK-klassgränserna i tabellerna 6.2-6.7. 
         """
-        return_dict['num_class'] = ref_object.get_num_class(return_dict['mean_total'])
-        return return_dict
+        class_result.add_info('num_class', ref_object.get_num_class(class_result['mean_total']))
+        return class_result
         
         
 ###############################################################################
@@ -233,7 +269,7 @@ class IndicatorDINwinter(IndicatorBase):
         self.name = 'DINwinter'
         
         # Parameter list contains all parameters that is used by the indicator class
-        self.parameter_list = ['NTRA', 'NTRI', 'AMON', 'DIN']
+        self.parameter_list = ['NTRA', 'NTRI', 'AMON', 'DIN', 'SALT_CTD']
         
         self._load_data_objects()
         
@@ -244,7 +280,7 @@ class IndicatorDINwinter(IndicatorBase):
         Initiates data to work with. Typically parameter class objects. 
         """
         
-        self.salt = est_core.ParameterSALT()
+        self.salt_ctd = est_core.ParameterSALT_CTD()
         
         self.ntra = est_core.ParameterNTRA()
         self.ntri = est_core.ParameterNTRI()
@@ -288,7 +324,7 @@ class IndicatorDINwinter(IndicatorBase):
         return True
 
     #==========================================================================
-    def get_ek_value(self, tolerance_filter):
+    def get_status(self, tolerance_filter):
         """
         tollerance_filters is a dict with tolerance filters for the 
         """
@@ -356,7 +392,7 @@ class IndicatorTN(IndicatorBase):
         
 
     #==========================================================================
-    def get_ek_value(self, tolerance_filter):
+    def get_status(self, tolerance_filter):
         return self.get_ek_value_for_par_with_salt_ref(par='NTOT', 
                                                        indicator='TN_winter', tolerance_filter=tolerance_filter)
         
@@ -401,7 +437,7 @@ if __name__ == '__main__':
     est_core.RefValues().add_ref_parameter_from_file('TN_winter', 'D:/Utveckling/g_EKOSTAT_tool/test_data/totn_vinter.txt')
     
     
-    nclass = ind_TN.get_ek_value(tolerance_filter)
+    nclass = ind_TN.get_status(tolerance_filter)
     
 #    df = ind_TN.df
 #    df.to_csv('d:/Ny mapp/pandas/df.txt', sep='\t')

@@ -69,7 +69,7 @@ class DataHandler(object):
 #                print('df', df.columns)
 #                print('data_filter_object.parameter:', data_filter_object.parameter)
                 for col in list(df.columns):
-                    if col not in est_core.ParameterList().metadata_list + list(set([data_filter_object.parameter, 'SALT_CTD'])):
+                    if col not in est_core.ParameterList().metadata_list + [data_filter_object.parameter]:
                         df = df.drop(col, 1)
             new_data_handler.add_df(df, 'column')
         if len(self.row_data):
@@ -96,54 +96,54 @@ class DataHandler(object):
     
         
         
-    #==========================================================================
-    def _filter_column_data_on_depth_interval(self, df, data_filter_object): 
-        """
-        Keeps data from the depth interval in the list [from, to] under data_filter_object['DEPTH_INTERVAL']
-        """
+#    #==========================================================================
+#    def _filter_column_data_on_depth_interval(self, df, data_filter_object): 
+#        """
+#        Keeps data from the depth interval in the list [from, to] under data_filter_object['DEPTH_INTERVAL']
+#        """
+#        
+#        if 'DEPTH_INTERVAL' not in data_filter_object.keys() or not data_filter_object['DEPTH_INTERVAL']:
+#            return df
+#        min_depth, max_depth = map(float, data_filter_object['DEPTH_INTERVAL'])
+#        df = df.loc[(df['DEPH'] >= min_depth) & (df['DEPH'] <= max_depth), :]
+##        df = df.loc[df.index[(df['DEPH'] >= min_depth) & (df['DEPH'] <= max_depth)], :]
+#        return df
+#    
+#    #==========================================================================
+#    def _filter_column_data_on_month(self, df, data_filter_object): 
+#        """
+#        Keeps data from all months in the list under data_filter_object['MONTH']
+#        """
+#        if 'MONTH' not in data_filter_object.keys() or not data_filter_object['MONTH']:
+#            return df
+##        print('_filter_column_data_on_months')
+#        month_list = map(float, data_filter_object['MONTH'])
+##        df = df.loc[df.index[df['MONTH'].isin(month_list)], :] 
+#        df = df.loc[df['MONTH'].isin(month_list), :] 
+#        return df
+#    
+#    #==========================================================================
+#    def _filter_column_data_on_year(self, df, data_filter_object): 
+#        """
+#        Keeps data from all months in the list under data_filter_object['MYEAR']
+#        """
+#        if 'MYEAR' not in data_filter_object.keys() or not data_filter_object['MYEAR']:
+#            return df
+##        print('_filter_column_data_on_year')
+#        year_list = map(float, data_filter_object['MYEAR'])
+#        df = df.loc[df['MYEAR'].isin(year_list), :] 
+##        df = df.loc[df.index[df['MYEAR'].isin(month_list)], :] 
+#        return df
+#        
+#    #==========================================================================
+#    def _filter_column_data_on_type_area(self, data_filter_object, df):
+#        new_df = df
+#        
+#        return new_df
         
-        if 'DEPTH_INTERVAL' not in data_filter_object.keys() or not data_filter_object['DEPTH_INTERVAL']:
-            return df
-        min_depth, max_depth = map(float, data_filter_object['DEPTH_INTERVAL'])
-        df = df.loc[(df['DEPH'] >= min_depth) & (df['DEPH'] <= max_depth), :]
-#        df = df.loc[df.index[(df['DEPH'] >= min_depth) & (df['DEPH'] <= max_depth)], :]
-        return df
     
     #==========================================================================
-    def _filter_column_data_on_month(self, df, data_filter_object): 
-        """
-        Keeps data from all months in the list under data_filter_object['MONTH']
-        """
-        if 'MONTH' not in data_filter_object.keys() or not data_filter_object['MONTH']:
-            return df
-#        print('_filter_column_data_on_months')
-        month_list = map(float, data_filter_object['MONTH'])
-#        df = df.loc[df.index[df['MONTH'].isin(month_list)], :] 
-        df = df.loc[df['MONTH'].isin(month_list), :] 
-        return df
-    
-    #==========================================================================
-    def _filter_column_data_on_year(self, df, data_filter_object): 
-        """
-        Keeps data from all months in the list under data_filter_object['MYEAR']
-        """
-        if 'MYEAR' not in data_filter_object.keys() or not data_filter_object['MYEAR']:
-            return df
-#        print('_filter_column_data_on_year')
-        year_list = map(float, data_filter_object['MYEAR'])
-        df = df.loc[df['MYEAR'].isin(year_list), :] 
-#        df = df.loc[df.index[df['MYEAR'].isin(month_list)], :] 
-        return df
-        
-    #==========================================================================
-    def _filter_column_data_on_type_area(self, data_filter_object, df):
-        new_df = df
-        
-        return new_df
-        
-    
-    #==========================================================================
-    def _filter_row_data(self, data_filter_object):
+    def _filter_row_data(self, df, data_filter_object):
         pass
     
     #==========================================================================

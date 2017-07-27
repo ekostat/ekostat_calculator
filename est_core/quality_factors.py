@@ -23,11 +23,15 @@ class QualityFactorBase(object):
     def _load_indicators(self):
         """
         Load indicator objects that are included in the quality factor. 
+        Overwritten by subclasses. 
         """
         pass
     
     #==========================================================================
     def _calculate_quality_factor(self):
+        """
+        Overwritten by subclasses. 
+        """
         pass
     
     #========================================================================== 
