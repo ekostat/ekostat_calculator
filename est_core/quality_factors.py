@@ -4,7 +4,7 @@ Created on Wed Jul 12 14:43:35 2017
 
 @author: a001985
 """
-
+import os
 import est_core 
 
 ###############################################################################
@@ -64,7 +64,7 @@ class QualityFactorBase(object):
             attr = getattr(self, indicator.lower())
             attr.filter_data(data_filter_object=data_filter_object, parameter=parameter)
         elif data_filter_object:
-            for key in self.parameter_list:
+            for key in self.indicator_list:
                 attr = getattr(self, key.lower())
                 attr.filter_data(data_filter_object)
         return True
@@ -78,7 +78,7 @@ class QualityFactorNP(QualityFactorBase):
     def __init__(self):
         super().__init__() 
         self.name = 'NP'
-        self.indicator_list = ['DIN_winter', 'DIN_summer', 'TN_winter']
+        self.indicator_list = ['DIN_winter', 'DIN_summer', 'TOTN_winter']
         self._load_indicators()
         
     #==========================================================================
@@ -87,17 +87,87 @@ class QualityFactorNP(QualityFactorBase):
         Make sure the attributes and items in self.indicator_list are matching.
         (not case sensitive)
         """        
-        self.din_winter = est_core.IndicatorDINwinter() 
-        self.din_summer = est_core.IndicatorDINwinter() # Temp, should not be winter! 
-        self.tn_winter = est_core.IndicatorTN() # 
+        self.din_winter = est_core.IndicatorDIN() # winter modified by filter on months 
+        self.din_summer = est_core.IndicatorDIN() # summer modified by filter on months 
+        self.totn_winter = est_core.IndicatorTOTN() # 
         
     #==========================================================================
-    def calculate_quality_factor(self):
-        pass
+    def get_quality_factor(self, tolerance_filter):
+        return self.totn_winter.get_status(tolerance_filter)
     
     
+###############################################################################
+if __name__ == '__main__':
+    nr_marks = 60
+    print('='*nr_marks)
+    print('Running module "quality_factor.py"')
+    print('-'*nr_marks)
+    print('')
     
     
+    root_directory = os.path.dirname(os.path.abspath(__file__))[:-9]
+    
+#    est_core.StationList(root_directory + '/test_data/Stations_inside_med_typ_attribute_table_med_delar_av_utsjö.txt')
+    est_core.ParameterList()
+    
+    #--------------------------------------------------------------------------
+    # Directories and file paths
+    raw_data_file_path = root_directory + '/test_data/raw_data/data_BAS_2000-2009.txt'
+    first_filter_data_directory = root_directory + '/test_data/filtered_data' 
+    
+    first_data_filter_file_path = root_directory + '/test_data/filters/first_data_filter.txt' 
+    winter_data_filter_file_path = root_directory + '/test_data/filters/winter_data_filter.txt'
+    
+    tolerance_filter_file_path = root_directory + '/test_data/filters/tolerance_filter_template.txt'
+    
+    #--------------------------------------------------------------------------
+    # Filters 
+    first_filter = est_core.DataFilter('First filter', file_path=first_data_filter_file_path)
+    winter_filter = est_core.DataFilter('winter_filter', file_path=winter_data_filter_file_path)
+    winter_filter.save_filter_file(root_directory + '/test_data/filters/winter_data_filter_save.txt') # mothod available
+    tolerance_filter = est_core.ToleranceFilter('test_tolerance_filter', file_path=tolerance_filter_file_path)
+
+    #--------------------------------------------------------------------------
+    # Reference values
+    est_core.RefValues()
+    est_core.RefValues().add_ref_parameter_from_file('DIN_winter', root_directory + '/test_data/din_vinter.txt')
+    est_core.RefValues().add_ref_parameter_from_file('TOTN_winter', root_directory + '/test_data/totn_vinter.txt')
+    
+    #--------------------------------------------------------------------------
+    #--------------------------------------------------------------------------
+    # Handler (raw data)
+    raw_data = est_core.DataHandler('raw')
+    raw_data.add_txt_file(raw_data_file_path, data_type='column') 
+    
+    # Use first filter 
+    filtered_data = raw_data.filter_data(first_filter) 
+    
+    # Save filtered data (first filter) as a test
+    filtered_data.save_data(first_filter_data_directory)
+    
+    
+    # Load filtered data (first filter) as a test
+    loaded_filtered_data = est_core.DataHandler('first_filtered')
+    loaded_filtered_data.load_data(first_filter_data_directory)
+
+
+    # Create and fill QualityFactor
+    qf_NP = est_core.QualityFactorNP()
+    qf_NP.set_data_handler(data_handler=loaded_filtered_data)
+    
+    # Filter parameters in QualityFactorNP 
+    # First general filter 
+    qf_NP.filter_data(data_filter_object=first_filter) 
+    # winter filter
+    qf_NP.filter_data(data_filter_object=winter_filter, indicator='TOTN_winter') 
+    
+    q_factor = qf_NP.get_quality_factor(tolerance_filter)
+    
+    
+    # Parameter
+    print('-'*nr_marks)
+    print('done')
+    print('-'*nr_marks)
     
     
     

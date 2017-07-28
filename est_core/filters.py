@@ -4,6 +4,7 @@ Created on Tue Jul 11 11:04:47 2017
 
 @author: a001985
 """
+import os
 import codecs  
 import pandas as pd
     
@@ -33,6 +34,8 @@ class SingleFilter(object):
     def set_filter(self, value): 
         if not value:
             self.value = value
+        elif type(value) == list:
+            self.value = [self._convert(item) for item in value]
         elif '-' in value: 
             self.variable_type = 'interval'
             self.value = [self._convert(item) for item in value.split('-')] 
@@ -104,10 +107,7 @@ class FilterBase(dict):
             
     #==========================================================================
     def set_filter(self, filter_type, value): 
-        filter_type = filter_type.upper().replace(' ', '_')
-        if filter_type not in self.filter_list:
-            return
-        
+        filter_type = filter_type.upper().replace(' ', '_')       
         self[filter_type].set_filter(value)
         
         
@@ -138,6 +138,10 @@ class FilterBase(dict):
             setattr(self, item, self[item])
             
         self.header = sorted(header)
+        
+        if self.filter_type == 'data':
+            self.year_list = [y for y in range(self['YEAR_INTERVAL'].value[0], 
+                                                   self['YEAR_INTERVAL'].value[1]+1)]
                 
         
     #==========================================================================
@@ -163,13 +167,12 @@ class DataFilter(FilterBase):
         parameter is to specify the parameter that the filter is passed to. 
         """
         super().__init__() 
+        self.filter_type = 'data'
         self.source = source
         self.parameter = parameter
         self._initate_filter_items()
         if file_path:
             self.load_filter_file(file_path)
-            self.year_list = [y for y in range(self['YEAR_INTERVAL'].value[0], 
-                                               self['YEAR_INTERVAL'].value[1]+1)]
 
     #==========================================================================
     def _initate_filter_items(self):
@@ -205,6 +208,7 @@ class ToleranceFilter(FilterBase):
         parameter is to specify the parameter that the filter is passed to. 
         """
         super().__init__() 
+        self.filter_type = 'tolerance'
         self.source = source
         self.parameter = parameter
         self._initate_filter_items()
@@ -225,11 +229,18 @@ if __name__ == '__main__':
     print('-'*nr_marks)
     print('')   
     
-    data_filter_file_path = 'D:/Utveckling/g_EKOSTAT_tool/test_data/filters/data_filter_template.txt'
+    root_directory = os.path.dirname(os.path.abspath(__file__))[:-9]
+    
+    print(root_directory)
+    
+    data_filter_file_path = root_directory + '/test_data/filters/data_filter_template.txt'
     f = DataFilter('test', file_path=data_filter_file_path)
+    f.set_filter('YEAR_INTERVAL', '2000-2006')
     
     
-    
+    print('-'*nr_marks)
+    print('done')
+    print('-'*nr_marks)
     
     
     

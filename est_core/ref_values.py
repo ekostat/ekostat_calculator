@@ -152,7 +152,7 @@ def create_type_area_object():
     """  
     RefValues()
     RefValues().add_ref_parameter_from_file('DIN_winter', 'D:/Utveckling/g_EKOSTAT_tool/test_data/din_vinter.txt')
-    RefValues().add_ref_parameter_from_file('TN_winter', 'D:/Utveckling/g_EKOSTAT_tool/test_data/totn_vinter.txt')
+    RefValues().add_ref_parameter_from_file('TOTN_winter', 'D:/Utveckling/g_EKOSTAT_tool/test_data/totn_vinter.txt')
     
 #    DINRefTypeAreas()
 #    DINRefTypeAreas().load_txt_file('D:/Utveckling/g_EKOSTAT_tool/test_data/din_vinter.txt')
@@ -174,11 +174,11 @@ if __name__ == '__main__':
     print('-'*50)
     print('Type area', ta)
     print('-'*50)
-    for key in RefValues().tn_winter['20'].keys():
+    for key in RefValues().totn_winter['20'].keys():
         if key == 'Type Area':
             continue
-        print(key.ljust(30), RefValues().tn_winter['20'][key])
-    print('Ref value for salinity %s psu:' %s, RefValues().tn_winter['20'].get_ref_value(s))
+        print(key.ljust(30), RefValues().totn_winter['20'][key])
+    print('Ref value for salinity %s psu:' %s, RefValues().totn_winter['20'].get_ref_value(s))
         
     print('-'*50)
     

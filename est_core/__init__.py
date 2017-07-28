@@ -5,12 +5,12 @@ from .parameters import ParameterNTRA
 from .parameters import ParameterNTRI 
 from .parameters import ParameterAMON  
 from .parameters import ParameterDIN
-from .parameters import ParameterTN
+from .parameters import ParameterTOTN
 
 from .parameters import CalculatedParameterDIN
 
-from .indicators import IndicatorDINwinter
-from .indicators import IndicatorTN
+from .indicators import IndicatorDIN
+from .indicators import IndicatorTOTN
 
 from .quality_factors import QualityFactorNP
 

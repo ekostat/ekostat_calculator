@@ -520,7 +520,7 @@ class ParameterAMON(ParameterBasePhysicalChemical):
         self.unit = 'umol/l'
         
 ###############################################################################
-class ParameterTN(ParameterBasePhysicalChemical):
+class ParameterTOTN(ParameterBasePhysicalChemical):
     """
     Class to describe and handle Ammonium. 
     """
@@ -571,7 +571,7 @@ if __name__ == '__main__':
     filtered_data = raw_data.filter_data(first_filter)
     
     
-    tn = ParameterTN()
+    tn = ParameterTOTN()
     tn.set_data_handler(filtered_data)
     tn.filter_data(winter_filter_1)
     
@@ -597,4 +597,6 @@ if __name__ == '__main__':
         print('No match')
     
     
-    
+    print('-'*50)
+    print('done')
+    print('-'*50)

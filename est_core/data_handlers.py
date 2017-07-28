@@ -200,7 +200,9 @@ if __name__ == '__main__':
     raw_data = est_core.DataHandler('raw')
     raw_data.add_txt_file(raw_data_file_path, data_type='column') 
     
-    
+    print('-'*50)
+    print('done')
+    print('-'*50)
     
     
     

@@ -64,7 +64,8 @@ if __name__ == '__main__':
     print('-'*50)
     print('')
     
-    StationList('D:/Utveckling/g_EKOSTAT_tool/test_data/Stations_inside_med_typ_attribute_table_med_delar_av_utsjö.txt')
+    root_directory = os.path.dirname(os.path.abspath(__file__))
+    StationList(root_directory + '/test_data/Stations_inside_med_typ_attribute_table_med_delar_av_utsjö.txt')
     
     
     

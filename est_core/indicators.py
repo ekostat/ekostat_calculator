@@ -101,7 +101,7 @@ class IndicatorBase(object):
         return True
     
     #==========================================================================
-    def get_ek_value_for_par_with_salt_ref(self, par=None, salt_par='SALT_CTD', indicator=None, tolerance_filter=None):
+    def get_ek_value_for_par_with_salt_ref(self, par=None, salt_par='SALT_CTD', indicator_name=None, tolerance_filter=None):
         """
         tollerance_filters is a dict with tolerance filters for the specific (sub) parameter. 
         """
@@ -126,26 +126,26 @@ class IndicatorBase(object):
         för varje mätning och sedan ett medel-EK för varje specifikt mättillfälle.
         """
         
-        ref_object = getattr(est_core.RefValues(), indicator.lower())[self.data_filter_object.TYPE_AREA.value]
+        ref_object = getattr(est_core.RefValues(), indicator_name.lower())[self.data_filter_object.TYPE_AREA.value]
 #        self.ref_object = ref_object
         par_object = getattr(self, par.lower())
         salt_object = getattr(self, salt_par.lower())
         self.par_object = par_object
         self.salt_object = salt_object
         
-        df = par_object.data.column_data.copy(deep=True)
+        par_df = par_object.data.column_data.copy(deep=True)
         salt_df = salt_object.data.column_data
         
-        df['salt_value_ori'] = np.nan 
-        df['salt_value'] = np.nan 
-        df['salt_index'] = np.nan 
-        df['ref_value'] = np.nan 
-        df['ek_value_calc'] = np.nan 
-        df['ek_value'] = np.nan 
+        par_df['salt_value_ori'] = np.nan 
+        par_df['salt_value'] = np.nan 
+        par_df['salt_index'] = np.nan 
+        par_df['ref_value'] = np.nan 
+        par_df['ek_value_calc'] = np.nan 
+        par_df['ek_value'] = np.nan 
         
-        for i in df.index:
+        for i in par_df.index:
 #            self.i = i
-            df_row = df.loc[i, :]
+            df_row = par_df.loc[i, :]
             par_value = df_row[par]
             if np.isnan(par_value):
                 ref_value = np.nan
@@ -183,21 +183,21 @@ class IndicatorBase(object):
 #            print('ref_value', ref_value, '=', value)
 #            self.df_row = df_row
 #            self.salt_value = salt_value
-            df.set_value(i, 'salt_value_ori', salt_value_ori) 
-            df.set_value(i, 'salt_value', salt_value) 
-            df.set_value(i, 'salt_index', salt_index)
-            df.set_value(i, 'ref_value', ref_value)
-            df.set_value(i, 'ek_value_calc', ek_value_calc)
+            par_df.set_value(i, 'salt_value_ori', salt_value_ori) 
+            par_df.set_value(i, 'salt_value', salt_value) 
+            par_df.set_value(i, 'salt_index', salt_index)
+            par_df.set_value(i, 'ref_value', ref_value)
+            par_df.set_value(i, 'ek_value_calc', ek_value_calc)
             
             # Check ek_value_calc
             ek_value = ek_value_calc
             if ek_value > 1:
                 ek_value = 1
-            df.set_value(i, 'ek_value', ek_value)
+            par_df.set_value(i, 'ek_value', ek_value)
             
-        df['salt_index'] = df['salt_index'].apply(lambda x: '' if np.isnan(x) else int(x))
+        par_df['salt_index'] = par_df['salt_index'].apply(lambda x: '' if np.isnan(x) else int(x))
         
-        by_occasion = df.groupby(['profile_key', 'MYEAR']).ek_value.agg(['count', 'min', 'max', 'mean'])
+        by_occasion = par_df.groupby(['profile_key', 'MYEAR']).ek_value.agg(['count', 'min', 'max', 'mean'])
 #        by_occasion.to_csv('d:/Ny mapp/pandas/by_occation.txt', sep='\t')
         by_occasion.rename(columns={'mean':'mean_ek_value'}, inplace=True) # Cant use "mean" below
         
@@ -210,7 +210,7 @@ class IndicatorBase(object):
         by_year = by_occasion.groupby('MYEAR').mean_ek_value.agg(['count', 'min', 'max', 'mean'])
 #        by_year.to_csv('d:/Ny mapp/pandas/by_year.txt', sep='\t')
     
-        class_result.add_info('all_data', df)
+        class_result.add_info('all_data', par_df)
         class_result.add_info('mean_by_occasion', by_occasion)
         class_result.add_info('mean_by_year', by_year)
         class_result.add_info('nr_years', len(by_year))
@@ -234,34 +234,11 @@ class IndicatorBase(object):
         return class_result
         
         
-###############################################################################
-class IndicatorNtotSummer(IndicatorBase): 
-    """
-    Class to calculate status for a NP. 
-    """
-    
-    def __init__(self):
-        super().__init__() 
-        self.name = 'NtotSummer'
-        
-        # Parameter list contains all parameters that is used by the indicator class
-        self.parameter_list = []
-        
-        self._load_data_objects()
-        
-    
-    #==========================================================================
-    def _load_data_objects(self):
-        """
-        Initiates data to work with. Typically parameter class objects. 
-        """
-        pass
-        
     
 ###############################################################################
-class IndicatorDINwinter(IndicatorBase): 
+class IndicatorDIN(IndicatorBase): 
     """
-    Class to calculate indicator DINwinter. 
+    Class to calculate indicator DIN. 
     """
     
     def __init__(self):
@@ -366,14 +343,14 @@ class IndicatorDINwinter(IndicatorBase):
         pass
     
 ###############################################################################
-class IndicatorTN(IndicatorBase): 
+class IndicatorTOTN(IndicatorBase): 
     """
     Class to calculate indicator TN. 
     """
     
     def __init__(self):
         super().__init__() 
-        self.name = 'TN'
+        self.name = 'TOTN'
         
         # Parameter list contains all parameters that is used by the indicator class
         self.parameter_list = ['SALT_CTD', 'NTOT']
@@ -388,13 +365,14 @@ class IndicatorTN(IndicatorBase):
         """
         self.salt_ctd = est_core.ParameterSALT_CTD()
         
-        self.ntot = est_core.ParameterTN()
+        self.ntot = est_core.ParameterTOTN()
         
 
     #==========================================================================
     def get_status(self, tolerance_filter):
         return self.get_ek_value_for_par_with_salt_ref(par='NTOT', 
-                                                       indicator='TN_winter', tolerance_filter=tolerance_filter)
+                                                       salt_par='SALT_CTD', 
+                                                       indicator_name='TOTN_winter', tolerance_filter=tolerance_filter)
         
         """
         5) EK vägs samman för ingående parametrar (tot-N, tot-P, DIN och DIP) enligt
@@ -428,29 +406,18 @@ if __name__ == '__main__':
     filtered_data = raw_data.filter_data(first_filter)
     
     
-    ind_TN = IndicatorTN()
-    ind_TN.set_data_handler(filtered_data)
-    ind_TN.filter_data(winter_filter_1)
+    ind_TOTN = IndicatorTOTN()
+    ind_TOTN.set_data_handler(filtered_data)
+    ind_TOTN.filter_data(winter_filter_1)
     
     est_core.RefValues()
-#    est_core.RefValues().add_ref_parameter_from_file('DIN_winter', 'D:/Utveckling/g_EKOSTAT_tool/test_data/din_vinter.txt')
-    est_core.RefValues().add_ref_parameter_from_file('TN_winter', 'D:/Utveckling/g_EKOSTAT_tool/test_data/totn_vinter.txt')
+    est_core.RefValues().add_ref_parameter_from_file('TOTN_winter', 'D:/Utveckling/g_EKOSTAT_tool/test_data/totn_vinter.txt')
     
     
-    nclass = ind_TN.get_status(tolerance_filter)
+    nclass = ind_TOTN.get_status(tolerance_filter)
     
-#    df = ind_TN.df
-#    df.to_csv('d:/Ny mapp/pandas/df.txt', sep='\t')
-##    df.groupby('profile_key').ref_value.agg(['count', 'min', 'max', 'mean'])
-#    by_occasion = df.groupby(['profile_key', 'MYEAR']).ek_value.agg(['count', 'min', 'max', 'mean'])
-##    by_occasion = by_occasion.loc[by_occasion['count'] >= tolerance_filter.MIN_NR_VALUES.value, :]
-#    by_occasion.to_csv('d:/Ny mapp/pandas/by_occation.txt', sep='\t')
-#    
-#    by_occasion.rename(columns={'mean':'mean_ek_value'}, inplace=True)
-#    by_year = by_occasion.groupby('MYEAR').mean_ek_value.agg(['count', 'min', 'max', 'mean'])
-#    by_year.to_csv('d:/Ny mapp/pandas/by_year.txt', sep='\t')
-    
-    
-#    ind_TN.df.loc[[7795, 7870, 11647, 11728], :] # 4055
+    print('-'*50)
+    print('done')
+    print('-'*50)
     
     
