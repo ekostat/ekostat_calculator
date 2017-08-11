@@ -6,17 +6,48 @@ Created on Wed Jul 12 14:43:35 2017
 """
 import os
 import est_core 
+import numpy as np
+
+###############################################################################
+class ClassificationResult(dict):
+    """
+    Class to hold result from a classification. 
+    Jag kopierade denna från indicators.py
+    """ 
+    def __init__(self):
+        super().__init__() 
+        
+        self['qualityfactor'] = None
+        self['type_area'] = None
+        self['status'] = None
+        self['EQR'] = None
+        self['qf_EQR'] = None
+        self['all_ok'] = False
+        
+        self._set_attributes()
+        
+    #========================================================================== 
+    def _set_attributes(self):
+        for key in self.keys():
+            setattr(self, key, self[key])
+            
+    #========================================================================== 
+    def add_info(self, key, value): 
+        self[key] = value
+        setattr(self, key, value)
+        
 
 ###############################################################################
 class QualityFactorBase(object): 
     """
-    Class to hold general inforamtion about quality factors. 
+    Class to hold general information about quality factors. 
     """ 
     def __init__(self):
         self.name = '' 
         
         self._load_indicators()
         self.indicator_list = []
+        self.class_result = None
         
     
     #==========================================================================
@@ -43,12 +74,12 @@ class QualityFactorBase(object):
         """ 
         if all([data_handler, indicator]):
             attr = getattr(self, indicator.lower())
-            attr.set_data_handler(data_handler=data_handler, parameter=parameter) 
+            attr.set_data_handler(data_handler = data_handler, parameter = parameter) 
             # parameter could be None here. If so, all parameters in the indicator will be assigned the data_handler. 
         elif data_handler:
             for key in self.indicator_list:
                 attr = getattr(self, key.lower())
-                attr.set_data_handler(data_handler=data_handler)
+                attr.set_data_handler(data_handler = data_handler)
         return True
     
     
@@ -62,13 +93,12 @@ class QualityFactorBase(object):
         """
         if all([data_filter_object, indicator]):
             attr = getattr(self, indicator.lower())
-            attr.filter_data(data_filter_object=data_filter_object, parameter=parameter)
+            attr.filter_data(data_filter_object = data_filter_object, parameter = parameter)
         elif data_filter_object:
             for key in self.indicator_list:
                 attr = getattr(self, key.lower())
                 attr.filter_data(data_filter_object)
         return True
-        
         
 ###############################################################################
 class QualityFactorNP(QualityFactorBase): 
@@ -78,7 +108,7 @@ class QualityFactorNP(QualityFactorBase):
     def __init__(self):
         super().__init__() 
         self.name = 'NP'
-        self.indicator_list = ['DIN_winter', 'DIN_summer', 'TOTN_winter']
+        self.indicator_list = ['DIN_winter', 'TOTN_summer', 'TOTN_winter']
         self._load_indicators()
         
     #==========================================================================
@@ -88,13 +118,88 @@ class QualityFactorNP(QualityFactorBase):
         (not case sensitive)
         """        
         self.din_winter = est_core.IndicatorDIN() # winter modified by filter on months 
-        self.din_summer = est_core.IndicatorDIN() # summer modified by filter on months 
+        self.totn_summer = est_core.IndicatorTOTN() # summer modified by filter on months 
         self.totn_winter = est_core.IndicatorTOTN() # 
+    
+    #==========================================================================
+    def calculate_quality_factor(self, tolerance_filter):
+        """
+        5) EK vägs samman för ingående parametrar (tot-N, tot-P, DIN och DIP) enligt
+        beskrivning nedan (6.4.2) för slutlig statusklassificering av hela kvalitetsfaktorn Näringsämnen.
+        """
+        """
+        Ett medelvärde av de numeriska klassningarna (Nklass) beräknas för 
+        DIN, DIP, tot-N, tot-P under vintern och ett medelvärde för tot-N, tot-P under sommaren. 
+        Därefter beräknas medelvärdet av sommar och vinter, vilket blir den sammanvägda klassificeringen av näringsämnen. 
+        Statusklassificeringen avgörs av medelvärdet för den numeriska klassningen enligt tabell 2.1, ett värde 0-4.99.
+        Denna klassificering ska sedan omvandlas till skalan 0-1 med stegen 0.2 mellan statusklasserna. 
+        Dessa värden kan sedan jämföras med övriga kvalitetsfaktorer och ingå i sammansvägningen.
+        """
+        class_result = ClassificationResult()
+        class_result.add_info('qualityfactor', 'Nutrients')
+        print('\t\tCalculating Indicator EK values.....')
+        din_winter = self.din_winter.calculate_ek_value(tolerance_filter, 'DIN_winter', 'DIN')
+        totn_winter = self.totn_winter.calculate_ek_value(tolerance_filter, 'TOTN_winter', 'NTOT')
+        totn_summer = self.totn_summer.calculate_ek_value(tolerance_filter, 'TOTN_summer', 'NTOT')
+        print('\t\tIndicator EK values calculated')
+        
+        din_winter = self.din_winter.class_result['num_class'][-1]
+        totn_winter = self.totn_winter.class_result['num_class'][-1]
+        totn_summer = self.totn_summer.class_result['num_class'][-1]
+        #qf_NP_summer = self.totn_summer.get_status(tolerance_filter)['num_class'][-1]
+        
+        qf_NP_winter = np.mean([totn_winter, din_winter])
+        qf_NP_summer = np.mean([totn_summer])
+        
+        # TODO: add the rest of the indicators
+        qf_num_class = np.mean([qf_NP_summer, qf_NP_winter])
+        qf_EQR = {'qf_NP_winter': qf_NP_winter, 'qf_NP_summer': qf_NP_summer, 'qf_NP_EQR': qf_num_class}
+        class_result.add_info('qf_EQR', qf_EQR)
+        
+        self.class_result = class_result
         
     #==========================================================================
+    def get_EQR(self, tolerance_filter = None):
+        """
+        Calculates EQR from quality factor class (Nklass) according to eq. 1 in WATERS final report p 153.
+        """
+        self.calculate_quality_factor(tolerance_filter)
+        qf_EQR = getattr(self.class_result, 'qf_EQR')['qf_NP_EQR']
+
+        if qf_EQR >= 4.99: 
+            1
+            status = 'High'
+        elif qf_EQR >= 4:
+            EQR = 0.2*((qf_EQR-4)/(5-4)) + 0.8
+            status = 'High'          
+        elif qf_EQR >= 3:
+            EQR = 0.2*((qf_EQR-3)/(4-3)) + 0.6
+            status = 'Good'
+        elif qf_EQR >= 2:
+            EQR = 0.2*((qf_EQR-2)/(3-2)) + 0.4
+            status = 'Moderate'
+        elif qf_EQR >= 1: 
+            EQR = 0.2*((qf_EQR-1)/(2-1)) + 0.2
+            status = 'Poor'
+        elif qf_EQR > 0:
+            EQR = 0.2*((qf_EQR-0)/(1-0))
+            status = 'Bad'
+        elif qf_EQR == 0:
+            EQR = 0
+            status = 'Bad'
+        else:
+            raise('Error: NP Qualityfactor numeric class: {} incorrect.'.self.qf_num_class)
+        
+        self.class_result.add_info('EQR', EQR)
+        self.class_result.add_info('status', status)
+                
+    #==========================================================================       
     def get_quality_factor(self, tolerance_filter):
-        return self.totn_winter.get_status(tolerance_filter)
-    
+        """
+        Jag vet inte vad denna def behövs för.
+        """
+        #return self.totn_winter.get_status(tolerance_filter)
+        pass
     
 ###############################################################################
 if __name__ == '__main__':

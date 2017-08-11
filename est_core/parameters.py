@@ -66,6 +66,9 @@ class ParameterBase(object):
         
     #==========================================================================
     def filter_data(self, data_filter_object):
+        """
+        ParameterBase.filter_data
+        """
         self.data_filter_object = data_filter_object
 #        print('filter_data')
 #        print(data_filter_object.keys())
@@ -382,7 +385,7 @@ class ParameterBasePhysicalChemical(ParameterBase):
             return False
         
         # TODO: Does this work for row data as well?
-        return sorted(set(self.data.column_data.loc[self.data.index[~self.data[self.internal_name].isnull()], 'STATN']))
+        return sorted(set(self.data.column_data.loc[self.data.column_data.index[~self.data.column_data[self.internal_name].isnull()], 'STATN']))
         
     #==========================================================================
     def get_profile_key_list(self, year=None):
@@ -431,7 +434,7 @@ class CalculatedParameterDIN(CalculatedParameterPhysicalChemical):
         
     #==========================================================================
     def _calculate_din(self):
-        
+        print('\tCalculating DIN...')
         #----------------------------------------------------------------------
         # Merge ntra, ntri and amon on index 
         # All data is found in column data
@@ -443,6 +446,7 @@ class CalculatedParameterDIN(CalculatedParameterPhysicalChemical):
         #----------------------------------------------------------------------
         # Calculate DIN 
         # TODO: Where do we exclude qf and should we look at H2S? 
+        # We need to handle qf, although H2S is not very important since we are only working with surface waters. /Lena 2017-08-08
         din_list = []
         for no3, no2, nh4 in zip(df['NTRA'], df['NTRI'], df['AMON']): 
             din = np.nan
@@ -470,11 +474,13 @@ class CalculatedParameterDIN(CalculatedParameterPhysicalChemical):
         
         self.data = est_core.DataHandler('calculated_din')
         self.data.add_df(new_df, 'col') 
+        
+        print('\t\t\t...Done.')
             
 ###############################################################################
 class ParameterDIN(ParameterBasePhysicalChemical):
     """
-    Class to describe and handle Nitrate. 
+    Class to describe and handle Dissolved Inorganics Nitrogen (DIN). 
     """
     def __init__(self):
         super().__init__()
@@ -522,7 +528,7 @@ class ParameterAMON(ParameterBasePhysicalChemical):
 ###############################################################################
 class ParameterTOTN(ParameterBasePhysicalChemical):
     """
-    Class to describe and handle Ammonium. 
+    Class to describe and handle Total Nitrogen (NTOT). 
     """
     def __init__(self):
         super().__init__()
@@ -534,7 +540,7 @@ class ParameterTOTN(ParameterBasePhysicalChemical):
 ###############################################################################
 class ParameterSALT_CTD(ParameterBasePhysicalChemical):
     """
-    Class to describe and handle Ammonium. 
+    Class to describe and handle Salinity measured with CTD. 
     """
     def __init__(self):
         super().__init__()

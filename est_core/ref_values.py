@@ -41,6 +41,7 @@ class RefTypeArea(dict):
     
     #==========================================================================
     def get_max_salinity(self, s=None):
+
         if s != None:
             if np.isnan(s):
                 return s
@@ -58,7 +59,16 @@ class RefTypeArea(dict):
         return eval(self.ekv_ref)
     
     #==========================================================================
-    def get_num_class(self, mean_value): 
+    def get_num_class(self, mean_value):
+        """
+        Calculates indicator class (Nklass) according to eq 2.1 in HVMFS 2013:19.
+        Returns a tuple with four values, low, ek_low, ek_heigh and the resulting Nklass.
+        This is specific for the nutrient indicators.
+        There needs to be:
+            - one def to get nutrient num_class for nutrient indicators (this one as is)
+            - one def to get indicator class and value with the indicator specific EQR and the EQR transformed to the common scale
+            (for nutrients that is num_class on scale 0-4.99 for most others some values on a 0-1 scale)
+        """
         if mean_value > self['EK H/G']: 
             low = 4 
             ek_heigh = 1
@@ -85,8 +95,6 @@ class RefTypeArea(dict):
             ek_low = 0
         
         return low, ek_low, ek_heigh, low + (mean_value - ek_low)/(ek_heigh-ek_low)
-        
-        
 
 ###############################################################################     
 class ParameterRefTypeAreas(dict):
@@ -124,7 +132,6 @@ class RefValues(object):
     def add_ref_parameter_from_file(self, par, file_path): 
         setattr(self, par.lower(), ParameterRefTypeAreas(parameter=par, 
                                                          file_path=file_path))
-    
         
 ###############################################################################    
 #@est_utils.singleton

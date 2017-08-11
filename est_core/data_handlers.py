@@ -81,7 +81,7 @@ class DataHandler(object):
     #==========================================================================
     def _filter_column_data(self, df, data_filter_object): 
         """
-        Filters column file data and retuns resulting dataframe
+        Filters column file data and returns resulting dataframe
         """
         boolean = data_filter_object.get_boolean(df)
         

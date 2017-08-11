@@ -44,7 +44,7 @@ class ParameterList(object):
     Singleton to hold parameter information. 
     """
     def __init__(self):
-        self.metadata_list = ['MYEAR', 'SDATE', 'STIME', 'STATN', 'LATIT', 'LONGI', 'DEPH']
+        self.metadata_list = ['MYEAR', 'SDATE', 'STIME', 'MONTH', 'STATN', 'LATIT', 'LONGI', 'DEPH']
     
     
     
