@@ -8,7 +8,7 @@ Created on Mon Jul 10 15:27:01 2017
 import os
 import sys
 import datetime
-import est_core
+import core
 
     
     
@@ -23,8 +23,8 @@ if __name__ == '__main__':
     
     root_directory = os.path.dirname(os.path.abspath(__file__))
     
-#    est_core.StationList(root_directory + '/test_data/Stations_inside_med_typ_attribute_table_med_delar_av_utsjö.txt')
-    est_core.ParameterList()
+#    core.StationList(root_directory + '/test_data/Stations_inside_med_typ_attribute_table_med_delar_av_utsjö.txt')
+    core.ParameterList()
     
     #--------------------------------------------------------------------------
     # Directories and file paths
@@ -41,26 +41,26 @@ if __name__ == '__main__':
     #--------------------------------------------------------------------------
     # Filters 
     print('{}\nInitiating filters'.format('*'*nr_marks))
-    first_filter = est_core.DataFilter('First filter', file_path = first_data_filter_file_path)
-    winter_filter = est_core.DataFilter('winter_filter', file_path = winter_data_filter_file_path)
+    first_filter = core.DataFilter('First filter', file_path = first_data_filter_file_path)
+    winter_filter = core.DataFilter('winter_filter', file_path = winter_data_filter_file_path)
     winter_filter.save_filter_file(root_directory + '/test_data/filters/winter_data_filter_save.txt') # mothod available
-    summer_filter = est_core.DataFilter('summer_filter', file_path = summer_data_filter_file_path)
+    summer_filter = core.DataFilter('summer_filter', file_path = summer_data_filter_file_path)
     summer_filter.save_filter_file(root_directory + '/test_data/filters/summer_data_filter_save.txt') # mothod available
-    tolerance_filter = est_core.ToleranceFilter('test_tolerance_filter', file_path = tolerance_filter_file_path)
+    tolerance_filter = core.ToleranceFilter('test_tolerance_filter', file_path = tolerance_filter_file_path)
 
     #--------------------------------------------------------------------------
     # Reference values
     print('{}\nLoading reference values'.format('*'*nr_marks))
-    est_core.RefValues()
-    est_core.RefValues().add_ref_parameter_from_file('DIN_winter', root_directory + '/test_data/din_vinter.txt')
-    est_core.RefValues().add_ref_parameter_from_file('TOTN_winter', root_directory + '/test_data/totn_vinter.txt')
-    est_core.RefValues().add_ref_parameter_from_file('TOTN_summer', root_directory + '/test_data/totn_summer.txt')
+    core.RefValues()
+    core.RefValues().add_ref_parameter_from_file('DIN_winter', root_directory + '/test_data/din_vinter.txt')
+    core.RefValues().add_ref_parameter_from_file('TOTN_winter', root_directory + '/test_data/totn_vinter.txt')
+    core.RefValues().add_ref_parameter_from_file('TOTN_summer', root_directory + '/test_data/totn_summer.txt')
     
     #--------------------------------------------------------------------------
     #--------------------------------------------------------------------------
     # Handler (raw data)
     print('{}\nInitiate raw data handler\n'.format('*'*nr_marks))
-    raw_data = est_core.DataHandler('raw')
+    raw_data = core.DataHandler('raw')
     raw_data.add_txt_file(raw_data_file_path, data_type='column') 
     
     # Use first filter 
@@ -71,13 +71,13 @@ if __name__ == '__main__':
     filtered_data.save_data(first_filter_data_directory)
     
     # Load filtered data (first filter) as a test
-    loaded_filtered_data = est_core.DataHandler('first_filtered')
+    loaded_filtered_data = core.DataHandler('first_filtered')
     loaded_filtered_data.load_data(first_filter_data_directory)
 
 
     # Create and fill QualityFactor
     print('{}\nCreate QualityFactor and set data_handler\n'.format('*'*nr_marks))
-    qf_NP = est_core.QualityFactorNP()
+    qf_NP = core.QualityFactorNP()
     
     qf_NP.set_data_handler(data_handler = loaded_filtered_data)
     #Class IndicatorBase:

@@ -1,0 +1,5 @@
+comment	dtype	parameter	value	variable
+#	int	DEPH	0-10	DEPTH_INTERVAL
+#	int	MONTH	6,7,8	MONTH_LIST
+#	str		22	TYPE_AREA
+#	int	MYEAR	2000-2002	YEAR_INTERVAL
