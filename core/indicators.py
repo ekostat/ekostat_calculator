@@ -328,7 +328,12 @@ class IndicatorDIN(IndicatorNutrients):
         self.parameter_list = ['NTRA', 'NTRI', 'AMON', 'DIN', 'SALT_CTD']
         
         self._load_data_objects()
-         
+        self._set_refvalues()
+    
+    #==========================================================================
+#    def _set_refvalues(self):
+#        core.RefValues().add_ref_parameter_from_file(self.name, resources_directory + '/classboundaries/nutrients/classboundaries_din_vinter.txt')
+    
     #==========================================================================
     def _load_data_objects(self):
         """

@@ -90,6 +90,7 @@ class SingleFilter(object):
                 value = str(value)
             item_list.append(value)
         fid.write('\t'.join(item_list)) 
+        
     
     
 ###############################################################################
@@ -106,11 +107,11 @@ class FilterBase(dict):
             self.pop(i)
             
     #==========================================================================
-    def set_filter(self, filter_type, value): 
-        filter_type = filter_type.upper().replace(' ', '_')       
-        self[filter_type].set_filter(value)
+    def set_filter(self, filter_variable, value): 
         
-        
+        filter_variable = filter_variable.upper().replace(' ', '_')       
+        self[filter_variable].set_filter(value)
+
     #==========================================================================
     def load_filter_file(self, file_path):
         """
@@ -142,8 +143,7 @@ class FilterBase(dict):
         if self.filter_type == 'data':
             self.year_list = [y for y in range(self['YEAR_INTERVAL'].value[0], 
                                                    self['YEAR_INTERVAL'].value[1]+1)]
-                
-        
+                    
     #==========================================================================
     def save_filter_file(self, file_path):
         self.file_path = file_path
@@ -153,7 +153,12 @@ class FilterBase(dict):
             fid.write('\n')
             for item in sorted(self.keys()): 
                 self[item].write_to_fid(fid)
-                fid.write('\n') 
+                fid.write('\n')
+                
+    #==========================================================================
+    def show_filter(self):
+        for key, item in self.items():
+            print(key, item.value)
         
 ###############################################################################
 class DataFilter(FilterBase):
@@ -181,7 +186,7 @@ class DataFilter(FilterBase):
                             'MONTH_LIST', 
                             'YEAR_INTERVAL', 
                             'MONTH_LIST']
-    
+            
     #==========================================================================
     def get_boolean(self, df): 
         combined_boolean = ()

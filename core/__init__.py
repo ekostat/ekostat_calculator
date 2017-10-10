@@ -25,3 +25,7 @@ from .lists import AreaList
 
 from .filters import DataFilter
 from .filters import ToleranceFilter
+
+from .workspaces import WorkSpace
+
+from .jupyter_eventhandlers import MultiCheckboxWidget
