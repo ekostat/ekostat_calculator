@@ -32,9 +32,13 @@ class SingleFilter(object):
         
     #==========================================================================
     def set_filter(self, value): 
+        """
+        Determines if the filter is one given value, an interval or a list of values
+        """
         if not value:
             self.value = value
         elif type(value) == list:
+            self.variable_type = 'list' # LENA: added this, or is variable_type for this case already set?
             self.value = [self._convert(item) for item in value]
         elif '-' in value: 
             self.variable_type = 'interval'
@@ -43,6 +47,7 @@ class SingleFilter(object):
             self.variable_type = 'list' 
             self.value = [self._convert(item) for item in value.split(',')] 
         else:
+            self.variable_type = 'single value' # LENA: added this, or is variable_type for this case already set?
             self.value = self._convert(value)
         
     #==========================================================================
@@ -181,14 +186,20 @@ class DataFilter(FilterBase):
 
     #==========================================================================
     def _initate_filter_items(self):
+        # LENA: flytta MONTH_LIST och DEPTH_INTERVAL till tolerance filter
+        # LENA: lägg till 'WATER_DISTRICTS' och 'WATER_BODIES', ändra till 'TYPE_AREAS'
         self.filter_list = ['DEPTH_INTERVAL', 
                             'TYPE_AREA', 
                             'MONTH_LIST', 
-                            'YEAR_INTERVAL', 
-                            'MONTH_LIST']
+                            'YEAR_INTERVAL']
             
     #==========================================================================
     def get_boolean(self, df): 
+        """
+        Get boolean tuple to use for filtering
+        """
+        # LENA: Ska inte detta ligga i FilterBase, om inte varför? 
+        # Behövs i tolerance filter också om vi flyttar month_list och depth_interval dit
         combined_boolean = ()
         for item in self.keys():
             boolean = self[item].get_boolean(df)
@@ -222,6 +233,7 @@ class ToleranceFilter(FilterBase):
 
     #==========================================================================
     def _initate_filter_items(self):
+        # LENA: lägg till MONTH_LIST och DEPTH_INTERVAL till tolerance filter
         self.filter_items = ['MIN_NR_VALUES', 'TIME_DELTA']  
         # Time delta in hours
         
