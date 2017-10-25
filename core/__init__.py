@@ -23,6 +23,8 @@ from .lists import StationList
 from .lists import ParameterList
 from .lists import AreaList
 
+from .mapping import ParameterMapping
+
 from .filters import DataFilter
 from .filters import ToleranceFilter
 
