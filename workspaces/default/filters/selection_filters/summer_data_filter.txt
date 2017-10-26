@@ -1,5 +1,0 @@
-variable	parameter	value	dtype	comment
-TYPE_AREA		22	str	#
-YEAR_INTERVAL	MYEAR	2000-2002	int	#
-MONTH_LIST	MONTH	6,7,8	int	#
-DEPTH_INTERVAL	DEPH	0-10	int	#

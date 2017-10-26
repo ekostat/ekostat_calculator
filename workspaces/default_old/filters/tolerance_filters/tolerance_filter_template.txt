@@ -1,0 +1,6 @@
+variable	parameter	value	dtype	comment
+MIN_NR_YEARS		3	int	#
+MIN_NR_VALUES		3	int	#
+TIME_DELTA		3	float	#In hours
+POS_RADIUS 		0.1	float	#In km
+DEPTH		5	float	#in meters

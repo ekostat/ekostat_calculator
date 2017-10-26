@@ -7,7 +7,307 @@ Created on Tue Jul 11 11:04:47 2017
 import os
 import codecs  
 import pandas as pd
+
+import core
+
+###############################################################################
+class SettingsFile(object):
+    """
+    Holds Settings file information. Reading and writing file. Basic file handling. 
+    """
+    #==========================================================================
+    def __init__(self, file_path):
+        self.file_path = file_path 
+        self.indicator = os.path.basename(file_path)[:-13]
+        
+        self.int_columns = [] 
+        self.str_columns = [] 
+        
+        self.interval_columns = []
+        self.list_columns = [] 
+        
+        self.filter_columns = [] 
+        self.ref_columns = [] 
+        self.tolerance_columns = []
+        
+        self.connected_to_filter_settings_object = False
+        self.connected_to_ref_settings_object = False
+        self.connected_to_tolerance_settings_object = False
+        
+        self._prefix_list = ['FILTER', 'REF', 'TOLERANCE'] 
+        self._suffix_list = ['INT', 'EKV']
+        
+        self._load_file()
     
+    
+    #==========================================================================
+    def _load_file(self):
+        self.df = pd.read_csv(self.file_path, sep='\t', dtype='str', encoding='cp1252') 
+        
+        # Save columns
+        self.columns_in_file = list(self.df.columns)
+        self.columns = []
+        for col in self.df.columns: 
+            col = col.upper() 
+            
+            parts = col.split('_') 
+            # First check if col has prefix or suffix 
+            if parts[0] not in self._prefix_list:
+                col = '_' + col 
+            if parts[-1] not in self._suffix_list:
+                col = col + '_'
+            
+            # Now split again and extracts part 
+            parts = col.split('_') 
+            variable = '_'.join(parts[1:-1])
+            prefix = parts[0]
+            suffix = parts[-1]
+            
+            #------------------------------------------------------------------
+            # Prefix 
+            if prefix == 'FILTER':
+                self.filter_columns.append(variable)
+            elif prefix == 'REF': 
+                self.ref_columns.append(variable) 
+            elif prefix == 'TOLERANCE': 
+                self.tolerance_columns.append(variable)
+            
+            #------------------------------------------------------------------
+            # Suffix
+            if suffix == 'STR': 
+                self.str_columns.append(variable)
+            elif suffix == 'INT': 
+                self.int_columns.append(variable) 
+            
+            #------------------------------------------------------------------
+            # Contains
+            if 'INTERVAL' in variable:
+                self.interval_columns.append(variable) 
+                
+            if 'LIST' in variable:
+                self.list_columns.append(variable)
+            
+            self.columns.append(variable)
+            
+        # Set new column names 
+        self.df.columns = self.columns 
+        
+        self.type_area_list = list(self.df['TYPE_AREA'])
+        
+        
+    #==========================================================================
+    def save_file(self, file_path=None):
+        if not file_path:
+            file_path = self.file_path
+        # Rename columns 
+        self.df.columns = self.columns_in_file 
+        
+        self.df.to_csv(file_path, sep='\t', encoding='cp1252', index=False) 
+        
+        self.df.columns = self.columns
+
+    #==========================================================================
+    def get_value(self, type_area=None, variable=None): 
+        if type_area not in self.type_area_list:
+            return False
+        variable = variable.upper() 
+        assert all([type_area, variable]), 'Must provide: type_area and variable' 
+        value = self.df.loc[self.df['TYPE_AREA']==type_area, variable.upper()].values[0]
+        if variable in self.list_columns: 
+            value = self._get_list_from_string(value, variable)
+        elif variable in self.interval_columns: 
+            value = self._get_interval_from_string(value, variable)
+        else:
+            value = self._convert(value)
+        return value
+    
+    #==========================================================================
+    def set_value(self, type_area=None, variable=None, value=None): 
+        if type_area not in self.type_area_list:
+            return False
+        if variable in self.list_columns: 
+            print('List column')
+            value = self._get_string_from_list(value, variable)
+        elif variable in self.interval_columns: 
+            print('Interval column')
+            value = self._get_string_from_interval(value, variable) 
+        
+        if value == False: 
+            print('Value could not be changed!')
+            return False
+        else:
+            print('Value to set for type_area "{}" and variable "{}": {}'.format(type_area, variable, value))
+            self.df.loc[self.df['TYPE_AREA']==type_area, variable] = value
+            return True
+        
+    #==========================================================================
+    def set_values(self, value_dict): 
+        """
+        Sets values for several type_areas and variables. 
+        Values to be set are given in dict like: 
+            value_dict[type_area][variable] = value 
+        """
+        all_ok = True
+        for type_area in value_dict.keys():
+            for variable in value_dict[type_area].keys(): 
+                value = value_dict[type_area][variable]
+                if not self.set_value(type_area, variable, value):
+                    all_ok = False
+        return all_ok
+    
+    #==========================================================================
+    def _get_list_from_string(self, value, variable): 
+        return_list = []
+        for item in value.split(';'):
+            item = self._convert(item.strip(), variable)
+            return_list.append(item)
+        return return_list
+    
+    #==========================================================================
+    def _get_interval_from_string(self, value, variable): 
+        return_list = []
+        for item in value.split('-'):
+            item = self._convert(item.strip(), variable)
+            return_list.append(item)
+        return return_list
+    
+    #==========================================================================
+    def _get_string_from_list(self, value, variable): 
+        item_list = []
+        for item in value:
+            if not self._valid_value(item, variable):
+                return False
+            else:
+                item_list.append(str(item))
+        return ';'.join(item_list)
+    
+    #==========================================================================
+    def _get_string_from_interval(self, value, variable): 
+        item_list = []
+        for item in value:
+            if not self._valid_value(item, variable):
+                return False
+            else:
+                item_list.append(str(item))
+        return '-'.join(item_list)
+
+    #==========================================================================
+    def _convert(self, value, variable):
+        if variable in self.int_columns: 
+            return int(value)
+        return value
+    
+    #==========================================================================
+    def _valid_value(self, value, variable): 
+        """
+        Checks the validity of a value based on the variable. 
+        """
+        if 'MONTH' in variable: 
+            if int(value) not in list(range(1,13)):
+                return False
+        return True
+    
+    #==========================================================================
+    def get_filter_boolean(self, df=None, type_area=None, parameter=None): 
+        """
+        Get boolean tuple to use for filtering
+        """
+        combined_boolean = ()
+        for variable in self.filter_columns: 
+            if variable in self.interval_columns:
+                boolean = self._get_boolean_from_interval(df=df, 
+                                                          type_area=type_area, 
+                                                          variable=variable) 
+            elif variable in self.list_columns:
+                boolean = self._get_boolean_from_list(df=df, 
+                                                      type_area=type_area, 
+                                                      variable=variable) 
+            else:
+                print('No boolean for "{}"'.format(variable))
+                continue
+            
+            if not type(boolean) == pd.Series:
+                continue            
+            if type(combined_boolean) == pd.Series:
+                combined_boolean = combined_boolean & boolean
+            else:
+                combined_boolean = boolean 
+        return combined_boolean
+    
+    #==========================================================================
+    def _get_boolean_from_interval(self, df=None, type_area=None, variable=None, parameter=None): 
+        from_value, to_value = self.get_value(type_area=type_area, 
+                                              variable=variable)
+        return (self.df[parameter] >= from_value) & (df[variable] <= to_value)
+
+    #==========================================================================
+    def _get_boolean_from_list(self, df=None, type_area=None, variable=None, parameter=None):
+        value_list = self.get_value(type_area=type_area, 
+                                    variable=variable)
+        return df[parameter].isin(value_list)
+    
+    
+###############################################################################
+class SettingsRef(object):
+    """
+    Handles ref settings. 
+    """
+    #==========================================================================
+    def __init__(self, settings_file_object): 
+        self.settings = settings_file_object 
+        self.settings.connected_to_ref_settings_object = True
+        
+        
+###############################################################################
+class SettingsFilter(object):
+    """
+    Handles filter settings. 
+    """
+    #==========================================================================
+    def __init__(self, settings_file_object): 
+        self.settings = settings_file_object 
+        self.settings.connected_to_filter_settings_object = True
+        
+    #==========================================================================
+    def get_boolean(self, df=None, type_area=None): 
+        """
+        Get boolean tuple to use for filtering
+        """
+        return self.settings.get_filter_boolean(df=df, 
+                                                type_area=type_area)
+        
+
+    #==========================================================================
+    def set_values(self, value_dict): 
+        """
+        Sets values for several type_areas and variables. 
+        Values to be set are given in dict like: 
+            value_dict[type_area][variable] = value 
+        """
+        self.settings.set_values(value_dict) 
+
+
+###############################################################################
+class SettingsTolerance(object):
+    """
+    Handles tolerance settings. 
+    """
+    #==========================================================================
+    def __init__(self, settings_file_object): 
+        self.settings = settings_file_object 
+        self.settings.connected_to_tolerance_settings_object = True
+
+
+
+
+
+
+
+
+
+
+
+        
 ###############################################################################
 class SingleFilter(object):
     """
@@ -246,13 +546,62 @@ if __name__ == '__main__':
     print('-'*nr_marks)
     print('')   
     
-    root_directory = os.path.dirname(os.path.abspath(__file__))[:-9]
+    root_directory = os.path.dirname(os.path.abspath(__file__))[:-5]
+    print('root directory is "{}"'.format(root_directory))
     
-    print(root_directory)
     
-    data_filter_file_path = root_directory + '/test_data/filters/data_filter_template.txt'
-    f = DataFilter('test', file_path=data_filter_file_path)
-    f.set_filter('YEAR_INTERVAL', '2000-2006')
+    
+    ###########################################################################
+    if 1:
+        # MW test for SetingsFile 
+        raw_data_file_path = root_directory + '/test_data/raw_data/data_BAS_2000-2009.txt'
+        first_data_filter_file_path = root_directory + '/resources/indicator_settings/first_data_filter.txt' 
+        
+        raw_data = core.DataHandler('raw')
+        raw_data.add_txt_file(raw_data_file_path, data_type='column') 
+        
+        # Use first filter 
+        print('{}\nApply data filters\n'.format('*'*nr_marks))
+        first_filter = core.DataFilter('First filter', file_path=first_data_filter_file_path)
+        filtered_data = raw_data.filter_data(first_filter) 
+        
+        file_path = root_directory + '/resources/indicator_settings/din_winter_settings.txt'
+        output_file_path = root_directory + '/resources/indicator_settings/din_winter_settings_save.txt'
+        s = SettingsFile(file_path) 
+        
+        month = s.get_value('2', 'MONTH_LIST')
+        s.set_value('2', 'MONTH_LIST', [1,2,3])
+        
+        set_value_dict = {'1n': {'DEPTH_INTERVAL': [0, 20], 
+                                 'MONTH_LIST': [3,4,5]}, 
+                          '3': {'MIN_NR_VALUES': 10}}
+        s.set_values(set_value_dict)
+        s.save_file(output_file_path)
+    
+        
+        sf = SettingsFilter(s)
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    ###########################################################################
+    if 0:
+        root_directory = os.path.dirname(os.path.abspath(__file__))[:-9]
+        
+        print(root_directory)
+        
+        data_filter_file_path = root_directory + '/test_data/filters/data_filter_template.txt'
+        f = DataFilter('test', file_path=data_filter_file_path)
+        f.set_filter('YEAR_INTERVAL', '2000-2006')
     
     
     print('-'*nr_marks)
