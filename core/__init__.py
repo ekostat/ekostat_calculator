@@ -24,6 +24,7 @@ from .lists import ParameterList
 from .lists import AreaList
 
 from .mapping import ParameterMapping
+from .mapping import AttributeDict
 
 from .filters import DataFilter
 from .filters import ToleranceFilter

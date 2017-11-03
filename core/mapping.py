@@ -26,7 +26,14 @@ class AttributeDict(dict):
             for value in array.values:
                 if not pd.isnull(value):
                     setattr(self, value, key)
-        
+                    
+    #==========================================================================
+    def _add_arrays_to_entries(self, **entries): 
+        for key, array in entries.items():
+            if len(array)==1:
+                array = array[0]
+            setattr(self, key, array)
+                    
     #==========================================================================
     def keys(self):
         return list(self.__dict__.keys())
