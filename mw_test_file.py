@@ -118,10 +118,10 @@ class EventHandler():
         ws_default = 'default'
         ws_name_1 = 'mw_test_workspace_1'
         self.workspaces[ws_default] = core.WorkSpace(name=ws_default, parent_directory=self.workspace_directory) 
-        self.workspaces[ws_name_1] = core.WorkSpace(name=ws_name_1, parent_directory=self.workspace_directory) 
-        
-        self.workspaces[ws_name_1].add_files_from_workspace(workspace_object=self.workspaces[ws_default], 
-                                                           overwrite=False)
+#        self.workspaces[ws_name_1] = core.WorkSpace(name=ws_name_1, parent_directory=self.workspace_directory) 
+#        
+#        self.workspaces[ws_name_1].add_files_from_workspace(workspace_object=self.workspaces[ws_default], 
+#                                                           overwrite=False)
         
     #==========================================================================
     def get_workspace(self, work_space_name): 
@@ -140,9 +140,16 @@ if __name__ == '__main__':
     workspace_name = 'mw_test_workspace_1' 
     indicator_name = 'din_winter'
     
+    # Create event handler
     e = EventHandler()
-    ws = e.get_workspace(workspace_name)
-
+    
+    
+    ws = e.get_workspace('default')
+    
+    
+    
+    
+    
     set_value_dict = {'1n': {'DEPTH_INTERVAL': [0, 20], 
                              'MONTH_LIST': [3,4,5]}, 
                       '3': {'MIN_NR_VALUES': 10}}

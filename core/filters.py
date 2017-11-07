@@ -8,8 +8,73 @@ import os
 import codecs  
 import pandas as pd
 
-import core
+#if current_path not in sys.path: 
+#    sys.path.append(os.path.dirname(os.path.realpath(__file__)))
 
+try:
+    import core
+except:
+    pass
+###############################################################################
+class DataFilter(object):
+    """
+    Holds information about data filter. 
+    Data filter is built up with several files listed in the given direktory. 
+    """
+    #==========================================================================
+    def __init__(self, filter_directory): 
+        self.filter_directory = filter_directory
+        self.filter_file_paths = {} 
+        self.list_filter = {} 
+        
+        self.load_filter_files()
+        
+    #==========================================================================
+    def get_list_filter(self, filter_name):
+        return self.list_filter.get(filter_name, False)
+        
+    #==========================================================================
+    def load_filter_files(self): 
+        self.filter_file_paths = {} 
+        self.list_filter = {} 
+        for file_name in [item for item in os.listdir(self.filter_directory) if item.endswith('.fil')]: 
+            print('-'*70)
+            file_path = os.path.join(self.filter_directory, file_name).replace('\\', '/') 
+            filter_name = file_name[:-4] 
+            print('load:', filter_name)
+            
+            # Save filter path
+            self.filter_file_paths[filter_name] = file_path
+            
+            # Load filters 
+            if filter_name == 'areas':
+                pass
+            elif filter_name.startswith('list_'):
+                with codecs.open(file_path, 'r', encoding='cp1252') as fid: 
+                    self.list_filter[filter_name] = [item.strip() for item in fid.readlines()]
+            print('Loaded list:', self.list_filter[filter_name])
+    #==========================================================================
+    def save_filter_files(self): 
+        for filter_name in self.list_filter.keys():
+            print('save:', filter_name)
+            if filter_name == 'areas':
+                pass
+            elif filter_name.startswith('list_'): 
+                with codecs.open(self.filter_file_paths[filter_name], 'w', encoding='cp1252') as fid: 
+                    for item in self.list_filter[filter_name]:
+                        fid.write(item) 
+                        fid.write('\n')
+                    
+    #==========================================================================
+    def set_list_filter(self, filter_name, filter_list, save_files=True): 
+        if filter_name not in self.list_filter.keys():
+            return False
+        filter_list = sorted(set([item.strip() for item in filter_list]))
+        self.list_filter[filter_name] = filter_list
+        if save_files: 
+            self.save_filter_files()
+                    
+        
 ###############################################################################
 class SettingsFile(object):
     """
@@ -18,7 +83,7 @@ class SettingsFile(object):
     #==========================================================================
     def __init__(self, file_path):
         self.file_path = file_path 
-        self.indicator = os.path.basename(file_path)[:-13]
+        self.indicator = os.path.basename(file_path)[:-4]
         
         self.int_columns = [] 
         self.str_columns = [] 
@@ -94,6 +159,13 @@ class SettingsFile(object):
         
         self.type_area_list = list(self.df['TYPE_AREA'])
         
+        
+    #==========================================================================
+    def change_path(self, new_file_path):
+        if not os.path.exists(new_file_path): 
+            print('Invalid file_path for file: {}\nOld file_path is {}'.format(new_file_path, self.file_path))
+            return False
+        self.file_path = new_file_path
         
     #==========================================================================
     def save_file(self, file_path=None):
@@ -269,7 +341,7 @@ class SettingsFilter(object):
         self.settings.connected_to_filter_settings_object = True
         
     #==========================================================================
-    def get_boolean(self, df=None, type_area=None): 
+    def get_column_data_boolean(self, df=None, type_area=None): 
         """
         Get boolean tuple to use for filtering
         """
@@ -285,6 +357,7 @@ class SettingsFilter(object):
             value_dict[type_area][variable] = value 
         """
         self.settings.set_values(value_dict) 
+        self.settings.save_file()
 
 
 ###############################################################################
@@ -299,17 +372,8 @@ class SettingsTolerance(object):
 
 
 
-
-
-
-
-
-
-
-
-        
 ###############################################################################
-class SingleFilter(object):
+class old_SingleFilter(object):
     """
     Holds information about and methods for a single filter. 
     """
@@ -466,7 +530,7 @@ class FilterBase(dict):
             print(key, item.value)
         
 ###############################################################################
-class DataFilter(FilterBase):
+class old_DataFilter(FilterBase):
     """
     Class to hold data filter settings.  
     Typically this information is read from a file. 
@@ -494,7 +558,7 @@ class DataFilter(FilterBase):
                             'YEAR_INTERVAL']
             
     #==========================================================================
-    def get_boolean(self, df): 
+    def get_column_data_boolean(self, df): 
         """
         Get boolean tuple to use for filtering
         """
@@ -514,7 +578,7 @@ class DataFilter(FilterBase):
         
         
 ###############################################################################
-class ToleranceFilter(FilterBase):
+class old_ToleranceFilter(FilterBase):
     """
     Class to hold tolerance filter settings.  
     Typically this information is read from a file. 
@@ -552,7 +616,7 @@ if __name__ == '__main__':
     
     
     ###########################################################################
-    if 1:
+    if 0:
         # MW test for SetingsFile 
         raw_data_file_path = root_directory + '/test_data/raw_data/data_BAS_2000-2009.txt'
         first_data_filter_file_path = root_directory + '/resources/indicator_settings/first_data_filter.txt' 
@@ -585,8 +649,12 @@ if __name__ == '__main__':
     
     
     
-    
-    
+    if 1:
+        filter_directory = 'D:/Utveckling/g_ekostat_calculator/ekostat_calculator_lena/workspaces/default/step_0/data_filters' 
+        d = DataFilter(filter_directory) 
+        y = d.get_list_filter('list_year') 
+        y.append('2017') 
+        d.set_list_filter('list_year', y)
     
     
     

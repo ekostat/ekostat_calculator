@@ -23,7 +23,7 @@ class ParameterBase(object):
     
     #==========================================================================
     def _initiate_attributes(self): 
-        self.data_holder = None # Dedicated for a DataHolder obejct. This is the source data. 
+        self.data_handler = None # Dedicated for a DataHandler obejct. This is the source data. 
         
         self.data = None        # Dedicated for a pandas dataframe. Hold data to work with. 
         
@@ -43,8 +43,9 @@ class ParameterBase(object):
         """
         Set data_handler to work with. 
         This is not the data that will be looked in by the get-methodes. 
-        To create this data 
-        Data might look different depending on the source. 
+        To create this data you need to filter data using the filter_data 
+        method or set data using the set_filtered_data. 
+        Consider using method set_filtered_data instead. 
         """
         self.data_handler = data_handler 
         self.data_handler_source = data_handler.source 
@@ -67,7 +68,9 @@ class ParameterBase(object):
     #==========================================================================
     def filter_data(self, data_filter_object):
         """
-        ParameterBase.filter_data
+        This method is generally not used. 
+        Filtered data shoudl instead be set from Indicator-level 
+        using the method set_filtered_data. 
         """
         self.data_filter_object = data_filter_object
 #        print('filter_data')
@@ -77,6 +80,12 @@ class ParameterBase(object):
         self.data = self.data_handler.filter_data(data_filter_object)
         # TODO: Check if all is ok 
         return True
+        
+    #==========================================================================
+    def set_filtered_data(self, data_handler_object): 
+        if not self.data_handler:
+            self.set_data_handler(data_handler_object)
+        self.data = data_handler_object
         
     #==========================================================================
     def get_data(self, **kwargs): 
