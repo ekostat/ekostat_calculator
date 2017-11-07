@@ -59,6 +59,7 @@ class RowDataHandler(object):
 #            self.add_df(df_pivot, 'col', add_columns=False)            
         else:
 #            print('111',self.df.keys())
+            print('-get_column_data_format', self.df.columns)
             self._set_column_table_from_pivot_table(sort=True)
             self._seperate_para_value_from_qflag(sep='__')
 #            print('222',self.df.keys())
@@ -102,7 +103,7 @@ class RowDataHandler(object):
 #        return
         # Simply get the length of one seperated string 
         print('#'*70) 
-        print('self.df.columns:', self.df.columns)
+        print('-_seperate_para_value_from_qflag', self.df.columns)
         print('self.df.columns:', sorted(self.df.columns))
         for para in self.para_list: 
             
@@ -128,6 +129,7 @@ class RowDataHandler(object):
 #        self.df = self.df.unstack()
 #        self.df = self.df.reset_index()
         self.df = df_col
+        print('-_set_column_table_from_pivot_table', self.df.columns)
         if sort:
             self.sort_dict_by_keys(sort_order=self.filter_parameters.sort_by_fields,
                                    ascending_list=[True]*len(self.filter_parameters.sort_by_fields), 
