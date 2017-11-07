@@ -9,6 +9,8 @@ from .parameters import ParameterTOTN
 
 from .parameters import CalculatedParameterDIN
 
+from .index_handler import IndexHandler
+
 from .indicators import IndicatorDIN
 from .indicators import IndicatorTOTN
 

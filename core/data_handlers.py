@@ -658,9 +658,9 @@ class DataHandler(object):
             if data_filter_object.parameter:
 #                print('df', df.columns)
 #                print('data_filter_object.parameter:', data_filter_object.parameter)
-#                for col in list(df.columns):
-#                    if col not in core.ParameterList().metadata_list + [data_filter_object.parameter]:
-#                        df = df.drop(col, 1)
+                for col in list(df.columns):
+                    if col not in core.ParameterList().metadata_list + [data_filter_object.parameter]:
+                        df = df.drop(col, 1)
             new_data_handler.add_df(df, 'column')
         if len(self.row_data):
             df = self._filter_row_data(self.row_data, data_filter_object)

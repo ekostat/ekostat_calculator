@@ -10,30 +10,12 @@ import shutil
 import sys
 import datetime
 import codecs
-#if current_path not in sys.path: 
-#    sys.path.append(os.path.dirname(os.path.realpath(__file__)))
-try:
-    import core
-except:
-    pass
 
-###############################################################################
-class IndexHandler(object):
-    """
-    Dummy class to be able to create the workflow. 
-    This should be replaced by script from Johannes.  
-    """
-    def __init__(self, data_handler_object):
-        self.data_handler_object = data_handler_object
-    
-###############################################################################
-class DataHandler(object):
-    """
-    Dummy class to be able to create the workflow. 
-    This should be replaced by script from Johannes.  
-    """
-    def __init__(self):
-        pass
+current_path = os.path.dirname(os.path.realpath(__file__))[:-4]
+sys.path.append(current_path)
+
+import core
+
 
 ###############################################################################
 class WorkStep(object):
@@ -60,7 +42,7 @@ class WorkStep(object):
     #==========================================================================
     def _load_attributes(self): 
         # Load attributes to be able to check what has been done
-        self.first_filter = None
+        self.data_filter = None
         self.data = None
         self.indicator_settings = {}
         
@@ -96,17 +78,32 @@ class WorkStep(object):
                 file_path = '/'.join([self.directory_paths['indicator_settings'], file_name]) 
                 indicator = file_name.split('.')[0]
                 self.indicator_settings_paths[indicator] = file_path
-                
-        # Data filters 
-        self.data_filters_paths = {} 
-        for file_name in os.listdir(self.directory_paths['data_filters']): 
-            if file_name.endswith('.fil'):
-                file_path = '/'.join([self.directory_paths['data_filters'], file_name]) 
-                data_filter = file_name.split('.')[0]
-                self.data_filters_paths[data_filter] = file_path 
-                
-        #TODO: What about data? 
         
+    #==========================================================================
+    def _check_folder_structure(self):
+        #TODO: make check of workspace folder structure
+        all_ok = True
+        for key, item in self.directory_paths.items():
+            if os.path.isdir(item):
+                continue
+            else:
+                all_ok = False
+                try:
+                    # MW: Does not work for me in Spyder
+                    raise('PathError')
+                except:
+                    pass
+                print('no folder set for: {}'.format(item)) 
+                
+        return all_ok
+        
+    #==========================================================================
+    def _save_ok(self):
+        if self.name == 'default':
+            print('Not allowed to save default workspace!')
+            return False
+        return True
+    
     #==========================================================================
     def add_files_from_workstep(self, step_object=None, overwrite=False):
         """
@@ -137,31 +134,6 @@ class WorkStep(object):
     
             
     #==========================================================================
-    def _check_folder_structure(self):
-        #TODO: make check of workspace folder structure
-        all_ok = True
-        for key, item in self.directory_paths.items():
-            if os.path.isdir(item):
-                continue
-            else:
-                all_ok = False
-                try:
-                    # MW: Does not work for me in Spyder
-                    raise('PathError')
-                except:
-                    pass
-                print('no folder set for: {}'.format(item)) 
-                
-        return all_ok
-        
-    #==========================================================================
-    def _save_ok(self):
-        if self.name == 'default':
-            print('Not allowed to save default workspace!')
-            return False
-        return True
-            
-    #==========================================================================
     def load_all_files(self): 
         self._create_file_paths()
         self.load_data_filters()
@@ -171,9 +143,7 @@ class WorkStep(object):
     #==========================================================================
     def load_data_filters(self):
         # Load all settings file in the current WorkSpace filter folder... 
-        self.data_filters = {} 
-        for data_filter, file_path in self.data_filters_paths.items():
-            self.data_filters[data_filter] = core.DataFilter(data_filter, file_path=file_path)
+        self.data_filter = core.DataFilter(self.directory_paths['data_filters'])
 
     #==========================================================================
     def load_indicator_files(self): 
@@ -205,6 +175,10 @@ class WorkStep(object):
             self.indicator_tolerance_settings[indicator] = core.SettingsTolerance(obj)
         
     #==========================================================================
+    def get_data_filter(self):
+        return self.data_filter
+    
+    #==========================================================================
     def get_indicator_settings_name_list(self):
         return sorted(self.indicator_settings.keys()) 
     
@@ -227,20 +201,13 @@ class WorkStep(object):
         
         
     #==========================================================================
-    def apply_first_filter(self):
-        # Use first filter 
-        print('{}\nApplying first filter\n'.format('*'*nr_marks))
-        
-        self.filtered_data = self.raw_data.filter_data(self.first_filter) 
-        
-    #==========================================================================
     def update_data_filter_settings(self, filter_settings=None):
         """
         filter_settings are dicts like: 
             filter_settings[type_area][variable] = value 
         """
         if filter_settings: 
-            filter_object.set_values(filter_settings)
+            filter_settings.set_values(filter_settings)
             
     #==========================================================================
     def update_indicator_filter_settings(self, indicator=None, filter_settings=None):
@@ -440,8 +407,8 @@ class WorkSpace(object):
         print('='*100)
         print('Initiating WorkSpace: {}'.format(self.workspace_directory)) 
         
-        self.data_handler = DataHandler() 
-        self.index_handler = IndexHandler(self.data_handler)
+        self.data_handler = core.DataHandler() 
+        self.index_handler = core.IndexHandler(self.data_handler)
         
         self._load_attributes() 
         

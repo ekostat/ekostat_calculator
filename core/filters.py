@@ -52,7 +52,8 @@ class DataFilter(object):
             elif filter_name.startswith('list_'):
                 with codecs.open(file_path, 'r', encoding='cp1252') as fid: 
                     self.list_filter[filter_name] = [item.strip() for item in fid.readlines()]
-            print('Loaded list:', self.list_filter[filter_name])
+            print('Loaded list:', self.list_filter[filter_name]) 
+            
     #==========================================================================
     def save_filter_files(self): 
         for filter_name in self.list_filter.keys():
@@ -578,7 +579,7 @@ class old_DataFilter(FilterBase):
         
         
 ###############################################################################
-class old_ToleranceFilter(FilterBase):
+class ToleranceFilter(FilterBase):
     """
     Class to hold tolerance filter settings.  
     Typically this information is read from a file. 

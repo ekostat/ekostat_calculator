@@ -27,5 +27,5 @@ class IndexHandler(object):
     - Utgår från föregående index.array för det specifika subsetet.. Indicator.index 
     - Pratar med DataHandler och dess DataFrame för att plocka fram index 
     """
-    def __init__(self):
-        pass
+    def __init__(self, data_handler_object):
+        self.data_handler_object = data_handler_object
