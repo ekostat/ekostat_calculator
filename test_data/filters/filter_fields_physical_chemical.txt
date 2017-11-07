@@ -1,18 +1,18 @@
-compulsory_fields	fields_index	fields_parameter	use_parameters	fields_value	fields_qflag	sort_by_fields	depth_key	visit_id_key
-STATN	MYEAR	PARAM	AMON	VALUE	QFLAG	SDATE	DEPH	SERNO
-SDATE	SHIPC		CPHL			SERNO		
-STIME	SERNO		DOXY_BTL			SHIPC		
-LATIT_DD	DEPH		DOXY_CTD			DEPH		
-LONGI_DD	PARAM		HSUL					
-WLTYP			NTRA					
-WATER_DISTRICT			NTRI					
-SEA_AREA_NAME			NTRZ					
-SEA_AREA_CODE			PHOS					
-WATER_TYPE_AREA			SALT_BTL					
-SEA_BASIN			SALT_CTD					
-MYEAR			SECCHI					
-SHIPC			TEMP_BTL					
-SERNO			TEMP_CTD					
+compulsory_fields	fields_index	sort_by_fields	use_parameters	visit_id_key	depth_key	parameter_key	value_key	qflag_key
+MYEAR	MYEAR	SDATE	TEMP_BTL	SERNO	DEPH	PARAM	VALUE	QFLAG
+SDATE	SHIPC	SERNO	TEMP_CTD					
+STIME	SERNO	SHIPC	SALT_BTL					
+SHIPC	DEPH	DEPH	SALT_CTD					
+SERNO	PARAM		DOXY_BTL					
+STATN			DOXY_CTD					
+LATIT_DD			HSUL					
+LONGI_DD			PHOS					
+SEA_AREA_CODE			NTRI					
+SEA_AREA_NAME			NTRA					
+SEA_BASIN			NTRZ					
+WATER_DISTRICT			AMON					
+WATER_TYPE_AREA			CPHL					
+WLTYP			SECCHI					
 DEPH								
 PARAM								
 VALUE								

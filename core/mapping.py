@@ -23,9 +23,10 @@ class AttributeDict(dict):
         """
         for key, array in entries.items():
             setattr(self, key, key)
+            setattr(self, key.lower(), key)
             for value in array.values:
                 if not pd.isnull(value):
-                    setattr(self, value, key)
+                    setattr(self, value.lower(), key)
                     
     #==========================================================================
     def _add_arrays_to_entries(self, **entries): 
@@ -44,11 +45,11 @@ class AttributeDict(dict):
         
     #==========================================================================
     def get_list(self, key_list):
-        return list(self.get(key.lower()) for key in key_list)
+        return list(self.get(key) for key in key_list)
         
     #==========================================================================
     def get_mapping_dict(self, key_list):
-        return dict(list((key, self.get(key.lower())) for key in key_list))
+        return dict(list((key, self.get(key)) for key in key_list))
         
     #==========================================================================
     def __getitem__(self, key):
@@ -101,7 +102,7 @@ if __name__ == '__main__':
     print('done')
     print('-'*50)
     
-    
-    
-    
+#    for k in p_map.keys():
+#        if k.startswith('sili'):
+#            print(k, len(k), p_map.get(k))
     

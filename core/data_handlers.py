@@ -43,7 +43,7 @@ class RowDataHandler(object):
         if self.one_parameter:
             self._one_parameter_df_adjustments()            
         else:
-            self._merge_df_string_columns([self.filter_parameters.fields_value, self.filter_parameters.fields_qflag], 
+            self._merge_df_string_columns([self.filter_parameters.value_key, self.filter_parameters.qflag_key], 
                                           new_key=u'TEMP_VALUE',
                                           sep='__')
             index_fields = self._get_index_fields(data_keys=self.df.keys())
@@ -70,13 +70,13 @@ class RowDataHandler(object):
         fp: filter_parameters 
         """
         exclude_params = list(self.filter_parameters.fields_index) + \
-                           [self.filter_parameters.fields_value] + \
-                             [self.filter_parameters.fields_qflag]
+                             [self.filter_parameters.value_key] + \
+                             [self.filter_parameters.qflag_key]
                              
         return list(p for p in self.filter_parameters.compulsory_fields \
                     if p not in exclude_params and p in data_keys) + \
                     self.filter_parameters.fields_index + extra_field
-                      
+                    
     #==========================================================================
     def _merge_df_string_columns(self, col_to_merge, new_key=u'new_key', sep=u'__'):
         """
@@ -89,10 +89,10 @@ class RowDataHandler(object):
         """ 
         fp: filter_parameters 
         """
-        map_dict = {self.filter_parameters.fields_value: self.filter_parameters.use_parameters, 
-                    self.filter_parameters.fields_qflag: 'Q_'+self.filter_parameters.use_parameters}
+        map_dict = {self.filter_parameters.value_key: self.filter_parameters.use_parameters, 
+                    self.filter_parameters.qflag_key: 'Q_'+self.filter_parameters.use_parameters}
         
-        self._delete_columns_from_df(columns=self.filter_parameters.fields_parameter)
+        self._delete_columns_from_df(columns=self.filter_parameters.parameter_key)
         self._rename_columns_of_DataFrame(map_dict)
         
     #==========================================================================
@@ -136,48 +136,67 @@ class RowDataHandler(object):
     
     #==========================================================================
 
-
 """
 #==============================================================================
 #==============================================================================
 """
-#class DataFrameHandler(ColumnDataHandler, RowDataHandler):
-class DataFrameHandler(object):
+#class DataFrameHandler(object):
+class DataFrameHandler(ColumnDataHandler, RowDataHandler):
     """
     Holds functions to handle DataFrame operations
     """
     def __init__(self):
         super().__init__()
-
-    #==========================================================================
-    def _apply_field_filter(self):
-        """
-        """
-        #TODO seperate method into multiple methods
-        self._select_columns_from_df() # use only default fields
-        self._organize_data_format()
-
+                            
     #==========================================================================
     def add_column_df(self, add_columns=False):
         """
         Adds data to the internal data structure. 
         """
         # Add columns (time etc.)
-#        if add_columns:
-#            self._add_columns(pd_df)
+        if add_columns:
+            self._add_columns()
         
-        self.column_data = self.column_data.append(self.df, ignore_index=True)
+        self.column_data[self.source] = self.df.copy(deep=True) # One DataFrame per source
+#        self.column_data = self.column_data.append(self.df, ignore_index=True).fillna('')
 
+    #==========================================================================
+    def _add_columns(self): 
+        self.df['time'] = pd.Series(pd.to_datetime(self.df['SDATE'] + self.df['STIME'], format='%Y-%m-%d%H:%M'))
+
+#        df['latit_dec_deg'] = df['LATIT'].apply(utils.decmin_to_decdeg)
+#        df['longi_dec_deg'] = df['LONGI'].apply(utils.decmin_to_decdeg)
+        
+        if not 'LATIT_DD' in self.df and 'LATIT_DM' in self.df:
+            self.df['LATIT_DD'] = self.df['LATIT_DM'].apply(utils.decmin_to_decdeg)
+        if not 'LONGI_DD' in self.df and 'LONGI_DM' in self.df:
+            self.df['LONGI_DD'] = self.df['LONGI_DM'].apply(utils.decmin_to_decdeg)
+        
+        if 'LATIT_DD' in self.df and 'LONGI_DD' in self.df:
+            self.df['profile_key'] = self.df['time'].apply(str) + \
+                                ' ' + \
+                                self.df['LATIT_DD'].apply(str) + \
+                                ' ' + \
+                                self.df['LONGI_DD'].apply(str)
+                            
     #==========================================================================
     def add_row_df(self, add_columns=False):
         """
         Adds data to the internal data structure. 
         """
         # Add columns (time etc.)
-#        if add_columns:
-#            self._add_columns(pd_df)
+        if add_columns:
+            self._add_columns()
             
-        self.row_data = self.row_data.append(self.df, ignore_index=True).fillna('')
+        self.row_data[self.source] = self.df.copy(deep=True)
+#        self.row_data = self.row_data.append(self.df, ignore_index=True).fillna('')
+
+    #==========================================================================
+    def _apply_field_filter(self):
+        """
+        """
+        self._select_columns_from_df() # use only default fields
+        self._organize_data_format()
         
     #==========================================================================
     def _check_nr_of_parameters(self):
@@ -206,7 +225,43 @@ class DataFrameHandler(object):
         """
         """
         self.df = self.df.drop(columns, axis=1, errors='ignore') # inplace=True ?
-         
+        
+    #==========================================================================
+    def filter_data(self, data_filter_object, filter_id=''):
+        """
+        Filters data according to data_filter_object.
+        data_filter_object is a core.filters.DataFilter-object.
+        Returns a DataHandler object with the filtered data.
+        """
+        new_data_handler = DataHandler(self.source + '_filtered_%s' % filter_id)
+        if len(self.column_data):
+#            print( 'data_filter_object', data_filter_object)
+            df = self._filter_column_data(self.column_data, data_filter_object)
+            if data_filter_object.parameter:
+#                print('df', df.columns)
+#                print('data_filter_object.parameter:', data_filter_object.parameter)
+                for col in list(df.columns):
+                    if col not in core.ParameterList().metadata_list + [data_filter_object.parameter]:
+                        df = df.drop(col, 1)
+            new_data_handler.add_df(df, 'column')
+        if len(self.row_data):
+            df = self._filter_row_data(self.row_data, data_filter_object)
+            new_data_handler.add_df(df, 'row')
+        
+        return new_data_handler
+    
+    #==========================================================================
+    def _filter_column_data(self, df, data_filter_object): 
+        """
+        Filters column file data and returns resulting dataframe
+        """
+        boolean = data_filter_object.get_boolean(df)
+        
+        if not len(boolean):
+            return df
+        return df.loc[df.index[boolean], :]
+
+
     #==========================================================================
     def get_dict(self, data, drop_nans=True):
         """
@@ -216,12 +271,31 @@ class DataFrameHandler(object):
             return { key : list(data.get(key).dropna(axis=0)) for key in data}
         else:
             return { key : list(data.get(key)) for key in data}
-            
+        
+    #==========================================================================
+    def get_index_for_profile_key(self, profile_key):
+        """
+        Method to get index for a unique profile key. 
+        profile_key is "time LATIT LONGI"
+        """
+        return self.column_data.index[self.column_data['profile_key'] == profile_key]  
+    
+    #==========================================================================
+    def get_profile_key_list(self, year=None):
+        """
+        Returns a list och unique combinations of pos and time. 
+        """
+        if year:
+            return sorted(set(self.column_data.loc[self.column_data['MYEAR'] == year, 'profile_key'])) 
+        else:
+            return sorted(set(self.column_data['profile_key']))   
+       
     #==========================================================================
     def _handle_column_data(self):
         """
         """
 #        cdh = ColumnDataHandler(DataFrameHandler)
+        self.sort_columns_of_df()
         self.add_column_df()      
         
     #==========================================================================
@@ -243,6 +317,7 @@ class DataFrameHandler(object):
         self.filter_row_data()
         self.get_column_data_format()
         
+        self.sort_columns_of_df()
         self.add_column_df()
 #        self.add_row_df()
     
@@ -261,7 +336,7 @@ class DataFrameHandler(object):
     def _map_parameter_list(self):
         """
         """
-        p_map = self.parameter_mapping.get_parameter_mapping(self.df.get(self.filter_parameters.fields_parameter).unique())
+        p_map = self.parameter_mapping.get_parameter_mapping(self.df.get(self.filter_parameters.parameter_key).unique())
         return p_map, list(p for p in p_map if p_map[p] in self.filter_parameters.use_parameters)
 
     #==========================================================================
@@ -288,7 +363,7 @@ class DataFrameHandler(object):
     def _recognize_format(self):
         """
         """
-        if self.filter_parameters.fields_parameter in self.df: #'PARAM' in data header
+        if self.filter_parameters.parameter_key in self.df: #'PARAM' in data header
             self.raw_data_format = 'row'
         else:
             self.raw_data_format = 'column'
@@ -324,9 +399,17 @@ class DataFrameHandler(object):
     def _select_columns_from_df(self):
         """
         """
-        self._delete_columns_from_df(columns=list(x for x in \
-                                     self.df.keys() if x not in self.filter_parameters.compulsory_fields))
-    
+        if self.raw_data_format == 'row':
+            self._delete_columns_from_df(columns=list(x for x in \
+                                         self.df.keys() if x not in self.filter_parameters.compulsory_fields))
+            
+        elif self.raw_data_format == 'column':
+            self._delete_columns_from_df(columns=list(x for x in \
+                                         self.df.keys() if x not in \
+                                         self.filter_parameters.compulsory_fields + \
+                                         self.filter_parameters.use_parameters + \
+                                         [u'Q_'+p for p in self.filter_parameters.use_parameters]))            
+                
     #==========================================================================
     def _select_parameters(self):
         """
@@ -334,15 +417,14 @@ class DataFrameHandler(object):
         self._check_nr_of_parameters()
         p_map, p_list = self._map_parameter_list()
         self.para_list = self.parameter_mapping.map_parameter_list(p_list)
-        parameter_head = self.filter_parameters.fields_parameter
         
         for para in p_list:
-            self.df[parameter_head] = np.where(self.df[parameter_head]==para, 
-                                               p_map[para], 
-                                               self.df[parameter_head])
+            self.df[self.filter_parameters.parameter_key] = np.where(self.df[self.filter_parameters.parameter_key]==para, 
+                                                                     p_map[para], 
+                                                                     self.df[self.filter_parameters.parameter_key])
             
 #        indices = np.where( self.df[parameter_head] == params_to_use[:,None] )[0]
-        indices = np.where( self.df[self.filter_parameters.fields_parameter].isin(self.para_list) )[0]
+        indices = np.where( self.df[self.filter_parameters.parameter_key].isin(self.para_list) )[0]
         self.df = self.df.iloc[indices,:]
         
     #==========================================================================
@@ -373,7 +455,25 @@ class DataFrameHandler(object):
         if drop_index:
             print(u'Reseting and Droping INDEX')
             self.df = self.df.reset_index().drop([u'index'], axis=1)
-    
+        
+    #==========================================================================
+    def sort_columns_of_df(self):
+        
+        sort_order = [key for key in self.filter_parameters.compulsory_fields if key in self.df]
+#        print(self.filter_parameters.compulsory_fields)
+#        print(sort_order)
+#        print(self.df.keys())
+        for para in self.filter_parameters.use_parameters:
+            if para in self.df:
+                sort_order.append(para)
+                if 'Q_'+para in self.df:
+                    sort_order.append('Q_'+para)
+                    
+#        print(sort_order)
+        self.df = self.df[sort_order]
+#        self.df = self.df.ix[:, sort_order]
+#        self.df.reindex_axis(sort_order, axis=1) # DOES NOT WORK PROPERLY
+                           
     #==========================================================================
     
     
@@ -407,8 +507,8 @@ class DataHandlerPhysicalChemical(DataFrameHandler):
         self.read_filter_file(file_path=filter_path)
         self.parameter_mapping = parameter_mapping
         
-        self.column_data = pd.DataFrame()
-        self.row_data = pd.DataFrame()
+        self.column_data = {} #pd.DataFrame()
+        self.row_data = {} #pd.DataFrame()
         
     #==========================================================================
         
@@ -427,8 +527,8 @@ class DataHandlerZoobenthos(DataFrameHandler):
         self.read_filter_file(file_path=filter_path)
         self.parameter_mapping = parameter_mapping
         
-        self.column_data = pd.DataFrame()
-        self.row_data = pd.DataFrame()
+        self.column_data = {} #pd.DataFrame()
+        self.row_data = {} #pd.DataFrame()
         
     #==========================================================================    
         
@@ -447,8 +547,8 @@ class DataHandlerChlorophyll(DataFrameHandler):
         self.read_filter_file(file_path=filter_path)
         self.parameter_mapping = parameter_mapping
         
-        self.column_data = pd.DataFrame()
-        self.row_data = pd.DataFrame()
+        self.column_data = {} #pd.DataFrame()
+        self.row_data = {} #pd.DataFrame()
         
     #==========================================================================   
 
@@ -467,8 +567,8 @@ class DataHandlerPhytoplankton(DataFrameHandler):
         self.read_filter_file(file_path=filter_path)
         self.parameter_mapping = parameter_mapping
         
-        self.column_data = pd.DataFrame()
-        self.row_data = pd.DataFrame()
+        self.column_data = {} #pd.DataFrame()
+        self.row_data = {} #pd.DataFrame()
         
     #==========================================================================           
         
@@ -514,7 +614,8 @@ class DataHandler(object):
         
         self.zoobenthos = DataHandlerZoobenthos(filter_path=path_fields_filter+u'filter_fields_zoobenthos.txt',
                                                 parameter_mapping=self.parameter_mapping)
-    
+        
+        
     
     #==========================================================================
 #    def add_txt_file(self, file_path, data_type): 
@@ -557,9 +658,9 @@ class DataHandler(object):
             if data_filter_object.parameter:
 #                print('df', df.columns)
 #                print('data_filter_object.parameter:', data_filter_object.parameter)
-                for col in list(df.columns):
-                    if col not in core.ParameterList().metadata_list + [data_filter_object.parameter]:
-                        df = df.drop(col, 1)
+#                for col in list(df.columns):
+#                    if col not in core.ParameterList().metadata_list + [data_filter_object.parameter]:
+#                        df = df.drop(col, 1)
             new_data_handler.add_df(df, 'column')
         if len(self.row_data):
             df = self._filter_row_data(self.row_data, data_filter_object)
@@ -580,47 +681,30 @@ class DataHandler(object):
         return df.loc[df.index[boolean], :]
 
     #==========================================================================
-    def _filter_row_data(self, data_filter_object=None, fp=None, map_object=None):
+    def merge_all_data(self, save_to_txt=False):
         """
-        fp: filter_parameters
+        - Do we need to sort all_data ?
+        - Merge data from different datatypes for the same visit ?
         """
-        self.row_data = self.select_columns_from_df(self.row_data, 
-                                                    columns=fp['compulsory_fields']) # use only default fields
+        self.all_data = pd.DataFrame()
         
-        self.row_data = self.select_parameters(self.row_data,
-                                               fp['fields_parameter'][0],
-                                               fp['use_parameters'],
-                                               map_object)
-        if self.one_parameter:
-            self.row_data = self._one_parameter_df_adjustments(self.row_data, fp)            
-        else:
-            self.row_data['TEMP_VALUE'] = self.merge_df_string_columns(self.row_data, 
-                                                                       fp['fields_value'] + fp['fields_qflag'], 
-                                                                       sep='__')
-            index_fields = self.get_index_fields(fp=fp, 
-                                                 data_keys=self.row_data.keys())
+        # All datatypes that might include data for setting ecological status
+        all_datatypes = [u'chlorophyll',
+                         u'physical_chemical',
+                         u'phytoplankton',
+                         u'zoobenthos']
+        
+        for dtype in all_datatypes:
+            if dtype in dir(self):
+                # Appends dataframes from each datatype into one dataframe
+                for source in self.__getattribute__(dtype).column_data:
+                    # Each datatype might have multiple sources..
+                    # .column_data is a dict
+                    self.all_data = self.all_data.append(self.__getattribute__(dtype).column_data[source], 
+                                                         ignore_index=True)
+        if save_to_txt:
+            self.save_data(df=self.all_data, file_name='all_data.txt')
             
-            self.row_data = self.set_pivot_table(self.row_data, 
-                                                 'TEMP_VALUE', 
-                                                 index_fields)
-
-    #==========================================================================
-    def get_column_data_format(self, df_pivot, fp):
-        """
-        fp: filter_parameters
-        """
-        if not self.one_parameter:
-            df_col = self.set_column_table_from_pivot_table(df_pivot, 
-                                                            fp, 
-                                                            sort=True)
-            
-            df_col = self.seperate_para_value_from_qflag(df_col, 
-                                                         self.para_list, 
-                                                         sep='__')
-            self.add_df(df_col, 'col', add_columns=False)
-        else:
-            self.add_df(df_pivot, 'col', add_columns=False)
-    
     #==========================================================================
     def load_data(self, directory):
         try:
@@ -628,7 +712,6 @@ class DataHandler(object):
             self.column_data = pd.read_csv(column_file_path, sep='\t', encoding='cp1252')
         except:
             pass
-        
         try:
             row_file_path = directory + '/row_data.txt'
             self.row_data = pd.read_csv(row_file_path, sep='\t', encoding='cp1252')
@@ -643,12 +726,25 @@ class DataHandler(object):
         self.parameter_mapping.load_mapping_settings(file_path=file_path)
 
     #==========================================================================
-    def save_data(self, directory):
-        column_file_path = directory + '/column_data.txt'
-        self.column_data.to_csv(column_file_path, sep='\t', encoding='cp1252', index=False)
+    def save_data(self, df=None, directory=u'', file_name=u''):
         
-        row_file_path = directory + '/row_data.txt'
-        self.row_data.to_csv(row_file_path, sep='\t', encoding='cp1252', index=False)
+        if not directory:
+            directory = os.path.dirname(os.path.realpath(__file__))[:-4] + 'test_data\\test_exports\\'
+            
+        if not directory.endswith(('/','\\')):
+            directory = directory + '/'
+        
+        file_path = directory + file_name
+        
+        print(u'Saving data to:',file_path)
+        
+        df.to_csv(file_path, sep='\t', encoding='cp1252', index=True)
+        
+#        column_file_path = directory + '/column_data.txt'
+#        self.column_data.to_csv(column_file_path, sep='\t', encoding='cp1252', index=False)
+#        
+#        row_file_path = directory + '/row_data.txt'
+#        self.row_data.to_csv(row_file_path, sep='\t', encoding='cp1252', index=False)
 
 
 if __name__ == '__main__':

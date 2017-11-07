@@ -29,7 +29,8 @@ filter_parameters_file_fysche = u'filter_fields_physical_chemical.txt'
 
 # Row data
 fid_zooben = u'zoobenthos_2016_row_format_2.txt'
-fid_fysche = u'BOS_HAL_2015-2016_row_format_2.txt'
+fid_phyche = u'BOS_HAL_2015-2016_row_format_2.txt'
+fid_phyche_col = u'BOS_BAS_2016-2017_column_format.txt'
 
 # Parameter mapping
 parameter_mapping = core.ParameterMapping()
@@ -50,10 +51,11 @@ parameter_mapping.load_mapping_settings(file_path=mapping_directory)
 #raw_data.get_column_data_format(raw_data.row_data, filter_parameters)
 #raw_data.save_data(export_directory)
 
-
 ## Row data handling new version
 raw_data = core.DataHandler()
-raw_data.physical_chemical.load_source(file_path=raw_data_file_path + fid_fysche,
+raw_data.physical_chemical.load_source(file_path=raw_data_file_path + fid_phyche,
+                                       raw_data_copy=True)
+raw_data.physical_chemical.load_source(file_path=raw_data_file_path + fid_phyche_col,
                                        raw_data_copy=True)
 raw_data.physical_chemical.save_data_as_txt(directory=u'', prefix=u'Column_format')
 
@@ -64,6 +66,7 @@ raw_data.physical_chemical.save_data_as_txt(directory=u'', prefix=u'Column_forma
 raw_data.zoobenthos.load_source(file_path=raw_data_file_path + fid_zooben,
                                 raw_data_copy=True)
 raw_data.zoobenthos.save_data_as_txt(directory=u'', prefix=u'Column_format')
+raw_data.merge_all_data(save_to_txt=True)
 
 """
 #==============================================================================
