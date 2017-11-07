@@ -93,7 +93,7 @@ class IndicatorBase(object):
             attr = getattr(self, parameter.lower())
             all_ok = attr.filter_data(data_filter_object)
             return all_ok
-        if data_filter_object:
+        elif data_filter_object:
             for key in self.parameter_list:
 #                print('key', key)
                 if hasattr(self, key.lower()):
