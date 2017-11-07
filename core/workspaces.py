@@ -394,21 +394,24 @@ class WorkSpace(object):
     Class to load workspace
     Holds step_0 and subsets. 
     """
-    def __init__(self, name=None, parent_directory=None, nr_subsets_allowed=4):
+    def __init__(self, 
+                 name=None, 
+                 parent_directory=None, 
+                 resource_directory=None, 
+                 nr_subsets_allowed=4): 
+        
         assert all([name, parent_directory])
         assert nr_subsets_allowed
         
         self.name = name 
         self.parent_directory = parent_directory.replace('\\', '/')
+        self.resource_directory = resource_directory.replace('\\', '/')
         self.workspace_directory = '/'.join([self.parent_directory, self.name]) 
         self.nr_subsets_allowed = nr_subsets_allowed
         
         print('')
         print('='*100)
         print('Initiating WorkSpace: {}'.format(self.workspace_directory)) 
-        
-        self.data_handler = core.DataHandler() 
-        self.index_handler = core.IndexHandler(self.data_handler)
         
         self._load_attributes() 
         
@@ -456,7 +459,13 @@ class WorkSpace(object):
 #        if not os.path.exists(self.directory_path_step_0):
 #            os.makedirs(self.directory_path_step_0) 
         self.step_0 = WorkStep(name='step_0', 
-                               parent_directory=self.workspace_directory)
+                               parent_directory=self.workspace_directory) 
+        
+        # Set data and index handler
+        self.data_handler = core.DataHandler(input_data_directory=self.directory_path_input_data, 
+                                             resource_directory=self.resource_directory) 
+        
+        self.index_handler = core.IndexHandler(self.data_handler)
         
     #==========================================================================
     def add_files_from_workspace(self, workspace_object=None, overwrite=False):
@@ -477,7 +486,17 @@ class WorkSpace(object):
             self.subset_dict[subset].add_files_from_subset(subset_object=workspace_object.subset_dict[subset], 
                                                            overwrite=overwrite)
             
-#        self._setup_workspace()
+        # Data         
+        for from_file_path in workspace_object.get_all_file_paths_in_input_data():
+            to_file_path = from_file_path.replace(workspace_object.workspace_directory, self.workspace_directory) 
+            if os.path.exists(to_file_path) and not overwrite:
+                continue
+            to_directory = os.path.dirname(to_file_path)
+            if not os.path.exists(to_directory):
+                # If directory has been added in later versions of the ekostat calculator
+                os.makedirs(to_directory) 
+            # Copy file
+            shutil.copy(from_file_path, to_file_path)
         
     #==========================================================================
     def add_subset(self, sub=None, alias=False): 
@@ -528,6 +547,14 @@ class WorkSpace(object):
     def get_all_file_paths_in_workspace(self):
         file_list = []
         for root, dirs, files in os.walk(self.workspace_directory): 
+                for f in files:
+                    file_list.append('/'.join([root, f]).replace('\\', '/'))
+        return sorted(file_list)
+    
+    #==========================================================================
+    def get_all_file_paths_in_input_data(self):
+        file_list = []
+        for root, dirs, files in os.walk(self.directory_path_input_data): 
                 for f in files:
                     file_list.append('/'.join([root, f]).replace('\\', '/'))
         return sorted(file_list)
@@ -598,6 +625,40 @@ class WorkSpace(object):
                 all_ok = False
         return all_ok 
     
+    #==========================================================================
+    def load_all_data(self): 
+        """ 
+        Loads all data from the input_data-directory belonging to the workspace. 
+        """
+        # TODO: Make this part dynamic 
+        raw_data_file_path = self.directory_path_input_data + '/raw_data/'
+        output_directory = self.directory_path_input_data + '/exports/' 
+        """
+        # The input_data directory is given to DataHandler during initation. 
+        # If no directory is given use the default directory! 
+        # This has to be done in physical_chemical, zoobenthos etc. 
+        """
+        # Row data
+        fid_zooben = u'zoobenthos_2016_row_format_2.txt'
+        fid_phyche = u'BOS_HAL_2015-2016_row_format_2.txt'
+        fid_phyche_col = u'BOS_BAS_2016-2017_column_format.txt' 
+        
+        self.data_handler.physical_chemical.load_source(file_path=raw_data_file_path + fid_phyche,
+                                       raw_data_copy=True)
+        self.data_handler.physical_chemical.load_source(file_path=raw_data_file_path + fid_phyche_col,
+                                               raw_data_copy=True)
+        self.data_handler.physical_chemical.save_data_as_txt(directory=output_directory, prefix=u'Column_format')
+        
+        #raw_data.physical_chemical.raw_data_format
+        #raw_data.physical_chemical.row_data.keys()
+        #raw_data.physical_chemical.filter_parameters.use_parameters
+        
+        self.data_handler.zoobenthos.load_source(file_path=raw_data_file_path + fid_zooben,
+                                        raw_data_copy=True)
+        self.data_handler.zoobenthos.save_data_as_txt(directory=output_directory, prefix=u'Column_format')
+#        self.data_handler.merge_all_data(save_to_txt=True)
+
+        
     #==========================================================================
     def set_filter_0(self, filter_dict): 
         """

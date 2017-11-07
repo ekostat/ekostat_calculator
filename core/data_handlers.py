@@ -99,8 +99,14 @@ class RowDataHandler(object):
     def _seperate_para_value_from_qflag(self, sep=''):
         """
         """
+#        return
         # Simply get the length of one seperated string 
+        print('#'*70) 
+        print('self.df.columns:', self.df.columns)
+        print('self.df.columns:', sorted(self.df.columns))
         for para in self.para_list: 
+            
+            print('para', para)
             if np.any(self.df[para]):
                 length = len(self.df[para][self.df.index[self.df[para].notnull()][0]].split(sep))
                 break
@@ -386,7 +392,8 @@ class DataFrameHandler(ColumnDataHandler, RowDataHandler):
         """
         
         if not directory:
-            directory = os.path.dirname(os.path.realpath(__file__))[:-4] + 'test_data\\test_exports\\'
+            return False
+#            directory = os.path.dirname(os.path.realpath(__file__))[:-4] + 'test_data\\test_exports\\'
             
         if not directory.endswith(('/','\\')):
             directory = directory + '/'
@@ -582,16 +589,29 @@ class DataHandler(object):
     """
 
     #TODO check dubblett 
-    def __init__(self):
+    def __init__(self, 
+                 input_data_directory=None, 
+                 resource_directory=None): 
         
+        assert all([input_data_directory, resource_directory])
         super().__init__()
 #        self.source = source
 #        self.column_data = pd.DataFrame()
-#        self.row_data = pd.DataFrame()
-
-
-        path_parameter_mapping = current_path + u'/test_data/mappings/mapping_parameter_dynamic_extended.txt'
-        path_fields_filter = current_path + u'/test_data/filters/'        
+#        self.row_data = pd.DataFrame() 
+        
+        self.input_data_directory = input_data_directory
+        
+        # TODO: Maybe WorkSpace should specify these too
+        self.raw_data_directory = self.input_data_directory + '/raw_data'
+        self.export_directory = self.input_data_directory + '/exports'
+        
+        
+        self.resource_directory = resource_directory 
+        path_parameter_mapping = self.resource_directory + '/mappings/mapping_parameter_dynamic_extended.txt'
+        path_fields_filter = self.resource_directory + '/filters/'
+    
+#        path_parameter_mapping = current_path + u'/test_data/mappings/mapping_parameter_dynamic_extended.txt'
+#        path_fields_filter = current_path + u'/test_data/filters/'        
         
         
         self._load_field_mapping(file_path=path_parameter_mapping)
@@ -604,7 +624,7 @@ class DataHandler(object):
 #                                                  parameter_mapping=self.parameter_mapping)
         
         
-        self.physical_chemical = DataHandlerPhysicalChemical(filter_path=path_fields_filter+u'filter_fields_physical_chemical.txt',
+        self.physical_chemical = DataHandlerPhysicalChemical(filter_path=path_fields_filter+'filter_fields_physical_chemical.txt',
                                                              parameter_mapping=self.parameter_mapping)
         
         
@@ -612,7 +632,7 @@ class DataHandler(object):
 #                                                       parameter_mapping=self.parameter_mapping)
         
         
-        self.zoobenthos = DataHandlerZoobenthos(filter_path=path_fields_filter+u'filter_fields_zoobenthos.txt',
+        self.zoobenthos = DataHandlerZoobenthos(filter_path=path_fields_filter+'filter_fields_zoobenthos.txt',
                                                 parameter_mapping=self.parameter_mapping)
         
         
@@ -702,8 +722,10 @@ class DataHandler(object):
                     # .column_data is a dict
                     self.all_data = self.all_data.append(self.__getattribute__(dtype).column_data[source], 
                                                          ignore_index=True)
+                    
         if save_to_txt:
-            self.save_data(df=self.all_data, file_name='all_data.txt')
+            self.save_data(df=self.all_data, 
+                           file_name='all_data.txt')
             
     #==========================================================================
     def load_data(self, directory):
@@ -728,8 +750,9 @@ class DataHandler(object):
     #==========================================================================
     def save_data(self, df=None, directory=u'', file_name=u''):
         
-        if not directory:
-            directory = os.path.dirname(os.path.realpath(__file__))[:-4] + 'test_data\\test_exports\\'
+        if not directory: 
+            directory = self.export_directory
+#            directory = os.path.dirname(os.path.realpath(__file__))[:-4] + 'test_data\\test_exports\\'
             
         if not directory.endswith(('/','\\')):
             directory = directory + '/'

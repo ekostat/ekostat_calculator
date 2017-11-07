@@ -38,10 +38,10 @@ class DataFilter(object):
         self.filter_file_paths = {} 
         self.list_filter = {} 
         for file_name in [item for item in os.listdir(self.filter_directory) if item.endswith('.fil')]: 
-            print('-'*70)
+#            print('-'*70)
             file_path = os.path.join(self.filter_directory, file_name).replace('\\', '/') 
             filter_name = file_name[:-4] 
-            print('load:', filter_name)
+#            print('load:', filter_name)
             
             # Save filter path
             self.filter_file_paths[filter_name] = file_path
@@ -52,7 +52,7 @@ class DataFilter(object):
             elif filter_name.startswith('list_'):
                 with codecs.open(file_path, 'r', encoding='cp1252') as fid: 
                     self.list_filter[filter_name] = [item.strip() for item in fid.readlines()]
-            print('Loaded list:', self.list_filter[filter_name]) 
+#            print('Loaded list:', self.list_filter[filter_name]) 
             
     #==========================================================================
     def save_filter_files(self): 
