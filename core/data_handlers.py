@@ -59,7 +59,6 @@ class RowDataHandler(object):
 #            self.add_df(df_pivot, 'col', add_columns=False)            
         else:
 #            print('111',self.df.keys())
-            print('-get_column_data_format', self.df.columns)
             self._set_column_table_from_pivot_table(sort=True)
             self._seperate_para_value_from_qflag(sep='__')
 #            print('222',self.df.keys())
@@ -102,12 +101,12 @@ class RowDataHandler(object):
         """
 #        return
         # Simply get the length of one seperated string 
-        print('#'*70) 
-        print('-_seperate_para_value_from_qflag', self.df.columns)
-        print('self.df.columns:', sorted(self.df.columns))
+#        print('#'*70) 
+#        print('-_seperate_para_value_from_qflag', self.df.columns)
+#        print('self.df.columns:', sorted(self.df.columns))
         for para in self.para_list: 
             
-            print('para', para)
+#            print('para', para)
             if np.any(self.df[para]):
                 length = len(self.df[para][self.df.index[self.df[para].notnull()][0]].split(sep))
                 break
@@ -129,7 +128,7 @@ class RowDataHandler(object):
 #        self.df = self.df.unstack()
 #        self.df = self.df.reset_index()
         self.df = df_col
-        print('-_set_column_table_from_pivot_table', self.df.columns)
+#        print('-_set_column_table_from_pivot_table', self.df.columns)
         if sort:
             self.sort_dict_by_keys(sort_order=self.filter_parameters.sort_by_fields,
                                    ascending_list=[True]*len(self.filter_parameters.sort_by_fields), 
@@ -601,14 +600,13 @@ class DataHandler(object):
 #        self.column_data = pd.DataFrame()
 #        self.row_data = pd.DataFrame() 
         
-        self.input_data_directory = input_data_directory
+        self.input_data_directory = input_data_directory 
+        self.resource_directory = resource_directory
         
         # TODO: Maybe WorkSpace should specify these too
         self.raw_data_directory = self.input_data_directory + '/raw_data'
         self.export_directory = self.input_data_directory + '/exports'
-        
-        
-        self.resource_directory = resource_directory 
+
         path_parameter_mapping = self.resource_directory + '/mappings/mapping_parameter_dynamic_extended.txt'
         path_fields_filter = self.resource_directory + '/filters/'
     
@@ -638,6 +636,7 @@ class DataHandler(object):
                                                 parameter_mapping=self.parameter_mapping)
         
         
+        self.all_data = None
     
     #==========================================================================
 #    def add_txt_file(self, file_path, data_type): 
@@ -666,42 +665,57 @@ class DataHandler(object):
             self.row_data = self.row_data.append(pd_df, ignore_index=True).fillna('')
 #        print(self.data_phys_chem.head())
         
-    #==========================================================================
-    def filter_data(self, data_filter_object, filter_id=''):
-        """
-        Filters data according to data_filter_object. 
-        data_filter_object is a core.filters.DataFilter-object. 
-        Returns a DataHandler object with the filtered data. 
-        """
-        new_data_handler = DataHandler(self.source + '_filtered_%s' % filter_id)
-        if len(self.column_data):
-#            print( 'data_filter_object', data_filter_object)
-            df = self._filter_column_data(self.column_data, data_filter_object)
-            if data_filter_object.parameter:
-#                print('df', df.columns)
-#                print('data_filter_object.parameter:', data_filter_object.parameter)
-                for col in list(df.columns):
-                    if col not in core.ParameterList().metadata_list + [data_filter_object.parameter]:
-                        df = df.drop(col, 1)
-            new_data_handler.add_df(df, 'column')
-        if len(self.row_data):
-            df = self._filter_row_data(self.row_data, data_filter_object)
-            new_data_handler.add_df(df, 'row')
-        
-        return new_data_handler
-    
-    #==========================================================================
-    def _filter_column_data(self, df, data_filter_object): 
-        """
-        Filters column file data and returns resulting dataframe
-        """
-        #TODO kolla på flera DF ? annan struktur ? 
-        boolean = data_filter_object.get_column_data_boolean(df)
-        
-        if not len(boolean):
-            return df
-        return df.loc[df.index[boolean], :]
+#    #==========================================================================
+#    def filter_data(self, data_filter_object, filter_id=''):
+#        """
+#        Filters data according to data_filter_object. 
+#        data_filter_object is a core.filters.DataFilter-object. 
+#        Returns a DataHandler object with the filtered data. 
+#        """
+#        new_data_handler = DataHandler(self.source + '_filtered_%s' % filter_id)
+#        if len(self.column_data):
+##            print( 'data_filter_object', data_filter_object)
+#            df = self._filter_column_data(self.column_data, data_filter_object)
+#            if data_filter_object.parameter:
+##                print('df', df.columns)
+##                print('data_filter_object.parameter:', data_filter_object.parameter)
+#                for col in list(df.columns):
+#                    if col not in core.ParameterList().metadata_list + [data_filter_object.parameter]:
+#                        df = df.drop(col, 1)
+#            new_data_handler.add_df(df, 'column')
+#        if len(self.row_data):
+#            df = self._filter_row_data(self.row_data, data_filter_object)
+#            new_data_handler.add_df(df, 'row')
+#        
+#        return new_data_handler
 
+
+#    #==========================================================================
+#    def _filter_column_data(self, df, data_filter_object): 
+#        """
+#        Filters column file data and returns resulting dataframe
+#        """
+#        #TODO kolla på flera DF ? annan struktur ? 
+#        boolean = data_filter_object.get_column_data_boolean(df)
+#        
+#        if not len(boolean):
+#            return df
+#        return df.loc[df.index[boolean], :]
+
+    #==========================================================================
+    def get_all_column_data_df(self, boolean_filter=[]): 
+        """
+        mw
+        Returns a pandas dataframe that contains all data in column format. 
+        boolean_filter is a pd.Series. If not given the whole df is returned. 
+        """
+        if len(boolean_filter): 
+            # TODO: Check length
+            return self.all_data.loc[boolean_filter, :]
+        else: 
+            return self.all_data
+    
+        
     #==========================================================================
     def merge_all_data(self, save_to_txt=False):
         """

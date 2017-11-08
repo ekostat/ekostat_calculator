@@ -7,6 +7,7 @@ Created on Tue Jul 11 11:04:47 2017
 import os
 import codecs  
 import pandas as pd
+import numpy as np
 
 #if current_path not in sys.path: 
 #    sys.path.append(os.path.dirname(os.path.realpath(__file__)))
@@ -25,53 +26,129 @@ class DataFilter(object):
     def __init__(self, filter_directory): 
         self.filter_directory = filter_directory
         self.filter_file_paths = {} 
-        self.list_filter = {} 
+        self.include_list_filter = {} 
+        self.exclude_list_filter = {} 
         
         self.load_filter_files()
         
     #==========================================================================
-    def get_list_filter(self, filter_name):
-        return self.list_filter.get(filter_name, False)
+    def _get_filter_boolean_for_df_from_exclude_list(self, df=None, parameter=None): 
+        parameter = parameter.upper()
+        value_list = self.get_exclude_list_filter(parameter)
+        return ~df[parameter].astype(str).isin(value_list)
+    
+    #==========================================================================
+    def _get_filter_boolean_for_df_from_include_list(self, df=None, parameter=None): 
+        parameter = parameter.upper()
+        value_list = self.get_include_list_filter(parameter)
+        return df[parameter].astype(str).isin(value_list)
+    
+    #==========================================================================
+    def get_filter_boolean_for_df(self, df=None): 
+        """
+        Get boolean tuple to use for filtering. 
+        """
+        combined_boolean = ()
+        
+        #----------------------------------------------------------------------
+        # Filter exclude list 
+        for par in sorted(self.exclude_list_filter.keys()): 
+            boolean = self._get_filter_boolean_for_df_from_exclude_list(df=df, parameter=par) 
+
+            if not type(boolean) == pd.Series:
+                continue            
+            if type(combined_boolean) == pd.Series:
+                combined_boolean = combined_boolean & boolean
+            else:
+                combined_boolean = boolean 
+        
+        #----------------------------------------------------------------------
+        # Filter include list 
+        for par in sorted(self.include_list_filter.keys()): 
+            boolean = self._get_filter_boolean_for_df_from_include_list(df=df, parameter=par) 
+
+            if not type(boolean) == pd.Series:
+                continue            
+            if type(combined_boolean) == pd.Series:
+                combined_boolean = combined_boolean & boolean
+            else:
+                combined_boolean = boolean 
+        return combined_boolean
+    
+    #==========================================================================
+    def get_exclude_list_filter(self, filter_name):
+        return self.exclude_list_filter.get(filter_name.upper(), False)
+    
+    #==========================================================================
+    def get_include_list_filter(self, filter_name):
+        return self.include_list_filter.get(filter_name.upper(), False)
         
     #==========================================================================
     def load_filter_files(self): 
         self.filter_file_paths = {} 
-        self.list_filter = {} 
+        self.include_list_filter = {} 
+        self.exclude_list_filter = {} 
         for file_name in [item for item in os.listdir(self.filter_directory) if item.endswith('.fil')]: 
 #            print('-'*70)
             file_path = os.path.join(self.filter_directory, file_name).replace('\\', '/') 
-            filter_name = file_name[:-4] 
+            long_name = file_name[:-4].upper()
 #            print('load:', filter_name)
             
             # Save filter path
-            self.filter_file_paths[filter_name] = file_path
+            self.filter_file_paths[long_name] = file_path
             
             # Load filters 
-            if filter_name == 'areas':
+            if long_name == 'areas':
                 pass
-            elif filter_name.startswith('list_'):
+            elif long_name.startswith('LIST_'):
+                filter_name = long_name[5:] 
                 with codecs.open(file_path, 'r', encoding='cp1252') as fid: 
-                    self.list_filter[filter_name] = [item.strip() for item in fid.readlines()]
-#            print('Loaded list:', self.list_filter[filter_name]) 
+                    if filter_name.startswith('EXCLUDE_'): 
+                        self.exclude_list_filter[filter_name[8:]] = [item.strip() for item in fid.readlines()]
+                    elif filter_name.startswith('INCLUDE_'): 
+                        self.include_list_filter[filter_name[8:]] = [item.strip() for item in fid.readlines()]
+#            print('Loaded list:', self.include_list_filter[filter_name]) 
             
     #==========================================================================
     def save_filter_files(self): 
-        for filter_name in self.list_filter.keys():
-            print('save:', filter_name)
-            if filter_name == 'areas':
-                pass
-            elif filter_name.startswith('list_'): 
-                with codecs.open(self.filter_file_paths[filter_name], 'w', encoding='cp1252') as fid: 
-                    for item in self.list_filter[filter_name]:
-                        fid.write(item) 
-                        fid.write('\n')
+            
+        # Exclude list filter 
+        print(self.exclude_list_filter.keys())
+        for filter_name in self.exclude_list_filter.keys(): 
+            long_name = 'LIST_EXCLUDE_' + filter_name
+            file_path = self.filter_file_paths[long_name]
+            print('save: "{}" to file: "{}"'.format(filter_name, file_path))
+            with codecs.open(file_path, 'w', encoding='cp1252') as fid: 
+                for item in self.exclude_list_filter[filter_name]:
+                    fid.write(item) 
+                    fid.write('\n') 
+                    
+        # Include list filter 
+        print(self.include_list_filter.keys())
+        for filter_name in self.include_list_filter.keys(): 
+            long_name = 'LIST_INCLUDE_' + filter_name
+            file_path = self.filter_file_paths[long_name.upper()]
+            print('save: "{}" to file: "{}"'.format(filter_name, file_path))
+            with codecs.open(file_path, 'w', encoding='cp1252') as fid: 
+                for item in self.include_list_filter[filter_name]:
+                    fid.write(item) 
+                    fid.write('\n')
                     
     #==========================================================================
-    def set_list_filter(self, filter_name, filter_list, save_files=True): 
-        if filter_name not in self.list_filter.keys():
+    def set_include_list_filter(self, filter_name, filter_list, save_files=True): 
+        if filter_name not in self.include_list_filter.keys():
             return False
         filter_list = sorted(set([item.strip() for item in filter_list]))
-        self.list_filter[filter_name] = filter_list
+        self.include_list_filter[filter_name] = filter_list
+        if save_files: 
+            self.save_filter_files()
+    
+    #==========================================================================
+    def set_exclude_list_filter(self, filter_name, filter_list, save_files=True): 
+        if filter_name not in self.exclude_list_filter.keys():
+            return False
+        filter_list = sorted(set([item.strip() for item in filter_list]))
+        self.exclude_list_filter[filter_name] = filter_list
         if save_files: 
             self.save_filter_files()
                     
@@ -342,9 +419,10 @@ class SettingsFilter(object):
         self.settings.connected_to_filter_settings_object = True
         
     #==========================================================================
-    def get_column_data_boolean(self, df=None, type_area=None): 
+    def get_filter_boolean_for_df(self, df=None, type_area=None): 
         """
-        Get boolean tuple to use for filtering
+        Get boolean pd.Series to use for filtering. 
+        Name of this has to be tha same as the one in class DataFilter. 
         """
         return self.settings.get_filter_boolean(df=df, 
                                                 type_area=type_area)

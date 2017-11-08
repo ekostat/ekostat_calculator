@@ -33,7 +33,7 @@ class WorkStep(object):
         
         self._load_attributes() 
         
-        self._set_paths()
+        self._set_directories()
         
         self._create_folder_structure()
         self.load_all_files()    
@@ -47,13 +47,14 @@ class WorkStep(object):
         self.indicator_settings = {}
         
     #==========================================================================
-    def _set_paths(self):
+    def _set_directories(self):
         self.directory_paths = {}
         #set paths
         self.directory_paths['data_filters'] = self.step_directory + '/data_filters'
         self.directory_paths['settings'] = self.step_directory + '/settings'
         self.directory_paths['indicator_settings'] = self.step_directory + '/settings/indicator_settings'
-        self.directory_paths['results'] = self.step_directory + '/results'
+        self.directory_paths['output'] = self.step_directory + '/output'
+        self.directory_paths['results'] = self.step_directory + '/output/results'
         
     #==========================================================================
     def _create_folder_structure(self):
@@ -109,7 +110,7 @@ class WorkStep(object):
         """
         Copy files from given workstep. Option to overwrite or not. 
         This method shold generaly be used when copying step_0 or a whole subset. 
-        DONT USE FOR COPYING SINGLE STEPS NUBERED 1 and up. 
+        DONT USE FOR COPYING SINGLE STEPS NUMBERED 1 and up. 
         """ 
         for from_file_path in step_object.get_all_file_paths_in_workstep():
             to_file_path = from_file_path.replace(step_object.step_directory, self.step_directory) 
@@ -125,7 +126,11 @@ class WorkStep(object):
         self.load_all_files()
         
     #==========================================================================
-    def get_all_file_paths_in_workstep(self):
+    def get_all_file_paths_in_workstep(self): 
+        """
+        Returns a sorted list of all file paths in the workstep tree. 
+        Generally this method is used when copying the workstep. 
+        """
         file_list = []
         for root, dirs, files in os.walk(self.step_directory): 
                 for f in files:
@@ -137,8 +142,7 @@ class WorkStep(object):
     def load_all_files(self): 
         self._create_file_paths()
         self.load_data_filters()
-        self.load_indicator_files()
-        # Load all data files
+        self.load_indicator_filters()
         
     #==========================================================================
     def load_data_filters(self):
@@ -146,7 +150,7 @@ class WorkStep(object):
         self.data_filter = core.DataFilter(self.directory_paths['data_filters'])
 
     #==========================================================================
-    def load_indicator_files(self): 
+    def load_indicator_filters(self): 
         """
         Loads all types of settings, data and config files/objects. 
         """
@@ -324,7 +328,10 @@ class Subset(object):
             self.steps.pop(step)
             
     #==========================================================================
-    def get_all_file_paths_in_subset(self):
+    def get_all_file_paths_in_subset(self): 
+        """
+        Returns a sorted list of all file paths in the subset tree. 
+        """
         file_list = []
         for root, dirs, files in os.walk(self.subset_directory): 
                 for f in files:
@@ -465,7 +472,8 @@ class WorkSpace(object):
         self.data_handler = core.DataHandler(input_data_directory=self.directory_path_input_data, 
                                              resource_directory=self.resource_directory) 
         
-        self.index_handler = core.IndexHandler(self.data_handler)
+        self.index_handler = core.IndexHandler(workspace_object=self, 
+                                               data_handler_object=self.data_handler)
         
     #==========================================================================
     def add_files_from_workspace(self, workspace_object=None, overwrite=False):
@@ -525,6 +533,24 @@ class WorkSpace(object):
         return sub 
     
     #==========================================================================
+    def apply_first_filter(self): 
+        """
+        Applies the first filter to the index_handler. 
+        """
+        self.index_handler.add_filter(filter_object=self.step_0.data_filter, filter_level=0)
+        
+    #==========================================================================
+    def apply_subset_filter(self, subset): 
+        """
+        Applies the first data filter for the given subset. 
+        This is not fully handled by the index_handler. 
+        """
+        if subset not in self.get_subset_list():
+            return False
+        sub_object = self.get_step_1_object(subset)
+        self.index_handler.add_filter(filter_object=sub_object.data_filter, filter_level=1, subset=subset)
+        
+    #==========================================================================
     def copy_subset(self, sourse_subset_name=None, target_subset_name=None, new_alias=False): 
         assert all([sourse_subset_name, target_subset_name])
         if not self.add_subset(sub=target_subset_name, alias=new_alias):
@@ -544,7 +570,10 @@ class WorkSpace(object):
         return False
             
     #==========================================================================
-    def get_all_file_paths_in_workspace(self):
+    def get_all_file_paths_in_workspace(self): 
+        """
+        Returns a sorted list of all file paths in the workspace tree. 
+        """
         file_list = []
         for root, dirs, files in os.walk(self.workspace_directory): 
                 for f in files:
@@ -559,6 +588,15 @@ class WorkSpace(object):
                     file_list.append('/'.join([root, f]).replace('\\', '/'))
         return sorted(file_list)
     
+    #==========================================================================
+    def get_filtered_data(self, level=None): 
+        """
+        Returns filtered data using the given filter level. 
+        """
+        if level == None:
+            return False
+        return self.index_handler.get_filtered_data(level=level)
+        
     #==========================================================================
     def get_subset_list(self):
         return sorted(self.subset_dict.keys())
@@ -600,13 +638,7 @@ class WorkSpace(object):
         
     #==========================================================================
     def get_indicator_settings_name_list(self):
-        return sorted(self.indicator_settings.keys()) 
-    
-    #==========================================================================
-    def run_step_0(self): 
-        """
-        Data
-        """
+        return sorted(self.indicator_settings.keys())  
         
     #==========================================================================
     def save_indicator_settings(self, indicator): 
@@ -656,7 +688,7 @@ class WorkSpace(object):
         self.data_handler.zoobenthos.load_source(file_path=raw_data_file_path + fid_zooben,
                                         raw_data_copy=True)
         self.data_handler.zoobenthos.save_data_as_txt(directory=output_directory, prefix=u'Column_format')
-#        self.data_handler.merge_all_data(save_to_txt=True)
+        self.data_handler.merge_all_data(save_to_txt=True)
 
         
     #==========================================================================
@@ -748,7 +780,7 @@ class WorkSpace_old2(object):
         
         self._load_attributes() 
         
-        self._set_paths()
+        self._set_directories()
         
         print('Parent directory is: {}'.format(self.parent_directory))
         
@@ -770,7 +802,7 @@ class WorkSpace_old2(object):
         self.indicator_settings = {}
         
     #==========================================================================
-    def _set_paths(self):
+    def _set_directories(self):
         self.directory_paths = {}
         #set paths
         self.directory_paths['data'] = self.workspace_directory + '/data'
@@ -971,7 +1003,7 @@ class WorkSpace_old(object):
         else:
 #            self.root_directory = os.path.dirname(os.path.abspath(__file__))
             self.root_directory = os.path.join( os.path.dirname( __file__ ), '..' )
-        self._set_paths()
+        self._set_directories()
         print(self.root_directory)
         if self.name not in os.listdir(self.root_directory + '\\workspaces'):
             print('Workspace directory: {}'.format(self.root_directory + '\\workspaces'))
@@ -983,7 +1015,7 @@ class WorkSpace_old(object):
             self._check_folderstructure()
             self._check_settings()
      
-    def _set_paths(self):
+    def _set_directories(self):
         self.paths = {}
         self.paths['current_workspace'] = self.root_directory + '\\workspaces\\' + self.name
         #set paths
