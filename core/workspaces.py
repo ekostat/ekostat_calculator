@@ -37,24 +37,7 @@ class WorkStep(object):
         
         self._create_folder_structure()
         self.load_all_files()    
-        self._check_folder_structure()
-        
-    #==========================================================================
-    def _load_attributes(self): 
-        # Load attributes to be able to check what has been done
-        self.data_filter = None
-        self.data = None
-        self.indicator_settings = {}
-        
-    #==========================================================================
-    def _set_directories(self):
-        self.directory_paths = {}
-        #set paths
-        self.directory_paths['data_filters'] = self.step_directory + '/data_filters'
-        self.directory_paths['settings'] = self.step_directory + '/settings'
-        self.directory_paths['indicator_settings'] = self.step_directory + '/settings/indicator_settings'
-        self.directory_paths['output'] = self.step_directory + '/output'
-        self.directory_paths['results'] = self.step_directory + '/output/results'
+        self._check_folder_structure()        
         
     #==========================================================================
     def _create_folder_structure(self):
@@ -99,11 +82,27 @@ class WorkStep(object):
         return all_ok
         
     #==========================================================================
+    def _load_attributes(self): 
+        # Load attributes to be able to check what has been done
+        self.data_filter = None
+        self.indicator_settings = {}
+        
+    #==========================================================================
     def _save_ok(self):
         if self.name == 'default':
             print('Not allowed to save default workspace!')
             return False
         return True
+    
+    #==========================================================================
+    def _set_directories(self):
+        self.directory_paths = {}
+        #set paths
+        self.directory_paths['data_filters'] = self.step_directory + '/data_filters'
+        self.directory_paths['settings'] = self.step_directory + '/settings'
+        self.directory_paths['indicator_settings'] = self.step_directory + '/settings/indicator_settings'
+        self.directory_paths['output'] = self.step_directory + '/output'
+        self.directory_paths['results'] = self.step_directory + '/output/results'
     
     #==========================================================================
     def add_files_from_workstep(self, step_object=None, overwrite=False):
@@ -123,7 +122,8 @@ class WorkStep(object):
             # Copy file
             shutil.copy(from_file_path, to_file_path)
         
-        self.load_all_files()
+        self.load_all_files()    
+            
         
     #==========================================================================
     def get_all_file_paths_in_workstep(self): 
@@ -137,17 +137,55 @@ class WorkStep(object):
                     file_list.append('/'.join([root, f]).replace('\\', '/'))
         return sorted(file_list)
     
-            
+    #==========================================================================
+    def get_data_filter_object(self):
+        return self.data_filter
+    
+    #==========================================================================
+    def get_data_filter_info(self): 
+        """
+        Returns a dict with data filter names as keys. 
+        Every key contains a list of the active filters. 
+        """
+        self.first_filter.get_filter_info()
+        
+    #==========================================================================
+    def get_indicator_filter_settings(self, indicator): 
+        """
+        Returns the filter settings for the given indicator. 
+        """
+        return self.indicator_filter_settings.get(indicator, False)
+    
+    #==========================================================================
+    def get_indicator_tolerance_settings(self, indicator): 
+        """
+        Returns the tolerance settings for the given indicator. 
+        """
+        return self.indicator_tolerance_settings.get(indicator, False)
+    
+    #==========================================================================
+    def get_indicator_ref_settings(self, indicator): 
+        """
+        Returns the reference settings for the given indicator. 
+        """
+        return self.indicator_ref_settings.get(indicator, False)
+    
+    #==========================================================================
+    def get_indicator_settings_name_list(self):
+        return sorted(self.indicator_settings.keys()) 
+    
     #==========================================================================
     def load_all_files(self): 
         self._create_file_paths()
-        self.load_data_filters()
+        self.load_data_filter()
         self.load_indicator_filters()
         
     #==========================================================================
-    def load_data_filters(self):
+    def load_data_filter(self):
         # Load all settings file in the current WorkSpace filter folder... 
-        self.data_filter = core.DataFilter(self.directory_paths['data_filters'])
+        self.data_filter = core.DataFilter(self.directory_paths['data_filters']) 
+        
+        
 
     #==========================================================================
     def load_indicator_filters(self): 
@@ -177,33 +215,7 @@ class WorkStep(object):
         self.indicator_tolerance_settings = {} 
         for indicator, obj in self._indicator_setting_files.items():
             self.indicator_tolerance_settings[indicator] = core.SettingsTolerance(obj)
-        
-    #==========================================================================
-    def get_data_filter(self):
-        return self.data_filter
-    
-    #==========================================================================
-    def get_indicator_settings_name_list(self):
-        return sorted(self.indicator_settings.keys()) 
-    
-    #==========================================================================
-    def save_indicator_settings(self, indicator): 
-        if not self._save_ok(): 
-            return 
-        self.indicator_settings[indicator].save_file() # Overwrites existing file if no file_path is given
-        return True 
-    
-    #==========================================================================
-    def save_all_indicator_settings(self): 
-        if not self._save_ok(): 
-            return 
-        all_ok = True
-        for obj in self.indicator_settings.values():
-            if not obj.save_file() :
-                all_ok = False
-        return all_ok
-        
-        
+            
     #==========================================================================
     def update_data_filter_settings(self, filter_settings=None):
         """
@@ -222,11 +234,40 @@ class WorkStep(object):
         if filter_settings: 
             filter_object = self.indicator_filter_settings[indicator] 
             filter_object.set_values(filter_settings) 
+        
+    #==========================================================================
+    def save_indicator_settings(self, indicator): 
+        if not self._save_ok(): 
+            return 
+        self.indicator_settings[indicator].save_file() # Overwrites existing file if no file_path is given
+        return True 
+    
+    #==========================================================================
+    def save_all_indicator_settings(self): 
+        if not self._save_ok(): 
+            return 
+        all_ok = True
+        for obj in self.indicator_settings.values():
+            if not obj.save_file() :
+                all_ok = False
+        return all_ok
+        
+    #==========================================================================
+    def set_data_filter(self, filter_type='', filter_name='', data=None, save_filter=True): 
+        """
+        Sets the data_filter. See data_filter.set_filter for more information. 
+        """ 
+        data_filter = self.get_data_filter_object() 
+        data_filter.set_filter(filter_type=filter_type, 
+                               filter_name=filter_name, 
+                               data=data, 
+                               save_filter=save_filter)    
             
     #==========================================================================
     def show_settings(self):
         print('first_filter:')
         self.first_filter.show_filter()
+        
         
 ###############################################################################
 class Subset(object):
@@ -251,13 +292,14 @@ class Subset(object):
             self.set_alias(alias)
         
     #==========================================================================
+    def _load_attributes(self): 
+        self.steps = {}
+        
+    #==========================================================================
     def _load_config(self): 
         self.config_file_path = self.subset_directory + '/subset.cfg'
         self.config = self.Config(self.config_file_path)               
         
-    #==========================================================================
-    def _load_attributes(self): 
-        self.steps = {}
         
     #==========================================================================
     def _load_steps(self): 
@@ -267,17 +309,6 @@ class Subset(object):
         print('step_list', step_list)
         for step in step_list:
             self.add_workstep(step)
-            
-    #==========================================================================
-    def get_alias(self): 
-        alias = self.config.get_config('alias') 
-        if not alias:
-            return ''
-    
-    #==========================================================================
-    def set_alias(self, alias):
-        print('New alias for subset "{}" => "{}"'.format(self.config.get_config('alias'), alias))
-        self.config.set_config('alias', alias)       
         
     #==========================================================================
     def add_files_from_subset(self, subset_object=None, overwrite=False):
@@ -326,7 +357,13 @@ class Subset(object):
         if step in self.subset_dict.keys(): 
             # TODO: Delete files and directories. How to make this safe? 
             self.steps.pop(step)
-            
+    
+    #==========================================================================
+    def get_alias(self): 
+        alias = self.config.get_config('alias') 
+        if not alias:
+            return '' 
+        
     #==========================================================================
     def get_all_file_paths_in_subset(self): 
         """
@@ -339,11 +376,32 @@ class Subset(object):
         return sorted(file_list)
 
     #==========================================================================
+    def get_data_filter_info(self, step): 
+        """
+        Returns a dict with information about the active filters. 
+        """
+        data_filter = self.get_data_filter_object(step)
+        if not data_filter:
+            return False
+        return data_filter.get_data_filter_info()
+    
+    #==========================================================================
+    def get_data_filter_object(self, step): 
+        """
+        Returns the data filter for the given step. 
+        """
+        step = get_step_name(step)
+        if step not in self.get_step_list():
+            return False 
+        return self.steps[step].data_filter 
+    
+    #==========================================================================
     def get_step_list(self): 
         return sorted(self.steps.keys())
     
     #==========================================================================
     def get_step_object(self, step): 
+        step = get_step_name(step)
         return self.steps.get(step, False)
         
     #==========================================================================
@@ -354,7 +412,6 @@ class Subset(object):
     def get_step_2_object(self): 
         return self.get_step_object('step_2')
     
-    
     #==========================================================================
     def load_data(self, step): 
         if step not in self.steps.keys():
@@ -362,6 +419,19 @@ class Subset(object):
             return False 
             
         self.steps[step].load_data()
+    
+    #==========================================================================
+    def set_alias(self, alias):
+        print('New alias for subset "{}" => "{}"'.format(self.config.get_config('alias'), alias))
+        self.config.set_config('alias', alias)
+        
+    #==========================================================================
+    def set_data_filter(self, step='', filter_type='', filter_name='', data=None, save_filter=True):  
+        step_object = self.get_step_object(step)
+        if not step_object:
+            return False 
+        return step_object.set_data_filter(filter_type=filter_type, filter_name=filter_name, data=data, save_filter=save_filter)
+    
     
     #==========================================================================
     #==========================================================================
@@ -440,6 +510,12 @@ class WorkSpace(object):
         self.subset_list = [chr(x+65) for x in range(self.nr_subsets_allowed)]
         self.subset_dict = {} 
         
+    #==========================================================================
+    def _save_ok(self):
+        if self.name == 'default':
+            print('Not allowed to save default workspace!')
+            return False
+        return True
         
     #==========================================================================
     def _setup_workspace(self):
@@ -589,6 +665,20 @@ class WorkSpace(object):
         return sorted(file_list)
     
     #==========================================================================
+    def get_data_filter_object(self, step=None, subset=None): 
+        step_object = self.get_step_object(step=step, subset=subset)
+        if not step_object:
+            return False
+        return step_object.get_data_filter_object()
+        
+    #==========================================================================
+    def get_data_filter_info(self, step=None, subset=None): 
+        data_filter = self.get_data_filter_object(step=step, subset=subset)
+        if not data_filter:
+            return False
+        return data_filter.get_data_filter_info()
+    
+    #==========================================================================
     def get_filtered_data(self, level=None): 
         """
         Returns filtered data using the given filter level. 
@@ -596,7 +686,11 @@ class WorkSpace(object):
         if level == None:
             return False
         return self.index_handler.get_filtered_data(level=level)
-        
+    
+    #==========================================================================
+    def get_indicator_settings_name_list(self):
+        return sorted(self.indicator_settings.keys())
+    
     #==========================================================================
     def get_subset_list(self):
         return sorted(self.subset_dict.keys())
@@ -607,6 +701,7 @@ class WorkSpace(object):
     
     #==========================================================================
     def get_step_object(self, step=None, subset=None): 
+        step = get_step_name(step)
         if step == 'step_0':
             return self.get_step_0_object()
         
@@ -628,35 +723,7 @@ class WorkSpace(object):
     #==========================================================================
     def get_step_2_object(self, subset): 
         return self.subset_dict[subset].get_step_2_object()
-    
-    #==========================================================================
-    def _save_ok(self):
-        if self.name == 'default':
-            print('Not allowed to save default workspace!')
-            return False
-        return True
         
-    #==========================================================================
-    def get_indicator_settings_name_list(self):
-        return sorted(self.indicator_settings.keys())  
-        
-    #==========================================================================
-    def save_indicator_settings(self, indicator): 
-        if not self._save_ok(): 
-            return 
-        self.indicator_settings[indicator].save_file() # Overwrites existing file if no file_path is given
-        return True 
-    
-    #==========================================================================
-    def save_all_indicator_settings(self): 
-        if not self._save_ok(): 
-            return 
-        all_ok = True
-        for obj in self.indicator_settings.values():
-            if not obj.save_file() :
-                all_ok = False
-        return all_ok 
-    
     #==========================================================================
     def load_all_data(self): 
         """ 
@@ -689,256 +756,7 @@ class WorkSpace(object):
                                         raw_data_copy=True)
         self.data_handler.zoobenthos.save_data_as_txt(directory=output_directory, prefix=u'Column_format')
         self.data_handler.merge_all_data(save_to_txt=True)
-
         
-    #==========================================================================
-    def set_filter_0(self, filter_dict): 
-        """
-        filter_dict is a dictionary like filter_dict[type_area][variable] = value
-        """ 
-        self.step_0.data_filters_paths['first_data_filter'].set_values(filter_dict)
-        
-#    #==========================================================================
-#    def load_data(self, step=None, subset=None): 
-#        # Load all data in the current WorkSpace data folder in the given subset and step...
-#        
-#        if step.lower() in ['0', 'step_0']:
-#            self.step_0.load_data()
-#        else: 
-#            if subset not in self.subset_dict.keys(): 
-#                print('Invalid subset "{}" given to load data from later steps!'.format(subset))
-#                return False 
-#            
-#            return self.subset_dict[subset].load_data(step)
-        
-        
-        
-#        # ...for now load test data...
-#        raw_data_file_path = root_directory + '/test_data/raw_data/data_BAS_2000-2009.txt'
-#        
-#        
-#        self.raw_data = core.DataHandler('raw')
-#        self.raw_data.add_txt_file(raw_data_file_path, data_type='column') 
-        
-#    #==========================================================================
-#    def apply_first_filter(self):
-#        # Use first filter 
-#        print('{}\nApplying first filter\n'.format('*'*nr_marks))
-#        
-#        self.filtered_data = self.raw_data.filter_data(self.first_filter) 
-        
-    #==========================================================================
-    def update_indicator_filter_settings(self, indicator=None, filter_settings=None):
-        """
-        filter_settings are dicts like: 
-            filter_settings[type_area][variable] = value 
-        """
-        if filter_settings: 
-            filter_object = self.indicator_filter_settings[indicator] 
-            filter_object.set_values(filter_settings) 
-            
-    #==========================================================================
-    def show_settings(self):
-        print('first_filter:')
-        self.first_filter.show_filter()
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-"""
-###############################################################################
-###############################################################################
-###############################################################################
-###############################################################################
-###############################################################################
-###############################################################################
-###############################################################################
-###############################################################################
-###############################################################################
-###############################################################################
-###############################################################################
-###############################################################################
-"""
-class WorkSpace_old2(object):
-    """
-    Class to load workspace
-    Creates folder structure and necessary filter files
-    """
-    def __init__(self, name=None, parent_directory=None):
-        if not all([name, parent_directory]): 
-            return
-        self.name = name 
-        self.parent_directory = parent_directory 
-        self.workspace_directory = '/'.join([self.parent_directory, self.name]) 
-        
-        self._load_attributes() 
-        
-        self._set_directories()
-        
-        print('Parent directory is: {}'.format(self.parent_directory))
-        
-        if not os.path.exists(self.workspace_directory): 
-            print('Setting up empty workspace named: {}'.format(self.name))
-            self._create_folder_structure() 
-        else:
-            print('Using existing workspace named: {}'.format(self.name))
-            self._check_folderstructure() 
-            self._create_file_paths()
-            self.load_all_files()
-    
-    #==========================================================================
-    def _load_attributes(self): 
-        # Load attributes to be able to check what has been done
-        self.first_filter = None
-        self.raw_data = None 
-        self.filtered_data = None 
-        self.indicator_settings = {}
-        
-    #==========================================================================
-    def _set_directories(self):
-        self.directory_paths = {}
-        #set paths
-        self.directory_paths['data'] = self.workspace_directory + '/data'
-        self.directory_paths['raw_data'] = self.workspace_directory + '/data/raw_data'
-        self.directory_paths['filtered_data'] = self.workspace_directory + '/data/filtered_data'
-        self.directory_paths['data_filters'] = self.workspace_directory + '/data_filters'
-        self.directory_paths['settings'] = self.workspace_directory + '/settings'
-        self.directory_paths['indicator_settings'] = self.workspace_directory + '/settings/indicator_settings'
-        self.directory_paths['results'] = self.workspace_directory + '/results'
-        
-    #==========================================================================
-    def _create_folder_structure(self):
-        """
-        Sets up the needed folder structure for the new workspace
-        """
-        for path in self.directory_paths.values():
-            if not os.path.exists(path):
-                os.makedirs(path)
-        
-    #==========================================================================
-    def _create_file_paths(self): 
-        
-        # Indicator settings 
-        self.indicator_settings_paths = {}
-        for file_name in os.listdir(self.directory_paths['indicator_settings']): 
-            if file_name.endswith('.set'):
-                file_path = '/'.join([self.directory_paths['indicator_settings'], file_name]) 
-                indicator = file_name.split('.')[0]
-                self.indicator_settings_paths[indicator] = file_path
-                
-        # Data filters 
-        self.data_filters_paths = {} 
-        for file_name in os.listdir(self.directory_paths['data_filters']): 
-            if file_name.endswith('.fil'):
-                file_path = '/'.join([self.directory_paths['data_filters'], file_name]) 
-                data_filter = file_name.split('.')[0]
-                self.data_filters_paths[data_filter] = file_path 
-                
-        #TODO: What about data? 
-        
-    #==========================================================================
-    def get_all_file_paths_in_worksapace(self):
-        file_list = []
-        for root, dirs, files in os.walk(self.workspace_directory): 
-                for f in files:
-                    file_list.append('/'.join([root, f]).replace('\\', '/'))
-        return sorted(file_list)
-    
-    #==========================================================================
-    def add_files_from_workspace(self, workspace_object=None, overwrite=False):
-        """
-        Copy files from given workspace. Opteion to overwrite or not. 
-        """ 
-        for from_file_path in workspace_object.get_all_file_paths_in_worksapace():
-            to_file_path = from_file_path.replace(workspace_object.workspace_directory, self.workspace_directory) 
-            if os.path.exists(to_file_path) and not overwrite:
-                continue
-            to_directory = os.path.dirname(to_file_path)
-            if not os.path.exists(to_directory):
-                # If directory has been added in later versions of the ekostat calculator
-                os.makedirs(to_directory) 
-            # Copy file
-            shutil.copy(from_file_path, to_file_path)
-        
-        self._create_file_paths()
-            
-#        self.selection_filter_default =  shutil.copy(self.root_directory + '\\workspaces\\default\\filters\\selection_filters\\first_data_filter.txt', self.directory_paths['selection_filters'])       
-#        self.tolerance_filter_default =  shutil.copy(self.root_directory + '\\workspaces\\default\\filters\\tolerance_filters\\tolerance_filter_template.txt', self.directory_paths['tolerance_filters'])       
-#        self.first_filter = core.DataFilter('First filter', file_path = self.directory_paths['selection_filters']+'\\first_data_filter.txt')
-        
-    #==========================================================================
-    def _check_folderstructure(self):
-        #TODO: make check of workspace folder structure
-        for key, item in self.directory_paths.items():
-            if os.path.isdir(item):
-                continue
-            else:
-                try:
-                    # MW: Does not work for me in Spyder
-                    raise('PathError')
-                except:
-                    pass
-                print('no folder set for {}'.format(key))
-        
-    #==========================================================================
-    def _save_ok(self):
-        if self.name == 'default':
-            print('Not allowed to save default workspace!')
-            return False
-        return True
-    
-    #==========================================================================
-    def load_all_files(self): 
-        self.load_data_filters()
-        self.load_indicator_files()
-        
-    #==========================================================================
-    def load_data_filters(self):
-        # Load all settings file in the current WorkSpace filter folder... 
-        self.data_filters = {} 
-        for data_filter, file_path in self.data_filters_paths.items():
-            self.data_filters[data_filter] = core.DataFilter(data_filter, file_path=file_path)
-
-    #==========================================================================
-    def load_indicator_files(self): 
-        """
-        Loads all types of settings, data and config files/objects. 
-        """
-        
-        # All indicators in directory should be loaded automatically         
-        # Load indicator setting files. Internal attr (_) since they are only used by other objects.  
-        self._indicator_setting_files = {} 
-        for indicator, file_path in self.indicator_settings_paths.items(): 
-            self._indicator_setting_files[indicator] = core.SettingsFile(file_path)
-            if self._indicator_setting_files[indicator].indicator != indicator:
-                print('Missmatch in indicator name and ombejct name!')
-            
-        # Load Filter settings. Filter settings are using indicator_setting_files-obects as data
-        self.indicator_filter_settings = {} 
-        for indicator, obj in self._indicator_setting_files.items():
-            self.indicator_filter_settings[indicator] = core.SettingsFilter(obj)
-            
-        # Load Ref settings. Filter settings are using indicator_setting_files-obects as data
-        self.indicator_ref_settings = {} 
-        for indicator, obj in self._indicator_setting_files.items():
-            self.indicator_ref_settings[indicator] = core.SettingsRef(obj) 
-            
-        # Load Tolerance settings. Filter settings are using indicator_setting_files-obects as data
-        self.indicator_tolerance_settings = {} 
-        for indicator, obj in self._indicator_setting_files.items():
-            self.indicator_tolerance_settings[indicator] = core.SettingsTolerance(obj)
-        
-    #==========================================================================
-    def get_indicator_settings_name_list(self):
-        return sorted(self.indicator_settings.keys()) 
-    
     #==========================================================================
     def save_indicator_settings(self, indicator): 
         if not self._save_ok(): 
@@ -954,124 +772,72 @@ class WorkSpace_old2(object):
         for obj in self.indicator_settings.values():
             if not obj.save_file() :
                 all_ok = False
-        return all_ok
+        return all_ok 
+    
+    #==========================================================================
+    def set_data_filter(self, step='', subset='', filter_type='', filter_name='', data=None, save_filter=True): 
+        step_object = self.get_step_object(step=step, subset=subset)
+        if not step_object:
+            return False
+        return step_object.set_data_filter(filter_type=filter_type, 
+                                            filter_name=filter_name, 
+                                            data=data, 
+                                            save_filter=save_filter)
         
     #==========================================================================
-    def load_data(self): 
-        # Load all data in the current WorkSpace data folder...
-        
-        # ...for now load test data...
-        raw_data_file_path = root_directory + '/test_data/raw_data/data_BAS_2000-2009.txt'
-        
-        
-        self.raw_data = core.DataHandler('raw')
-        self.raw_data.add_txt_file(raw_data_file_path, data_type='column') 
-        
-    #==========================================================================
-    def apply_first_filter(self):
-        # Use first filter 
-        print('{}\nApplying first filter\n'.format('*'*nr_marks))
-        
-        self.filtered_data = self.raw_data.filter_data(self.first_filter) 
+    def set_indicator_settings_filter(self, step='', subset='', filter_type='', filter_name='', data=None, save_filter=True): 
+        """
+        Use to change indicator settings filter. 
+        """
+        step_object = self.get_step_object(step=step, subset=subset)
+        if not step_object:
+            return False
+        return step_object.set_data_filter(filter_type=filter_type, 
+                                            filter_name=filter_name, 
+                                            data=data, 
+                                            save_filter=save_filter)
+
         
     #==========================================================================
-    def update_filter_settings(self, indicator=None, filter_settings=None):
+    def update_indicator_filter_settings(self, indicator=None, filter_settings=None):
         """
         filter_settings are dicts like: 
             filter_settings[type_area][variable] = value 
         """
         if filter_settings: 
             filter_object = self.indicator_filter_settings[indicator] 
-            filter_object.set_values(filter_settings) 
-            
-    #==========================================================================
-    def show_settings(self):
-        print('first_filter:')
-        self.first_filter.show_filter()
+            filter_object.set_values(filter_settings)    
     
+    
+    
+"""
 ###############################################################################
-class WorkSpace_old(object):
-    """
-    Class to load workspace
-    Creates folder structure and necessary filter files
-    """
-    
-    def __init__(self, name = 'active workspace', root_directory=None):
-        self.name = name
-        if root_directory:
-            self.root_directory = root_directory
-        else:
-#            self.root_directory = os.path.dirname(os.path.abspath(__file__))
-            self.root_directory = os.path.join( os.path.dirname( __file__ ), '..' )
-        self._set_directories()
-        print(self.root_directory)
-        if self.name not in os.listdir(self.root_directory + '\\workspaces'):
-            print('Workspace directory: {}'.format(self.root_directory + '\\workspaces'))
-            print('Setting up new workspace named: {}'.format(name))
-            self._create_folder_structure()
-            self._default_settings()
-        else:
-            print('Using existing workspace named: {}'.format(name))
-            self._check_folderstructure()
-            self._check_settings()
-     
-    def _set_directories(self):
-        self.paths = {}
-        self.paths['current_workspace'] = self.root_directory + '\\workspaces\\' + self.name
-        #set paths
-        self.paths['filtered_data'] = self.paths['current_workspace'] + '\\data\\filtered_data'
-        self.paths['raw_data'] = self.paths['current_workspace'] + '\\data\\raw_data'
-        self.paths['selection_filters'] = self.paths['current_workspace'] + '\\filters\\selection_filters'
-        self.paths['tolerance_filters'] = self.paths['current_workspace'] + '\\filters\\tolerance_filters'
-        self.paths['results'] = self.paths['current_workspace'] + '\\results'
-        
-    def _create_folder_structure(self):
-        """
-        Sets up the needed folder structure for the new workspace
-        """
-
-        #create directories
-        os.makedirs(self.paths['filtered_data'])
-        os.makedirs(self.paths['raw_data'])
-        os.makedirs(self.paths['selection_filters'])
-        os.makedirs(self.paths['tolerance_filters'])
-        os.makedirs(self.paths['results'])
-        
-        
-    def _default_settings(self):
-        """
-        Gets default filter files (some with default filters defined some with only the structure of the file)
-        """
-        self.selection_filter_default =  shutil.copy(self.root_directory + '\\workspaces\\default\\filters\\selection_filters\\first_data_filter.txt', self.paths['selection_filters'])       
-        self.tolerance_filter_default =  shutil.copy(self.root_directory + '\\workspaces\\default\\filters\\tolerance_filters\\tolerance_filter_template.txt', self.paths['tolerance_filters'])       
-        self.first_filter = core.DataFilter('First filter', file_path = self.paths['selection_filters']+'\\first_data_filter.txt')
-        
-    def _check_folderstructure(self):
-        #TODO: make check of workspace folder structure
-        for key, item in self.paths.items():
-            if os.path.isdir(item):
-                continue
-            else:
-                try:
-                    # MW: Does not work for me in Spyder
-                    raise('PathError')
-                except:
-                    pass
-                print('no folder set for {}'.format(key))
-    
-    def _check_settings(self):
-        #TODO: make check of workspace settings
-        self.first_filter = core.DataFilter('First filter', file_path = self.paths['selection_filters']+'\\first_data_filter.txt')
-        
-    
-    def show_settings(self):
-        print('first_filter:')
-        self.first_filter.show_filter()
-    
-    def first_filter(self):
-        pass
+###############################################################################
+###############################################################################
+###############################################################################
+###############################################################################
+###############################################################################
+###############################################################################
+###############################################################################
+###############################################################################
+###############################################################################
+###############################################################################
+###############################################################################
+"""
 
 
+#==============================================================================
+#==============================================================================
+def get_step_name(step): 
+    step = str(step)
+    if not step.startswith('step_'):
+        step = 'step_' + step
+    return step
+
+
+#==============================================================================
+#==============================================================================
+#==============================================================================
 if __name__ == '__main__':
     if 0:
         directory = 'D:/Utveckling/g_ekostat_calculator/ekostat_calculator_lena/workspaces/default'
