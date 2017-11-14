@@ -35,13 +35,17 @@ class DataFilter(object):
     #==========================================================================
     def _get_filter_boolean_for_df_from_exclude_list(self, df=None, parameter=None): 
         parameter = parameter.upper()
-        value_list = self.get_exclude_list_filter(parameter)
+        value_list = self.get_exclude_list_filter(parameter) 
+        if not value_list:
+            return False
         return ~df[parameter].astype(str).isin(value_list)
     
     #==========================================================================
     def _get_filter_boolean_for_df_from_include_list(self, df=None, parameter=None): 
         parameter = parameter.upper()
-        value_list = self.get_include_list_filter(parameter)
+        value_list = self.get_include_list_filter(parameter) 
+        if not value_list:
+            return False
         return df[parameter].astype(str).isin(value_list)
     
     #==========================================================================
@@ -112,7 +116,7 @@ class DataFilter(object):
             self.filter_file_paths[long_name] = file_path
             
             # Load filters 
-            if long_name == 'areas':
+            if long_name.startswith('areas'):
                 pass
             elif long_name.startswith('LIST_'):
                 filter_name = long_name[5:] 
@@ -140,7 +144,7 @@ class DataFilter(object):
         for filter_name in self.exclude_list_filter.keys(): 
             long_name = 'LIST_EXCLUDE_' + filter_name
             file_path = self.filter_file_paths[long_name]
-            print('save: "{}" to file: "{}"'.format(filter_name, file_path))
+            print('Save: "{}" to file: "{}"'.format(filter_name, file_path))
             with codecs.open(file_path, 'w', encoding='cp1252') as fid: 
                 for item in self.exclude_list_filter[filter_name]:
                     fid.write(item) 
@@ -151,7 +155,7 @@ class DataFilter(object):
         for filter_name in self.include_list_filter.keys(): 
             long_name = 'LIST_INCLUDE_' + filter_name
             file_path = self.filter_file_paths[long_name.upper()]
-            print('save: "{}" to file: "{}"'.format(filter_name, file_path))
+            print('Save: "{}" to file: "{}"'.format(filter_name, file_path))
             with codecs.open(file_path, 'w', encoding='cp1252') as fid: 
                 for item in self.include_list_filter[filter_name]:
                     fid.write(item) 
@@ -462,11 +466,13 @@ class SettingsFilter(object):
         self.settings.connected_to_filter_settings_object = True
         
     #==========================================================================
-    def get_filter_boolean_for_df(self, df=None, type_area=None): 
+    def get_filter_boolean_for_df(self, df=None, water_body=None): 
         """
         Get boolean pd.Series to use for filtering. 
         Name of this has to be tha same as the one in class DataFilter. 
         """
+        # TODO: Convert water_body to type_area. Something like self.get_type_area_for_water_body
+        type_area = water_body
         return self.settings.get_filter_boolean(df=df, 
                                                 type_area=type_area)
         

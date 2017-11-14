@@ -613,18 +613,20 @@ class WorkSpace(object):
         """
         Applies the first filter to the index_handler. 
         """
-        self.index_handler.add_filter(filter_object=self.step_0.data_filter, filter_level=0)
+        all_ok = self.index_handler.add_filter(filter_object=self.step_0.data_filter, filter_level=0) 
+        return all_ok
         
     #==========================================================================
     def apply_subset_filter(self, subset): 
         """
-        Applies the first data filter for the given subset. 
+        Applies the data filter for the given subset. 
         This is not fully handled by the index_handler. 
         """
         if subset not in self.get_subset_list():
             return False
         sub_object = self.get_step_1_object(subset)
-        self.index_handler.add_filter(filter_object=sub_object.data_filter, filter_level=1, subset=subset)
+        all_ok = self.index_handler.add_filter(filter_object=sub_object.data_filter, filter_level=1, subset=subset) 
+        return all_ok
         
     #==========================================================================
     def copy_subset(self, sourse_subset_name=None, target_subset_name=None, new_alias=False): 
@@ -676,16 +678,16 @@ class WorkSpace(object):
         data_filter = self.get_data_filter_object(step=step, subset=subset)
         if not data_filter:
             return False
-        return data_filter.get_data_filter_info()
+        return data_filter.get_filter_info()
     
     #==========================================================================
-    def get_filtered_data(self, level=None): 
+    def get_filtered_data(self, level=None, subset=None): 
         """
         Returns filtered data using the given filter level. 
         """
         if level == None:
             return False
-        return self.index_handler.get_filtered_data(level=level)
+        return self.index_handler.get_filtered_data(level=level, subset=subset)
     
     #==========================================================================
     def get_indicator_settings_name_list(self):
@@ -779,6 +781,7 @@ class WorkSpace(object):
         step_object = self.get_step_object(step=step, subset=subset)
         if not step_object:
             return False
+        print('sdfs')
         return step_object.set_data_filter(filter_type=filter_type, 
                                             filter_name=filter_name, 
                                             data=data, 
