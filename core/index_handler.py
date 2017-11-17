@@ -49,21 +49,38 @@ class IndexHandler(object):
         
     #==========================================================================
     def _initiate_attributes(self):
-        self.filter = {}
+        self.filter = {} 
+        self.first_filter = None 
+        
+        self.subset_filter = None # This is just for testing to combine first filter and the first subset filter. 
         
     #==========================================================================
+<<<<<<< HEAD
     def add_filter(self, filter_object=None, filter_level=None, indicator=None, subset=None): 
+=======
+    def add_filter(self, filter_object=None, filter_level=None, subset=None, indicator=None, water_body=None): 
+>>>>>>> 70dbcf2762cedb99af5de59121a8d7431a6af59f
         """
         For now only first filter applied
         """
-        # TODO: handle levels and subsets 
+        df = self.data_handler_object.get_all_column_data_df() 
+        # TODO: handle levels, subsets and indicator input  
         if filter_level == 0:
-            df = self.data_handler_object.get_all_column_data_df()
             self.first_filter = filter_object.get_filter_boolean_for_df(df) 
             # TODO: reset later filters
+            return True
+        elif filter_level == 1 and subset == 'A': # Temporary!! Structure is not ready! 
+            self.subset_filter = filter_object.get_filter_boolean_for_df(df)
+            return True
+        
+        elif indicator and water_body: # Or something...
+            pass
+        
+        
+        return False
         
     #==========================================================================
-    def get_filtered_data(self, level=None): 
+    def get_filtered_data(self, level=None, subset=None): 
         """
         mw
         Returns filtered data for the given level...
@@ -71,5 +88,14 @@ class IndexHandler(object):
         if type(self.first_filter) != pd.Series:
             return False
         
-        boolean_filter = self.first_filter
-        return self.data_handler_object.get_all_column_data_df(boolean_filter) 
+        # Temp! Structure is not ready!!!
+        if level == 1 and subset == 'A': 
+            boolean_filter = self.first_filter & self.subset_filter
+            return self.data_handler_object.get_all_column_data_df(boolean_filter)
+        else:
+            boolean_filter = self.first_filter
+            return self.data_handler_object.get_all_column_data_df(boolean_filter) 
+
+        return False
+
+

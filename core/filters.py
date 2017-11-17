@@ -28,19 +28,24 @@ class DataFilter(object):
         self.filter_file_paths = {} 
         self.include_list_filter = {} 
         self.exclude_list_filter = {} 
+        self.all_filters = {}
         
         self.load_filter_files()
         
     #==========================================================================
     def _get_filter_boolean_for_df_from_exclude_list(self, df=None, parameter=None): 
         parameter = parameter.upper()
-        value_list = self.get_exclude_list_filter(parameter)
+        value_list = self.get_exclude_list_filter(parameter) 
+        if not value_list:
+            return False
         return ~df[parameter].astype(str).isin(value_list)
     
     #==========================================================================
     def _get_filter_boolean_for_df_from_include_list(self, df=None, parameter=None): 
         parameter = parameter.upper()
-        value_list = self.get_include_list_filter(parameter)
+        value_list = self.get_include_list_filter(parameter) 
+        if not value_list:
+            return False
         return df[parameter].astype(str).isin(value_list)
     
     #==========================================================================
@@ -80,14 +85,27 @@ class DataFilter(object):
         return self.exclude_list_filter.get(filter_name.upper(), False)
     
     #==========================================================================
+    def get_exclude_list_filter_names(self):
+        return sorted(self.exclude_list_filter.keys())
+    
+    #==========================================================================
     def get_include_list_filter(self, filter_name):
         return self.include_list_filter.get(filter_name.upper(), False)
         
+    #==========================================================================
+    def get_include_list_filter_names(self):
+        return sorted(self.include_list_filter.keys())
+        
+    #==========================================================================
+    def get_filter_info(self):
+        return self.all_filters 
+    
     #==========================================================================
     def load_filter_files(self): 
         self.filter_file_paths = {} 
         self.include_list_filter = {} 
         self.exclude_list_filter = {} 
+        self.all_filters = {}
         for file_name in [item for item in os.listdir(self.filter_directory) if item.endswith('.fil')]: 
 #            print('-'*70)
             file_path = os.path.join(self.filter_directory, file_name).replace('\\', '/') 
@@ -98,7 +116,7 @@ class DataFilter(object):
             self.filter_file_paths[long_name] = file_path
             
             # Load filters 
-            if long_name == 'areas':
+            if long_name.startswith('areas'):
                 pass
             elif long_name.startswith('LIST_'):
                 filter_name = long_name[5:] 
@@ -108,6 +126,15 @@ class DataFilter(object):
                     elif filter_name.startswith('INCLUDE_'): 
                         self.include_list_filter[filter_name[8:]] = [item.strip() for item in fid.readlines()]
 #            print('Loaded list:', self.include_list_filter[filter_name]) 
+        
+        #----------------------------------------------------------------------
+        # Add info to self.all_filters
+        # Exclude list 
+        self.all_filters['exclude_list'] = self.get_exclude_list_filter_names()
+        
+        # Include list 
+        self.all_filters['include_list'] = self.get_include_list_filter_names() 
+        
             
     #==========================================================================
     def save_filter_files(self): 
@@ -117,7 +144,7 @@ class DataFilter(object):
         for filter_name in self.exclude_list_filter.keys(): 
             long_name = 'LIST_EXCLUDE_' + filter_name
             file_path = self.filter_file_paths[long_name]
-            print('save: "{}" to file: "{}"'.format(filter_name, file_path))
+            print('Save: "{}" to file: "{}"'.format(filter_name, file_path))
             with codecs.open(file_path, 'w', encoding='cp1252') as fid: 
                 for item in self.exclude_list_filter[filter_name]:
                     fid.write(item) 
@@ -128,12 +155,30 @@ class DataFilter(object):
         for filter_name in self.include_list_filter.keys(): 
             long_name = 'LIST_INCLUDE_' + filter_name
             file_path = self.filter_file_paths[long_name.upper()]
-            print('save: "{}" to file: "{}"'.format(filter_name, file_path))
+            print('Save: "{}" to file: "{}"'.format(filter_name, file_path))
             with codecs.open(file_path, 'w', encoding='cp1252') as fid: 
                 for item in self.include_list_filter[filter_name]:
                     fid.write(item) 
                     fid.write('\n')
-                    
+              
+    #==========================================================================
+    def set_filter(self, filter_type=None, filter_name=None, data=None, save_filter=True): 
+        """
+        Sets the given filter_name of the given filter_type to data. 
+        Option to save or not. 
+        filter_types could be: 
+            include_list
+            exclude_list 
+        """
+        if filter_type == 'exclude_list':
+            return self.set_exclude_list_filter(filter_name=filter_name, 
+                                                filter_list=data, 
+                                                save_files=save_filter)
+        elif filter_type == 'include_list':
+            return self.set_include_list_filter(filter_name=filter_name, 
+                                                filter_list=data, 
+                                                save_files=save_filter)
+        
     #==========================================================================
     def set_include_list_filter(self, filter_name, filter_list, save_files=True): 
         if filter_name not in self.include_list_filter.keys():
@@ -141,7 +186,8 @@ class DataFilter(object):
         filter_list = sorted(set([item.strip() for item in filter_list]))
         self.include_list_filter[filter_name] = filter_list
         if save_files: 
-            self.save_filter_files()
+            self.save_filter_files() 
+        return True
     
     #==========================================================================
     def set_exclude_list_filter(self, filter_name, filter_list, save_files=True): 
@@ -151,6 +197,7 @@ class DataFilter(object):
         self.exclude_list_filter[filter_name] = filter_list
         if save_files: 
             self.save_filter_files()
+        return True
                     
         
 ###############################################################################
@@ -419,11 +466,13 @@ class SettingsFilter(object):
         self.settings.connected_to_filter_settings_object = True
         
     #==========================================================================
-    def get_filter_boolean_for_df(self, df=None, type_area=None): 
+    def get_filter_boolean_for_df(self, df=None, water_body=None): 
         """
         Get boolean pd.Series to use for filtering. 
         Name of this has to be tha same as the one in class DataFilter. 
         """
+        # TODO: Convert water_body to type_area. Something like self.get_type_area_for_water_body
+        type_area = water_body
         return self.settings.get_filter_boolean(df=df, 
                                                 type_area=type_area)
         
