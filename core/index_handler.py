@@ -52,7 +52,7 @@ class IndexHandler(object):
         self.filter = {}
         
     #==========================================================================
-    def add_filter(self, filter_object=None, filter_level=None, subset=None): 
+    def add_filter(self, filter_object=None, filter_level=None, indicator=None, subset=None): 
         """
         For now only first filter applied
         """
