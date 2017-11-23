@@ -31,12 +31,12 @@ class WorkStep(object):
         self.step_directory = '/'.join([self.parent_directory, self.name]) 
         print('Initiating WorkStep: {}'.format(self.step_directory))
         
-        self._load_attributes() 
+        self._load_attributes()
         
         self._set_directories()
         
         self._create_folder_structure()
-        self.load_all_files()    
+        self.load_all_files()
         self._check_folder_structure()        
         
     #==========================================================================
@@ -59,7 +59,7 @@ class WorkStep(object):
         self.indicator_settings_paths = {}
         for file_name in os.listdir(self.directory_paths['indicator_settings']): 
             if file_name.endswith('.set'):
-                file_path = '/'.join([self.directory_paths['indicator_settings'], file_name]) 
+                file_path = '/'.join([self.directory_paths['indicator_settings'], file_name])
                 indicator = file_name.split('.')[0]
                 self.indicator_settings_paths[indicator] = file_path
         
@@ -77,7 +77,7 @@ class WorkStep(object):
                     raise('PathError')
                 except:
                     pass
-                print('no folder set for: {}'.format(item)) 
+                print('no folder set for: {}'.format(item))
                 
         return all_ok
         
@@ -298,14 +298,14 @@ class Subset(object):
     #==========================================================================
     def _load_config(self): 
         self.config_file_path = self.subset_directory + '/subset.cfg'
-        self.config = self.Config(self.config_file_path)               
+        self.config = self.Config(self.config_file_path)
         
         
     #==========================================================================
     def _load_steps(self): 
         if not os.path.exists(self.subset_directory): 
-            os.makedirs(self.subset_directory) 
-        step_list = [item for item in os.listdir(self.subset_directory) if '.' not in item] 
+            os.makedirs(self.subset_directory)
+        step_list = [item for item in os.listdir(self.subset_directory) if '.' not in item]
         print('step_list', step_list)
         for step in step_list:
             self.add_workstep(step)
@@ -321,14 +321,14 @@ class Subset(object):
             self.add_workstep(step)
             step_object = subset_object.get_step_object(step)
             self.steps[step].add_files_from_workstep(step_object=step_object, 
-                                                     overwrite=overwrite) 
+                                                     overwrite=overwrite)
             
         # Copy config file
         if os.path.exists(subset_object.config_file_path):
             if os.path.exists(self.config_file_path) and not overwrite: 
                 return False 
             
-            shutil.copy(subset_object.config_file_path, self.config_file_path) 
+            shutil.copy(subset_object.config_file_path, self.config_file_path)
             self._load_config()
         return True
             
@@ -343,7 +343,7 @@ class Subset(object):
                     step = st
                     break
             if not step:
-                print('Cannot add another step!') 
+                print('Cannot add another step!')
                 return
         
         self.steps[step] = WorkStep(name=step, parent_directory=self.subset_directory)
@@ -483,14 +483,14 @@ class WorkSpace(object):
         self.name = name 
         self.parent_directory = parent_directory.replace('\\', '/')
         self.resource_directory = resource_directory.replace('\\', '/')
-        self.workspace_directory = '/'.join([self.parent_directory, self.name]) 
+        self.workspace_directory = '/'.join([self.parent_directory, self.name])
         self.nr_subsets_allowed = nr_subsets_allowed
         
         print('')
         print('='*100)
         print('Initiating WorkSpace: {}'.format(self.workspace_directory)) 
         
-        self._load_attributes() 
+        self._load_attributes()
         
 #        print('Parent directory is: {}'.format(self.parent_directory))
         
@@ -508,7 +508,7 @@ class WorkSpace(object):
         
         # Subset (convert to char)
         self.subset_list = [chr(x+65) for x in range(self.nr_subsets_allowed)]
-        self.subset_dict = {} 
+        self.subset_dict = {}
         
     #==========================================================================
     def _save_ok(self):
@@ -530,23 +530,23 @@ class WorkSpace(object):
         if not os.path.exists(self.directory_path_subset):
             os.makedirs(self.directory_path_subset)
             
-        subsets = os.listdir(self.directory_path_subset) 
+        subsets = os.listdir(self.directory_path_subset)
 #        print('subsets', subsets)
         if subsets:
             for s in subsets:
                 self.add_subset(s)
         else:
-            self.add_subset() 
+            self.add_subset()
             
         # Step 0
 #        if not os.path.exists(self.directory_path_step_0):
-#            os.makedirs(self.directory_path_step_0) 
+#            os.makedirs(self.directory_path_step_0)
         self.step_0 = WorkStep(name='step_0', 
-                               parent_directory=self.workspace_directory) 
+                               parent_directory=self.workspace_directory)
         
         # Set data and index handler
         self.data_handler = core.DataHandler(input_data_directory=self.directory_path_input_data, 
-                                             resource_directory=self.resource_directory) 
+                                             resource_directory=self.resource_directory)
         
         self.index_handler = core.IndexHandler(workspace_object=self, 
                                                data_handler_object=self.data_handler)
@@ -562,23 +562,23 @@ class WorkSpace(object):
             self.step_0 = WorkStep(name='step_0', 
                           parent_directory=self.workspace_directory) 
             self.step_0.add_files_from_workstep(step_object=workspace_object.step_0, 
-                                               overwrite=overwrite) 
+                                                overwrite=overwrite)
                 
         # Subsets
         for subset in workspace_object.get_subset_list():
-            self.add_subset(subset) 
+            self.add_subset(subset)
             self.subset_dict[subset].add_files_from_subset(subset_object=workspace_object.subset_dict[subset], 
                                                            overwrite=overwrite)
             
         # Data         
         for from_file_path in workspace_object.get_all_file_paths_in_input_data():
-            to_file_path = from_file_path.replace(workspace_object.workspace_directory, self.workspace_directory) 
+            to_file_path = from_file_path.replace(workspace_object.workspace_directory, self.workspace_directory)
             if os.path.exists(to_file_path) and not overwrite:
                 continue
             to_directory = os.path.dirname(to_file_path)
             if not os.path.exists(to_directory):
                 # If directory has been added in later versions of the ekostat calculator
-                os.makedirs(to_directory) 
+                os.makedirs(to_directory)
             # Copy file
             shutil.copy(from_file_path, to_file_path)
         
@@ -592,20 +592,20 @@ class WorkSpace(object):
                     sub = s
                     break
             if not sub:
-                print('Cannot add another subset. Maximum subset limit has been reached!') 
+                print('Cannot add another subset. Maximum subset limit has been reached!')
                 return False
         elif sub in self.subset_dict.keys():
-            print('Given subset is already present!') 
+            print('Given subset is already present!')
             return False
         elif sub not in self.subset_list:
-            print('Invalid subset name: {}'.format(sub)) 
+            print('Invalid subset name: {}'.format(sub))
             return False
         
 #        print('== {}'.format(sub))
-        self.directory_path_subsets[sub] = self.directory_path_subset + '/{}'.format(sub) 
+        self.directory_path_subsets[sub] = self.directory_path_subset + '/{}'.format(sub)
         self.subset_dict[sub] = Subset(name=sub, 
                                        parent_directory=self.directory_path_subset, 
-                                       alias=alias) 
+                                       alias=alias)
         return sub 
     
     #==========================================================================
@@ -613,11 +613,11 @@ class WorkSpace(object):
         """
         Applies the first filter to the index_handler. 
         """
-        all_ok = self.index_handler.add_filter(filter_object=self.step_0.data_filter, filter_level=0) 
+        all_ok = self.index_handler.add_filter(filter_object=self.step_0.data_filter, filter_level=0)
         return all_ok
         
     #==========================================================================
-    def apply_subset_filter(self, subset): 
+    def apply_subset_filter(self, subset):
         """
         Applies the data filter for the given subset. 
         This is not fully handled by the index_handler. 
@@ -625,7 +625,7 @@ class WorkSpace(object):
         if subset not in self.get_subset_list():
             return False
         sub_object = self.get_step_1_object(subset)
-        all_ok = self.index_handler.add_filter(filter_object=sub_object.data_filter, filter_level=1, subset=subset) 
+        all_ok = self.index_handler.add_filter(filter_object=sub_object.data_filter, filter_level=1, subset=subset)
         return all_ok
         
     #==========================================================================
@@ -707,7 +707,7 @@ class WorkSpace(object):
         if step == 'step_0':
             return self.get_step_0_object()
         
-        assert all([subset, step]) 
+        assert all([subset, step])
         
         sub = self.get_subset_object(subset)
         if not sub:
@@ -725,6 +725,10 @@ class WorkSpace(object):
     #==========================================================================
     def get_step_2_object(self, subset): 
         return self.subset_dict[subset].get_step_2_object()
+    
+    #==========================================================================
+    def initiate_quality_factors(self, ):
+        self.quality_factor_NP = core.QualityFactorNP()
         
     #==========================================================================
     def load_all_data(self): 
@@ -745,9 +749,9 @@ class WorkSpace(object):
         fid_phyche_col = u'BOS_BAS_2016-2017_column_format.txt' 
         
         self.data_handler.physical_chemical.load_source(file_path=raw_data_file_path + fid_phyche,
-                                       raw_data_copy=True)
+                                                        raw_data_copy=True)
         self.data_handler.physical_chemical.load_source(file_path=raw_data_file_path + fid_phyche_col,
-                                               raw_data_copy=True)
+                                                        raw_data_copy=True)
         self.data_handler.physical_chemical.save_data_as_txt(directory=output_directory, prefix=u'Column_format')
         
         #raw_data.physical_chemical.raw_data_format
@@ -755,8 +759,9 @@ class WorkSpace(object):
         #raw_data.physical_chemical.filter_parameters.use_parameters
         
         self.data_handler.zoobenthos.load_source(file_path=raw_data_file_path + fid_zooben,
-                                        raw_data_copy=True)
+                                                 raw_data_copy=True)
         self.data_handler.zoobenthos.save_data_as_txt(directory=output_directory, prefix=u'Column_format')
+        
         self.data_handler.merge_all_data(save_to_txt=True)
         
     #==========================================================================
@@ -772,7 +777,7 @@ class WorkSpace(object):
             return 
         all_ok = True
         for obj in self.indicator_settings.values():
-            if not obj.save_file() :
+            if not obj.save_file():
                 all_ok = False
         return all_ok 
     
@@ -808,8 +813,8 @@ class WorkSpace(object):
             filter_settings[type_area][variable] = value 
         """
         if filter_settings: 
-            filter_object = self.indicator_filter_settings[indicator] 
-            filter_object.set_values(filter_settings)    
+            filter_object = self.indicator_filter_settings[indicator]
+            filter_object.set_values(filter_settings)
     
     
     
@@ -856,7 +861,7 @@ if __name__ == '__main__':
                 for f in files:
     #                 file_list.append('/'.join([os.path.basename(root), f]))
                     file_path = '/'.join([root, f]).replace('\\', '/')
-                    file_list.append(file_path) 
+                    file_list.append(file_path)
                     new_file_path = file_path.replace(directory, new_directory)
                     new_file_list.append(new_file_path)
                     

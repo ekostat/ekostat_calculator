@@ -99,14 +99,8 @@ class RowDataHandler(object):
     def _seperate_para_value_from_qflag(self, sep=''):
         """
         """
-#        return
         # Simply get the length of one seperated string 
-#        print('#'*70) 
-#        print('-_seperate_para_value_from_qflag', self.df.columns)
-#        print('self.df.columns:', sorted(self.df.columns))
         for para in self.para_list: 
-            
-#            print('para', para)
             if np.any(self.df[para]):
                 length = len(self.df[para][self.df.index[self.df[para].notnull()][0]].split(sep))
                 break
@@ -125,10 +119,7 @@ class RowDataHandler(object):
         """
         df_col = self.df.unstack() # necessary to create a new local dataframe here
         df_col = df_col.reset_index()
-#        self.df = self.df.unstack()
-#        self.df = self.df.reset_index()
         self.df = df_col
-#        print('-_set_column_table_from_pivot_table', self.df.columns)
         if sort:
             self.sort_dict_by_keys(sort_order=self.filter_parameters.sort_by_fields,
                                    ascending_list=[True]*len(self.filter_parameters.sort_by_fields), 
@@ -629,7 +620,7 @@ class DataHandler(object):
         
         
 #        self.phytoplankton = DataHandlerPhytoplankton(filter_path=path_fields_filter+u'',
-#                                                       parameter_mapping=self.parameter_mapping)
+#                                                      parameter_mapping=self.parameter_mapping)
         
         
         self.zoobenthos = DataHandlerZoobenthos(filter_path=path_fields_filter+'filter_fields_zoobenthos.txt',

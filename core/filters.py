@@ -28,6 +28,8 @@ class DataFilter(object):
         self.filter_file_paths = {} 
         self.include_list_filter = {} 
         self.exclude_list_filter = {} 
+        self.include_header_filter = {} 
+        self.exclude_header_filter = {} 
         self.all_filters = {}
         
         self.load_filter_files()
@@ -47,7 +49,7 @@ class DataFilter(object):
         if not value_list:
             return False
         return df[parameter].astype(str).isin(value_list)
-    
+
     #==========================================================================
     def get_filter_boolean_for_df(self, df=None): 
         """
@@ -58,7 +60,7 @@ class DataFilter(object):
         #----------------------------------------------------------------------
         # Filter exclude list 
         for par in sorted(self.exclude_list_filter.keys()): 
-            boolean = self._get_filter_boolean_for_df_from_exclude_list(df=df, parameter=par) 
+            boolean = self._get_filter_boolean_for_df_from_exclude_list(df=df, parameter=par)
 
             if not type(boolean) == pd.Series:
                 continue            
@@ -69,8 +71,8 @@ class DataFilter(object):
         
         #----------------------------------------------------------------------
         # Filter include list 
-        for par in sorted(self.include_list_filter.keys()): 
-            boolean = self._get_filter_boolean_for_df_from_include_list(df=df, parameter=par) 
+        for par in sorted(self.include_list_filter.keys()):
+            boolean = self._get_filter_boolean_for_df_from_include_list(df=df, parameter=par)
 
             if not type(boolean) == pd.Series:
                 continue            
@@ -79,6 +81,21 @@ class DataFilter(object):
             else:
                 combined_boolean = boolean 
         return combined_boolean
+
+    #==========================================================================
+    def get_filter_header_for_df(self, df=None):
+        
+        self.df = self.df.drop(columns, axis=1, errors='ignore')
+
+    #==========================================================================
+    def get_exclude_header_filter(self, filter_name):
+        return self.exclude_header_filter.get(filter_name.upper(), False)
+    
+    #==========================================================================
+    def get_include_header_filter(self, filter_name):
+        return self.include_header_filter.get(filter_name.upper(), False)
+    
+    
     
     #==========================================================================
     def get_exclude_list_filter(self, filter_name):
@@ -158,7 +175,7 @@ class DataFilter(object):
             print('Save: "{}" to file: "{}"'.format(filter_name, file_path))
             with codecs.open(file_path, 'w', encoding='cp1252') as fid: 
                 for item in self.include_list_filter[filter_name]:
-                    fid.write(item) 
+                    fid.write(item)
                     fid.write('\n')
               
     #==========================================================================
@@ -742,7 +759,25 @@ if __name__ == '__main__':
     print('root directory is "{}"'.format(root_directory))
     
     
-    
+    if 1: 
+        root_directory = os.getcwd()
+        workspace_directory = root_directory + '/workspaces' 
+        resource_directory = root_directory + '/resources'
+        
+        
+        
+        default_workspace = core.WorkSpace(name='default', 
+                                           parent_directory=workspace_directory, 
+                                           resource_directory=resource_directory) 
+        
+        workspace = core.WorkSpace(name='jj', 
+                                   parent_directory=workspace_directory, 
+                                   resource_directory=resource_directory) 
+        
+        workspace.add_files_from_workspace(default_workspace, overwrite=True)
+        
+        workspace.load_all_data()
+
     ###########################################################################
     if 0:
         # MW test for SetingsFile 
@@ -777,7 +812,7 @@ if __name__ == '__main__':
     
     
     
-    if 1:
+    if 0:
         filter_directory = 'D:/Utveckling/g_ekostat_calculator/ekostat_calculator_lena/workspaces/default/step_0/data_filters' 
         d = DataFilter(filter_directory) 
         y = d.get_list_filter('list_year') 

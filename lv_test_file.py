@@ -14,7 +14,6 @@ importlib.reload(core)
 
     
     
-    
 ###############################################################################
 if __name__ == '__main__':
     nr_marks = 60
@@ -23,7 +22,7 @@ if __name__ == '__main__':
     print('-'*nr_marks)
     print('')
     
-    root_directory = os.path.dirname(os.path.abspath(__file__))
+    root_directory = os.path.dirname(os.path.abspath(__file__))[:-4]
     
 #    core.StationList(root_directory + '/test_data/Stations_inside_med_typ_attribute_table_med_delar_av_utsjö.txt')
     core.ParameterList()
