@@ -42,6 +42,7 @@ class IndexHandler(object):
     - Summera index arrayer
     - Utgår från föregående index.array för det specifika subsetet.. Indicator.index 
     - Pratar med DataHandler och dess DataFrame för att plocka fram index 
+    - select by columns
     """
     def __init__(self, workspace_object=None, data_handler_object=None):
         self.workspace_object = workspace_object
@@ -49,7 +50,7 @@ class IndexHandler(object):
         
     #==========================================================================
     def _initiate_attributes(self):
-        self.filter = {} 
+        self.filter = {}
         self.first_filter = None 
         
         self.subset_filter = None # This is just for testing to combine first filter and the first subset filter. 
@@ -59,10 +60,10 @@ class IndexHandler(object):
         """
         For now only first filter applied
         """
-        df = self.data_handler_object.get_all_column_data_df() 
+        df = self.data_handler_object.get_all_column_data_df()
         # TODO: handle levels, subsets and indicator input  
         if filter_level == 0:
-            self.first_filter = filter_object.get_filter_boolean_for_df(df) 
+            self.first_filter = filter_object.get_filter_boolean_for_df(df)
             # TODO: reset later filters
             return True
         elif filter_level == 1 and subset == 'A': # Temporary!! Structure is not ready! 
@@ -78,7 +79,6 @@ class IndexHandler(object):
     #==========================================================================
     def get_filtered_data(self, level=None, subset=None): 
         """
-        mw
         Returns filtered data for the given level...
         """
         if type(self.first_filter) != pd.Series:
@@ -90,7 +90,7 @@ class IndexHandler(object):
             return self.data_handler_object.get_all_column_data_df(boolean_filter)
         else:
             boolean_filter = self.first_filter
-            return self.data_handler_object.get_all_column_data_df(boolean_filter) 
+            return self.data_handler_object.get_all_column_data_df(boolean_filter)
 
         return False
 

@@ -168,7 +168,7 @@ class QualityFactorNP(QualityFactorBase):
         qf_EQR = getattr(self.class_result, 'qf_EQR')['qf_NP_EQR']
 
         if qf_EQR >= 4.99: 
-            1
+            EQR = 1
             status = 'High'
         elif qf_EQR >= 4:
             EQR = 0.2*((qf_EQR-4)/(5-4)) + 0.8

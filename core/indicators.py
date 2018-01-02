@@ -321,7 +321,7 @@ class IndicatorDIN(IndicatorNutrients):
     """
     
     def __init__(self):
-        super().__init__() 
+        super().__init__()
         self.name = 'DIN'
         
         # Parameter list contains all parameters that is used by the indicator class
@@ -331,8 +331,9 @@ class IndicatorDIN(IndicatorNutrients):
         self._set_refvalues()
     
     #==========================================================================
-#    def _set_refvalues(self):
-#        core.RefValues().add_ref_parameter_from_file(self.name, resources_directory + '/classboundaries/nutrients/classboundaries_din_vinter.txt')
+    def _set_refvalues(self):
+        resources_directory = u'D:/Utveckling/GitHub/ekostat_calculator/resources/'
+        core.RefValues().add_ref_parameter_from_file(self.name, resources_directory + 'classboundaries/nutrients/classboundaries_din_vinter.txt')
     
     #==========================================================================
     def _load_data_objects(self):
@@ -431,7 +432,7 @@ class IndicatorTOTN(IndicatorNutrients):
 #        return self.get_ek_value_for_par_with_salt_ref(par='NTOT', 
 #                                                       salt_par='SALT_CTD', 
 #                                                       indicator_name='TOTN_winter', tolerance_filter=tolerance_filter)
-#        
+
             
 ###############################################################################
 if __name__ == '__main__':
