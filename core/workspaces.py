@@ -474,7 +474,7 @@ class WorkSpace(object):
     def __init__(self, 
                  name=None, 
                  parent_directory=None, 
-                 resource_directory=None, 
+                 resource_directory='D:/github/ekostat_calculator/resources',
                  nr_subsets_allowed=4): 
         
         assert all([name, parent_directory])
