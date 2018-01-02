@@ -7,14 +7,22 @@ Created on Fri Oct 20 14:57:56 2017
 import pandas as pd
 import numpy as np
 import core
+import os, sys
 
-"""#========================================================================"""
+#if current_path not in sys.path: 
+#    sys.path.append(os.path.dirname(os.path.realpath(__file__)))
+
+
+"""
+#==============================================================================
+#==============================================================================
+""" 
 class AttributeDict(dict):
     """    
     Base class for attribute dictionary. 
     """
     def __init__(self): 
-        super().__init__() 
+        super().__init__()
                     
     #==========================================================================
     def _add_arrays_to_entries(self, **entries): 
@@ -26,21 +34,29 @@ class AttributeDict(dict):
             setattr(self, key, array)
 
     #==========================================================================
-    def add_corresponding_arrays(self, df=None, first_key=u'', second_key=u'', match_key=u''):
+    def add_corresponding_arrays(self, df=None, first_key=u'', 
+                                 second_key=u'', match_key=u''):
         """
+        Ex. Add arrays of all water bodies within a specific type area (key)
         """
         for value in df[first_key].unique():
-            array = [wb.strip() for wb in \
-                     df[match_key].iloc[np.where(df[first_key]==value)].values]
+            array = self._get_array_from_df(df=df, 
+                                            key_a=match_key, 
+                                            key_b=first_key, 
+                                            match=value)
             setattr(self, value, sorted(array))
-
-        merged = df.get(df[first_key]).astype(str).str.cat(df.get(second_key).astype(str), sep=u'')
-        
-        for value in merged.unique():
-            if value not in self:
-                array = [wb.strip() for wb in \
-                         df[match_key].iloc[np.where(df[first_key]==value)].values]
-                setattr(self, value, sorted(array))
+            
+        if second_key: 
+            df['temp_key'] = np.array([a+b for a,b in zip(df[first_key].values, 
+                                      df[second_key].values)])
+    
+            for value in np.unique(df['temp_key']):
+                if value not in self:
+                    array = self._get_array_from_df(df=df, 
+                                                    key_a=match_key, 
+                                                    key_b='temp_key', 
+                                                    match=value)
+                    setattr(self, value, sorted(array))
         
     #==========================================================================
     def add_entries(self, **entries):
@@ -62,15 +78,8 @@ class AttributeDict(dict):
         dictionary of values from key_list-arrays
         
         """
-        # As dictionary
-        self.dict = dict()
         for i, value in enumerate(df[first_key].values):
-            self.dict[value.strip()] = {key: df[key][i] for key in key_list}
-            
-        # As attributes.. 
-#        for i, value in enumerate(df[first_key].values):  
-#            setattr(self, value.replace.strip(),
-#                    {key.lower(): df[key][i] for key in key_list})
+            setattr(self, value.strip(), {key: df[key][i] for key in key_list})
                     
     #==========================================================================
     def keys(self):
@@ -78,7 +87,17 @@ class AttributeDict(dict):
         
     #==========================================================================
     def get(self, key):
-        return getattr(self, key.lower())
+        try:
+            return getattr(self, key.lower())
+        except: 
+            return getattr(self, key)
+    
+    #==========================================================================
+    def _get_array_from_df(self, df=None, key_a=u'', key_b=u'', match=None):
+#        print(type(df[key_a]), type(df[key_a][0]))
+#        return df[key_a].loc[df[key_b].isin([match])].values.str.strip()
+        return [x.strip() for x in df[key_a].loc[df[key_b].isin([match])].values]
+#        return [x.strip() for x in df[key_a].iloc[np.where(df[key_b]==match)].values]
         
     #==========================================================================
     def get_list(self, key_list):
@@ -91,9 +110,16 @@ class AttributeDict(dict):
     #==========================================================================
     def __getitem__(self, key):
         return getattr(self, key)
-        
+    
+    #==========================================================================
 
-"""#========================================================================"""
+
+
+
+"""
+#==============================================================================
+#==============================================================================
+""" 
 class ParameterMapping(AttributeDict):
     """
     Load file to map data fields and parameters to a standard setting format
@@ -119,7 +145,13 @@ class ParameterMapping(AttributeDict):
         
     #==========================================================================
 
-"""#========================================================================"""    
+
+
+
+"""
+#==============================================================================
+#==============================================================================
+"""    
 class WaterBody(AttributeDict):
     """
     Object to hold information on water bodies and type areas
@@ -129,22 +161,24 @@ class WaterBody(AttributeDict):
     def __init__(self):
         super().__init__()
         
-        #TODO Add Parametermapping for water body names ???
+        #TODO Add Parametermapping for water body names
+        #TODO Map against .lower() letters 
         
     #==========================================================================
     def load_water_body_match(self, file_path=u'', sep='\t', encoding='cp1252'):
-        self.water_bodies = core.Load().load_txt(file_path, sep=sep, 
+        
+        water_bodies = core.Load().load_txt(file_path, sep=sep, 
                                                  encoding=encoding, 
                                                  fill_nan=u'')
         
-        key_list = list(self.water_bodies.keys())
+        key_list = list(water_bodies.keys())
         key_list.remove(u'NAME')
         
-        self.add_info_dict(df=self.water_bodies, 
+        self.add_info_dict(df=water_bodies, 
                            first_key=u'NAME',
                            key_list=key_list)
         
-        self.add_corresponding_arrays(df=self.water_bodies,
+        self.add_corresponding_arrays(df=water_bodies,
                                       first_key=u'TYPE_AREA_NUMBER', 
                                       second_key=u'TYPE_AREA_SUFFIX',
                                       match_key=u'NAME')
@@ -154,34 +188,49 @@ class WaterBody(AttributeDict):
         return self.get(type_area)
     
     #==========================================================================
-    def get_type_area_for_water_body(self, wb):
-        return self.dict.get(wb).get(u'TYP')
+    def get_type_area_for_water_body(self, wb, include_suffix=False, 
+                                     key_number=u'TYPE_AREA_NUMBER', 
+                                     key_suffix=u'TYPE_AREA_SUFFIX'):
+        if include_suffix:
+            return self.get(wb).get(key_number) + \
+                   self.get(wb).get(key_suffix)
+        else:
+            return self.get(wb).get(key_number)
     
     #==========================================================================
-    def get_eu_cd_for_water_body(self, wb):
-        return self.dict.get(wb).get(u'EU_CD')
+    def get_type_area_suffix_for_water_body(self, wb, key=u'TYPE_AREA_SUFFIX'):
+        return self.get(wb).get(key)
+    
+    #==========================================================================
+    def get_eu_cd_for_water_body(self, wb, key=u'EU_CD'):
+        return self.get(wb).get(key)
 
     #==========================================================================
-    def get_bassin_number_for_water_body(self, wb):
-        return self.dict.get(wb).get(u'Bassängsnummer')
+    def get_bassin_number_for_water_body(self, wb, key=u'BASIN_NUMBER'):
+        return self.get(wb).get(key)
         
     #==========================================================================
-    def get_hid_for_water_body(self, wb):
-        return self.dict.get(wb).get(u'HID')
+    def get_hid_for_water_body(self, wb, key=u'HID'):
+        return self.get(wb).get(key)
         
     #==========================================================================
-    def get_url_viss_for_water_body(self, wb):
-        return self.dict.get(wb).get(u'URL_VISS')
+    def get_url_viss_for_water_body(self, wb, key=u'URL_VISS'):
+        return self.get(wb).get(key)
         
     #==========================================================================
-    def get_center_pos_for_water_body(self, wb):
-        return {'lat': self.dict.get(wb).get(u'Mittpunkt lat WGS84 g/m/s'),
-                'lon': self.dict.get(wb).get(u'Mittpunkt long WGS84 g/m/s')}
+    def get_center_position_for_water_body(self, wb, key_lat=u'CENTER_LAT', 
+                                           key_lon=u'CENTER_LON'):
+        return {'lat': self.get(wb).get(key_lat),
+                'lon': self.get(wb).get(key_lon)}
         
     #==========================================================================
+    
+    
     
 """#========================================================================"""
 if __name__ == '__main__':
+    current_path = os.path.dirname(os.path.realpath(__file__))[:-4]
+    sys.path.append(current_path)
     print('='*50)
     print('Running module "mapping.py"')
     print('-'*50)
@@ -191,16 +240,34 @@ if __name__ == '__main__':
     water_body_match_directory = 'D:/Utveckling/GitHub/ekostat_calculator/resources/mappings/water_body_match.txt' 
     
     # Mapping
+    print('\n# Mapping')
     p_map = ParameterMapping()
     p_map.load_mapping_settings(file_path=first_filter_directory)
     print(p_map.map_parameter_list(['myear', u'ammonium nh4-n']))
     print(p_map.get_parameter_mapping(['myear', u'ammonium nh4-n']))
     
     # Water Body Match
+    print('\n# Water Body Match')
     wb_match = WaterBody()
     wb_match.load_water_body_match(file_path=water_body_match_directory)
-    print(wb_match.dict.get('S. Seskaröfjärden sek namn').get('TYP'))
-    print(wb_match.get('24'))
+#    print(wb_match.dict.get('S. Seskaröfjärden sek namn').get('TYP'))
+    print(wb_match.get_type_area_for_water_body('Vändelsöarkipelagen', include_suffix=True))
+    print('='*50)
+    print(wb_match.get_bassin_number_for_water_body('Vändelsöarkipelagen'))
+    print('='*50)
+    print(wb_match.get_eu_cd_for_water_body('Vändelsöarkipelagen'))
+    print('='*50)
+    print(wb_match.get_hid_for_water_body('Vändelsöarkipelagen'))
+    print('='*50)
+    print(wb_match.get_url_viss_for_water_body('Vändelsöarkipelagen'))
+    print('='*50)
+    print(wb_match.get_center_position_for_water_body('Vändelsöarkipelagen'))
+    print('='*50)
+    print(wb_match.get_water_bodies_in_type_area('1n'))
+    print('='*50)
+    print(wb_match.get_water_bodies_in_type_area('1s'))
+    print('='*50)
+    print(wb_match.get_water_bodies_in_type_area('1'))
     
     print('-'*50)
     print('done')

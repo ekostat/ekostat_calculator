@@ -325,7 +325,7 @@ class DataFrameHandler(ColumnDataHandler, RowDataHandler):
         """
         self.source = file_path
         self.raw_data_copy = raw_data_copy
-        self.df = pd.read_csv(self.source, sep=sep, encoding=encoding).fillna('')
+        self.df = core.Load().load_txt(file_path, sep=sep, encoding=encoding, fill_nan=u'')
         self._remap_header()
         self._recognize_format()
         self._apply_field_filter()
@@ -351,7 +351,7 @@ class DataFrameHandler(ColumnDataHandler, RowDataHandler):
     def read_filter_file(self, file_path=u'', get_as_dict=True):
         """
         """
-        data = pd.read_csv(file_path, sep='\t',  encoding='cp1252')
+        data = core.Load().load_txt(file_path, fill_nan=u'')
         if get_as_dict:
             data = self.get_dict(data)
         self.filter_parameters = core.AttributeDict()

@@ -37,7 +37,7 @@ class DataFilter(object):
     #==========================================================================
     def _get_filter_boolean_for_df_from_exclude_list(self, df=None, parameter=None): 
         parameter = parameter.upper()
-        value_list = self.get_exclude_list_filter(parameter) 
+        value_list = self.get_exclude_list_filter(parameter)
         if not value_list:
             return False
         return ~df[parameter].astype(str).isin(value_list)
@@ -45,7 +45,7 @@ class DataFilter(object):
     #==========================================================================
     def _get_filter_boolean_for_df_from_include_list(self, df=None, parameter=None): 
         parameter = parameter.upper()
-        value_list = self.get_include_list_filter(parameter) 
+        value_list = self.get_include_list_filter(parameter)
         if not value_list:
             return False
         return df[parameter].astype(str).isin(value_list)
@@ -120,12 +120,12 @@ class DataFilter(object):
     #==========================================================================
     def load_filter_files(self): 
         self.filter_file_paths = {} 
-        self.include_list_filter = {} 
-        self.exclude_list_filter = {} 
+        self.include_list_filter = {}
+        self.exclude_list_filter = {}
         self.all_filters = {}
         for file_name in [item for item in os.listdir(self.filter_directory) if item.endswith('.fil')]: 
 #            print('-'*70)
-            file_path = os.path.join(self.filter_directory, file_name).replace('\\', '/') 
+            file_path = os.path.join(self.filter_directory, file_name).replace('\\', '/')
             long_name = file_name[:-4].upper()
 #            print('load:', filter_name)
             
@@ -150,7 +150,7 @@ class DataFilter(object):
         self.all_filters['exclude_list'] = self.get_exclude_list_filter_names()
         
         # Include list 
-        self.all_filters['include_list'] = self.get_include_list_filter_names() 
+        self.all_filters['include_list'] = self.get_include_list_filter_names()
         
             
     #==========================================================================
