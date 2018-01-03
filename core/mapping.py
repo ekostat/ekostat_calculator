@@ -29,6 +29,8 @@ class AttributeDict(dict):
         """
         """
         for key, array in entries.items():
+#            array = [v for v in array if v] # if you are using '' as nan value
+#            array = array[np.logical_and(array!='', ~pd.isnull(array))] 
             if len(array)==1:
                 array = array[0]
             setattr(self, key, array)
@@ -235,40 +237,55 @@ if __name__ == '__main__':
     print('Running module "mapping.py"')
     print('-'*50)
     print('')
-    
-    first_filter_directory = 'D:/Utveckling/GitHub/ekostat_calculator/resources/mappings/mapping_parameter_dynamic_extended.txt' 
-    water_body_match_directory = 'D:/Utveckling/GitHub/ekostat_calculator/resources/mappings/water_body_match.txt' 
-    
+    #--------------------------------------------------------------------------
+    #--------------------------------------------------------------------------
+    source_dir = u'D:\\Utveckling\\GitHub\\ekostat_calculator\\'
+
+    first_filter_directory = source_dir + 'resources/mappings/mapping_parameter_dynamic_extended.txt'
+    fields_filter_directory = source_dir + '/resources/filters/filter_fields_zoobenthos.txt'
+    water_body_match_directory = source_dir + 'resources/mappings/water_body_match.txt' 
+    #--------------------------------------------------------------------------
+    #--------------------------------------------------------------------------
     # Mapping
     print('\n# Mapping')
     p_map = ParameterMapping()
     p_map.load_mapping_settings(file_path=first_filter_directory)
     print(p_map.map_parameter_list(['myear', u'ammonium nh4-n']))
     print(p_map.get_parameter_mapping(['myear', u'ammonium nh4-n']))
-    
+    #--------------------------------------------------------------------------
+    #--------------------------------------------------------------------------
+    f_filter = AttributeDict()
+    data = core.Load().load_txt(fields_filter_directory, fill_nan=u'')
+    f_filter._add_arrays_to_entries(**data)
+#    print('compulsory_fields',f_filter.compulsory_fields)
+#    print('parameter_key',f_filter.parameter_key)
+#    print('sort_by_fields',f_filter.sort_by_fields)
+    #--------------------------------------------------------------------------
+    #--------------------------------------------------------------------------
     # Water Body Match
     print('\n# Water Body Match')
-    wb_match = WaterBody()
-    wb_match.load_water_body_match(file_path=water_body_match_directory)
-#    print(wb_match.dict.get('S. Seskaröfjärden sek namn').get('TYP'))
-    print(wb_match.get_type_area_for_water_body('Vändelsöarkipelagen', include_suffix=True))
-    print('='*50)
-    print(wb_match.get_bassin_number_for_water_body('Vändelsöarkipelagen'))
-    print('='*50)
-    print(wb_match.get_eu_cd_for_water_body('Vändelsöarkipelagen'))
-    print('='*50)
-    print(wb_match.get_hid_for_water_body('Vändelsöarkipelagen'))
-    print('='*50)
-    print(wb_match.get_url_viss_for_water_body('Vändelsöarkipelagen'))
-    print('='*50)
-    print(wb_match.get_center_position_for_water_body('Vändelsöarkipelagen'))
-    print('='*50)
-    print(wb_match.get_water_bodies_in_type_area('1n'))
-    print('='*50)
-    print(wb_match.get_water_bodies_in_type_area('1s'))
-    print('='*50)
-    print(wb_match.get_water_bodies_in_type_area('1'))
-    
+#    wb_match = WaterBody()
+#    wb_match.load_water_body_match(file_path=water_body_match_directory)
+##    print(wb_match.dict.get('S. Seskaröfjärden sek namn').get('TYP'))
+#    print(wb_match.get_type_area_for_water_body('Vändelsöarkipelagen', include_suffix=True))
+#    print('='*50)
+#    print(wb_match.get_bassin_number_for_water_body('Vändelsöarkipelagen'))
+#    print('='*50)
+#    print(wb_match.get_eu_cd_for_water_body('Vändelsöarkipelagen'))
+#    print('='*50)
+#    print(wb_match.get_hid_for_water_body('Vändelsöarkipelagen'))
+#    print('='*50)
+#    print(wb_match.get_url_viss_for_water_body('Vändelsöarkipelagen'))
+#    print('='*50)
+#    print(wb_match.get_center_position_for_water_body('Vändelsöarkipelagen'))
+#    print('='*50)
+#    print(wb_match.get_water_bodies_in_type_area('1n'))
+#    print('='*50)
+#    print(wb_match.get_water_bodies_in_type_area('1s'))
+#    print('='*50)
+#    print(wb_match.get_water_bodies_in_type_area('1'))
+    #--------------------------------------------------------------------------
+    #--------------------------------------------------------------------------
     print('-'*50)
     print('done')
     print('-'*50)

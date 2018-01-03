@@ -55,13 +55,10 @@ class RowDataHandler(object):
         """
         """
         if self.one_parameter:
-            pass
-#            self.add_df(df_pivot, 'col', add_columns=False)            
+            pass          
         else:
-#            print('111',self.df.keys())
             self._set_column_table_from_pivot_table(sort=True)
             self._seperate_para_value_from_qflag(sep='__')
-#            print('222',self.df.keys())
 #            self.add_df(df_col, 'col', add_columns=False)
 
     #==========================================================================
@@ -91,7 +88,7 @@ class RowDataHandler(object):
         """
         map_dict = {self.filter_parameters.value_key: self.filter_parameters.use_parameters, 
                     self.filter_parameters.qflag_key: 'Q_'+self.filter_parameters.use_parameters}
-        
+
         self._delete_columns_from_df(columns=self.filter_parameters.parameter_key)
         self._rename_columns_of_DataFrame(map_dict)
         
@@ -261,7 +258,7 @@ class DataFrameHandler(ColumnDataHandler, RowDataHandler):
 
 
     #==========================================================================
-    def get_dict(self, data, drop_nans=True):
+    def get_dict(self, data, drop_nans=True, drop_empty=True):
         """
         """
         if drop_nans:
@@ -314,7 +311,7 @@ class DataFrameHandler(ColumnDataHandler, RowDataHandler):
         
         self.filter_row_data()
         self.get_column_data_format()
-        
+#        print(self.df.get('BQIm'))
         self.sort_columns_of_df()
         self.add_column_df()
 #        self.add_row_df()
@@ -353,7 +350,7 @@ class DataFrameHandler(ColumnDataHandler, RowDataHandler):
     def read_filter_file(self, file_path=u'', get_as_dict=True):
         """
         """
-        data = core.Load().load_txt(file_path, fill_nan=u'')
+        data = core.Load().load_txt(file_path, fill_nan=np.nan)
         if get_as_dict:
             data = self.get_dict(data)
         self.filter_parameters = core.AttributeDict()
@@ -365,6 +362,8 @@ class DataFrameHandler(ColumnDataHandler, RowDataHandler):
         recognize row or column format and sets raw_data attribute
         """
         # TODO why is parameter_key attribute a list for rowdata?
+#        print(self.filter_parameters.parameter_key)
+#        print(self.df.keys())
         if self.filter_parameters.parameter_key in self.df: #'PARAM' in data header
             self.raw_data_format = 'row'
         else:
@@ -420,12 +419,13 @@ class DataFrameHandler(ColumnDataHandler, RowDataHandler):
         self._check_nr_of_parameters()
         p_map, p_list = self._map_parameter_list()
         self.para_list = self.parameter_mapping.map_parameter_list(p_list)
-        
+
         for para in p_list:
+            # Change parameter name according to parameter codelist
             self.df[self.filter_parameters.parameter_key] = np.where(self.df[self.filter_parameters.parameter_key]==para, 
                                                                      p_map[para], 
                                                                      self.df[self.filter_parameters.parameter_key])
-            
+
 #        indices = np.where( self.df[parameter_head] == params_to_use[:,None] )[0]
         indices = np.where( self.df[self.filter_parameters.parameter_key].isin(self.para_list) )[0]
         self.df = self.df.iloc[indices,:]
@@ -463,16 +463,20 @@ class DataFrameHandler(ColumnDataHandler, RowDataHandler):
     def sort_columns_of_df(self):
         
         sort_order = [key for key in self.filter_parameters.compulsory_fields if key in self.df]
-#        print(self.filter_parameters.compulsory_fields)
-#        print(sort_order)
-#        print(self.df.keys())
-        for para in self.filter_parameters.use_parameters:
-            if para in self.df:
-                sort_order.append(para)
-                if 'Q_'+para in self.df:
-                    sort_order.append('Q_'+para)
-                    
-#        print(sort_order)
+
+        if utils.is_sequence(self.filter_parameters.use_parameters):
+            for para in self.filter_parameters.use_parameters:
+                if para in self.df:
+                    sort_order.append(para)
+                    if 'Q_'+para in self.df:
+                        sort_order.append('Q_'+para)    
+        else:
+            
+            if self.filter_parameters.use_parameters in self.df:
+                sort_order.append(self.filter_parameters.use_parameters)
+            if 'Q_'+self.filter_parameters.use_parameters in self.df:
+                sort_order.append('Q_'+self.filter_parameters.use_parameters)            
+
         self.df = self.df[sort_order]
 #        self.df = self.df.ix[:, sort_order]
 #        self.df.reindex_axis(sort_order, axis=1) # DOES NOT WORK PROPERLY
@@ -588,7 +592,7 @@ class DataHandler(object):
     def __init__(self, 
                  input_data_directory=None, 
                  resource_directory=None): 
-        
+#        print(input_data_directory, resource_directory)
         assert all([input_data_directory, resource_directory])
         super().__init__()
 #        self.source = source
