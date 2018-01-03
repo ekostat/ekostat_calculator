@@ -1,4 +1,4 @@
-Indicator	Type_Area_name	Type_Area_suffix	filter_DEPTH_STRATA_int	MIN_NR_VALUES	filter_MONTH_LIST	HG	GM	MP	PB	max BQIm	ref_EK H/G	ref_EK G/M	ref_EK M/P	ref_EK P/B	Param	QualityElement
+Indicator	Type_Area_number	Type_Area_suffix	filter_DEPTH_STRATA_int	MIN_NR_VALUES	filter_MONTH_LIST	HG	GM	MP	PB	max BQIm	ref_EK H/G	ref_EK G/M	ref_EK M/P	ref_EK P/B	Param	QualityElement
 BQI	1		5-20	5	5;6	13.9	10.3	6.9	3.4	15.7	0.89	0.66	0.44	0.22	BQI	Bottom fauna
 BQI	1		20-500	5	5;6	15.7	12	8	4	17.6	0.89	0.68	0.45	0.23	BQI	Bottom fauna
 BQI	2		5-20	5	5;6	13.9	10.3	6.9	3.4	15.7	0.89	0.66	0.44	0.22	BQI	Bottom fauna

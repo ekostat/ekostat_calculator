@@ -297,9 +297,8 @@ class SettingsFile(object):
             self.columns.append(variable)
             
         # Set new column names 
-        self.df.columns = self.columns 
-        
-        self.type_area_list = list(self.df['TYPE_AREA'])
+        self.df.columns = self.columns        
+        self.type_area_list = list(self.df['TYPE_AREA_NUMBER'])
         
         
     #==========================================================================

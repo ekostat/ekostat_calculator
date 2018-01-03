@@ -474,7 +474,7 @@ class WorkSpace(object):
     def __init__(self, 
                  name=None, 
                  parent_directory=None, 
-                 resource_directory='D:/github/ekostat_calculator/resources',
+                 resource_directory='../ekostat_calculator/resources',
                  nr_subsets_allowed=4): 
         
         assert all([name, parent_directory])
@@ -492,8 +492,8 @@ class WorkSpace(object):
         
         self._load_attributes()
         
-#        print('Parent directory is: {}'.format(self.parent_directory))
-        
+        print('Parent directory is: {}'.format(self.parent_directory))
+        print('Resource directory is: {}'.format(self.resource_directory))
         self._setup_workspace()
             
     #==========================================================================
@@ -744,6 +744,7 @@ class WorkSpace(object):
         # This has to be done in physical_chemical, zoobenthos etc. 
         """
         # Row data
+        # TODO: retrieve from workspace. User should maybe choose which files to load?
         fid_zooben = u'zoobenthos_2016_row_format_2.txt'
         fid_phyche = u'BOS_HAL_2015-2016_row_format_2.txt'
         fid_phyche_col = u'BOS_BAS_2016-2017_column_format.txt' 

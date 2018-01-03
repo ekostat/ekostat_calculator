@@ -334,6 +334,8 @@ class DataFrameHandler(ColumnDataHandler, RowDataHandler):
     def _map_parameter_list(self):
         """
         """
+        
+        # TODO: for rowdata this row results in None type calling unique()
         p_map = self.parameter_mapping.get_parameter_mapping(self.df.get(self.filter_parameters.parameter_key).unique())
         return p_map, list(p for p in p_map if p_map[p] in self.filter_parameters.use_parameters)
 
@@ -360,7 +362,9 @@ class DataFrameHandler(ColumnDataHandler, RowDataHandler):
     #==========================================================================
     def _recognize_format(self):
         """
+        recognize row or column format and sets raw_data attribute
         """
+        # TODO why is parameter_key attribute a list for rowdata?
         if self.filter_parameters.parameter_key in self.df: #'PARAM' in data header
             self.raw_data_format = 'row'
         else:
