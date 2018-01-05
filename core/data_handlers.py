@@ -469,13 +469,12 @@ class DataFrameHandler(ColumnDataHandler, RowDataHandler):
                 if para in self.df:
                     sort_order.append(para)
                     if 'Q_'+para in self.df:
-                        sort_order.append('Q_'+para)    
+                        sort_order.append('Q_'+para)
         else:
-            
             if self.filter_parameters.use_parameters in self.df:
                 sort_order.append(self.filter_parameters.use_parameters)
             if 'Q_'+self.filter_parameters.use_parameters in self.df:
-                sort_order.append('Q_'+self.filter_parameters.use_parameters)            
+                sort_order.append('Q_'+self.filter_parameters.use_parameters)
 
         self.df = self.df[sort_order]
 #        self.df = self.df.ix[:, sort_order]
@@ -737,7 +736,7 @@ class DataHandler(object):
                     # .column_data is a dict
                     self.all_data = self.all_data.append(self.__getattribute__(dtype).column_data[source], 
                                                          ignore_index=True)
-                    
+        
         if save_to_txt:
             self.save_data(df=self.all_data, 
                            file_name='all_data.txt')
