@@ -456,7 +456,7 @@ class DataFrameHandler(ColumnDataHandler, RowDataHandler):
             self._convert_format([depth_head, serno_head], as_type=np.unicode)
             
         if drop_index:
-            print(u'Reseting and Droping INDEX')
+            print(u'Resetting and Dropping INDEX')
             self.df = self.df.reset_index().drop([u'index'], axis=1)
         
     #==========================================================================

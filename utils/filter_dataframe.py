@@ -46,22 +46,22 @@ def set_filter(df=None, filter_dict={}, interval_keys=[], logical_or_key=[], ret
                                  list_keys=logical_or_key)
     combined_boolean = ()
     
-    for key in loop_list:
-        
+    for key_org in loop_list:        
+        key = key_org.upper()
         if key not in df:
             continue
         
-        if key in interval_keys:
+        if key_org in interval_keys:
             boolean = get_boolean_from_interval(df=df, 
                                                 key=key, 
-                                                interval=filter_dict.get(key))
+                                                interval=filter_dict.get(key_org))
         else:
-            boolean = df[key].isin(filter_dict.get(key))
+            boolean = df[key].isin(filter_dict.get(key_org))
         
 #        if not type(boolean) == pd.Series:
 #            continue            
         if type(combined_boolean) == pd.Series:
-            if key in logical_or_key:
+            if key_org in logical_or_key:
                 combined_boolean = combined_boolean | boolean
             else:
                 combined_boolean = combined_boolean & boolean

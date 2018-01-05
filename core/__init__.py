@@ -22,8 +22,7 @@ from .lists import AreaList
 
 from .load import Load
 
-from .mapping import ParameterMapping
-from .mapping import AttributeDict
+from .mapping import *
 
 from .parameters import ParameterSALT_CTD
 from .parameters import ParameterNTRA 

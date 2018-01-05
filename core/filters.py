@@ -8,6 +8,7 @@ import os
 import codecs  
 import pandas as pd
 import numpy as np
+import utils
 
 #if current_path not in sys.path: 
 #    sys.path.append(os.path.dirname(os.path.realpath(__file__)))
@@ -94,9 +95,7 @@ class DataFilter(object):
     #==========================================================================
     def get_include_header_filter(self, filter_name):
         return self.include_header_filter.get(filter_name.upper(), False)
-    
-    
-    
+     
     #==========================================================================
     def get_exclude_list_filter(self, filter_name):
         return self.exclude_list_filter.get(filter_name.upper(), False)
@@ -320,17 +319,27 @@ class SettingsFile(object):
         self.df.columns = self.columns
 
     #==========================================================================
-    def get_value(self, type_area=None, variable=None): 
-        if type_area not in self.type_area_list:
-            return False
+    def get_value(self, filter_dict=None, variable=None): 
+        """
+        get value from settings file
+        filter_dict: keys and values to filter on
+        variable: settings variable to get value for
+        """ 
+        print(filter_dict)
+        print(variable)
+        if 'TYPE_AREA_NUMBER' in list(filter_dict.keys()): 
+            if filter_dict['TYPE_AREA_NUMBER'][0] not in self.type_area_list:
+                return False
+        
         variable = variable.upper() 
-        assert all([type_area, variable]), 'Must provide: type_area and variable' 
+        assert all(['TYPE_AREA_NUMBER' in list(filter_dict.keys()), variable]), 'Must provide: type_area number in filter_dict and variable' 
         assert variable.upper() in self.df.columns, 'Must provide filtervariable from settingsfile\n\t{}'.format(self.df.columns)
+        boolean_list = utils.set_filter(df = self.df, filter_dict = filter_dict, return_dataframe = False)
+        value = self.df.loc[boolean_list, variable.upper()].values
         
-        value = self.df.loc[self.df['TYPE_AREA_NUMBER']==type_area, variable.upper()].values
+        assert len(value) == 1, 'More than one setting for given filter_dict\n{}'.format(value)
         
-        assert len(value) == 1, 'More than one setting for given type_area'
-            
+        value = value[0]    
         if variable in self.list_columns: 
             value = self._get_list_from_string(value, variable)
         elif variable in self.interval_columns: 
@@ -492,8 +501,10 @@ class SettingsFilter(object):
         Get boolean pd.Series to use for filtering. 
         Name of this has to be tha same as the one in class DataFilter. 
         """
-        # TODO: Convert water_body to type_area. Something like self.get_type_area_for_water_body
-        type_area = water_body
+        # TODO: Convert water_body to type_area. method for this in mapping.py 
+#        get_type_area_for_water_body(wb, include_suffix=False)
+        type_area_number = mapping.get_type_area_for_water_body(water_body, include_suffix=False)
+        type_area_suffix = mapping.get_type_area_suffix_for_water_body(water_body, include_suffix=False)
         return self.settings.get_filter_boolean(df=df, 
                                                 type_area=type_area)
         
