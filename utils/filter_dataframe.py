@@ -28,7 +28,7 @@ def get_boolean_from_interval(df=None, key='', interval=[]):
 def get_ordered_list(dict_keys={}, list_keys=[]):
     ordered_list = [key for key in dict_keys if key not in list_keys]
     for key in list_keys:
-        ordered_list.append(key) 
+        ordered_list.append(key)
     return ordered_list
 
 #==============================================================================
@@ -91,7 +91,7 @@ if __name__ == '__main__':
                     return_dataframe=True)
                     
     print(df)
-        
+    
     print('-'*50)
     print('done')
     print('-'*50)

@@ -119,7 +119,7 @@ class DataFilter(object):
     
     #==========================================================================
     def load_filter_files(self): 
-        self.filter_file_paths = {} 
+        self.filter_file_paths = {}
         self.include_list_filter = {}
         self.exclude_list_filter = {}
         self.all_filters = {}
@@ -164,8 +164,8 @@ class DataFilter(object):
             print('Save: "{}" to file: "{}"'.format(filter_name, file_path))
             with codecs.open(file_path, 'w', encoding='cp1252') as fid: 
                 for item in self.exclude_list_filter[filter_name]:
-                    fid.write(item) 
-                    fid.write('\n') 
+                    fid.write(item)
+                    fid.write('\n')
                     
         # Include list filter 
         print(self.include_list_filter.keys())

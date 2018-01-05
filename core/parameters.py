@@ -482,10 +482,10 @@ class CalculatedParameterDIN(CalculatedParameterPhysicalChemical):
         self.data_handler.add_df(new_df, 'col')
         
         self.data = core.DataHandler('calculated_din')
-        self.data.add_df(new_df, 'col') 
+        self.data.add_df(new_df, 'col')
         
         print('\t\t\t...Done.')
-            
+        
 ###############################################################################
 class ParameterDIN(ParameterBasePhysicalChemical):
     """

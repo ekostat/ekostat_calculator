@@ -55,16 +55,21 @@ parameter_mapping.load_mapping_settings(file_path=mapping_directory)
 #raw_data.get_column_data_format(raw_data.row_data, filter_parameters)
 #raw_data.save_data(export_directory)
 
+#------------------------------------------------------------------------------
 ## Row data handling new version
 raw_data = core.DataHandler(input_data_directory=input_data_directory, 
                             resource_directory=resource_directory)
-
+#------------------------------------------------------------------------------
 raw_data.physical_chemical.load_source(file_path=raw_data_file_path + fid_phyche,
                                        raw_data_copy=True)
+raw_data.physical_chemical.calculate_din()
+#------------------------------------------------------------------------------
 raw_data.physical_chemical.load_source(file_path=raw_data_file_path + fid_phyche_col,
                                        raw_data_copy=True)
+raw_data.physical_chemical.calculate_din()
+#------------------------------------------------------------------------------
 raw_data.physical_chemical.save_data_as_txt(directory=u'', prefix=u'Column_format')
-
+#------------------------------------------------------------------------------
 #raw_data.physical_chemical.raw_data_format
 #raw_data.physical_chemical.row_data.keys()
 #raw_data.physical_chemical.filter_parameters.use_parameters

@@ -427,8 +427,10 @@ class DataFrameHandler(ColumnDataHandler, RowDataHandler):
                                                                      self.df[self.filter_parameters.parameter_key])
 
 #        indices = np.where( self.df[parameter_head] == params_to_use[:,None] )[0]
-        indices = np.where( self.df[self.filter_parameters.parameter_key].isin(self.para_list) )[0]
-        self.df = self.df.iloc[indices,:]
+#        indices = np.where( self.df[self.filter_parameters.parameter_key].isin(self.para_list) )[0]
+#        self.df = self.df.iloc[indices,:]
+        boolean = self.df[self.filter_parameters.parameter_key].isin(self.para_list)
+        self.df = self.df.loc[boolean,:]
         
     #==========================================================================
     def sort_dict_by_keys(self,
@@ -515,9 +517,49 @@ class DataHandlerPhysicalChemical(DataFrameHandler):
         
         self.column_data = {} #pd.DataFrame()
         self.row_data = {} #pd.DataFrame()
-        
+
     #==========================================================================
-        
+    def calculate_din(self, ignore_qf=u''):
+        """ 
+        Returns a vector calculated DIN. 
+        If NO3 is not present value is np.nan 
+        """
+        din_list = []
+        for no2, no3, nox, nh4 in zip(self.get_float_list(key=u'NTRI'), 
+                                      self.get_float_list(key=u'NTRA'), 
+                                      self.get_float_list(key=u'NTRZ'),
+                                      self.get_float_list(key=u'AMON')):
+
+            if np.isnan(nox):
+                din = np.nan
+                if not np.isnan(no3):
+                    din = no3                    
+                    if not np.isnan(no2):
+                        din += no2
+                    if not np.isnan(nh4):
+                        din += nh4
+            else:
+                din = nox
+                if not np.isnan(nh4):
+                    din += nh4
+            
+            if np.isnan(din):
+                din=''
+            else:
+                din = str(round(din, 2))
+            din_list.append(din)
+            
+        if not 'DIN' in self.column_data:
+            self.column_data[self.source]['DIN'] = din_list
+        else:
+            self.column_data[self.source]['DIN_calulated'] = din_list
+                            
+    #==========================================================================
+    def get_float_list(self, key, ignore_qf=['B','S']):
+        return utils.get_float_list_from_str(df=self.column_data[self.source], 
+                                       key=key, ignore_qf=ignore_qf)
+    
+    #==========================================================================
 """
 #==============================================================================
 #==============================================================================
