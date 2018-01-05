@@ -208,7 +208,7 @@ class WaterBody(AttributeDict):
         return self.get(wb).get(key)
 
     #==========================================================================
-    def get_bassin_number_for_water_body(self, wb, key=u'BASIN_NUMBER'):
+    def get_basin_number_for_water_body(self, wb, key=u'BASIN_NUMBER'):
         return self.get(wb).get(key)
         
     #==========================================================================
@@ -269,7 +269,7 @@ if __name__ == '__main__':
 ##    print(wb_match.dict.get('S. Seskaröfjärden sek namn').get('TYP'))
 #    print(wb_match.get_type_area_for_water_body('Vändelsöarkipelagen', include_suffix=True))
 #    print('='*50)
-#    print(wb_match.get_bassin_number_for_water_body('Vändelsöarkipelagen'))
+#    print(wb_match.get_basin_number_for_water_body('Vändelsöarkipelagen'))
 #    print('='*50)
 #    print(wb_match.get_eu_cd_for_water_body('Vändelsöarkipelagen'))
 #    print('='*50)

@@ -474,7 +474,7 @@ class WorkSpace(object):
     def __init__(self, 
                  name=None, 
                  parent_directory=None, 
-                 resource_directory='../ekostat_calculator/resources',
+                 resource_directory=None,
                  nr_subsets_allowed=4): 
         
         assert all([name, parent_directory])
@@ -688,6 +688,10 @@ class WorkSpace(object):
         if level == None:
             return False
         return self.index_handler.get_filtered_data(level=level, subset=subset)
+    #==========================================================================
+    def get_indicator_settings(self):
+        
+        return sorted(self.indicator_settings.keys())
     
     #==========================================================================
     def get_indicator_settings_name_list(self):

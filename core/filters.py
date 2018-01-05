@@ -325,13 +325,18 @@ class SettingsFile(object):
             return False
         variable = variable.upper() 
         assert all([type_area, variable]), 'Must provide: type_area and variable' 
-        value = self.df.loc[self.df['TYPE_AREA']==type_area, variable.upper()].values[0]
+        assert variable.upper() in self.df.columns, 'Must provide filtervariable from settingsfile\n\t{}'.format(self.df.columns)
+        
+        value = self.df.loc[self.df['TYPE_AREA_NUMBER']==type_area, variable.upper()].values
+        
+        assert len(value) == 1, 'More than one setting for given type_area'
+            
         if variable in self.list_columns: 
             value = self._get_list_from_string(value, variable)
         elif variable in self.interval_columns: 
             value = self._get_interval_from_string(value, variable)
         else:
-            value = self._convert(value)
+            value = self._convert(value, variable.upper())
         return value
     
     #==========================================================================
@@ -350,7 +355,7 @@ class SettingsFile(object):
             return False
         else:
             print('Value to set for type_area "{}" and variable "{}": {}'.format(type_area, variable, value))
-            self.df.loc[self.df['TYPE_AREA']==type_area, variable] = value
+            self.df.loc[self.df['TYPE_AREA_NUMBER']==type_area, variable] = value
             return True
         
     #==========================================================================
