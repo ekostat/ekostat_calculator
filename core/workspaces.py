@@ -711,12 +711,12 @@ class WorkSpace(object):
             for param in parameters:
                 if len(param.split('/')) > 1:
                     for param2 in param.split('/'):
-                        if param2 == 'salt':
+                        if param2 == 'SALT':
                             continue
-                        if param2 in self.get_filtered_data(level=0).columns and self.get_filtered_data(level=0).loc[:, param2].count() > 0:
+                        if param2 in self.get_filtered_data(level=0).columns and self.get_filtered_data(level=0)[param2].dropna().count() > 0:
                             self.available_indicators.append(indicator) 
                 else:
-                    if param.upper() in self.get_filtered_data(level=0).columns and self.get_filtered_data(level=0).loc[:, param].count() > 0:
+                    if param in self.get_filtered_data(level=0).columns and self.get_filtered_data(level=0)[param2].dropna().count() > 0:
                         self.available_indicators.append(indicator) 
             
         return sorted(self.available_indicators)
