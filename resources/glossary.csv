@@ -1,12 +1,60 @@
-Internal;External;Unit;Type;Description
-ntra;;;parameter;
-ntri;;;parameter;
-amon;;;parameter;
-totn;;;parameter;
-din;;;parameter;sum of ntra, ntri and amon
-salt_ctd;;;parameter;
-EQR;;;calculated value;Ecological quality ratio on a scale from 0-1 where 0.2, 0.4, 0.6 and 0.8 represent status boundaries bad-poor, poor-moderate, moderate-good and good-high.
-I_EQR;;;calculated value;Indicator specific EQR scales and boundaries also indicator specific, see HVMFS 2013-19 and tables in resources/utilities.
-QF_EQR;;;calculated value;Quality factor specific EQR scales and boundaries also quality factor specific, see HVMFS 2013-19 and tables in resources/utilities.
-ER;;;;Ecological ratio, Ekologisk kvot EK in Swedish
-Nklass;;;;
+Internal;External;Unit;Type;parameters;quality_element;Description
+ntra;nitrate;umol/l;parameter;;nutrients;
+ntri;nitrite;umol/l;parameter;;nutrients;
+amon;ammonium;umol/l;parameter;;nutrients;
+ntot;total nitrogen;umol/l;parameter;;nutrients;
+din;dissolved inorganic nitrogen;umol/l;calculated parameter;;nutrients;sum of ntra, ntri and amon
+phos;phosphate;umol/l;parameter;;nutrients;
+ptot;total phosphorus;umol/l;parameter;;nutrients;
+BQIm;benthic quality index;index per sample;parameter;;bottom fauna;
+tot_cover_all;total cover of all species;%;parameter;;macroalgae and soft-substrate macrophytes;
+biov_conc;biovolume;umol/l;calculated parameter;;phytoplankton;
+cphl;chlorophyll from discrete depth;umol/l;parameter;;phytoplankton;chlorophyll from discrete depths
+cphl_slang;chlorophyll integrated value;umol/l;parameter;;phytoplankton;chlorophyll from hose sampling
+secchi;secchi depth;m;parameter;;secchi depth;
+doxy;dissolved oxygen;ml/l;parameter;;oxygen balance;
+salt_ctd;salinity measured with ctd;psu;parameter;;;
+salt_btl;salinity from bottle sample;psu;parameter;;;
+salinity_prio_ctd;;psu;calculated parameter;;;
+salinity_prio_btl;;psu;calculated parameter;;;
+deph;depth;m;float;;;
+temp_ctd;temperature measured with ctd;degrees celcius;calculated parameter;;;
+temp_btl;temperature from bottle sample;degrees celcius;calculated parameter;;;
+temp;temperatute, unknown origin;degrees celcius;calculated parameter;;;
+temp_prio_ctd;;degrees celcius;calculated parameter;;;
+temp_prio_btl;;degrees celcius;calculated parameter;;;
+sdate;sampling date;yyyy-mm-dd;date object;;;
+stime;sampling time;hh:mm:ss;time object;;;
+;;;;;;
+;;;;;;
+;;;;;;
+;;;;;;
+;;;;;;
+din_winter;Dissolved inorganic nitrogen, winter;;indicator;din, salt;nutrients;
+ntot_summer;Total nitrogen, summer;;indicator;ntot, salt;nutrients;
+ntot_winter;Total nitrogen, winter;;indicator;ntot, salt;nutrients;
+dip_winter;Dissolved inorganic phosphorus, winter;;indicator;dip,salt;nutrients;
+ptot_summer;Total phosphorus, summer;;indicator;ptot, salt;nutrients;
+ptot_winter;Total phosphorus, winter;;indicator;ptot, salt;nutrients;
+bqi;bottom fauna quality index;;indicator;BQIm;bottom fauna;
+msmdi;multi species maximum depth  index;;indicator;tot_cover_all, salt;macroalgae and soft-substrate macrophytes;
+o2;oxygen balance;;indicator;doxy;Oxygen balance;
+biov;biovolume;;indicator;biov_conc;phytoplankton;
+chl;chlorophyll-a;;indicator;cphl, salt;phytoplankton;
+secchi;secchi depth;;indicator;secchi;secchi depth;
+;;;;;;
+;;;;;;
+;;;;;;
+;;;;;;
+;;;;;;
+;;;;;;
+EQR;;;calculated result;;;Ecological quality ratio on a scale from 0-1 where 0.2, 0.4, 0.6 and 0.8 represent status boundaries bad-poor, poor-moderate, moderate-good and good-high.
+I_EQR;;;calculated result;;;Indicator specific EQR scales and boundaries also indicator specific, see HVMFS 2013-19 and tables in resources/utilities.
+QF_EQR;;;calculated result;;;Quality factor specific EQR scales and boundaries also quality factor specific, see HVMFS 2013-19 and tables in resources/utilities.
+ER;;;calculated result;;;Ecological ratio, Ekologisk kvot EK in Swedish
+Nklass;;;calculated result;;;Numerical class, weighted statusvalue based on ER (used for nutrients and phytoplankton)
+class_boundarie;;;fixed;;;class boundarie, defines the limits of each status (HG, GM, MO, OD)
+HG;High-Good;;fixed;;;class boundarie for High-Good status
+GM;Good-Moderate;;fixed;;;class boundarie for Good-Moderate status
+MP;Moderate-Poor;;fixed;;;class boundarie for Moderate-Poor status
+PB;Poor-Bad;;fixed;;;class boundarie for Poor-Bad status

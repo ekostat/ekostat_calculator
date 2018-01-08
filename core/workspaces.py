@@ -10,6 +10,7 @@ import shutil
 import sys
 import datetime
 import codecs
+import pandas as pd
 
 current_path = os.path.dirname(os.path.realpath(__file__))[:-4]
 sys.path.append(current_path)
@@ -495,6 +496,7 @@ class WorkSpace(object):
         print('Parent directory is: {}'.format(self.parent_directory))
         print('Resource directory is: {}'.format(self.resource_directory))
         self._setup_workspace()
+        self._load_config_files()
             
     #==========================================================================
     def _load_attributes(self): 
@@ -551,6 +553,18 @@ class WorkSpace(object):
         self.index_handler = core.IndexHandler(workspace_object=self, 
                                                data_handler_object=self.data_handler)
         
+    def _load_config_files(self):       
+        
+        self.cf_df = pd.read_csv(self.resource_directory + '/Quality_Elements.cfg', sep='\t', dtype='str', encoding='cp1252')
+        assert all(['quality element' in self.cf_df.keys(), 'indicator' in self.cf_df.keys(), 'parameters' in self.cf_df.keys()]), 'configuration file must contain quality element, indicator and parameters information'
+        self.cfg = {}
+        self.cfg['quality elements'] = self.cf_df.groupby('quality element')['indicator'].unique()
+        self.cfg['indicators'] = self.cf_df.groupby('indicator')['parameters'].unique()
+#        for QE in self.cfg['quality elements']:
+#            self.cfg[QE] = self.cf_df.groupby(QE)['indicator'].unique()
+#        for indicator in self.cfg['indicators']:
+#            self.cfg[indicator] = self.cf_df.groupby(QE)['parameters'].split(',')        
+#        
     #==========================================================================
     def add_files_from_workspace(self, workspace_object=None, overwrite=False):
         """
@@ -688,6 +702,25 @@ class WorkSpace(object):
         if level == None:
             return False
         return self.index_handler.get_filtered_data(level=level, subset=subset)
+    
+    #==========================================================================
+    def get_available_indicators(self):
+        
+        self.available_indicators = []
+        for indicator, parameters in self.cfg['indicators'].items():
+            for param in parameters:
+                if len(param.split('/')) > 1:
+                    for param2 in param.split('/'):
+                        if param2 == 'salt':
+                            continue
+                        if param2 in self.get_filtered_data(level=0).columns and self.get_filtered_data(level=0).loc[:, param2].count() > 0:
+                            self.available_indicators.append(indicator) 
+                else:
+                    if param.upper() in self.get_filtered_data(level=0).columns and self.get_filtered_data(level=0).loc[:, param].count() > 0:
+                        self.available_indicators.append(indicator) 
+            
+        return sorted(self.available_indicators)
+    
     #==========================================================================
     def get_indicator_settings(self):
         
