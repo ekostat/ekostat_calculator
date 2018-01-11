@@ -716,7 +716,7 @@ class WorkSpace(object):
                         if param2 in self.get_filtered_data(level=0).columns and self.get_filtered_data(level=0)[param2].dropna().count() > 0:
                             self.available_indicators.append(indicator) 
                 else:
-                    if param in self.get_filtered_data(level=0).columns and self.get_filtered_data(level=0)[param2].dropna().count() > 0:
+                    if param in self.get_filtered_data(level=0).columns and self.get_filtered_data(level=0)[param].dropna().count() > 0:
                         self.available_indicators.append(indicator) 
             
         return sorted(self.available_indicators)
