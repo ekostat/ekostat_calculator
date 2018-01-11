@@ -6,11 +6,20 @@ Created on Fri Jan  5 10:10:50 2018
 """
 
 import pandas as pd
+import utils
 
 """
 #==============================================================================
 #==============================================================================
 """
+def check_lists_in_dict(filter_dict):
+    for key in filter_dict:
+        if not utils.is_sequence(filter_dict[key]):
+            filter_dict[key] = [filter_dict[key]]
+    return filter_dict
+
+#==============================================================================
+#==============================================================================
 def get_boolean_from_interval(df=None, key='', interval=[]):
     """
     Assumes interval is a list of two float/int values and that lists in df are 
@@ -44,6 +53,9 @@ def set_filter(df=None, filter_dict={}, interval_keys=[], logical_or_key=[], ret
     """
     loop_list = get_ordered_list(dict_keys=filter_dict, 
                                  list_keys=logical_or_key)
+    
+    filter_dict = check_lists_in_dict(filter_dict)
+    
     combined_boolean = ()
     
     for key_org in loop_list:        

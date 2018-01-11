@@ -89,7 +89,10 @@ class RowDataHandler(object):
         map_dict = {self.filter_parameters.value_key: self.filter_parameters.use_parameters, 
                     self.filter_parameters.qflag_key: 'Q_'+self.filter_parameters.use_parameters}
 
+        # Deleting column that only contains parameter name
         self._delete_columns_from_df(columns=self.filter_parameters.parameter_key)
+        
+        # Changing column "VALUE" to parameter name and column "QFLAG" to Q_"parameter_name"
         self._rename_columns_of_DataFrame(map_dict)
         
     #==========================================================================
@@ -173,7 +176,12 @@ class DataFrameHandler(ColumnDataHandler, RowDataHandler):
                                 self.df['LATIT_DD'].apply(str) + \
                                 ' ' + \
                                 self.df['LONGI_DD'].apply(str)
-                            
+    
+    #==========================================================================
+    def _add_field(self):
+        if self.filter_parameters.add_parameters:
+            self.df[self.filter_parameters.add_parameters] = ''
+                                
     #==========================================================================
     def add_row_df(self, add_columns=False):
         """
@@ -185,7 +193,12 @@ class DataFrameHandler(ColumnDataHandler, RowDataHandler):
             
         self.row_data[self.source] = self.df.copy(deep=True)
 #        self.row_data = self.row_data.append(self.df, ignore_index=True).fillna('')
-
+    
+    #==========================================================================
+    def _additional_filter(self):
+        """ Can be overwritten from child """
+        pass
+    
     #==========================================================================
     def _apply_field_filter(self):
         """
@@ -220,6 +233,10 @@ class DataFrameHandler(ColumnDataHandler, RowDataHandler):
         """
         """
         self.df = self.df.drop(columns, axis=1, errors='ignore') # inplace=True ?
+
+    #==========================================================================
+    def _drop_duplicates(self, based_on_column=''):
+        self.df.drop_duplicates(subset=based_on_column, inplace=True)
         
     #==========================================================================
     def filter_data(self, data_filter_object, filter_id=''):
@@ -304,11 +321,11 @@ class DataFrameHandler(ColumnDataHandler, RowDataHandler):
             self.add_row_df()
             
         if self.raw_data_copy:
-            self.save_data_as_txt(directory=u'', 
+            self.save_data_as_txt(directory=self.export_directory, 
                                   prefix=u'Raw_format')
             
 #        rdh = RowDataHandler(DataFrameHandler)
-        
+        self._additional_filter()
         self.filter_row_data()
         self.get_column_data_format()
 #        print(self.df.get('BQIm'))
@@ -316,9 +333,22 @@ class DataFrameHandler(ColumnDataHandler, RowDataHandler):
         self.add_column_df()
 #        self.add_row_df()
     
+    #==========================================================================
+    def _include_empty_cells(self, data=dict):
+        # if data is dataframe.. but not working properly
+#        mask = np.column_stack([data[col].str.contains('"empty"', na=False) for col in data])
+#        data.loc[mask.any(axis=1)] = ''
+        #TODO Make it nicer :D
+        for key in data.keys():
+            for i, value in enumerate(data.get(key)):
+                if value == '"empty"':
+                    data[key][i] = ''
+        return data
+    
     #==========================================================================    
     def load_source(self, file_path=u'', sep='\t', encoding='cp1252', raw_data_copy=False):
         """
+        Can be rewritten in child-class, eg. DataHandlerPhytoplankton
         """
         self.source = file_path
         self.raw_data_copy = raw_data_copy
@@ -353,6 +383,9 @@ class DataFrameHandler(ColumnDataHandler, RowDataHandler):
         data = core.Load().load_txt(file_path, fill_nan=np.nan)
         if get_as_dict:
             data = self.get_dict(data)
+            
+        data = self._include_empty_cells(data=data)
+#        print(data)
         self.filter_parameters = core.AttributeDict()
         self.filter_parameters._add_arrays_to_entries(**data)
 
@@ -372,6 +405,8 @@ class DataFrameHandler(ColumnDataHandler, RowDataHandler):
 
     #==========================================================================        
     def _remap_header(self):
+#        for k in self.df.columns.values:
+#            print(k)
         map_dict = self.parameter_mapping.get_parameter_mapping(self.df.columns.values)
         self._rename_columns_of_DataFrame(map_dict)
         
@@ -385,7 +420,6 @@ class DataFrameHandler(ColumnDataHandler, RowDataHandler):
     def save_data_as_txt(self, directory=u'', prefix=u''):   
         """
         """
-        
         if not directory:
             return False
 #            directory = os.path.dirname(os.path.realpath(__file__))[:-4] + 'test_data\\test_exports\\'
@@ -410,11 +444,12 @@ class DataFrameHandler(ColumnDataHandler, RowDataHandler):
                                          self.df.keys() if x not in \
                                          self.filter_parameters.compulsory_fields + \
                                          self.filter_parameters.use_parameters + \
-                                         [u'Q_'+p for p in self.filter_parameters.use_parameters]))            
+                                         [u'Q_'+p for p in self.filter_parameters.use_parameters]))
                 
     #==========================================================================
     def _select_parameters(self):
         """
+        Can be rewritten in child-class, eg. DataHandlerPhytoplankton
         """
         self._check_nr_of_parameters()
         p_map, p_list = self._map_parameter_list()
@@ -492,8 +527,10 @@ class DataFrameHandler(ColumnDataHandler, RowDataHandler):
 class NETCDFDataHandler(DataFrameHandler):
     """
     """
-    def __init__(self):
+    def __init__(self,
+                 export_directory=''):
         super().__init__()
+        self.export_directory = export_directory
         
     #==========================================================================    
     def load_nc(self):
@@ -508,10 +545,12 @@ class DataHandlerPhysicalChemical(DataFrameHandler):
     """
     """
     def __init__(self, filter_path=u'', 
+                 export_directory='',
                  parameter_mapping=None):
         
         super().__init__()
         self.dtype = u'PhysicalChemical'
+        self.export_directory = export_directory
         self.read_filter_file(file_path=filter_path)
         self.parameter_mapping = parameter_mapping
         
@@ -525,10 +564,10 @@ class DataHandlerPhysicalChemical(DataFrameHandler):
         If NO3 is not present value is np.nan 
         """
         din_list = []
-        for no2, no3, nox, nh4 in zip(self.get_float_list(key=u'NTRI'), 
-                                      self.get_float_list(key=u'NTRA'), 
-                                      self.get_float_list(key=u'NTRZ'),
-                                      self.get_float_list(key=u'AMON')):
+        for no2, no3, nox, nh4 in zip(self.get_float_list(key=u'NTRI', ignore_qf=['B','S']), 
+                                      self.get_float_list(key=u'NTRA', ignore_qf=['B','S']), 
+                                      self.get_float_list(key=u'NTRZ', ignore_qf=['B','S']),
+                                      self.get_float_list(key=u'AMON', ignore_qf=['B','S'])):
 
             if np.isnan(nox):
                 din = np.nan
@@ -555,9 +594,9 @@ class DataHandlerPhysicalChemical(DataFrameHandler):
             self.column_data[self.source]['DIN_calulated'] = din_list
                             
     #==========================================================================
-    def get_float_list(self, key, ignore_qf=['B','S']):
+    def get_float_list(self, key, ignore_qf=[]):
         return utils.get_float_list_from_str(df=self.column_data[self.source], 
-                                       key=key, ignore_qf=ignore_qf)
+                                             key=key, ignore_qf=ignore_qf)
     
     #==========================================================================
 """
@@ -567,11 +606,13 @@ class DataHandlerPhysicalChemical(DataFrameHandler):
 class DataHandlerZoobenthos(DataFrameHandler):
     """
     """
-    def __init__(self, filter_path=u'', 
+    def __init__(self, filter_path=u'',
+                 export_directory='', 
                  parameter_mapping=None):
         
         super().__init__()
         self.dtype = u'Zoobenthos'
+        self.export_directory = export_directory
         self.read_filter_file(file_path=filter_path)
         self.parameter_mapping = parameter_mapping
         
@@ -588,10 +629,12 @@ class DataHandlerChlorophyll(DataFrameHandler):
     """
     """
     def __init__(self, filter_path=u'', 
+                 export_directory='',
                  parameter_mapping=None):
         
         super().__init__()
         self.dtype = u'Chlorophyll' # Only Tube samples ? 
+        self.export_directory = export_directory
         self.read_filter_file(file_path=filter_path)
         self.parameter_mapping = parameter_mapping
         
@@ -608,18 +651,71 @@ class DataHandlerPhytoplankton(DataFrameHandler):
     """
     """
     def __init__(self, filter_path=u'', 
+                 export_directory='',
                  parameter_mapping=None):
         
         super().__init__()
         self.dtype = u'Phytoplankton'
+        self.export_directory = export_directory
         self.read_filter_file(file_path=filter_path)
         self.parameter_mapping = parameter_mapping
         
         self.column_data = {} #pd.DataFrame()
         self.row_data = {} #pd.DataFrame()
+    
+    #==========================================================================
+    def _additional_filter(self):
+        self._delete_columns_from_df(columns=self.filter_parameters.extra_fields + [self.filter_parameters.value_key])
+        self._drop_duplicates(based_on_column='SHARKID_MD5')
+        self.filter_parameters.use_parameters = 'BIOV_CONC_ALL'
+
+    #==========================================================================
+    def _extended_filter_for_phytoplanton_data(self):     
+        """
+        Selects parameters and TROPHIC-status according to 
+        self.filter_parameters
+        """
+        self.df = utils.set_filter(df=self.df, 
+                                   filter_dict={self.filter_parameters.parameter_key : self.para_list, 
+                                                self.filter_parameters.trophic_key : self.filter_parameters.use_trophic},
+                                   return_dataframe=True)
         
-    #==========================================================================           
+    #==========================================================================
+    def _get_total_biovolume(self, samp_key=''):
+        # keys could be set in filter_parameters instead..
+#        print(self.df.get(samp_key).unique)
+        for sample in self.df.get(samp_key).unique():
+            
+            boolean = utils.set_filter(df=self.df, 
+                                       filter_dict={samp_key:sample})
+            
+            tot_value = self.df.loc[boolean,self.filter_parameters.value_key].astype(np.float).sum(skipna=True)
+            
+            self.df.loc[boolean, self.filter_parameters.add_parameters] = str(tot_value)
+
+    #==========================================================================
+    def _select_parameters(self):
+        """
+        Rewritten from parent-class
+        """
+        #spara undan och sedan delete .extra_fields
+        # spara undan som kolumnformat
         
+        self._check_nr_of_parameters()
+        p_map, p_list = self._map_parameter_list()
+        self.para_list = self.parameter_mapping.map_parameter_list(p_list)
+
+        for para in p_list:
+            # Change parameter name according to parameter codelist
+            #TODO CHeck if this variant of np.where works with pandas irregular index..
+            self.df[self.filter_parameters.parameter_key] = np.where(self.df[self.filter_parameters.parameter_key]==para, 
+                                                                     p_map[para],
+                                                                     self.df[self.filter_parameters.parameter_key])
+        self._extended_filter_for_phytoplanton_data()
+        self._add_field()
+        self._get_total_biovolume(samp_key='SHARKID_MD5')
+            
+    #==========================================================================   
 """
 #==============================================================================
 #==============================================================================
@@ -657,22 +753,26 @@ class DataHandler(object):
         self._load_field_mapping(file_path=path_parameter_mapping)
         
         
-        #TODO lägg in datatypsobject i dict ? seperate sources as keys... 'phyche_source'
+        #TODO lägg in datatypsobject i dict ? seperate sources as keys... 'phyche_source' DONE!
         
         
-#        self.chlorophyll = DataHandlerChlorophyll(filter_path=path_fields_filter+u'',
-#                                                  parameter_mapping=self.parameter_mapping)
+        self.chlorophyll = DataHandlerChlorophyll(filter_path=path_fields_filter+u'filter_fields_chlorophyll_integrated.txt',
+                                                  export_directory=self.export_directory,
+                                                  parameter_mapping=self.parameter_mapping)
         
         
         self.physical_chemical = DataHandlerPhysicalChemical(filter_path=path_fields_filter+'filter_fields_physical_chemical.txt',
+                                                             export_directory=self.export_directory,
                                                              parameter_mapping=self.parameter_mapping)
         
         
-#        self.phytoplankton = DataHandlerPhytoplankton(filter_path=path_fields_filter+u'',
-#                                                      parameter_mapping=self.parameter_mapping)
+        self.phytoplankton = DataHandlerPhytoplankton(filter_path=path_fields_filter+u'filter_fields_phytoplankton.txt',
+                                                      export_directory=self.export_directory,
+                                                      parameter_mapping=self.parameter_mapping)
         
         
         self.zoobenthos = DataHandlerZoobenthos(filter_path=path_fields_filter+'filter_fields_zoobenthos.txt',
+                                                export_directory=self.export_directory,
                                                 parameter_mapping=self.parameter_mapping)
         
         

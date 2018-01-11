@@ -1,0 +1,20 @@
+compulsory_fields	fields_index	sort_by_fields	use_parameters	visit_id_key	depth_key	parameter_key	value_key	qflag_key
+MYEAR	MYEAR	SDATE	CPHL_INTEG			PARAM	VALUE	QFLAG
+SDATE	SHIPC	SHIPC						
+STIME	SHARKID_MD5	SHARKID_MD5						
+SHIPC	PARAM							
+SHARKID_MD5								
+STATN								
+LATIT_DD								
+LONGI_DD								
+SEA_AREA_CODE								
+SEA_AREA_NAME								
+SEA_BASIN								
+WATER_DISTRICT								
+WATER_TYPE_AREA								
+WLTYP								
+MNDEP								
+MXDEP								
+PARAM								
+VALUE								
+QFLAG								
