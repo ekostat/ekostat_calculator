@@ -643,11 +643,11 @@ class WorkSpace(object):
         return all_ok
         
     #==========================================================================
-    def copy_subset(self, sourse_subset_name=None, target_subset_name=None, new_alias=False): 
-        assert all([sourse_subset_name, target_subset_name])
+    def copy_subset(self, source_subset_name=None, target_subset_name=None, new_alias=False): 
+        assert all([source_subset_name, target_subset_name])
         if not self.add_subset(sub=target_subset_name, alias=new_alias):
             return False
-        return self.subset_dict[target_subset_name].add_files_from_subset(self.subset_dict[sourse_subset_name], overwrite=True)
+        return self.subset_dict[target_subset_name].add_files_from_subset(self.subset_dict[source_subset_name], overwrite=True)
     
     #==========================================================================
     def delete_subset(self, subset_name=None): 
@@ -821,6 +821,7 @@ class WorkSpace(object):
     
     #==========================================================================
     def set_data_filter(self, step='', subset='', filter_type='', filter_name='', data=None, save_filter=True): 
+        assert filter_type in ['include_list','exclude_list'], 'filter_type must be include_list or exclude_list'
         step_object = self.get_step_object(step=step, subset=subset)
         if not step_object:
             return False

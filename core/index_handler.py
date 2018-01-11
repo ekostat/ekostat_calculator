@@ -81,7 +81,9 @@ class IndexHandler(object):
         """
         Returns filtered data for the given level...
         """
+        # TODO: this leads to empty first filter returning False! Empty filters should return all data?
         if type(self.first_filter) != pd.Series:
+            print('index_handler.get_filtered_data: this is where it goes wrong')
             return False
         
         # Temp! Structure is not ready!!!
