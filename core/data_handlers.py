@@ -734,7 +734,9 @@ class DataHandler(object):
     """
     Class to hold data.  
     """
-
+    #TODO metod för att kontrollera odeffinerade datafiler, vilken datatyp är 
+    #det som gäller? input från användaren eller datafilen.. finns inte datatyp 
+    #i filen? säg till användaren.. när vi vet datatyp, spara filnamn i fil
     #TODO check dubblett 
     def __init__(self, 
                  input_data_directory=None, 

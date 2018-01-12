@@ -12,10 +12,12 @@ import utils
 #==============================================================================
 #==============================================================================
 """
-def check_lists_in_dict(filter_dict):
+def check_lists_in_dict(filter_dict, use_string=False):
     for key in filter_dict:
         if not utils.is_sequence(filter_dict[key]):
-            if type(filter_dict[key]) != str:
+            if type(filter_dict[key]) == str and use_string:
+                pass
+            else:
                 filter_dict[key] = [filter_dict[key]]
     return filter_dict
 
@@ -59,26 +61,26 @@ def set_filter(df=None, filter_dict={}, interval_keys=[], logical_or_key=[], ret
     
     combined_boolean = ()
     
-    for key_org in loop_list: 
+    for key in loop_list: 
         
-#        key = key_org.upper()
+#        key = key.upper()
         
-        if key_org not in df:
+        if key not in df: 
             continue
         
-        if key_org in interval_keys:
+        if key in interval_keys:
             
             boolean = get_boolean_from_interval(df=df, 
-                                                key=key_org, 
-                                                interval=filter_dict.get(key_org))
+                                                key=key, 
+                                                interval=filter_dict.get(key))
         else:
-            boolean = df[key_org].isin(filter_dict.get(key_org))
+            boolean = df[key].isin(filter_dict.get(key))
             
 #        if not type(boolean) == pd.Series:
 #            continue
 
         if type(combined_boolean) == pd.Series:
-            if key_org in logical_or_key:
+            if key in logical_or_key:
                 combined_boolean = combined_boolean | boolean
             else:
                 combined_boolean = combined_boolean & boolean
