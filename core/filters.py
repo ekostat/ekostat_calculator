@@ -440,15 +440,15 @@ class SettingsFile(object):
         Get boolean tuple to use for filtering
         """
         combined_boolean = ()
-        for variable in self.filter_columns: 
+        for variable in self.filter_columns:
             if variable in self.interval_columns:
-                boolean = self._get_boolean_from_interval(df=df, 
-                                                          type_area=type_area, 
-                                                          variable=variable) 
+                boolean = self._get_boolean_from_interval(df=df,
+                                                          type_area=type_area,
+                                                          variable=variable)
             elif variable in self.list_columns:
-                boolean = self._get_boolean_from_list(df=df, 
-                                                      type_area=type_area, 
-                                                      variable=variable) 
+                boolean = self._get_boolean_from_list(df=df,
+                                                      type_area=type_area,
+                                                      variable=variable)
             else:
                 print('No boolean for "{}"'.format(variable))
                 continue

@@ -15,7 +15,8 @@ import utils
 def check_lists_in_dict(filter_dict):
     for key in filter_dict:
         if not utils.is_sequence(filter_dict[key]):
-            filter_dict[key] = [filter_dict[key]]
+            if type(filter_dict[key]) != str:
+                filter_dict[key] = [filter_dict[key]]
     return filter_dict
 
 #==============================================================================
@@ -47,7 +48,7 @@ def set_filter(df=None, filter_dict={}, interval_keys=[], logical_or_key=[], ret
     df: pandas.DataFrame
     filter_dict: { key1: [x], key2: [x,y,z] }
     interval_keys: keys with value list will be handled as intervals
-                   filter_dict[key] = [value_from, value_to]
+                   filter_dict[key] = [value_from, value_to] or as string 'value_from-value_to'
     logical_key: if key in list, combined_boolean OR boolean from key is used.. (to be tested and evaluated / extended.. ).. sort order of loop ?
     return_dataframe: return as dataframe, else boolean
     """
@@ -58,20 +59,24 @@ def set_filter(df=None, filter_dict={}, interval_keys=[], logical_or_key=[], ret
     
     combined_boolean = ()
     
-    for key_org in loop_list:        
-        key = key_org.upper()
-        if key not in df:
+    for key_org in loop_list: 
+        
+#        key = key_org.upper()
+        
+        if key_org not in df:
             continue
         
         if key_org in interval_keys:
+            
             boolean = get_boolean_from_interval(df=df, 
-                                                key=key, 
+                                                key=key_org, 
                                                 interval=filter_dict.get(key_org))
         else:
-            boolean = df[key].isin(filter_dict.get(key_org))
-        
+            boolean = df[key_org].isin(filter_dict.get(key_org))
+            
 #        if not type(boolean) == pd.Series:
-#            continue            
+#            continue
+
         if type(combined_boolean) == pd.Series:
             if key_org in logical_or_key:
                 combined_boolean = combined_boolean | boolean
@@ -97,11 +102,11 @@ if __name__ == '__main__':
     df = pd.DataFrame({'a':range(10), 'b':range(10), 'c':range(10)})
     
     df = set_filter(df=df, 
-                    filter_dict={'a':[2,3,4], 'c':'1-7', 'b':[5,9]}, 
+                    filter_dict={'a':[2,3,4], 'c':'3-7', 'b':[5,9]}, 
                     interval_keys=['b','c'],
                     logical_or_key=['a'],
                     return_dataframe=True)
-                    
+
     print(df)
     
     print('-'*50)
