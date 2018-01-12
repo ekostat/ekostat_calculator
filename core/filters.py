@@ -56,7 +56,7 @@ class DataFilter(object):
         """
         Get boolean tuple to use for filtering. 
         """
-        combined_boolean = ()
+        combined_boolean = False
         
         #----------------------------------------------------------------------
         # Filter exclude list 
@@ -81,6 +81,10 @@ class DataFilter(object):
                 combined_boolean = combined_boolean & boolean
             else:
                 combined_boolean = boolean 
+                
+        if combined_boolean == False: 
+            combined_boolean = pd.Series(np.ones(len(df), dtype=bool))
+            
         return combined_boolean
 
     #==========================================================================
@@ -439,8 +443,8 @@ class SettingsFile(object):
         """
         Get boolean tuple to use for filtering
         """
-        combined_boolean = ()
-        for variable in self.filter_columns:
+        combined_boolean = False
+        for variable in self.filter_columns: 
             if variable in self.interval_columns:
                 boolean = self._get_boolean_from_interval(df=df,
                                                           type_area=type_area,
@@ -459,6 +463,10 @@ class SettingsFile(object):
                 combined_boolean = combined_boolean & boolean
             else:
                 combined_boolean = boolean 
+                
+        if combined_boolean == False: 
+            combined_boolean = pd.Series(np.ones(len(df), dtype=bool)) 
+            
         return combined_boolean
     
     #==========================================================================
@@ -486,7 +494,7 @@ class SettingsRef(object):
         
         
 ###############################################################################
-class SettingsFilter(object):
+class SettingsDataFilter(object):
     """
     Handles filter settings. 
     """
@@ -821,7 +829,7 @@ if __name__ == '__main__':
         s.save_file(output_file_path)
     
         
-        sf = SettingsFilter(s)
+        sf = SettingsDataFilter(s)
     
     
     
