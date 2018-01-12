@@ -45,7 +45,7 @@ def get_ordered_list(dict_keys={}, list_keys=[]):
 
 #==============================================================================
 #==============================================================================
-def set_filter(df=None, filter_dict={}, interval_keys=[], logical_or_key=[], return_dataframe=False):
+def set_filter(df=None, filter_dict={}, interval_keys=[], logical_or_key=[], return_dataframe=False, use_string=False):
     """
     df: pandas.DataFrame
     filter_dict: { key1: [x], key2: [x,y,z] }
@@ -57,7 +57,7 @@ def set_filter(df=None, filter_dict={}, interval_keys=[], logical_or_key=[], ret
     loop_list = get_ordered_list(dict_keys=filter_dict, 
                                  list_keys=logical_or_key)
     
-    filter_dict = check_lists_in_dict(filter_dict)
+    filter_dict = check_lists_in_dict(filter_dict, use_string=use_string)
     
     combined_boolean = ()
     
@@ -105,6 +105,7 @@ if __name__ == '__main__':
     
     df = set_filter(df=df, 
                     filter_dict={'a':[2,3,4], 'c':'3-7', 'b':[5,9]}, 
+                    use_string=True,
                     interval_keys=['b','c'],
                     logical_or_key=['a'],
                     return_dataframe=True)
