@@ -73,15 +73,12 @@ raw_data = core.DataHandler(input_data_directory=input_data_directory,
 #------------------------------------------------------------------------------
 #raw_data.physical_chemical.load_source(file_path=input_data_directory + fid_phyche,
 #                                       raw_data_copy=True)
-#raw_data.physical_chemical.calculate_din()
 ##------------------------------------------------------------------------------
 #raw_data.physical_chemical.load_source(file_path=input_data_directory + fid_phyche_col,
 #                                       raw_data_copy=True)
-#raw_data.physical_chemical.calculate_din()
 #------------------------------------------------------------------------------
 raw_data.physical_chemical.load_source(file_path=input_data_directory + fid_phyche_col_big,
                                        raw_data_copy=True)
-raw_data.physical_chemical.calculate_din()
 #------------------------------------------------------------------------------
 raw_data.physical_chemical.save_data_as_txt(directory=u'', prefix=u'Column_format')
 #------------------------------------------------------------------------------
