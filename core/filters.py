@@ -29,8 +29,8 @@ class DataFilter(object):
         self.filter_file_paths = {} 
         self.include_list_filter = {} 
         self.exclude_list_filter = {} 
-        self.include_header_filter = {} 
-        self.exclude_header_filter = {} 
+        self.include_header_filter = {}
+        self.exclude_header_filter = {}
         self.all_filters = {}
         
         self.load_filter_files()

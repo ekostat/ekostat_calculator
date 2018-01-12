@@ -37,6 +37,7 @@ filter_parameters_file_zooben = u'filter_fields_zoobenthos.txt'
 fid_chl_integ = u'raw_data\\chlorophyll_integrated_2015_2016_row_format.txt'
 fid_phyche = u'raw_data\\BOS_HAL_2015-2016_row_format_2.txt'
 fid_phyche_col = u'raw_data\\BOS_BAS_2016-2017_column_format.txt'
+fid_phyche_col_big = u'raw_data\\phyche_2008_2017_column_format.txt'
 fid_phyto = u'raw_data\\phytoplankton_2016_row_format.txt'
 fid_zooben = u'raw_data\\zoobenthos_2016_row_format_2.txt'
 
@@ -77,17 +78,21 @@ raw_data = core.DataHandler(input_data_directory=input_data_directory,
 #raw_data.physical_chemical.load_source(file_path=input_data_directory + fid_phyche_col,
 #                                       raw_data_copy=True)
 #raw_data.physical_chemical.calculate_din()
-##------------------------------------------------------------------------------
-#raw_data.physical_chemical.save_data_as_txt(directory=u'', prefix=u'Column_format')
+#------------------------------------------------------------------------------
+raw_data.physical_chemical.load_source(file_path=input_data_directory + fid_phyche_col_big,
+                                       raw_data_copy=True)
+raw_data.physical_chemical.calculate_din()
+#------------------------------------------------------------------------------
+raw_data.physical_chemical.save_data_as_txt(directory=u'', prefix=u'Column_format')
 #------------------------------------------------------------------------------
 #raw_data.physical_chemical.raw_data_format
 #raw_data.physical_chemical.row_data.keys()
 #raw_data.physical_chemical.filter_parameters.use_parameters
 
 #------------------------------------------------------------------------------
-raw_data.phytoplankton.load_source(file_path=input_data_directory + fid_phyto,
-                                   raw_data_copy=True)
-raw_data.phytoplankton.save_data_as_txt(directory=export_directory, prefix=u'Column_format')
+#raw_data.phytoplankton.load_source(file_path=input_data_directory + fid_phyto,
+#                                   raw_data_copy=True)
+#raw_data.phytoplankton.save_data_as_txt(directory=export_directory, prefix=u'Column_format')
 
 #------------------------------------------------------------------------------
 #raw_data.zoobenthos.load_source(file_path=input_data_directory + fid_zooben,
