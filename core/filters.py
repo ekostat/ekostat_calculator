@@ -82,7 +82,7 @@ class DataFilter(object):
             else:
                 combined_boolean = boolean 
                 
-        if combined_boolean == False: 
+        if type(combined_boolean) != pd.Series: 
             combined_boolean = pd.Series(np.ones(len(df), dtype=bool))
             
         return combined_boolean
@@ -464,7 +464,7 @@ class SettingsFile(object):
             else:
                 combined_boolean = boolean 
                 
-        if combined_boolean == False: 
+        if type(combined_boolean) != pd.Series: 
             combined_boolean = pd.Series(np.ones(len(df), dtype=bool)) 
             
         return combined_boolean
