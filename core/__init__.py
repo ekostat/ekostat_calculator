@@ -6,7 +6,7 @@ from .filters import DataFilter
 from .filters import ToleranceFilter
 from .filters import SettingsFile
 from .filters import SettingsRef
-from .filters import SettingsFilter
+from .filters import SettingsDataFilter
 from .filters import SettingsTolerance
 
 from .index_handler import IndexHandler

@@ -205,7 +205,7 @@ class WorkStep(object):
         # Load Filter settings. Filter settings are using indicator_setting_files-obects as data
         self.indicator_filter_settings = {} 
         for indicator, obj in self._indicator_setting_files.items():
-            self.indicator_filter_settings[indicator] = core.SettingsFilter(obj)
+            self.indicator_filter_settings[indicator] = core.SettingsDataFilter(obj)
             
         # Load Ref settings. Filter settings are using indicator_setting_files-obects as data
         self.indicator_ref_settings = {} 
