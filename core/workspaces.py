@@ -592,8 +592,21 @@ class WorkSpace(object):
 #            self.cfg[QE] = self.cf_df.groupby(QE)['indicator'].unique()
 #        for indicator in self.cfg['indicators']:
 #            self.cfg[indicator] = self.cf_df.groupby(QE)['parameters'].split(',')        
+# HEAD
 #        
 
+#   
+    #==========================================================================
+    def import_data(self, import_directory = None):
+        """
+        Imports data from choosen directory to input directory in workspace.
+        Used to import data to a new workspace or add files to input diretory.
+        If you copy files from existing workspace that contains data to your new workspace you do not need to use this, unless you wnat to add new files
+        """
+        pass
+        
+        
+# afa8b72762765087037ea666228975c8af79d660
     #==========================================================================
     def make_copy_of_workspace(self, workspace_name='', overwrite=False): 
         """
@@ -835,27 +848,52 @@ class WorkSpace(object):
         # If no directory is given use the default directory! 
         # This has to be done in physical_chemical, zoobenthos etc. 
         """
-        # Row data
-        # TODO: retrieve from workspace. User should maybe choose which files to load?
-        fid_zooben = u'zoobenthos_2016_row_format_2.txt'
-        fid_phyche = u'BOS_HAL_2015-2016_row_format_2.txt'
-        fid_phyche_col = u'BOS_BAS_2016-2017_column_format.txt' 
-        
-        self.data_handler.physical_chemical.load_source(file_path=raw_data_file_path + fid_phyche,
-                                                        raw_data_copy=True)
-        self.data_handler.physical_chemical.load_source(file_path=raw_data_file_path + fid_phyche_col,
-                                                        raw_data_copy=True)
-        self.data_handler.physical_chemical.save_data_as_txt(directory=output_directory, prefix=u'Column_format')
-        
-        #raw_data.physical_chemical.raw_data_format
-        #raw_data.physical_chemical.row_data.keys()
-        #raw_data.physical_chemical.filter_parameters.use_parameters
-        
-        self.data_handler.zoobenthos.load_source(file_path=raw_data_file_path + fid_zooben,
-                                                 raw_data_copy=True)
-        self.data_handler.zoobenthos.save_data_as_txt(directory=output_directory, prefix=u'Column_format')
+        # read settings to match filename and datatype, return pd df
+        dtype_settings = core.Load().load_txt(file_path=raw_data_file_path + 'dtype_settings.txt', sep='\t')
+        # TODO:  User should maybe choose which files to load?
+        #loop filenames in dtype_settings to read with correct datahandler
+        for index, row in dtype_settings.iterrows():
+            print(row.keys())
+            if row['data_type'] == 'phyche':
+                self.data_handler.physical_chemical.load_source(file_path=raw_data_file_path + row.filename,
+                                                                raw_data_copy=True)
+                self.data_handler.physical_chemical.save_data_as_txt(directory=output_directory, prefix=u'Column_format')
+            elif row['data_type']== 'zooben':
+                self.data_handler.zoobenthos.load_source(file_path=raw_data_file_path + row.filename,
+                                                         raw_data_copy=True)
+                self.data_handler.zoobenthos.save_data_as_txt(directory=output_directory, prefix=u'Column_format')
+            elif row['data_type'] == 'pp':
+                self.data_handler.phytoplankton.load_source(file_path=raw_data_file_path + row.filename,
+                                                         raw_data_copy=True)
+                self.data_handler.phytoplankton.save_data_as_txt(directory=output_directory, prefix=u'Column_format')
+            elif row['data_type'] == 'hose':
+                self.data_handler.chlorophyll.load_source(file_path=raw_data_file_path + row.filename,
+                                                         raw_data_copy=True)
+                self.data_handler.chlorophyll.save_data_as_txt(directory=output_directory, prefix=u'Column_format')   
+            else:
+                print('could not read {} from raw_data directory. Check data type'.format(row.filename))
+
         
         self.data_handler.merge_all_data(save_to_txt=True)
+        
+        # Row data
+        # TODO: retrieve from workspace. User should maybe choose which files to load?
+#        fid_zooben = u'zoobenthos_2016_row_format_2.txt'
+#        fid_phyche = u'BOS_HAL_2015-2016_row_format_2.txt'
+#        fid_phyche_col = u'BOS_BAS_2016-2017_column_format.txt' 
+#        
+#        self.data_handler.physical_chemical.load_source(file_path=raw_data_file_path + fid_phyche,
+#                                                        raw_data_copy=True)
+#        self.data_handler.physical_chemical.load_source(file_path=raw_data_file_path + fid_phyche_col,
+#                                                        raw_data_copy=True)
+#        self.data_handler.physical_chemical.save_data_as_txt(directory=output_directory, prefix=u'Column_format')
+#        
+#        
+#        self.data_handler.zoobenthos.load_source(file_path=raw_data_file_path + fid_zooben,
+#                                                 raw_data_copy=True)
+#        self.data_handler.zoobenthos.save_data_as_txt(directory=output_directory, prefix=u'Column_format')
+#        
+#        self.data_handler.merge_all_data(save_to_txt=True)
         
     #==========================================================================
     def save_indicator_settings(self, indicator=None, subset=None): 

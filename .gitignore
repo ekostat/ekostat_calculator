@@ -5,3 +5,4 @@
 .spyproject/codestyle.ini
 **/__pycache__/*
 *.pyc
+*.ipynb
