@@ -60,17 +60,17 @@ class IndexHandler(object):
         self.subset_filter = None # This is just for testing to combine first filter and the first subset filter. 
         
     #==========================================================================
-    def add_filter(self, filter_object=None, filter_level=None, subset=None, indicator=None, water_body=None): 
+    def add_filter(self, filter_object=None, filter_step=None, subset=None, indicator=None, water_body=None): 
         """
         For now only first filter applied
         """
         df = self.data_handler_object.get_all_column_data_df()
         # TODO: handle levels, subsets and indicator input  
-        if filter_level == 0:
+        if filter_step == 0:
             self.first_filter = filter_object.get_filter_boolean_for_df(df)
             # TODO: reset later filters
             return True
-        elif filter_level == 1 and subset == 'A': # Temporary!! Structure is not ready! 
+        elif filter_step == 1 and subset == 'A': # Temporary!! Structure is not ready! 
             self.subset_filter = filter_object.get_filter_boolean_for_df(df)
             return True
         

@@ -12,11 +12,11 @@ import utils
 
 #if current_path not in sys.path: 
 #    sys.path.append(os.path.dirname(os.path.realpath(__file__)))
-
 try:
     import core
 except:
     pass
+
 ###############################################################################
 class DataFilter(object):
     """
@@ -24,7 +24,9 @@ class DataFilter(object):
     Data filter is built up with several files listed in the given direktory. 
     """
     #==========================================================================
-    def __init__(self, filter_directory): 
+    def __init__(self, 
+                 filter_directory, 
+                 mapping_objects={}): 
         self.filter_directory = filter_directory
         self.filter_file_paths = {} 
         self.include_list_filter = {} 
@@ -32,6 +34,8 @@ class DataFilter(object):
         self.include_header_filter = {}
         self.exclude_header_filter = {}
         self.all_filters = {}
+        
+        self.mapping_water_body = mapping_objects['water_body']
         
         self.load_filter_files()
         
@@ -51,12 +55,84 @@ class DataFilter(object):
             return False
         return df[parameter].astype(str).isin(value_list)
 
+    
+    #==========================================================================
+    def include_statn(self, statn, include_current=False):
+        """
+        statn => water_body => type_area => water_district
+        Makes sure that the water_body containing the station is included in the include_water_body filter. 
+        include_current nor used
+        """
+        if type(statn) != list:
+            statn = list(statn) 
+        
+        statn = sorted(set([item.strip() for item in statn]))
+        self.include_list_filter['STATN'] = statn
+         
+        water_body_list = self.include_list_filter['WATER_BODY_NAME'][:] 
+        # Add water bodies
+        for s in statn: 
+            #TODO: Link between statn and water body
+            water_body_list.append('')
+             
+        self.include_water_body(water_body_list)
+        
+    
+    #==========================================================================
+    def include_type_area(self, type_area, include_current=False): 
+        """
+        type_area => water_district
+        include_current nor used
+        """
+        if type(type_area) != list:
+            type_area = list(type_area) 
+        
+        type_area = sorted(set([item.strip() for item in type_area]))
+        self.include_list_filter['TYPE_AREA_NUMBER'] = type_area 
+         
+        water_district_list = self.include_list_filter['WATER_DISTRICT_NAME'][:] 
+        # Add water districts
+        for ta in type_area: 
+            #TODO: Link between type area and water district
+            water_district_list.append('')
+
+        self.include_water_district(water_district_list)
+
+    #==========================================================================
+    def include_water_district(self, water_district, include_current=False): 
+        """
+        water_district
+        include_current nor used
+        """
+        water_district = sorted(set([item.strip() for item in water_district]))
+        self.include_list_filter['WATER_DISTRICT_NAME'] = water_district
+        
+    #==========================================================================
+    def include_water_body(self, water_body, include_current=False): 
+        """
+        water_body => type_area => water_district
+        include_current nor used
+        """
+        if type(water_body) != list:
+            water_body = list(water_body) 
+        
+        water_body = sorted(set([item.strip() for item in water_body]))
+        self.include_list_filter['WATER_BODY_NAME'] = water_body[:]
+        
+        # Get current type areas
+        type_area_list = self.include_list_filter['TYPE_AREA_NUMBER'][:] 
+        
+        for wb in water_body:
+            type_area_list.append(self.mapping_water_body.get_type_area_for_water_body(wb, include_suffix=True))
+             
+        self.include_type_area(type_area_list)
+        
     #==========================================================================
     def get_filter_boolean_for_df(self, df=None): 
         """
         Get boolean tuple to use for filtering. 
         """
-        combined_boolean = False
+        combined_boolean = ()
         
         #----------------------------------------------------------------------
         # Filter exclude list 
@@ -82,7 +158,7 @@ class DataFilter(object):
             else:
                 combined_boolean = boolean 
                 
-        if combined_boolean == False: 
+        if len(combined_boolean) == 0: 
             combined_boolean = pd.Series(np.ones(len(df), dtype=bool))
             
         return combined_boolean
@@ -189,7 +265,15 @@ class DataFilter(object):
         filter_types could be: 
             include_list
             exclude_list 
+        OBS! 
+        Files are not loaded before change. 
+        This means that changes in files will not be seen by the object if working in self updating notebook. 
         """
+#        print('11')
+#        print(filter_type) 
+#        print(filter_name)
+#        print(data)
+#        print(save_filter)
         if filter_type == 'exclude_list':
             return self.set_exclude_list_filter(filter_name=filter_name, 
                                                 filter_list=data, 
@@ -200,11 +284,17 @@ class DataFilter(object):
                                                 save_files=save_filter)
         
     #==========================================================================
-    def set_include_list_filter(self, filter_name, filter_list, save_files=True): 
+    def set_include_list_filter(self, filter_name=None, filter_list=None, save_files=True): 
+        filter_name = filter_name.upper()
         if filter_name not in self.include_list_filter.keys():
             return False
-        filter_list = sorted(set([item.strip() for item in filter_list]))
-        self.include_list_filter[filter_name] = filter_list
+        
+        print('filter_name')
+        if filter_name == 'WATER_BODY_NAME':
+            self.include_water_body(filter_list)
+        else:
+            filter_list = sorted(set([item.strip() for item in filter_list]))
+            self.include_list_filter[filter_name] = filter_list
         if save_files: 
             self.save_filter_files() 
         return True
@@ -218,7 +308,7 @@ class DataFilter(object):
         if save_files: 
             self.save_filter_files()
         return True
-                    
+    
         
 ###############################################################################
 class SettingsFile(object):
@@ -443,7 +533,7 @@ class SettingsFile(object):
         """
         Get boolean tuple to use for filtering
         """
-        combined_boolean = False
+        combined_boolean = ()
         for variable in self.filter_columns: 
             if variable in self.interval_columns:
                 boolean = self._get_boolean_from_interval(df=df,
@@ -464,7 +554,7 @@ class SettingsFile(object):
             else:
                 combined_boolean = boolean 
                 
-        if combined_boolean == False: 
+        if len(combined_boolean) == 0: 
             combined_boolean = pd.Series(np.ones(len(df), dtype=bool)) 
             
         return combined_boolean
