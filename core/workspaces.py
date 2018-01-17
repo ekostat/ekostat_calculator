@@ -24,13 +24,23 @@ class WorkStep(object):
     A WorkStep holds information about the file structure and 
     contains all methodes operating on a specific workstep. 
     """
-    def __init__(self, name=None, parent_directory=None):
+    def __init__(self, 
+                 name=None, 
+                 parent_directory=None, 
+                 mapping_objects={}):
         if not all([name, parent_directory]): 
             return 
+        name = get_step_name(name)
         self.name = name 
         self.parent_directory = parent_directory 
         self.step_directory = '/'.join([self.parent_directory, self.name]) 
         print('Initiating WorkStep: {}'.format(self.step_directory))
+        
+        """ 
+        Input argument mapping_objects is a dictionary since there might be several mapping objects in the future. 
+        We do not want to (?) load mapping objects individually in each sub-object to save memory. 
+        """
+        self.mapping_objects = mapping_objects 
         
         self._load_attributes()
         
@@ -86,7 +96,11 @@ class WorkStep(object):
     def _load_attributes(self): 
         # Load attributes to be able to check what has been done
         self.data_filter = None
-        self.indicator_settings = {}
+        self.indicator_settings = {} 
+        
+        self.allowed_data_filter_steps = ['step_0', 'step_1']
+        self.allowed_indicator_settings_steps = ['step_2'] 
+        
         
     #==========================================================================
     def _save_ok(self):
@@ -139,7 +153,9 @@ class WorkStep(object):
         return sorted(file_list)
     
     #==========================================================================
-    def get_data_filter_object(self):
+    def get_data_filter_object(self): 
+        if self.name not in self.allowed_data_filter_steps:
+            return False
         return self.data_filter
     
     #==========================================================================
@@ -148,20 +164,24 @@ class WorkStep(object):
         Returns a dict with data filter names as keys. 
         Every key contains a list of the active filters. 
         """
-        self.first_filter.get_filter_info()
+        self.data_filter.get_filter_info()
         
     #==========================================================================
-    def get_indicator_filter_settings(self, indicator): 
+    def get_indicator_data_filter_settings(self, indicator): 
         """
-        Returns the filter settings for the given indicator. 
+        Returns the data filter settings for the given indicator. 
         """
-        return self.indicator_filter_settings.get(indicator, False)
+        if self.name not in self.allowed_indicator_settings_steps:
+            return False
+        return self.indicator_data_filter_settings.get(indicator, False)
     
     #==========================================================================
     def get_indicator_tolerance_settings(self, indicator): 
         """
         Returns the tolerance settings for the given indicator. 
         """
+        if self.name not in self.allowed_indicator_settings_steps:
+            return False
         return self.indicator_tolerance_settings.get(indicator, False)
     
     #==========================================================================
@@ -169,6 +189,8 @@ class WorkStep(object):
         """
         Returns the reference settings for the given indicator. 
         """
+        if self.name not in self.allowed_indicator_settings_steps:
+            return False
         return self.indicator_ref_settings.get(indicator, False)
     
     #==========================================================================
@@ -183,9 +205,11 @@ class WorkStep(object):
         
     #==========================================================================
     def load_data_filter(self):
-        # Load all settings file in the current WorkSpace filter folder... 
-        self.data_filter = core.DataFilter(self.directory_paths['data_filters']) 
-        
+        """
+        Load all settings files in the current WorkSpace filter folder... 
+        """
+        self.data_filter = core.DataFilter(self.directory_paths['data_filters'], 
+                                           mapping_objects=self.mapping_objects) 
         
 
     #==========================================================================
@@ -202,17 +226,17 @@ class WorkStep(object):
             if self._indicator_setting_files[indicator].indicator != indicator:
                 print('Missmatch in indicator name and object name! {}:{}'.format(self._indicator_setting_files[indicator].indicator, indicator))
             
-        # Load Filter settings. Filter settings are using indicator_setting_files-obects as data
-        self.indicator_filter_settings = {} 
+        # Load Filter settings. Filter settings are using indicator_setting_files-objects as data
+        self.indicator_data_filter_settings = {} 
         for indicator, obj in self._indicator_setting_files.items():
-            self.indicator_filter_settings[indicator] = core.SettingsDataFilter(obj)
+            self.indicator_data_filter_settings[indicator] = core.SettingsDataFilter(obj)
             
-        # Load Ref settings. Filter settings are using indicator_setting_files-obects as data
+        # Load Ref settings. Filter settings are using indicator_setting_files-objects as data
         self.indicator_ref_settings = {} 
         for indicator, obj in self._indicator_setting_files.items():
             self.indicator_ref_settings[indicator] = core.SettingsRef(obj) 
             
-        # Load Tolerance settings. Filter settings are using indicator_setting_files-obects as data
+        # Load Tolerance settings. Filter settings are using indicator_setting_files-objects as data
         self.indicator_tolerance_settings = {} 
         for indicator, obj in self._indicator_setting_files.items():
             self.indicator_tolerance_settings[indicator] = core.SettingsTolerance(obj)
@@ -227,13 +251,13 @@ class WorkStep(object):
             filter_settings.set_values(filter_settings)
             
     #==========================================================================
-    def update_indicator_filter_settings(self, indicator=None, filter_settings=None):
+    def update_indicator_data_filter_settings(self, indicator=None, filter_settings=None):
         """
         filter_settings are dicts like: 
             filter_settings[type_area][variable] = value 
         """
         if filter_settings: 
-            filter_object = self.indicator_filter_settings[indicator] 
+            filter_object = self.indicator_data_filter_settings[indicator] 
             filter_object.set_values(filter_settings) 
         
     #==========================================================================
@@ -267,7 +291,7 @@ class WorkStep(object):
     #==========================================================================
     def show_settings(self):
         print('first_filter:')
-        self.first_filter.show_filter()
+        self.data_filter.show_filter()
         
         
 ###############################################################################
@@ -275,25 +299,28 @@ class Subset(object):
     """
     Class to hold subset paths and objects. 
     """
-    def __init__(self, name=None, parent_directory=None, alias=False, max_step_nr=2): 
+    def __init__(self, 
+                 name=None, 
+                 parent_directory=None, 
+                 mapping_objects={}): 
         assert all([name, parent_directory])
         self.name = name 
         self.parent_directory = parent_directory.replace('\\', '/')
         self.subset_directory = '/'.join([self.parent_directory, self.name]) 
-        self.max_step_nr = max_step_nr
         print('-'*100)
-        print('Initiating Subset: {}'.format(self.subset_directory))
+        print('Initiating Subset: {}'.format(self.subset_directory)) 
+        
+        self.mapping_objects = mapping_objects
         
         self._load_attributes()
         self._load_steps() 
         
         self._load_config()
         
-        if alias not in [False, None]: 
-            self.set_alias(alias)
         
     #==========================================================================
     def _load_attributes(self): 
+        self.nr_steps = 5
         self.steps = {}
         
     #==========================================================================
@@ -309,17 +336,17 @@ class Subset(object):
         step_list = [item for item in os.listdir(self.subset_directory) if '.' not in item]
         print('step_list', step_list)
         for step in step_list:
-            self.add_workstep(step)
+            self._load_workstep(step)
         
     #==========================================================================
-    def add_files_from_subset(self, subset_object=None, overwrite=False):
+    def _add_files_from_subset(self, subset_object=None, overwrite=False):
         """
         Copy files from given subset. Option to overwrite or not. 
         This method is used to copy (branching) an entire subset. 
         """ 
         for step in subset_object.get_step_list(): 
             print('step:', step)
-            self.add_workstep(step)
+            self._load_workstep(step)
             step_object = subset_object.get_step_object(step)
             self.steps[step].add_files_from_workstep(step_object=step_object, 
                                                      overwrite=overwrite)
@@ -335,23 +362,18 @@ class Subset(object):
             
             
     #==========================================================================
-    def add_workstep(self, step=None):
+    def _load_workstep(self, step=None): 
+        step = get_step_name(step)
         if not step:
-            step_list = self.get_step_list()
-            for s in range(1, self.max_step_nr+1): 
-                st = 'step_{}'.format(s)
-                if st not in step_list:
-                    step = st
-                    break
-            if not step:
-                print('Cannot add another step!')
-                return
+            return False
         
-        self.steps[step] = WorkStep(name=step, parent_directory=self.subset_directory)
-
+        self.steps[step] = WorkStep(name=str(step), 
+                                    parent_directory=self.subset_directory, 
+                                    mapping_objects=self.mapping_objects)
+        return True
         
     #==========================================================================
-    def delete_workstep(self, step=None): 
+    def deprecated_delete_workstep(self, step=None): 
         """
         step is like 'step_1', 'step_2' and so on. 
         """
@@ -360,7 +382,7 @@ class Subset(object):
             self.steps.pop(step)
     
     #==========================================================================
-    def get_alias(self): 
+    def deprecated_get_alias(self): 
         alias = self.config.get_config('alias') 
         if not alias:
             return '' 
@@ -422,7 +444,7 @@ class Subset(object):
         self.steps[step].load_data()
     
     #==========================================================================
-    def set_alias(self, alias):
+    def deprecated_set_alias(self, alias):
         print('New alias for subset "{}" => "{}"'.format(self.config.get_config('alias'), alias))
         self.config.set_config('alias', alias)
         
@@ -484,6 +506,7 @@ class WorkSpace(object):
         self.name = name 
         self.parent_directory = parent_directory.replace('\\', '/')
         self.resource_directory = resource_directory.replace('\\', '/')
+        self.mapping_directory = '/'.join([self.resource_directory, 'mappings'])
         self.workspace_directory = '/'.join([self.parent_directory, self.name])
         self.nr_subsets_allowed = nr_subsets_allowed
         
@@ -508,9 +531,12 @@ class WorkSpace(object):
         # Load attributes to be able to check what has been done
         self.step_0 = None 
         
-        # Subset (convert to char)
-        self.subset_list = [chr(x+65) for x in range(self.nr_subsets_allowed)]
-        self.subset_dict = {}
+        # Subset
+        self.subset_dict = {} 
+        
+        # Mapping objects 
+        self.mapping_objects = {}
+        self.mapping_objects['water_body'] = core.WaterBody(file_path=self.mapping_directory + '/water_body_match.txt')
         
     #==========================================================================
     def _save_ok(self):
@@ -536,15 +562,16 @@ class WorkSpace(object):
 #        print('subsets', subsets)
         if subsets:
             for s in subsets:
-                self.add_subset(s)
+                self._add_subset(s)
         else:
-            self.add_subset()
+            self._add_subset('default_subset')
             
         # Step 0
 #        if not os.path.exists(self.directory_path_step_0):
 #            os.makedirs(self.directory_path_step_0)
         self.step_0 = WorkStep(name='step_0', 
-                               parent_directory=self.workspace_directory)
+                               parent_directory=self.workspace_directory, 
+                               mapping_objects=self.mapping_objects)
         
         # Set data and index handler
         self.data_handler = core.DataHandler(input_data_directory=self.directory_path_input_data, 
@@ -553,6 +580,7 @@ class WorkSpace(object):
         self.index_handler = core.IndexHandler(workspace_object=self, 
                                                data_handler_object=self.data_handler)
         
+    #==========================================================================
     def _load_config_files(self):       
         
         self.cf_df = pd.read_csv(self.resource_directory + '/Quality_Elements.cfg', sep='\t', dtype='str', encoding='cp1252')
@@ -564,6 +592,9 @@ class WorkSpace(object):
 #            self.cfg[QE] = self.cf_df.groupby(QE)['indicator'].unique()
 #        for indicator in self.cfg['indicators']:
 #            self.cfg[indicator] = self.cf_df.groupby(QE)['parameters'].split(',')        
+# HEAD
+#        
+
 #   
     #==========================================================================
     def import_data(self, import_directory = None):
@@ -575,23 +606,53 @@ class WorkSpace(object):
         pass
         
         
+# afa8b72762765087037ea666228975c8af79d660
     #==========================================================================
-    def add_files_from_workspace(self, workspace_object=None, overwrite=False):
+    def make_copy_of_workspace(self, workspace_name='', overwrite=False): 
+        """
+        Makes a copy of the workspace. 
+        Input: 
+            workspace_name - name of the new workspace
+        Return: 
+            workspace object of the new workspace
+            Returns False if something whent wrong 
+        """ 
+        
+        # Initiating workspace
+        new_workspace_path = '/'.join([self.parent_directory, workspace_name])
+        if os.path.exists(new_workspace_path) and overwrite == False:
+            return False
+        new_workspace_object = core.WorkSpace(name=workspace_name, 
+                                              parent_directory=self.parent_directory,
+                                              resource_directory=self.resource_directory) 
+        
+        # Copy files to new workspace
+        new_workspace_object._add_files_from_workspace(self, overwrite=overwrite)
+        
+        # Load data in workspace 
+        new_workspace_object._load_all_data()
+        
+        return new_workspace_object
+        
+        
+    #==========================================================================
+    def _add_files_from_workspace(self, workspace_object=None, overwrite=False):
         """
         Copy files from given workspace. Option to overwrite or not. 
-        This method is used to copy an entire workspace. 
+        This method is used when copy an entire workspace. 
         """ 
         # Step 0
         if workspace_object.step_0: 
             self.step_0 = WorkStep(name='step_0', 
-                          parent_directory=self.workspace_directory) 
+                          parent_directory=self.workspace_directory, 
+                          mapping_objects=self.mapping_objects) 
             self.step_0.add_files_from_workstep(step_object=workspace_object.step_0, 
                                                 overwrite=overwrite)
                 
         # Subsets
         for subset in workspace_object.get_subset_list():
-            self.add_subset(subset)
-            self.subset_dict[subset].add_files_from_subset(subset_object=workspace_object.subset_dict[subset], 
+            self._add_subset(subset)
+            self.subset_dict[subset]._add_files_from_subset(subset_object=workspace_object.subset_dict[subset], 
                                                            overwrite=overwrite)
             
         # Data         
@@ -607,57 +668,53 @@ class WorkSpace(object):
             shutil.copy(from_file_path, to_file_path)
         
     #==========================================================================
-    def add_subset(self, sub=None, alias=False): 
-#        print(sub)
-#        print(self.subset_list)
-        if not sub:
-            for s in self.subset_list:
-                if s not in self.subset_dict.keys():
-                    sub = s
-                    break
-            if not sub:
-                print('Cannot add another subset. Maximum subset limit has been reached!')
-                return False
-        elif sub in self.subset_dict.keys():
+    def _add_subset(self, sub=None): 
+        assert sub, 'No subset name given!'
+        if sub in self.subset_dict.keys():
             print('Given subset is already present!')
-            return False
-        elif sub not in self.subset_list:
-            print('Invalid subset name: {}'.format(sub))
             return False
         
 #        print('== {}'.format(sub))
         self.directory_path_subsets[sub] = self.directory_path_subset + '/{}'.format(sub)
         self.subset_dict[sub] = Subset(name=sub, 
-                                       parent_directory=self.directory_path_subset, 
-                                       alias=alias)
+                                       parent_directory=self.directory_path_subset,
+                                       mapping_objects=self.mapping_objects)
         return sub 
     
     #==========================================================================
-    def apply_first_filter(self): 
+    def _load_workstep(self, subset=None, step=None): 
+        subset_object = self.get_subset_object(subset) 
+        if not subset_object:
+            return False 
+        return subset_object._load_workstep(step)
+        
+    #==========================================================================
+    def apply_data_filter_step_0(self): 
         """
         Applies the first filter to the index_handler. 
         """
-        all_ok = self.index_handler.add_filter(filter_object=self.step_0.data_filter, filter_level=0)
+        all_ok = self.index_handler.add_filter(filter_object=self.step_0.data_filter, filter_step=0)
         return all_ok
         
     #==========================================================================
-    def apply_subset_filter(self, subset):
+    def apply_subset_data_filter(self, subset):
         """
         Applies the data filter for the given subset. 
         This is not fully handled by the index_handler. 
+        Filter is applyed in step 1.
         """
         if subset not in self.get_subset_list():
             return False
         sub_object = self.get_step_1_object(subset)
-        all_ok = self.index_handler.add_filter(filter_object=sub_object.data_filter, filter_level=1, subset=subset)
+        all_ok = self.index_handler.add_filter(filter_object=sub_object.data_filter, filter_step=1, subset=subset)
         return all_ok
         
     #==========================================================================
-    def copy_subset(self, source_subset_name=None, target_subset_name=None, new_alias=False): 
+    def copy_subset(self, source_subset_name=None, target_subset_name=None): 
         assert all([source_subset_name, target_subset_name])
-        if not self.add_subset(sub=target_subset_name, alias=new_alias):
+        if not self._add_subset(sub=target_subset_name):
             return False
-        return self.subset_dict[target_subset_name].add_files_from_subset(self.subset_dict[source_subset_name], overwrite=True)
+        return self.subset_dict[target_subset_name]._add_files_from_subset(self.subset_dict[source_subset_name], overwrite=True)
     
     #==========================================================================
     def delete_subset(self, subset_name=None): 
@@ -732,13 +789,14 @@ class WorkSpace(object):
         return sorted(self.available_indicators)
     
     #==========================================================================
-    def get_indicator_settings(self):
-        
-        return sorted(self.indicator_settings.keys())
+    def get_indicator_settings_data_filter_object(self, subset=None, step=2, indicator=None): 
+        step_object = self.get_step_object(subset=subset, step=step)
+        return step_object.get_indicator_data_filter_settings(indicator)
     
     #==========================================================================
-    def get_indicator_settings_name_list(self):
-        return sorted(self.indicator_settings.keys())
+    def get_indicator_settings_name_list(self, subset=None, step=2):
+        step_object = self.get_step_object(subset=subset, step=step)
+        return sorted(step_object.indicator_settings.keys())
     
     #==========================================================================
     def get_subset_list(self):
@@ -778,7 +836,7 @@ class WorkSpace(object):
         self.quality_factor_NP = core.QualityFactorNP()
         
     #==========================================================================
-    def load_all_data(self): 
+    def _load_all_data(self): 
         """ 
         Loads all data from the input_data-directory belonging to the workspace. 
         """
@@ -838,18 +896,24 @@ class WorkSpace(object):
 #        self.data_handler.merge_all_data(save_to_txt=True)
         
     #==========================================================================
-    def save_indicator_settings(self, indicator): 
+    def save_indicator_settings(self, indicator=None, subset=None): 
+        """
+        Saving indicator settings is only possible in step 2. 
+        """
+        # TODO: Chould later steps be removed if indicator settings are saved (saving only possible at level 2)?
         if not self._save_ok(): 
             return 
-        self.indicator_settings[indicator].save_file() # Overwrites existing file if no file_path is given
+        step_object = self.get_step_2_object(subset)
+        step_object.indicator_settings[indicator].save_file() # Overwrites existing file if no file_path is given
         return True 
     
     #==========================================================================
-    def save_all_indicator_settings(self): 
+    def save_all_indicator_settings_in_subset(self, subset): 
         if not self._save_ok(): 
             return 
         all_ok = True
-        for obj in self.indicator_settings.values():
+        step_object = self.get_step_2_object(subset)
+        for obj in step_object.indicator_settings.values():
             if not obj.save_file():
                 all_ok = False
         return all_ok 
@@ -860,7 +924,6 @@ class WorkSpace(object):
         step_object = self.get_step_object(step=step, subset=subset)
         if not step_object:
             return False
-        print('sdfs')
         return step_object.set_data_filter(filter_type=filter_type, 
                                             filter_name=filter_name, 
                                             data=data, 
@@ -881,13 +944,13 @@ class WorkSpace(object):
 
         
     #==========================================================================
-    def update_indicator_filter_settings(self, indicator=None, filter_settings=None):
+    def update_indicator_data_filter_settings(self, indicator=None, filter_settings=None):
         """
         filter_settings are dicts like: 
             filter_settings[type_area][variable] = value 
         """
         if filter_settings: 
-            filter_object = self.indicator_filter_settings[indicator]
+            filter_object = self.indicator_data_filter_settings[indicator]
             filter_object.set_values(filter_settings)
     
     

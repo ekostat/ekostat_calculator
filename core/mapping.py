@@ -160,12 +160,14 @@ class WaterBody(AttributeDict):
     - get various info for each water body 
     - get list on different water bodies within a specific type area
     """
-    def __init__(self):
+    def __init__(self, **kwargs):
         super().__init__()
         
         #TODO Add Parametermapping for water body names
         #TODO Map against .lower() letters 
-        
+        if kwargs:
+            self.load_water_body_match(**kwargs)
+            
     #==========================================================================
     def load_water_body_match(self, file_path=u'', sep='\t', encoding='cp1252'):
         
@@ -194,8 +196,9 @@ class WaterBody(AttributeDict):
                                      key_number=u'TYPE_AREA_NUMBER', 
                                      key_suffix=u'TYPE_AREA_SUFFIX'):
         if include_suffix:
-            return self.get(wb).get(key_number) + \
-                   self.get(wb).get(key_suffix)
+            string = self.get(wb).get(key_number) + '-' + \
+                     self.get(wb).get(key_suffix)
+            return string.strip('-')
         else:
             return self.get(wb).get(key_number)
     

@@ -75,7 +75,7 @@ class IndexHandler(object):
                 break
             else:
                 bool_dict = bool_dict[key]
-            
+
                 
     #==========================================================================
     def _get_boolean(self, *args):
