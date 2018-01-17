@@ -592,10 +592,8 @@ class WorkSpace(object):
 #            self.cfg[QE] = self.cf_df.groupby(QE)['indicator'].unique()
 #        for indicator in self.cfg['indicators']:
 #            self.cfg[indicator] = self.cf_df.groupby(QE)['parameters'].split(',')        
-# HEAD
-#        
 
-#   
+
     #==========================================================================
     def import_data(self, import_directory = None):
         """
@@ -606,7 +604,6 @@ class WorkSpace(object):
         pass
         
         
-# afa8b72762765087037ea666228975c8af79d660
     #==========================================================================
     def make_copy_of_workspace(self, workspace_name='', overwrite=False): 
         """
@@ -693,7 +690,7 @@ class WorkSpace(object):
         """
         Applies the first filter to the index_handler. 
         """
-        all_ok = self.index_handler.add_filter(filter_object=self.step_0.data_filter, filter_step=0)
+        all_ok = self.index_handler.add_filter(filter_object=self.step_0.data_filter, step_0='step_0')
         return all_ok
         
     #==========================================================================

@@ -130,9 +130,9 @@ resource_directory = source_dir + '/resources'
 
 default_workspace = core.WorkSpace(name='default', 
                                    parent_directory=workspace_directory, 
-                                   resource_directory=resource_directory) 
-
-default_workspace.load_all_data()
+                                   resource_directory=resource_directory)
+jj_workspace = default_workspace.make_copy_of_workspace('JJ', overwrite=True)
+#default_workspace.load_all_data()
 
 
 include_stations = ['BROFJORDEN', 'BYFJORDEN'] 
@@ -140,13 +140,13 @@ exclude_stations = ['BROFJORDEN'] # Example that both include and exclude are po
 include_years = ['2015', '2017']
 
 
-default_workspace.set_data_filter(step=0, filter_type='include_list', filter_name='STATN', data=include_stations) 
-default_workspace.set_data_filter(step=0, filter_type='exclude_list', filter_name='STATN', data=exclude_stations) 
-default_workspace.set_data_filter(step=0, filter_type='include_list', filter_name='MYEAR', data=include_years) 
+jj_workspace.set_data_filter(step=0, filter_type='include_list', filter_name='STATN', data=include_stations) 
+jj_workspace.set_data_filter(step=0, filter_type='exclude_list', filter_name='STATN', data=exclude_stations) 
+jj_workspace.set_data_filter(step=0, filter_type='include_list', filter_name='MYEAR', data=include_years) 
 
 
 
-
+jj_workspace.apply_first_filter()
 
 
 
