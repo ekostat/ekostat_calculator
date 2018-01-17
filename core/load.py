@@ -28,7 +28,7 @@ class Load(object):
         xl.close()
 
         return pd.read_excel(file_path, sheetname=sheetname, header=header_row, 
-                             converters={i:str for i in range(ncols)}).fillna(fill_nan) # str in python 3 is equivalent to unicode ?
+                             converters={i:str for i in range(ncols)}).fillna(fill_nan)
         
     #==========================================================================
     def load_netcdf(self, file_path=u''):
@@ -40,7 +40,7 @@ class Load(object):
             header = f.readline().strip('\n').strip('\r').split(sep) # is .strip('\r') necessary?
 
         return pd.read_csv(file_path, sep='\t', encoding='cp1252',
-                           dtype={key:str for key in header}).fillna(fill_nan) # str in python 3 is equivalent to unicode ?
+                           dtype={key:str for key in header}).fillna(fill_nan)
 
     
     #==========================================================================

@@ -11,6 +11,7 @@ current_path = os.path.dirname(os.path.realpath(__file__))[:-10]
 sys.path.append(current_path)
 import datetime
 import core
+import importlib
 
 import pandas as pd 
 import numpy as np
@@ -62,8 +63,8 @@ parameter_mapping.load_mapping_settings(file_path=mapping_directory)
 
 #------------------------------------------------------------------------------
 ## Row data handling new version
-raw_data = core.DataHandler(input_data_directory=input_data_directory, 
-                            resource_directory=resource_directory)
+#raw_data = core.DataHandler(input_data_directory=input_data_directory, 
+#                            resource_directory=resource_directory)
 
 #------------------------------------------------------------------------------
 #raw_data.chlorophyll.load_source(file_path=input_data_directory + fid_chl_integ,
@@ -87,9 +88,9 @@ raw_data = core.DataHandler(input_data_directory=input_data_directory,
 #raw_data.physical_chemical.filter_parameters.use_parameters
 
 #------------------------------------------------------------------------------
-raw_data.phytoplankton.load_source(file_path=input_data_directory + fid_phyto,
-                                   raw_data_copy=True)
-raw_data.phytoplankton.save_data_as_txt(directory=export_directory, prefix=u'Column_format')
+#raw_data.phytoplankton.load_source(file_path=input_data_directory + fid_phyto,
+#                                   raw_data_copy=True)
+#raw_data.phytoplankton.save_data_as_txt(directory=export_directory, prefix=u'Column_format')
 
 #------------------------------------------------------------------------------
 #raw_data.zoobenthos.load_source(file_path=input_data_directory + fid_zooben,
@@ -99,7 +100,11 @@ raw_data.phytoplankton.save_data_as_txt(directory=export_directory, prefix=u'Col
 #------------------------------------------------------------------------------
 #------------------------------------------------------------------------------
 #------------------------------------------------------------------------------
-raw_data.merge_all_data(save_to_txt=True)
+
+
+#raw_data.merge_all_data(save_to_txt=True)
+
+
 #------------------------------------------------------------------------------
 #------------------------------------------------------------------------------
 #------------------------------------------------------------------------------
@@ -117,6 +122,32 @@ raw_data.merge_all_data(save_to_txt=True)
 ##fid_filter_para = u'filter_fields_zoobenthos.txt'
 ##fid = u'test_data_format_converter.txt'
 #para_mapping = u'mapping_parameter_dynamic_extended.txt'
+
+
+root_directory = "../" #os.getcwd()
+workspace_directory = source_dir + '/workspaces' 
+resource_directory = source_dir + '/resources'
+
+default_workspace = core.WorkSpace(name='default', 
+                                   parent_directory=workspace_directory, 
+                                   resource_directory=resource_directory) 
+
+default_workspace.load_all_data()
+
+
+include_stations = ['BROFJORDEN', 'BYFJORDEN'] 
+exclude_stations = ['BROFJORDEN'] # Example that both include and exclude are possible 
+include_years = ['2015', '2017']
+
+
+default_workspace.set_data_filter(step=0, filter_type='include_list', filter_name='STATN', data=include_stations) 
+default_workspace.set_data_filter(step=0, filter_type='exclude_list', filter_name='STATN', data=exclude_stations) 
+default_workspace.set_data_filter(step=0, filter_type='include_list', filter_name='MYEAR', data=include_years) 
+
+
+
+
+
 
 
     
