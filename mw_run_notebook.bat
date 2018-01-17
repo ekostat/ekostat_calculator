@@ -1,0 +1,1 @@
+C:\Continuum\Anaconda3\envs\EKOSTAT_tool\python.exe C:\Continuum\Anaconda3\cwp.py C:\Continuum\Anaconda3\envs\EKOSTAT_tool "C:/Continuum/Anaconda3/envs/EKOSTAT_tool/python.exe" "C:/Continuum/Anaconda3/envs/EKOSTAT_tool/Scripts/jupyter-notebook-script.py" D:\Utveckling\git\ekostat_calculator

@@ -1,0 +1,8 @@
+filename	data_type
+zoobenthos_2016_row_format_2.txt	zooben
+BOS_HAL_2015-2016_row_format_2.txt	phyche
+BOS_BAS_2016-2017_column_format.txt	phyche
+phyche_2008_2017_column_format.txt	phyche
+phytoplankton_2016_row_format.txt	pp
+zoobenthos_2016_row_format_2.txt	zooben
+chlorophyll_hose_2015_2016_row_format.txt	chlorophyll

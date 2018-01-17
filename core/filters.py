@@ -7,14 +7,16 @@ Created on Tue Jul 11 11:04:47 2017
 import os
 import codecs  
 import pandas as pd
+import numpy as np
+import utils
 
 #if current_path not in sys.path: 
 #    sys.path.append(os.path.dirname(os.path.realpath(__file__)))
-
 try:
     import core
 except:
     pass
+
 ###############################################################################
 class DataFilter(object):
     """
@@ -22,58 +24,291 @@ class DataFilter(object):
     Data filter is built up with several files listed in the given direktory. 
     """
     #==========================================================================
-    def __init__(self, filter_directory): 
+    def __init__(self, 
+                 filter_directory, 
+                 mapping_objects={}): 
         self.filter_directory = filter_directory
         self.filter_file_paths = {} 
-        self.list_filter = {} 
+        self.include_list_filter = {} 
+        self.exclude_list_filter = {} 
+        self.include_header_filter = {}
+        self.exclude_header_filter = {}
+        self.all_filters = {}
+        
+        self.mapping_water_body = mapping_objects['water_body']
         
         self.load_filter_files()
         
     #==========================================================================
-    def get_list_filter(self, filter_name):
-        return self.list_filter.get(filter_name, False)
+    def _get_filter_boolean_for_df_from_exclude_list(self, df=None, parameter=None): 
+        parameter = parameter.upper()
+        value_list = self.get_exclude_list_filter(parameter)
+        if not value_list:
+            return False
+        return ~df[parameter].astype(str).isin(value_list)
+    
+    #==========================================================================
+    def _get_filter_boolean_for_df_from_include_list(self, df=None, parameter=None): 
+        parameter = parameter.upper()
+        value_list = self.get_include_list_filter(parameter)
+        if not value_list:
+            return False
+        return df[parameter].astype(str).isin(value_list)
+
+    
+    #==========================================================================
+    def include_statn(self, statn, include_current=False):
+        """
+        statn => water_body => type_area => water_district
+        Makes sure that the water_body containing the station is included in the include_water_body filter. 
+        include_current nor used
+        """
+        if type(statn) != list:
+            statn = list(statn) 
+        
+        statn = sorted(set([item.strip() for item in statn]))
+        self.include_list_filter['STATN'] = statn
+         
+        water_body_list = self.include_list_filter['WATER_BODY_NAME'][:] 
+        # Add water bodies
+        for s in statn: 
+            #TODO: Link between statn and water body
+            water_body_list.append('')
+             
+        self.include_water_body(water_body_list)
+        
+    
+    #==========================================================================
+    def include_type_area(self, type_area, include_current=False): 
+        """
+        type_area => water_district
+        include_current nor used
+        """
+        if type(type_area) != list:
+            type_area = list(type_area) 
+        
+        type_area = sorted(set([item.strip() for item in type_area]))
+        self.include_list_filter['TYPE_AREA_NUMBER'] = type_area 
+         
+        water_district_list = self.include_list_filter['WATER_DISTRICT_NAME'][:] 
+        # Add water districts
+        for ta in type_area: 
+            #TODO: Link between type area and water district
+            water_district_list.append('')
+
+        self.include_water_district(water_district_list)
+
+    #==========================================================================
+    def include_water_district(self, water_district, include_current=False): 
+        """
+        water_district
+        include_current nor used
+        """
+        water_district = sorted(set([item.strip() for item in water_district]))
+        self.include_list_filter['WATER_DISTRICT_NAME'] = water_district
         
     #==========================================================================
+    def include_water_body(self, water_body, include_current=False): 
+        """
+        water_body => type_area => water_district
+        include_current nor used
+        """
+        if type(water_body) != list:
+            water_body = list(water_body) 
+        
+        water_body = sorted(set([item.strip() for item in water_body]))
+        self.include_list_filter['WATER_BODY_NAME'] = water_body[:]
+        
+        # Get current type areas
+        type_area_list = self.include_list_filter['TYPE_AREA_NUMBER'][:] 
+        
+        for wb in water_body:
+            type_area_list.append(self.mapping_water_body.get_type_area_for_water_body(wb, include_suffix=True))
+             
+        self.include_type_area(type_area_list)
+        
+    #==========================================================================
+    def get_filter_boolean_for_df(self, df=None): 
+        """
+        Get boolean tuple to use for filtering. 
+        """
+        combined_boolean = ()
+        
+        #----------------------------------------------------------------------
+        # Filter exclude list 
+        for par in sorted(self.exclude_list_filter.keys()): 
+            boolean = self._get_filter_boolean_for_df_from_exclude_list(df=df, parameter=par)
+
+            if not type(boolean) == pd.Series:
+                continue            
+            if type(combined_boolean) == pd.Series:
+                combined_boolean = combined_boolean & boolean
+            else:
+                combined_boolean = boolean 
+        
+        #----------------------------------------------------------------------
+        # Filter include list 
+        for par in sorted(self.include_list_filter.keys()):
+            boolean = self._get_filter_boolean_for_df_from_include_list(df=df, parameter=par)
+
+            if not type(boolean) == pd.Series:
+                continue            
+            if type(combined_boolean) == pd.Series:
+                combined_boolean = combined_boolean & boolean
+            else:
+                combined_boolean = boolean 
+                
+        if len(combined_boolean) == 0: 
+            combined_boolean = pd.Series(np.ones(len(df), dtype=bool))
+            
+        return combined_boolean
+
+    #==========================================================================
+    def get_filter_header_for_df(self, df=None):
+        
+        self.df = self.df.drop(columns, axis=1, errors='ignore')
+
+    #==========================================================================
+    def get_exclude_header_filter(self, filter_name):
+        return self.exclude_header_filter.get(filter_name.upper(), False)
+    
+    #==========================================================================
+    def get_include_header_filter(self, filter_name):
+        return self.include_header_filter.get(filter_name.upper(), False)
+     
+    #==========================================================================
+    def get_exclude_list_filter(self, filter_name):
+        return self.exclude_list_filter.get(filter_name.upper(), False)
+    
+    #==========================================================================
+    def get_exclude_list_filter_names(self):
+        return sorted(self.exclude_list_filter.keys())
+    
+    #==========================================================================
+    def get_include_list_filter(self, filter_name):
+        return self.include_list_filter.get(filter_name.upper(), False)
+        
+    #==========================================================================
+    def get_include_list_filter_names(self):
+        return sorted(self.include_list_filter.keys())
+        
+    #==========================================================================
+    def get_filter_info(self):
+        return self.all_filters 
+    
+    #==========================================================================
     def load_filter_files(self): 
-        self.filter_file_paths = {} 
-        self.list_filter = {} 
+        self.filter_file_paths = {}
+        self.include_list_filter = {}
+        self.exclude_list_filter = {}
+        self.all_filters = {}
         for file_name in [item for item in os.listdir(self.filter_directory) if item.endswith('.fil')]: 
-            print('-'*70)
-            file_path = os.path.join(self.filter_directory, file_name).replace('\\', '/') 
-            filter_name = file_name[:-4] 
-            print('load:', filter_name)
+#            print('-'*70)
+            file_path = os.path.join(self.filter_directory, file_name).replace('\\', '/')
+            long_name = file_name[:-4].upper()
+#            print('load:', filter_name)
             
             # Save filter path
-            self.filter_file_paths[filter_name] = file_path
+            self.filter_file_paths[long_name] = file_path
             
             # Load filters 
-            if filter_name == 'areas':
+            if long_name.startswith('areas'):
                 pass
-            elif filter_name.startswith('list_'):
+            elif long_name.startswith('LIST_'):
+                filter_name = long_name[5:] 
                 with codecs.open(file_path, 'r', encoding='cp1252') as fid: 
-                    self.list_filter[filter_name] = [item.strip() for item in fid.readlines()]
-            print('Loaded list:', self.list_filter[filter_name])
+                    if filter_name.startswith('EXCLUDE_'): 
+                        self.exclude_list_filter[filter_name[8:]] = [item.strip() for item in fid.readlines()]
+                    elif filter_name.startswith('INCLUDE_'): 
+                        self.include_list_filter[filter_name[8:]] = [item.strip() for item in fid.readlines()]
+#            print('Loaded list:', self.include_list_filter[filter_name]) 
+        
+        #----------------------------------------------------------------------
+        # Add info to self.all_filters
+        # Exclude list 
+        self.all_filters['exclude_list'] = self.get_exclude_list_filter_names()
+        
+        # Include list 
+        self.all_filters['include_list'] = self.get_include_list_filter_names()
+        
+            
     #==========================================================================
     def save_filter_files(self): 
-        for filter_name in self.list_filter.keys():
-            print('save:', filter_name)
-            if filter_name == 'areas':
-                pass
-            elif filter_name.startswith('list_'): 
-                with codecs.open(self.filter_file_paths[filter_name], 'w', encoding='cp1252') as fid: 
-                    for item in self.list_filter[filter_name]:
-                        fid.write(item) 
-                        fid.write('\n')
+            
+        # Exclude list filter 
+        print(self.exclude_list_filter.keys())
+        for filter_name in self.exclude_list_filter.keys(): 
+            long_name = 'LIST_EXCLUDE_' + filter_name
+            file_path = self.filter_file_paths[long_name]
+            print('Save: "{}" to file: "{}"'.format(filter_name, file_path))
+            with codecs.open(file_path, 'w', encoding='cp1252') as fid: 
+                for item in self.exclude_list_filter[filter_name]:
+                    fid.write(item)
+                    fid.write('\n')
                     
+        # Include list filter 
+        print(self.include_list_filter.keys())
+        for filter_name in self.include_list_filter.keys(): 
+            long_name = 'LIST_INCLUDE_' + filter_name
+            file_path = self.filter_file_paths[long_name.upper()]
+            print('Save: "{}" to file: "{}"'.format(filter_name, file_path))
+            with codecs.open(file_path, 'w', encoding='cp1252') as fid: 
+                for item in self.include_list_filter[filter_name]:
+                    fid.write(item)
+                    fid.write('\n')
+              
     #==========================================================================
-    def set_list_filter(self, filter_name, filter_list, save_files=True): 
-        if filter_name not in self.list_filter.keys():
+    def set_filter(self, filter_type=None, filter_name=None, data=None, save_filter=True): 
+        """
+        Sets the given filter_name of the given filter_type to data. 
+        Option to save or not. 
+        filter_types could be: 
+            include_list
+            exclude_list 
+        OBS! 
+        Files are not loaded before change. 
+        This means that changes in files will not be seen by the object if working in self updating notebook. 
+        """
+#        print('11')
+#        print(filter_type) 
+#        print(filter_name)
+#        print(data)
+#        print(save_filter)
+        if filter_type == 'exclude_list':
+            return self.set_exclude_list_filter(filter_name=filter_name, 
+                                                filter_list=data, 
+                                                save_files=save_filter)
+        elif filter_type == 'include_list':
+            return self.set_include_list_filter(filter_name=filter_name, 
+                                                filter_list=data, 
+                                                save_files=save_filter)
+        
+    #==========================================================================
+    def set_include_list_filter(self, filter_name=None, filter_list=None, save_files=True): 
+        filter_name = filter_name.upper()
+        if filter_name not in self.include_list_filter.keys():
+            return False
+        
+        print('filter_name')
+        if filter_name == 'WATER_BODY_NAME':
+            self.include_water_body(filter_list)
+        else:
+            filter_list = sorted(set([item.strip() for item in filter_list]))
+            self.include_list_filter[filter_name] = filter_list
+        if save_files: 
+            self.save_filter_files() 
+        return True
+    
+    #==========================================================================
+    def set_exclude_list_filter(self, filter_name, filter_list, save_files=True): 
+        if filter_name not in self.exclude_list_filter.keys():
             return False
         filter_list = sorted(set([item.strip() for item in filter_list]))
-        self.list_filter[filter_name] = filter_list
+        self.exclude_list_filter[filter_name] = filter_list
         if save_files: 
             self.save_filter_files()
-                    
+        return True
+    
         
 ###############################################################################
 class SettingsFile(object):
@@ -155,9 +390,8 @@ class SettingsFile(object):
             self.columns.append(variable)
             
         # Set new column names 
-        self.df.columns = self.columns 
-        
-        self.type_area_list = list(self.df['TYPE_AREA'])
+        self.df.columns = self.columns        
+        self.type_area_list = list(self.df['TYPE_AREA_NUMBER'])
         
         
     #==========================================================================
@@ -179,18 +413,33 @@ class SettingsFile(object):
         self.df.columns = self.columns
 
     #==========================================================================
-    def get_value(self, type_area=None, variable=None): 
-        if type_area not in self.type_area_list:
-            return False
+    def get_value(self, filter_dict=None, variable=None): 
+        """
+        get value from settings file
+        filter_dict: keys and values to filter on
+        variable: settings variable to get value for
+        """ 
+        print(filter_dict)
+        print(variable)
+        if 'TYPE_AREA_NUMBER' in list(filter_dict.keys()): 
+            if filter_dict['TYPE_AREA_NUMBER'][0] not in self.type_area_list:
+                return False
+        
         variable = variable.upper() 
-        assert all([type_area, variable]), 'Must provide: type_area and variable' 
-        value = self.df.loc[self.df['TYPE_AREA']==type_area, variable.upper()].values[0]
+        assert all(['TYPE_AREA_NUMBER' in list(filter_dict.keys()), variable]), 'Must provide: type_area number in filter_dict and variable' 
+        assert variable.upper() in self.df.columns, 'Must provide filtervariable from settingsfile\n\t{}'.format(self.df.columns)
+        boolean_list = utils.set_filter(df = self.df, filter_dict = filter_dict, return_dataframe = False)
+        value = self.df.loc[boolean_list, variable.upper()].values
+        
+        assert len(value) == 1, 'More than one setting for given filter_dict\n{}'.format(value)
+        
+        value = value[0]    
         if variable in self.list_columns: 
             value = self._get_list_from_string(value, variable)
         elif variable in self.interval_columns: 
             value = self._get_interval_from_string(value, variable)
         else:
-            value = self._convert(value)
+            value = self._convert(value, variable.upper())
         return value
     
     #==========================================================================
@@ -209,7 +458,7 @@ class SettingsFile(object):
             return False
         else:
             print('Value to set for type_area "{}" and variable "{}": {}'.format(type_area, variable, value))
-            self.df.loc[self.df['TYPE_AREA']==type_area, variable] = value
+            self.df.loc[self.df['TYPE_AREA_NUMBER']==type_area, variable] = value
             return True
         
     #==========================================================================
@@ -287,13 +536,13 @@ class SettingsFile(object):
         combined_boolean = ()
         for variable in self.filter_columns: 
             if variable in self.interval_columns:
-                boolean = self._get_boolean_from_interval(df=df, 
-                                                          type_area=type_area, 
-                                                          variable=variable) 
+                boolean = self._get_boolean_from_interval(df=df,
+                                                          type_area=type_area,
+                                                          variable=variable)
             elif variable in self.list_columns:
-                boolean = self._get_boolean_from_list(df=df, 
-                                                      type_area=type_area, 
-                                                      variable=variable) 
+                boolean = self._get_boolean_from_list(df=df,
+                                                      type_area=type_area,
+                                                      variable=variable)
             else:
                 print('No boolean for "{}"'.format(variable))
                 continue
@@ -304,6 +553,10 @@ class SettingsFile(object):
                 combined_boolean = combined_boolean & boolean
             else:
                 combined_boolean = boolean 
+                
+        if len(combined_boolean) == 0: 
+            combined_boolean = pd.Series(np.ones(len(df), dtype=bool)) 
+            
         return combined_boolean
     
     #==========================================================================
@@ -331,7 +584,7 @@ class SettingsRef(object):
         
         
 ###############################################################################
-class SettingsFilter(object):
+class SettingsDataFilter(object):
     """
     Handles filter settings. 
     """
@@ -341,10 +594,15 @@ class SettingsFilter(object):
         self.settings.connected_to_filter_settings_object = True
         
     #==========================================================================
-    def get_column_data_boolean(self, df=None, type_area=None): 
+    def get_filter_boolean_for_df(self, df=None, water_body=None): 
         """
-        Get boolean tuple to use for filtering
+        Get boolean pd.Series to use for filtering. 
+        Name of this has to be tha same as the one in class DataFilter. 
         """
+        # TODO: Convert water_body to type_area. method for this in mapping.py 
+#        get_type_area_for_water_body(wb, include_suffix=False)
+        type_area_number = mapping.get_type_area_for_water_body(water_body, include_suffix=False)
+        type_area_suffix = mapping.get_type_area_suffix_for_water_body(water_body, include_suffix=False)
         return self.settings.get_filter_boolean(df=df, 
                                                 type_area=type_area)
         
@@ -578,7 +836,7 @@ class old_DataFilter(FilterBase):
         
         
 ###############################################################################
-class old_ToleranceFilter(FilterBase):
+class ToleranceFilter(FilterBase):
     """
     Class to hold tolerance filter settings.  
     Typically this information is read from a file. 
@@ -614,7 +872,25 @@ if __name__ == '__main__':
     print('root directory is "{}"'.format(root_directory))
     
     
-    
+    if 1: 
+        root_directory = os.getcwd()
+        workspace_directory = root_directory + '/workspaces' 
+        resource_directory = root_directory + '/resources'
+        
+        
+        
+        default_workspace = core.WorkSpace(name='default', 
+                                           parent_directory=workspace_directory, 
+                                           resource_directory=resource_directory) 
+        
+        workspace = core.WorkSpace(name='jj', 
+                                   parent_directory=workspace_directory, 
+                                   resource_directory=resource_directory) 
+        
+        workspace.add_files_from_workspace(default_workspace, overwrite=True)
+        
+        workspace.load_all_data()
+
     ###########################################################################
     if 0:
         # MW test for SetingsFile 
@@ -643,13 +919,13 @@ if __name__ == '__main__':
         s.save_file(output_file_path)
     
         
-        sf = SettingsFilter(s)
+        sf = SettingsDataFilter(s)
     
     
     
     
     
-    if 1:
+    if 0:
         filter_directory = 'D:/Utveckling/g_ekostat_calculator/ekostat_calculator_lena/workspaces/default/step_0/data_filters' 
         d = DataFilter(filter_directory) 
         y = d.get_list_filter('list_year') 
