@@ -135,7 +135,7 @@ jj_workspace = default_workspace.make_copy_of_workspace('JJ', overwrite=True)
 #default_workspace.load_all_data()
 
 
-include_stations = ['BROFJORDEN', 'BYFJORDEN'] 
+include_stations = ['BROFJORDEN', 'BYFJORDEN']
 exclude_stations = ['BROFJORDEN'] # Example that both include and exclude are possible 
 include_years = ['2015', '2017']
 
@@ -146,8 +146,42 @@ jj_workspace.set_data_filter(step=0, filter_type='include_list', filter_name='MY
 
 
 
-jj_workspace.apply_first_filter()
+#jj_workspace.apply_first_filter()
+jj_workspace.apply_data_filter_step_0()
+
+#jj_workspace.index_handler.booleans
+
+wbo = jj_workspace.mapping_objects['water_body']
+
+df_default_1 = jj_workspace.get_data_filter_object(subset='default_subset', step=1)
+
+
+sdf_default_2 = jj_workspace.get_indicator_settings_data_filter_object(subset='default_subset', step=2, indicator='din_winter')
+
+df_default_1.include_list_filter
+
+
+jj_workspace.set_data_filter(step=1, subset='default_subset', filter_type='include_list', filter_name='water_body_name', data=['N m Bottenvikens kustvatten', 'Bulleröfjärden', 'Norrfjärden'])
+
+
+df_default_2 = jj_workspace.get_data_filter_object(subset='default_subset', step=2) # This should not be possible
 
 
 
-    
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
