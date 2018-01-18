@@ -195,7 +195,7 @@ class WorkStep(object):
     
     #==========================================================================
     def get_indicator_settings_name_list(self):
-        return sorted(self.indicator_settings.keys()) 
+        return sorted(self.indicator_settings.keys())
     
     #==========================================================================
     def load_all_files(self): 
@@ -690,7 +690,7 @@ class WorkSpace(object):
         """
         Applies the first filter to the index_handler. 
         """
-        all_ok = self.index_handler.add_filter(filter_object=self.step_0.data_filter, step_0='step_0')
+        all_ok = self.index_handler.add_filter(filter_object=self.step_0.data_filter, step='step_0')
         return all_ok
         
     #==========================================================================
