@@ -148,7 +148,7 @@ class IndexHandler(object):
 
 
     #==========================================================================
-    def _reset_boolean(self):
+    def _get_default_boolean(self):
         """
         - Sets up a dictionary including key 'boolean' containing None
         """
@@ -166,7 +166,7 @@ class IndexHandler(object):
         bool_dict = self.booleans
         for key in args:
             if key and key not in bool_dict:
-                bool_dict[key] = self._reset_boolean()
+                bool_dict[key] = self._get_default_boolean()
                 break
             elif key:
                 bool_dict = bool_dict[key]
@@ -221,7 +221,7 @@ class IndexHandler(object):
             if key:
                 bool_dict = bool_dict[key]
             else:
-                bool_dict = self._reset_boolean()
+                bool_dict = self._get_default_boolean()
                 break
             
 
