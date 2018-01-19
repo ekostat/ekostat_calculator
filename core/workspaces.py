@@ -16,13 +16,27 @@ current_path = os.path.dirname(os.path.realpath(__file__))[:-4]
 sys.path.append(current_path)
 
 import core
+"""
+Module contains classes related to the structure of a workspace-directory. 
+WorkSpace is the top class and contains one WorkStep-object representing step_0 
+and one or several Subset-objects. Each Subset contains several WorkStep-objects 
+for step_1, step_2....etc. 
 
+All calls from outside this module should be made to the WorkSpace instance. 
+If information in subsets or steps is needed the WorkSpace-class should be 
+updated to retrieve this information (data should be passt on hierarchically in 
+the data structure) 
+
+Be aware that classes in this module are dependent on the directory and file 
+structure of a Workspace. Altering the structure of the workspace directory  
+tree 
+"""
 
 ###############################################################################
 class WorkStep(object):
     """
-    A WorkStep holds information about the file structure and 
-    contains all methodes operating on a specific workstep. 
+    A WorkStep holds information about the file structure in a step-directory 
+    and contains all methodes operating on a specific workstep. 
     """
     def __init__(self, 
                  name=None, 
@@ -42,7 +56,7 @@ class WorkStep(object):
         """
         self.mapping_objects = mapping_objects 
         
-        self._load_attributes()
+        self._initiate_attributes()
         
         self._set_directories()
         
@@ -54,7 +68,7 @@ class WorkStep(object):
     def _create_folder_structure(self):
         """
         Sets up the needed folder structure for the workstep. 
-        Folders ar added if they dont exist. 
+        Folders are added if they dont exist. 
         """
         if not os.path.exists(self.step_directory): 
             os.makedirs(self.step_directory)
@@ -93,8 +107,10 @@ class WorkStep(object):
         return all_ok
         
     #==========================================================================
-    def _load_attributes(self): 
-        # Load attributes to be able to check what has been done
+    def _initiate_attributes(self): 
+        """
+        Load attributes 
+        """
         self.data_filter = None
         self.indicator_settings = {} 
         
@@ -312,14 +328,14 @@ class Subset(object):
         
         self.mapping_objects = mapping_objects
         
-        self._load_attributes()
+        self._initiate_attributes()
         self._load_steps() 
         
         self._load_config()
         
         
     #==========================================================================
-    def _load_attributes(self): 
+    def _initiate_attributes(self): 
         self.nr_steps = 5
         self.steps = {}
         
@@ -491,7 +507,7 @@ class Subset(object):
 ###############################################################################
 class WorkSpace(object):
     """
-    Class to load workspace
+    Class to hold and alter a workspace. 
     Holds step_0 and subsets. 
     """
     def __init__(self, 
@@ -503,18 +519,17 @@ class WorkSpace(object):
         assert all([name, parent_directory])
         assert nr_subsets_allowed
         
+        # Initiate directories 
         self.name = name 
         self.parent_directory = parent_directory.replace('\\', '/')
         self.resource_directory = resource_directory.replace('\\', '/')
-        self.mapping_directory = '/'.join([self.resource_directory, 'mappings'])
-        self.workspace_directory = '/'.join([self.parent_directory, self.name])
         self.nr_subsets_allowed = nr_subsets_allowed
         
         print('')
         print('='*100)
         print('Initiating WorkSpace: {}'.format(self.workspace_directory)) 
         
-        self._load_attributes()
+        self._initiate_attributes()
         
         print('Parent directory is: {}'.format(self.parent_directory))
         print('Resource directory is: {}'.format(self.resource_directory))
@@ -522,13 +537,16 @@ class WorkSpace(object):
         self._load_config_files()
             
     #==========================================================================
-    def _load_attributes(self): 
+    def _initiate_attributes(self): 
         # Setup default paths 
+        self.mapping_directory = '/'.join([self.resource_directory, 'mappings'])
+        self.workspace_directory = '/'.join([self.parent_directory, self.name])
+        
         self.directory_path_subsets = {}
         self.directory_path_input_data = self.workspace_directory + '/input_data'
         self.directory_path_subset = self.workspace_directory + '/subsets'
         
-        # Load attributes to be able to check what has been done
+        # Step
         self.step_0 = None 
         
         # Subset
