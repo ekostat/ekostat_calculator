@@ -32,6 +32,7 @@ class BooleanFilter(object):
     def add_filter(self): 
         pass
 
+
 """
 #==============================================================================
 #==============================================================================
@@ -59,32 +60,42 @@ class IndexHandler(object):
         
         
     #==========================================================================
-    def _add_boolean_to_dict(self, *args, filter_object=None, df=None): #  **kwargs ?
+    def _add_boolean_to_dict(self, *args, filter_object=None, df=None, wb=None): #  **kwargs ?
         """
         *args: step_0, subset, step_1, step_2, water_body, indicator
         Uses bool_dict as a dynamic reference to a specific part of self.booleans
+        
         """
+
         bool_dict = self.booleans
-        for key in reversed(args):
-            if key:
-                use_key=key
-                break
-                
+        
+        use_keys = {'keys':[key for key in reversed(args) if key],
+                    'keys_in_booleans':list(self._get_keys_from_dict(self.booleans))}
+         
         for key in args:
-            if key == use_key:
-                if bool_dict.get('boolean') != None:
+            if not key in use_keys.get('keys_in_booleans'):
+                raise UserWarning(key,'should be included in IndexHandler, perhaps we are jumping to far ahead?')
+                
+            if key in use_keys.get('keys')[0]:
+                
+                if bool_dict.get('boolean') is not None:
                     # Merge boolean from parent with new boolean from filter_object
-                    bool_dict[key]['boolean'] = bool_dict.get('boolean') & filter_object.get_filter_boolean_for_df(df)
+                    bool_dict[key]['boolean'] = bool_dict.get('boolean') & filter_object.get_filter_boolean_for_df(df, water_body=wb)
+                    
                 else:
                     # No boolean from parent, use new boolean from filter_object
-                    bool_dict[key]['boolean'] = filter_object.get_filter_boolean_for_df(df)
-
+                    bool_dict[key]['boolean'] = filter_object.get_filter_boolean_for_df(df, water_body=wb)
                 break
+            
             else:
+                # If we do not have a boolean for this key we copy from key before
+                if bool_dict[key].get('boolean') is None:
+                    bool_dict[key]['boolean'] = bool_dict.get('boolean').copy()
+                
                 # "dynamic reference" to a specific part of self.booleans
                 bool_dict = bool_dict[key]
 
-                
+
     #==========================================================================
     def _get_boolean(self, *args):
         """
@@ -102,7 +113,22 @@ class IndexHandler(object):
             
         return bool_dict.get('boolean')
         
-    
+        
+    #==========================================================================
+    def _get_keys_from_dict(self, dictionary):
+        """
+        generator, generates a list of all the keys within a dictionary,
+        flat or nested.
+        key_list = list(get_keys_from_nested_dictionary(h))
+        """
+        for key, value in dictionary.items():
+            if isinstance(value, dict):
+                yield key
+                yield from self._get_keys_from_dict(value)
+            else:
+                yield key    
+                
+                
     #==========================================================================
     def _get_steps(self, step=''):
         if step=='step_0':
@@ -112,7 +138,7 @@ class IndexHandler(object):
         elif step=='step_2':
             return 'step_0', 'step_1', step
         else:
-            raise UserWarning('Step definition is incorrect. Acceptable step is step_x, where x equals 0-2')
+            raise UserWarning('Step definition is incorrect. Acceptable step is step_0, step_1 or step_2')
         
         
     #==========================================================================
@@ -120,7 +146,7 @@ class IndexHandler(object):
         """ 
         - The intended structure of self.booleans is as follows:
         {'step_0':{'boolean':bool,
-                   'subset_A':{'boolean':bool,
+                   'subset_A':{'boolean':None,
                                'step_1':{'boolean':bool,
                                          'step_2':{'boolean':bool,
                                                    'water_body_X':{'boolean':bool,
@@ -167,7 +193,7 @@ class IndexHandler(object):
         for key in args:
             if key and key not in bool_dict:
                 bool_dict[key] = self._get_default_boolean()
-                break
+                bool_dict = bool_dict[key]
             elif key:
                 bool_dict = bool_dict[key]
             else:
@@ -188,11 +214,16 @@ class IndexHandler(object):
         
         step_0, step_1, step_2 = self._get_steps(step=step)
         
+#        print(step_0, subset, step_1, step_2, water_body, indicator)
+        
         self._set_dict(step_0, subset, step_1, step_2, water_body, indicator)
+        
+#        print(self.booleans)
         
         self._add_boolean_to_dict(step_0, subset, step_1, step_2, water_body, indicator,
                                   filter_object=filter_object, 
-                                  df=df)
+                                  df=df,
+                                  wb=water_body)
 
         
     #==========================================================================
@@ -204,17 +235,24 @@ class IndexHandler(object):
         
         boolean = self._get_boolean(step_0, subset, step_1, step_2, water_body, indicator)
         
-        return self.data_handler_object.get_all_column_data_df(boolean_filter=boolean)        
+        return self.data_handler_object.get_all_column_data_df(boolean_filter=boolean)
 
 
     #==========================================================================
-    def reset_booleans(self, subset=None, step=None, water_body=None, indicator=None):
+    def reset_booleans(self, subset=None, step=None):
+#    def reset_booleans(self, subset=None, step=None, water_body=None, indicator=None):
         """
         All keys that shall be kept should be specified in *args. 
         When a key doesnt exists we reset the dict for the key before and break
+        Example: args = ['step_0', 'default_subset', 'step_1', None] (we want 
+        to reset 'step_1')
+                Save a temporary reference part of self.booleans to bool_dict 
+                for each loop iteration. If key==None we assume the boolean 
+                from the key before should be reset and will hence do so, break..
+                
         """ 
         step_0, step_1, step_2 = self._get_steps(step=step)
-        args = [step_0, subset, step_1, step_2, water_body, indicator]
+        args = [step_0, subset, step_1, step_2]
         
         bool_dict = self.booleans
         for key in args:

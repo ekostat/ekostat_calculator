@@ -235,7 +235,7 @@ class DataFrameHandler(ColumnDataHandler, RowDataHandler):
         """
 #        cdh = ColumnDataHandler(DataFrameHandler)
         self.sort_columns_of_df()
-        self.add_column_df()      
+        self.add_column_df()
         self._calculate_data()
         
     #==========================================================================
@@ -948,9 +948,10 @@ if __name__ == '__main__':
     raw_data_file_path = 'D:/Utveckling/g_EKOSTAT_tool/test_data/raw_data/data_BAS_2000-2009.txt'
     first_filter_directory = 'D:/Utveckling/g_EKOSTAT_tool/test_data/filtered_data' 
     
+    
     # Handler
 #    raw_data = core.DataHandler('raw')
-#    raw_data.add_txt_file(raw_data_file_path, data_type='column') 
+#    raw_data.add_txt_file(raw_data_file_path, data_type='column')
     
     print('-'*50)
     print('done')

@@ -1,0 +1,12 @@
+compulsory_fields	fields_index	sort_by_fields	use_parameters	visit_id_key	depth_key	parameter_key	value_key	qflag_key
+SDATE	DEPH	SDATE	SALT_BTL	SERNO	DEPH	PARAM	VALUE	QFLAG
+SEA_AREA_CODE	PARAM	DEPH	DOXY_BTL					
+SEA_AREA_NAME			HSUL					
+SEA_BASIN			PHOS					
+WATER_DISTRICT			NTRI					
+WATER_TYPE_AREA			NTRA					
+WLTYP			NTRZ					
+DEPH			AMON					
+PARAM			CPHL					
+VALUE			SECCHI					
+QFLAG								
