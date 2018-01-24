@@ -171,10 +171,10 @@ jj_workspace.index_handler.add_filter(filter_object=df_default_1, subset='defaul
 
 
 
-#jj_workspace.index_handler.booleans
+#jj_workspace.index_handler.booleans.get('step_0','default_subset').get('boolean')
 
 
-
+#li = list(get_keys_from_nested_dictionary(jj_workspace.index_handler.booleans))
 
 
 

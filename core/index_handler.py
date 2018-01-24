@@ -65,6 +65,7 @@ class IndexHandler(object):
         *args: step_0, subset, step_1, step_2, water_body, indicator
         Uses bool_dict as a dynamic reference to a specific part of self.booleans
         
+        #TODO Should we be able to apply different booleas from one filter-object ? 
         """
 
         bool_dict = self.booleans
@@ -84,6 +85,7 @@ class IndexHandler(object):
                     
                 else:
                     # No boolean from parent, use new boolean from filter_object
+                    # This one should only be possible fro 'step_0' due to else-sats below..
                     bool_dict[key]['boolean'] = filter_object.get_filter_boolean_for_df(df, water_body=wb)
                 break
             
@@ -240,7 +242,6 @@ class IndexHandler(object):
 
     #==========================================================================
     def reset_booleans(self, subset=None, step=None):
-#    def reset_booleans(self, subset=None, step=None, water_body=None, indicator=None):
         """
         All keys that shall be kept should be specified in *args. 
         When a key doesnt exists we reset the dict for the key before and break
