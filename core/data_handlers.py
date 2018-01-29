@@ -112,7 +112,7 @@ class RowDataHandler(object):
         """
         """
         if self.one_parameter:
-            self._one_parameter_df_adjustments()            
+            self._one_parameter_df_adjustments()
         else:
             self._merge_df_string_columns([self.filter_parameters.value_key, self.filter_parameters.qflag_key], 
                                           new_key=u'TEMP_VALUE',
@@ -126,7 +126,7 @@ class RowDataHandler(object):
         """
         """
         if self.one_parameter:
-            pass          
+            pass
         else:
             self._set_column_table_from_pivot_table(sort=True)
             self._seperate_para_value_from_qflag(sep='__')

@@ -8,6 +8,7 @@ Created on Wed Nov 22 10:18:45 2017
 
 #import numpy as np
 import pandas as pd
+import json
 #import netcdf
 """
 #==============================================================================
@@ -21,6 +22,7 @@ class Load(object):
     def __init__(self):
         pass
     
+    
     #==========================================================================
     def load_excel(self, file_path=u'', sheetname=u'', header_row=0, fill_nan=u''):
         xl = pd.ExcelFile(file_path)
@@ -30,9 +32,11 @@ class Load(object):
         return pd.read_excel(file_path, sheetname=sheetname, header=header_row, 
                              converters={i:str for i in range(ncols)}).fillna(fill_nan)
         
+        
     #==========================================================================
     def load_netcdf(self, file_path=u''):
         pass
+    
     
     #==========================================================================
     def load_txt(self, file_path=u'', sep='\t', encoding='cp1252', fill_nan=u''):
@@ -44,7 +48,21 @@ class Load(object):
 
     
     #==========================================================================
+    def load_json(self, file_path=u''):
+        """
+        array will be either a list of dictionaries or one single dictionary 
+        depending on what the json file includes
+        """
+        with open(file_path, 'r') as f:
+            array = json.load(f)
+        
+        return array
     
+    
+    #==========================================================================
+        
+        
+        
 """
 #==============================================================================
 #==============================================================================
