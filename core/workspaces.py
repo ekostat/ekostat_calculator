@@ -12,6 +12,7 @@ import datetime
 import codecs
 import pandas as pd
 import uuid
+import re
 
 current_path = os.path.dirname(os.path.realpath(__file__))[:-4]
 sys.path.append(current_path)
@@ -301,18 +302,40 @@ class WorkStep(object):
         return all_ok
         
     #==========================================================================
-    def rename_paths(self, from_string, to_string): 
+    def rename_paths(self, from_name, to_name, pre_directory=''): 
         """
         Replaces string in all file paths. 
         """
         for name in self.paths.keys(): 
             if type(self.paths[name]) == dict:
                 for sub_name in self.paths[name].keys():
-                    self.paths[name][sub_name] = self.paths[name][sub_name].replace(from_string, to_string)
+                    self.paths[name][sub_name] = get_new_path(from_name, to_name, self.paths[name][sub_name], pre_directory)
             else:
-                self.paths[name] = self.paths[name].replace(from_string, to_string)
+                self.paths[name] = get_new_path(from_name, to_name, self.paths[name], pre_directory) 
             
-    
+    #==========================================================================
+    def print_all_paths(self): 
+        """
+        Prints all path in the step.
+        """
+        sep_length = 100
+        print('='*sep_length)
+        print('='*sep_length)
+        print('{} paths'.format(self.name))
+        print('-'*sep_length)
+        for item in sorted(self.paths.keys()):
+            if type(self.paths[item]) == dict:
+                for path in sorted(self.paths[item].keys()):
+                    if type(self.paths[item][path]) == dict:
+                        for p in sorted(self.paths[item][path].keys()):
+                            print('-', self.paths[item][path][p])
+                    else:
+                        print(self.paths[item][path])
+            else:
+                print(self.paths[item])
+                
+        print('')
+                
     #==========================================================================
     def set_data_filter(self, filter_type='', filter_name='', data=None, save_filter=True): 
         """
@@ -364,6 +387,19 @@ class Subset(object):
         self.nr_steps = 5
         self.steps = {}
             
+    #==========================================================================
+    def _change_ok(self): 
+        """
+        Check to make sure that the default 
+        """
+        if self.parent_subset_object and self.parent_workspace_object.name == 'default':
+            print('Not allowed to change default workspace!')
+            return False
+        elif self.name == 'default_subset':
+            print('Not allowed to change default subset!')
+            return False
+        return True
+    
     #==========================================================================
     def _load_subset_config(self): 
         self.config = Config(self.paths['subset_directory'] + '/subset.cfg')
@@ -502,27 +538,83 @@ class Subset(object):
         self.config.set_config('alias', alias)
         
     #==========================================================================
-    def rename(self, new_name): 
-        if new_name.lower() in ['subset', 'default_subset']: 
-            print('Invalid name "{}" for subset!'.format(new_name))
-            return False
+    def rename_paths(self, from_name, to_name, pre_directory=''): 
         
-         
-        # Rename all paths in subset 
-        from_string, to_string = get_subset_rename_strings(self.name, new_name)
-        self.name = new_name
         for name in self.paths.keys(): 
             if type(self.paths[name]) == dict:
                 for sub_name in self.paths[name].keys():
-                    self.paths[name][sub_name] = self.paths[name][sub_name].replace(from_string, to_string)
+                    self.paths[name][sub_name] = get_new_path(from_name, to_name, self.paths[name][sub_name], pre_directory)
             else:
-                self.paths[name] = self.paths[name].replace(from_string, to_string)
-            
+                self.paths[name] = get_new_path(from_name, to_name, self.paths[name], pre_directory)
+
+
+    #==========================================================================
+    def rename_subset(self, new_name): 
+        if new_name.lower() in ['subset', 'default_subset']: 
+            print('Invalid name "{}" for subset!'.format(new_name))
+            return False 
+        
+        current_directory = self.paths['subset_directory']
+        new_directory = '{}/{}'.format(self.paths['parent_directory'], new_name)
+        
+        # Rename all paths in subset 
+        self.rename_paths(self.name, new_name, pre_directory='subsets')
+        
         # Rename paths in steps 
         for step in self.steps.keys(): 
-            self.steps[step].rename_paths(from_string, to_string)
-            
+            self.steps[step].rename_paths(self.name, new_name, pre_directory='subsets') 
+        
+        # Rename directoy
+        os.rename(current_directory, new_directory) 
+        
+        # Set path in config file 
+        self.config.set_path(self.name, new_name, pre_directory='subsets')
+        
+        self.name = new_name
+        
+        return True 
     
+    #==========================================================================
+    def rename_workspace(self, from_name, to_name): 
+        
+        # Rename all paths in subset 
+        self.rename_paths(from_name, to_name, pre_directory='workspaces')
+        
+        # Rename paths in steps 
+        for step in self.steps.keys(): 
+            self.steps[step].rename_paths(from_name, to_name, pre_directory='workspaces')  
+            
+        # Set path in config file 
+        self.config.set_path(from_name, to_name, pre_directory='workspaces')
+        
+        return True
+            
+    #==========================================================================
+    def print_all_paths(self): 
+        """
+        Prints all path in the subset.
+        """
+        sep_length = 100
+        print('='*sep_length)
+        print('='*sep_length) 
+        print('Subset {} paths'.format(self.name))
+        print('-'*sep_length)
+        for item in sorted(self.paths.keys()):
+            if type(self.paths[item]) == dict:
+                for path in sorted(self.paths[item].keys()):
+                    if type(self.paths[item][path]) == dict:
+                        for p in sorted(self.paths[item][path].keys()):
+                            print('-', self.paths[item][path][p])
+                    else:
+                        print(self.paths[item][path])
+            else:
+                print(self.paths[item])
+            
+        for step in sorted(self.steps.keys()):
+            self.steps[step].print_all_paths() 
+        
+        print('')
+                
     #==========================================================================
     def set_data_filter(self, step='', filter_type='', filter_name='', data=None, save_filter=True):  
         step_object = self.get_step_object(step)
@@ -622,12 +714,10 @@ class WorkSpace(object):
         else:
             self._add_subset('default_subset')
             
-        # Load congif file 
+        # Load config file 
         self._load_workspace_config()
             
         # Step 0
-#        if not os.path.exists(self.directory_path_step_0):
-#            os.makedirs(self.directory_path_step_0)
         self.step_0 = WorkStep(name='step_0', 
                                parent_directory=self.paths['workspace_directory'], 
                                mapping_objects=self.mapping_objects, 
@@ -676,7 +766,7 @@ class WorkSpace(object):
         self.dtype_settings.add_file(file_path=file_path, data_type=data_type)
 
     #==========================================================================
-    def import_default_data(self):
+    def import_default_data(self, force=False):
         """
         Imports default data from the resources directory to input raw_data directory in workspace.
         """
@@ -684,9 +774,10 @@ class WorkSpace(object):
         if not self._change_ok():
             return False
         
-        if os.listdir(self.paths['directory_path_raw_data']):
-            print('raw_data directory is not empty. Will not copy default files from resource directory!')
-            return False
+        if os.listdir(self.paths['directory_path_raw_data']): 
+            if not force:
+                print('raw_data directory is not empty. Will not copy default files from resource directory!')
+                return False
         
         source_directory = self.paths['resource_directory'] + '/default_data'  
         
@@ -700,7 +791,7 @@ class WorkSpace(object):
             shutil.copyfile(src, tar)
             
         # Load data 
-        self._load_all_data() 
+        self.load_all_data() 
         
         # Update dtype_settings object
         all_ok = self.dtype_settings.load_and_sync_dtype_settings()
@@ -725,7 +816,8 @@ class WorkSpace(object):
         
         # Initiating workspace
         new_workspace_path = '/'.join([self.paths['parent_directory'], workspace_name])
-        if os.path.exists(new_workspace_path) and overwrite == False:
+        if os.path.exists(new_workspace_path): 
+            print('New workspace already excists!')
             return False
         new_workspace_object = core.WorkSpace(name=workspace_name, 
                                               parent_directory=self.paths['parent_directory'],
@@ -735,7 +827,7 @@ class WorkSpace(object):
         new_workspace_object._add_files_from_workspace(self, overwrite=overwrite)
         
         # Load data in workspace 
-        data_loaded = new_workspace_object._load_all_data()
+        data_loaded = new_workspace_object.load_all_data()
         
         if data_loaded:
             print('Data loaded!')
@@ -747,6 +839,8 @@ class WorkSpace(object):
         # Workspace config 
         des_path = new_workspace_object.config.file_path 
         new_workspace_object.config = self.config.make_copy_of_config(des_path)
+        print(self.name)
+        print(new_workspace_object.name)
         # Subset configs
         for subset in new_workspace_object.subset_dict.keys(): 
             des_path = new_workspace_object.subset_dict[subset].config.file_path
@@ -880,6 +974,17 @@ class WorkSpace(object):
         return True
     
     #==========================================================================
+    def rename_paths(self, from_name, to_name, pre_directory=''): 
+        
+        for name in self.paths.keys(): 
+            if type(self.paths[name]) == dict:
+                for sub_name in self.paths[name].keys():
+                    self.paths[name][sub_name] = get_new_path(from_name, to_name, self.paths[name][sub_name], pre_directory)
+            else:
+                self.paths[name] = get_new_path(from_name, to_name, self.paths[name], pre_directory)
+            
+                
+    #==========================================================================
     def rename_subset(self, from_name=None, to_name=None): 
         """
         Renames the subset and changes all the paths. 
@@ -889,31 +994,90 @@ class WorkSpace(object):
         if to_name.lower() in ['subset', 'default_subset']: 
             print('Invalid name "{}" for subset!'.format(to_name)) 
             return False 
+        
+        if to_name in self.subset_dict.keys():
+            print('Invalid name "{}" for subset! subset already excists!'.format(to_name)) 
+            return False 
             
         subset_object = self.get_subset_object(from_name)
-        from_path = subset_object.paths['subset_directory']
         
-        # Change all paths that has to do with subset 
-        subset_object.rename(to_name)
+        subset_object.rename_subset(to_name)
         
-        # Rename in Workspace 
-        from_string, to_string = get_subset_rename_strings(from_name, to_name)
-        for name in self.paths.keys(): 
-            if type(self.paths[name]) == dict:
-                for sub_name in self.paths[name].keys():
-                    self.paths[name][sub_name] = self.paths[name][sub_name].replace(from_string, to_string)
-            else:
-                self.paths[name] = self.paths[name].replace(from_string, to_string)
+        # Rename paths in Workspace 
+        self.rename_paths(from_name, to_name, pre_directory='subsets')
         
+        # Rename paths in step_0 
+        self.step_0.rename_paths(from_name, to_name, pre_directory='subsets')
+        
+        # Rename key in dict 
+        self.subset_dict[to_name] = self.subset_dict[from_name]
+        self.subset_dict.pop(from_name)
+        
+    
+    #==========================================================================
+    def rename_workspace(self, to_name=None): 
+        """
+        Renames the workspace and changes all the paths. 
+        """  
+        
+        if not self._change_ok(): 
+            print('Not allowed to rename workspace!') 
+            return False  
+            
+        current_directory = self.paths['workspace_directory']
+        new_directory = '{}/{}'.format(self.paths['parent_directory'], to_name) 
+        
+        if os.path.exists(new_directory):
+            print('Workspace "{}" already excists. Can not rename workspace!'.format(to_name))
+            return False
+        
+        # Rename paths in Workspace 
+        self.rename_paths(self.name, to_name, pre_directory='workspaces')
+        
+        # Rename paths in step_0 
+        self.step_0.rename_paths(self.name, to_name, pre_directory='workspaces') 
+        
+        # Rename subsets 
+        for subset in self.subset_dict.keys():
+            self.subset_dict[subset].rename_workspace(self.name, to_name)
+        
+        # Set path in config file 
+        self.config.set_path(self.name, to_name, pre_directory='workspaces') 
         
         # Rename directory 
-        to_path = '{}/{}'.format(os.path.dirname(from_path), to_name)
-        print(from_path)
-        print(to_path)
-        os.rename(from_path, to_path) 
+#        print(from_path)
+#        print(to_path)
+        os.rename(current_directory, new_directory)
         
+        self.name = to_name 
         
+    #==========================================================================
+    def print_all_paths(self): 
+        """
+        Prints all path in the workspace.
+        """
+        sep_length = 100
+        print('='*sep_length)
+        print('='*sep_length)
+        print('Workspace root paths')
+        print('-'*sep_length)
+        for item in sorted(self.paths.keys()):
+            if type(self.paths[item]) == dict:
+                for path in sorted(self.paths[item].keys()):
+                    if type(self.paths[item][path]) == dict:
+                        for p in sorted(self.paths[item][path].keys()):
+                            print('-', self.paths[item][path][p])
+                    else:
+                        print(self.paths[item][path])
+            else:
+                print(self.paths[item])
+                
+        self.step_0.print_all_paths()
         
+        for subset in sorted(self.subset_dict.keys()):
+            self.subset_dict[subset].print_all_paths()
+        
+        print('')
         
         
     #==========================================================================
@@ -1036,7 +1200,7 @@ class WorkSpace(object):
         self.quality_factor_NP = core.QualityFactorNP()
         
     #==========================================================================
-    def _load_all_data(self): 
+    def load_all_data(self): 
         """ 
         Loads all data from the input_data/raw_data-directory belonging to the workspace. 
         """
@@ -1271,6 +1435,10 @@ class Config(dict):
         c.save_file()
         return c
     
+    #==========================================================================
+    def set_path(self, from_name, to_name, pre_directory): 
+        self.file_path = get_new_path(from_name, to_name, self.file_path, pre_directory)
+        
 """
 ###############################################################################
 ###############################################################################
@@ -1295,13 +1463,21 @@ def get_step_name(step):
         step = 'step_' + step
     return step
 
+
 #==============================================================================
 #==============================================================================
-def get_subset_rename_strings(from_name, to_name): 
-    # include /subset/ here to be safer when using replace for string. 
-    from_string = '/subsets/{}'.format(from_name)
-    to_string = '/subsets/{}'.format(to_name) 
-    return from_string, to_string
+def get_new_path(from_name, to_name, old_path, pre_directory=''): 
+    # include /p/ here to be safer when using replace for string. 
+    from_string = '/{}/{}'.format(pre_directory, from_name)
+    to_string = '/{}/{}'.format(pre_directory, to_name) 
+    if old_path.endswith(from_name):
+        from_string = from_string + '$'
+    else:
+        from_string = from_string + '/'
+        to_string = to_string + '/' 
+    
+    return re.sub(from_string, to_string, old_path, 1)
+
 
 #==============================================================================
 #==============================================================================
