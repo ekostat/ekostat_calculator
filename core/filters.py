@@ -128,7 +128,7 @@ class DataFilter(object):
         self.include_type_area(type_area_list)
         
     #==========================================================================
-    def get_filter_boolean_for_df(self, df=None): 
+    def get_filter_boolean_for_df(self, df=None, **kwargs): 
         """
         Get boolean tuple to use for filtering. 
         """

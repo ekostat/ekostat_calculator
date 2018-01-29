@@ -112,7 +112,7 @@ class RowDataHandler(object):
         """
         """
         if self.one_parameter:
-            self._one_parameter_df_adjustments()            
+            self._one_parameter_df_adjustments()
         else:
             self._merge_df_string_columns([self.filter_parameters.value_key, self.filter_parameters.qflag_key], 
                                           new_key=u'TEMP_VALUE',
@@ -126,7 +126,7 @@ class RowDataHandler(object):
         """
         """
         if self.one_parameter:
-            pass          
+            pass
         else:
             self._set_column_table_from_pivot_table(sort=True)
             self._seperate_para_value_from_qflag(sep='__')
@@ -235,7 +235,7 @@ class DataFrameHandler(ColumnDataHandler, RowDataHandler):
         """
 #        cdh = ColumnDataHandler(DataFrameHandler)
         self.sort_columns_of_df()
-        self.add_column_df()      
+        self.add_column_df()
         self._calculate_data()
         
     #==========================================================================
@@ -948,9 +948,10 @@ if __name__ == '__main__':
     raw_data_file_path = 'D:/Utveckling/g_EKOSTAT_tool/test_data/raw_data/data_BAS_2000-2009.txt'
     first_filter_directory = 'D:/Utveckling/g_EKOSTAT_tool/test_data/filtered_data' 
     
+    
     # Handler
 #    raw_data = core.DataHandler('raw')
-#    raw_data.add_txt_file(raw_data_file_path, data_type='column') 
+#    raw_data.add_txt_file(raw_data_file_path, data_type='column')
     
     print('-'*50)
     print('done')

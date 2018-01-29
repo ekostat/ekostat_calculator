@@ -850,11 +850,21 @@ class WorkSpace(object):
         # TODO:  User should maybe choose which files to load?
         #loop filenames in dtype_settings to read with correct datahandler
         for index, row in dtype_settings.iterrows():
+            
+            if row.filename.startswith('#'):
+                print('\nSkipping', row.filename+'\n')
+                continue
+            
             print(row.keys())
             if row['data_type'] == 'phyche':
                 self.data_handler.physical_chemical.load_source(file_path=raw_data_file_path + row.filename,
                                                                 raw_data_copy=True)
                 self.data_handler.physical_chemical.save_data_as_txt(directory=output_directory, prefix=u'Column_format')
+            elif row['data_type'] == 'phyche_model':
+                self.data_handler.physical_chemical.load_source(file_path=raw_data_file_path + row.filename,
+                                                                raw_data_copy=True)
+                self.data_handler.physical_chemical.save_data_as_txt(directory=output_directory, prefix=u'Column_format')                
+                
             elif row['data_type']== 'zooben':
                 self.data_handler.zoobenthos.load_source(file_path=raw_data_file_path + row.filename,
                                                          raw_data_copy=True)

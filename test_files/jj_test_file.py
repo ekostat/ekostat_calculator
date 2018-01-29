@@ -140,9 +140,9 @@ exclude_stations = ['BROFJORDEN'] # Example that both include and exclude are po
 include_years = ['2015', '2017']
 
 
-jj_workspace.set_data_filter(step=0, filter_type='include_list', filter_name='STATN', data=include_stations) 
-jj_workspace.set_data_filter(step=0, filter_type='exclude_list', filter_name='STATN', data=exclude_stations) 
-jj_workspace.set_data_filter(step=0, filter_type='include_list', filter_name='MYEAR', data=include_years) 
+jj_workspace.set_data_filter(step=0, filter_type='include_list', filter_name='STATN', data=include_stations)
+jj_workspace.set_data_filter(step=0, filter_type='exclude_list', filter_name='STATN', data=exclude_stations)
+jj_workspace.set_data_filter(step=0, filter_type='include_list', filter_name='MYEAR', data=include_years)
 
 
 
@@ -161,26 +161,20 @@ sdf_default_2 = jj_workspace.get_indicator_settings_data_filter_object(subset='d
 df_default_1.include_list_filter
 
 
-jj_workspace.set_data_filter(step=1, subset='default_subset', filter_type='include_list', filter_name='water_body_name', data=['N m Bottenvikens kustvatten', 'Bulleröfjärden', 'Norrfjärden'])
+jj_workspace.set_data_filter(step=1, subset='default_subset', filter_type='include_list')#, filter_name='water_body_name', data=['N m Bottenvikens kustvatten', 'Bulleröfjärden', 'Norrfjärden'])
 
 
 df_default_2 = jj_workspace.get_data_filter_object(subset='default_subset', step=2) # This should not be possible
 
 
+jj_workspace.index_handler.add_filter(filter_object=df_default_1, subset='default_subset', step='step_1')
 
 
 
+#jj_workspace.index_handler.booleans.get('step_0','default_subset').get('boolean')
 
 
-
-
-
-
-
-
-
-
-
+#li = list(get_keys_from_nested_dictionary(jj_workspace.index_handler.booleans))
 
 
 
