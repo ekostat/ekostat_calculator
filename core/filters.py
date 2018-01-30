@@ -237,7 +237,7 @@ class DataFilter(object):
     def save_filter_files(self): 
             
         # Exclude list filter 
-        print(self.exclude_list_filter.keys())
+#        print(self.exclude_list_filter.keys())
         for filter_name in self.exclude_list_filter.keys(): 
             long_name = 'LIST_EXCLUDE_' + filter_name
             file_path = self.filter_file_paths[long_name]
@@ -248,7 +248,7 @@ class DataFilter(object):
                     fid.write('\n')
                     
         # Include list filter 
-        print(self.include_list_filter.keys())
+#        print(self.include_list_filter.keys())
         for filter_name in self.include_list_filter.keys(): 
             long_name = 'LIST_INCLUDE_' + filter_name
             file_path = self.filter_file_paths[long_name.upper()]

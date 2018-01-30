@@ -348,6 +348,7 @@ class WorkStep(object):
                                filter_name=filter_name, 
                                data=data, 
                                save_filter=save_filter)    
+        return True
             
     #==========================================================================
     def show_settings(self):
@@ -952,9 +953,10 @@ class WorkSpace(object):
             return False
         else:
             subset_object = self.get_subset_object(subset) 
-            filter_object = subset_object.data_filter 
+            step_object = subset_object.get_step_object(step)
+            filter_object = step_object.data_filter 
             
-        all_ok = self.index_handler.add_filter(filter_object=filter_object, filter_step=step, subset=subset)
+        all_ok = self.index_handler.add_filter(filter_object=filter_object, step=step, subset=subset)
         return all_ok
         
         
@@ -1126,13 +1128,15 @@ class WorkSpace(object):
         return data_filter.get_filter_info()
     
     #==========================================================================
-    def get_filtered_data(self, level=None, subset=None): 
+    def get_filtered_data(self, step=None, subset=None, water_body=None, indicator=None): 
         """
         Returns filtered data using the given filter level. 
         """
-        if level == None:
+        step = get_step_name(step)
+        if step == None:
             return False
-        return self.index_handler.get_filtered_data(level=level, subset=subset)
+        print('STEP', step)
+        return self.index_handler.get_filtered_data(subset=subset, step=step, water_body=water_body, indicator=indicator)
     
     #==========================================================================
     def get_available_indicators(self):
@@ -1480,6 +1484,9 @@ class Config(dict):
 #==============================================================================
 #==============================================================================
 def get_step_name(step): 
+#    print('STEP', step)
+    if step == None:
+        return step
     step = str(step)
     if not step.startswith('step_'):
         step = 'step_' + step
