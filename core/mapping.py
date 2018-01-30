@@ -230,7 +230,124 @@ class WaterBody(AttributeDict):
         
     #==========================================================================
     
+
+"""
+#==============================================================================
+#==============================================================================
+""" 
+class RawDataFiles(object): 
+    """
+    Class to hold information in dtype_settings.txt based on the file 
+    content in the rad_data-directory of the workspace. 
+    Also keeps and handles information about active files. 
+    """
+    def __init__(self, raw_data_directory): 
+        self.raw_data_directory = raw_data_directory.replace('\\', '/') 
+        self.info_file_name ='dtype_settings.txt'
+        self.info_file_path = '/'.join([self.raw_data_directory, self.info_file_name])
+        
+        self.has_info = False
+        self.load_and_sync_dtype_settings() 
+        
+        
+        
+    #==========================================================================
+    def load_and_sync_dtype_settings(self): 
+        """
+        Loads the inforfile and check if all links and info is present. 
+        Returns True if all is ok, else False. 
+        """
+        if not os.path.exists(self.info_file_path): 
+            print('No dtype_setting file found in raw_data directory')
+            return False
+        
+        # Load info file
+        self.df = pd.read_csv(self.info_file_path, sep='\t', dtype={'status': int, 
+                                                                    'filename': str, 
+                                                                    'data_type': str}) 
+        self.has_info = True
+        
+        # List all files
+        all_file_names = sorted([item for item in os.listdir(self.raw_data_directory) if item != os.path.basename(self.info_file_path)])
+        
+        # Check that all files are in info file
+        if sorted(self.df['filename']) != all_file_names:
+            print('='*50)
+            print('\n'.join(sorted(self.df['filename'])))
+            print('.'*50)
+            print('\n'.join(all_file_names))
+            print('-'*50)
+            print('All files not in dtype_settings file!') 
+            return False
+        
+        # Check that all data_types are present 
+        if not all(self.df['data_type']):
+            print('dtype not specified for all files!') 
+            return False 
+        
+        return True
+        
+    #==========================================================================
+    def get_active_paths(self): 
+        if not self.has_info:
+            return False
+        return sorted(['/'.join([self.raw_data_directory, item]) for item in self.df.loc[self.df['status']==1, 'filename']])
+   
+    #==========================================================================
+    def get_active_paths_with_data_type(self):
+        if not self.has_info:
+            return False
+        file_paths = self.get_active_paths() 
+        output_list = []
+        for file_path in file_paths:
+            dt = self.df.loc[self.df['filename']==os.path.basename(file_path), 'data_type'].values[0]
+            output_list.append((file_path, dt))
+        return output_list
+        
     
+    #==========================================================================
+    def activate(self, file_list): 
+        """
+        Activates the given filenames and deactivate the rest. Returns True if all ok. 
+        Returns False if filename is missing. 
+        file_list is a list with strings. 
+        """
+        file_list = [os.path.basename(item) for item in file_list] 
+        for file_name in file_list: 
+            print(file_name)
+            if file_name not in self.df['filename'].values: 
+                return False
+            
+        for file_name in self.df['filename']:
+            if file_name in file_list:
+                self.df.loc[self.df['filename']==file_name, 'status'] = 1
+            else:
+                self.df.loc[self.df['filename']==file_name, 'status'] = 0 
+                           
+        # Save file 
+        self._save_file()
+        return True
+        
+        
+    #==========================================================================
+    def add_file(self, file_name=None, data_type=None): 
+        """
+        Takes tha basname of the file_name (Could be path) and adds it to the file. 
+        """
+        assert all([file_name, data_type]), 'Not enough input arguments' 
+        
+        file_name = os.path.basename(file_name)
+        if file_name in self.df['filename'].values: 
+            print('File already added')
+            return False
+        next_index = len(self.df) 
+        self.df.iloc[next_index] = [1, file_name, data_type]
+        return True
+        
+    #==========================================================================
+    def _save_file(self):
+        self.df.to_csv(self.info_file_path, index=False, sep='\t')
+        
     
 """#========================================================================"""
 if __name__ == '__main__':
@@ -296,3 +413,4 @@ if __name__ == '__main__':
 #        if k.startswith('sili'):
 #            print(k, len(k), p_map.get(k))
     
+

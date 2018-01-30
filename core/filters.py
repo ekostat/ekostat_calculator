@@ -9,6 +9,7 @@ import codecs
 import pandas as pd
 import numpy as np
 import utils
+import re
 
 #if current_path not in sys.path: 
 #    sys.path.append(os.path.dirname(os.path.realpath(__file__)))
@@ -240,7 +241,7 @@ class DataFilter(object):
         for filter_name in self.exclude_list_filter.keys(): 
             long_name = 'LIST_EXCLUDE_' + filter_name
             file_path = self.filter_file_paths[long_name]
-            print('Save: "{}" to file: "{}"'.format(filter_name, file_path))
+#            print('Save: "{}" to file: "{}"'.format(filter_name, file_path))
             with codecs.open(file_path, 'w', encoding='cp1252') as fid: 
                 for item in self.exclude_list_filter[filter_name]:
                     fid.write(item)
@@ -251,7 +252,7 @@ class DataFilter(object):
         for filter_name in self.include_list_filter.keys(): 
             long_name = 'LIST_INCLUDE_' + filter_name
             file_path = self.filter_file_paths[long_name.upper()]
-            print('Save: "{}" to file: "{}"'.format(filter_name, file_path))
+#            print('Save: "{}" to file: "{}"'.format(filter_name, file_path))
             with codecs.open(file_path, 'w', encoding='cp1252') as fid: 
                 for item in self.include_list_filter[filter_name]:
                     fid.write(item)
@@ -316,9 +317,12 @@ class SettingsFile(object):
     Holds Settings file information. Reading and writing file. Basic file handling. 
     """
     #==========================================================================
-    def __init__(self, file_path):
+    def __init__(self, file_path, mapping_objects=None):
         self.file_path = file_path 
         self.indicator = os.path.basename(file_path)[:-4]
+        
+        self.mapping_objects = mapping_objects
+        self.mapping_water_body = mapping_objects['water_body']
         
         self.int_columns = [] 
         self.str_columns = [] 
@@ -337,8 +341,7 @@ class SettingsFile(object):
         self._prefix_list = ['FILTER', 'REF', 'TOLERANCE'] 
         self._suffix_list = ['INT', 'EKV']
         
-        self._load_file()
-    
+        self._load_file()    
     
     #==========================================================================
     def _load_file(self):
@@ -413,12 +416,13 @@ class SettingsFile(object):
         self.df.columns = self.columns
 
     #==========================================================================
-    def get_value(self, filter_dict=None, variable=None): 
+    def old_get_value(self, filter_dict=None, variable=None): 
         """
         get value from settings file
         filter_dict: keys and values to filter on
-        variable: settings variable to get value for
+        variable: settings variable to get value for 
         """ 
+        
         print(filter_dict)
         print(variable)
         if 'TYPE_AREA_NUMBER' in list(filter_dict.keys()): 
@@ -429,6 +433,9 @@ class SettingsFile(object):
         assert all(['TYPE_AREA_NUMBER' in list(filter_dict.keys()), variable]), 'Must provide: type_area number in filter_dict and variable' 
         assert variable.upper() in self.df.columns, 'Must provide filtervariable from settingsfile\n\t{}'.format(self.df.columns)
         boolean_list = utils.set_filter(df = self.df, filter_dict = filter_dict, return_dataframe = False)
+        # TODO: How made this with utils.set_filter. Dont think we need this? /MW
+        
+        
         value = self.df.loc[boolean_list, variable.upper()].values
         
         assert len(value) == 1, 'More than one setting for given filter_dict\n{}'.format(value)
@@ -443,8 +450,27 @@ class SettingsFile(object):
         return value
     
     #==========================================================================
+    def get_value(self, variable=None, type_area=None): 
+        num, suf = get_type_area_parts(type_area)
+        if suf:
+            value = self.df.loc[(self.df['TYPE_AREA_NUMBER']==num) & (self.df['TYPE_AREA_SUFFIX']==suf), variable]
+        else:
+            value = self.df.loc[self.df['TYPE_AREA_NUMBER']==num, variable]
+        
+        assert len(value) == 1, 'More than one setting for given filter_dict\n{}'.format(value)
+        
+        value = value.values[0]    
+        if variable in self.list_columns: 
+            value = self._get_list_from_string(value, variable)
+        elif variable in self.interval_columns: 
+            value = self._get_interval_from_string(value, variable)
+        else:
+            value = self._convert(value, variable.upper())
+        return value
+    
+    #==========================================================================
     def set_value(self, type_area=None, variable=None, value=None): 
-        if type_area not in self.type_area_list:
+        if not all([type_area, variable, value]):
             return False
         if variable in self.list_columns: 
             print('List column')
@@ -452,17 +478,25 @@ class SettingsFile(object):
         elif variable in self.interval_columns: 
             print('Interval column')
             value = self._get_string_from_interval(value, variable) 
+        elif variable in self.tolerance_columns: 
+            print('Tolerance column')
+            value = str(value)
         
         if value == False: 
             print('Value could not be changed!')
             return False
         else:
             print('Value to set for type_area "{}" and variable "{}": {}'.format(type_area, variable, value))
-            self.df.loc[self.df['TYPE_AREA_NUMBER']==type_area, variable] = value
+            
+            num, suf = get_type_area_parts(type_area)
+            if suf:
+                self.df.loc[(self.df['TYPE_AREA_NUMBER']==num) & (self.df['TYPE_AREA_SUFFIX']==suf), variable] = value 
+            else:
+                self.df.loc[self.df['TYPE_AREA_NUMBER']==num, variable] = value
             return True
         
     #==========================================================================
-    def set_values(self, value_dict): 
+    def set_values(self, value_dict, allowed_variables): 
         """
         Sets values for several type_areas and variables. 
         Values to be set are given in dict like: 
@@ -471,6 +505,9 @@ class SettingsFile(object):
         all_ok = True
         for type_area in value_dict.keys():
             for variable in value_dict[type_area].keys(): 
+                if variable not in allowed_variables:
+                    print('Not allowed to change variable "{}". Allowed variables to change are:\n{}\n'.format(variable, '\n'.join(allowed_variables)))
+                    continue
                 value = value_dict[type_area][variable]
                 if not self.set_value(type_area, variable, value):
                     all_ok = False
@@ -529,10 +566,12 @@ class SettingsFile(object):
         return True
     
     #==========================================================================
-    def get_filter_boolean(self, df=None, type_area=None, parameter=None): 
+    def get_filter_boolean_for_df(self, df=None, water_body=None): 
         """
         Get boolean tuple to use for filtering
         """
+        type_area = self.mapping_water_body.get_type_area_for_water_body(water_body, include_suffix=True)
+        
         combined_boolean = ()
         for variable in self.filter_columns: 
             if variable in self.interval_columns:
@@ -560,53 +599,20 @@ class SettingsFile(object):
         return combined_boolean
     
     #==========================================================================
-    def _get_boolean_from_interval(self, df=None, type_area=None, variable=None, parameter=None): 
+    def _get_boolean_from_interval(self, df=None, type_area=None, variable=None): 
         from_value, to_value = self.get_value(type_area=type_area, 
                                               variable=variable)
-        return (self.df[parameter] >= from_value) & (df[variable] <= to_value)
+        return (self.df[variable] >= from_value) & (df[variable] <= to_value)
 
     #==========================================================================
-    def _get_boolean_from_list(self, df=None, type_area=None, variable=None, parameter=None):
+    def _get_boolean_from_list(self, df=None, type_area=None, variable=None):
         value_list = self.get_value(type_area=type_area, 
                                     variable=variable)
-        return df[parameter].isin(value_list)
-    
-    
+        return df[variable].isin(value_list)
+  
 ###############################################################################
-class SettingsRef(object):
-    """
-    Handles ref settings. 
-    """
-    #==========================================================================
-    def __init__(self, settings_file_object): 
-        self.settings = settings_file_object 
-        self.settings.connected_to_ref_settings_object = True
-        
-        
-###############################################################################
-class SettingsDataFilter(object):
-    """
-    Handles filter settings. 
-    """
-    #==========================================================================
-    def __init__(self, settings_file_object): 
-        self.settings = settings_file_object 
-        self.settings.connected_to_filter_settings_object = True
-        
-    #==========================================================================
-    def get_filter_boolean_for_df(self, df=None, water_body=None): 
-        """
-        Get boolean pd.Series to use for filtering. 
-        Name of this has to be tha same as the one in class DataFilter. 
-        """
-        # TODO: Convert water_body to type_area. method for this in mapping.py 
-#        get_type_area_for_water_body(wb, include_suffix=False)
-        type_area_number = mapping.get_type_area_for_water_body(water_body, include_suffix=False)
-        type_area_suffix = mapping.get_type_area_suffix_for_water_body(water_body, include_suffix=False)
-        return self.settings.get_filter_boolean(df=df, 
-                                                type_area=type_area)
-        
-
+class SettingsBase(object): 
+    
     #==========================================================================
     def set_values(self, value_dict): 
         """
@@ -614,112 +620,58 @@ class SettingsDataFilter(object):
         Values to be set are given in dict like: 
             value_dict[type_area][variable] = value 
         """
-        self.settings.set_values(value_dict) 
+        self.settings.set_values(value_dict, self.allowed_variables) 
         self.settings.save_file()
-
+    
+###############################################################################
+class SettingsRef(SettingsBase):
+    """
+    Handles ref settings. 
+    """
+    #==========================================================================
+    def __init__(self, settings_file_object): 
+        super().__init__()
+        self.settings = settings_file_object 
+        self.settings.connected_to_ref_settings_object = True
+        self.allowed_variables = self.settings.ref_columns
+        
+        
+###############################################################################
+class SettingsDataFilter(SettingsBase):
+    """
+    Handles filter settings. 
+    """
+    #==========================================================================
+    def __init__(self, settings_file_object): 
+        super().__init__()
+        self.settings = settings_file_object 
+        self.settings.connected_to_filter_settings_object = True 
+        self.allowed_variables = self.settings.filter_columns
+        
+    #==========================================================================
+    def get_filter_boolean_for_df(self, df=None, water_body=None): 
+        """
+        Get boolean pd.Series to use for filtering. 
+        Name of this has to be the same as the one in class DataFilter. 
+        """
+#        get_type_area_for_water_body(wb, include_suffix=False)
+        return self.settings.get_filter_boolean_for_df(df=df, 
+                                                       water_body=water_body)
+        
 
 ###############################################################################
-class SettingsTolerance(object):
+class SettingsTolerance(SettingsBase):
     """
     Handles tolerance settings. 
     """
     #==========================================================================
     def __init__(self, settings_file_object): 
+        super().__init__()
         self.settings = settings_file_object 
         self.settings.connected_to_tolerance_settings_object = True
+        self.allowed_variables = self.settings.tolerance_columns
 
-
-
-###############################################################################
-class old_SingleFilter(object):
-    """
-    Holds information about and methods for a single filter. 
-    """
-    #==========================================================================
-    def __init__(self, line_dict, parameter):
-        
-        self.header = sorted(line_dict.keys())
-        self.comment = line_dict['comment']
-        self.variable = line_dict['variable']
-        self.parameter = line_dict['parameter']
-        if not self.parameter:
-            self.par = parameter # This is to keep track of self in filter settings file
-        else:
-            self.par = self.parameter
-        self.dtype = line_dict['dtype']
-        self.variable_type = None
-        
-        value = line_dict['value']
-        self.set_filter(value)
-        
-    #==========================================================================
-    def set_filter(self, value): 
-        """
-        Determines if the filter is one given value, an interval or a list of values
-        """
-        if not value:
-            self.value = value
-        elif type(value) == list:
-            self.variable_type = 'list' # LENA: added this, or is variable_type for this case already set?
-            self.value = [self._convert(item) for item in value]
-        elif '-' in value: 
-            self.variable_type = 'interval'
-            self.value = [self._convert(item) for item in value.split('-')] 
-        elif ',' in value: 
-            self.variable_type = 'list' 
-            self.value = [self._convert(item) for item in value.split(',')] 
-        else:
-            self.variable_type = 'single value' # LENA: added this, or is variable_type for this case already set?
-            self.value = self._convert(value)
-        
-    #==========================================================================
-    def _convert(self, item):
-        item = item.strip()
-        if self.dtype == 'int':
-            return int(item)
-        elif self.dtype == 'float':
-            return float(item) 
-        return item
-    
-    #==========================================================================
-    def get_boolean(self, df): 
-        """
-        Returns a boolean array for matching filter in dataframe. 
-        """
-        if not self.value:
-            return False
-        elif not self.par:
-            return ()
-        if self.variable_type == 'interval':
-            return self._interval_boolean(df)
-        elif self.variable_type == 'list':
-            return self._list_boolean(df)
-        
-    #==========================================================================
-    def _interval_boolean(self, df):
-        return (df[self.par] >= self.value[0]) & (df[self.par] <= self.value[1])
-
-    #==========================================================================
-    def _list_boolean(self, df):
-        return df[self.par].isin(self.value)
-    
-    #==========================================================================
-    def write_to_fid(self, fid):
-        item_list = []
-        for item in self.header:
-            value = getattr(self, item)
-            if item == 'value':
-                if self.variable_type == 'interval':
-                    value = '-'.join(map(str, value))
-                if self.variable_type == 'list':
-                    value = ','.join(map(str, value))
-            else:
-                value = str(value)
-            item_list.append(value)
-        fid.write('\t'.join(item_list)) 
-        
-    
-    
+  
 ###############################################################################
 class FilterBase(dict):
     """
@@ -858,7 +810,20 @@ class ToleranceFilter(FilterBase):
         # LENA: lägg till MONTH_LIST och DEPTH_INTERVAL till tolerance filter
         self.filter_items = ['MIN_NR_VALUES', 'TIME_DELTA']  
         # Time delta in hours
+       
         
+###############################################################################
+def get_type_area_parts(type_area): 
+    """
+    Returns a tuple like (type_area_number, type_area_suffix)
+    """
+    type_area = str(type_area)
+    if type_area[-1].isalpha():
+        suf = type_area[-1] 
+    else:
+        suf = ''
+    
+    return re.findall('\d+', type_area)[0], suf
         
 ###############################################################################
 if __name__ == '__main__':
@@ -872,7 +837,7 @@ if __name__ == '__main__':
     print('root directory is "{}"'.format(root_directory))
     
     
-    if 1: 
+    if 0: 
         root_directory = os.getcwd()
         workspace_directory = root_directory + '/workspaces' 
         resource_directory = root_directory + '/resources'
