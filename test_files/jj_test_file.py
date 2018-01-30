@@ -170,7 +170,6 @@ df_default_2 = jj_workspace.get_data_filter_object(subset='default_subset', step
 jj_workspace.index_handler.add_filter(filter_object=df_default_1, subset='default_subset', step='step_1')
 
 
-
 #jj_workspace.index_handler.booleans.get('step_0','default_subset').get('boolean')
 
 

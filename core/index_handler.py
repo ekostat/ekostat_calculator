@@ -72,7 +72,7 @@ class IndexHandler(object):
         
         use_keys = {'keys':[key for key in reversed(args) if key],
                     'keys_in_booleans':list(self._get_keys_from_dict(self.booleans))}
-         
+        
         for key in args:
             if not key in use_keys.get('keys_in_booleans'):
                 raise UserWarning(key,'should be included in IndexHandler, perhaps we are jumping to far ahead?')
