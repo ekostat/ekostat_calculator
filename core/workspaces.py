@@ -929,6 +929,8 @@ class WorkSpace(object):
     #==========================================================================
     def apply_data_filter(self, step=None, subset=None):
         """
+        Applies data filter to the index handler. 
+        
         Input: 
             step:           step that the data filter should be applied on. 
                             data_filter can be applied on step 0, 1 and 2
@@ -954,11 +956,39 @@ class WorkSpace(object):
         else:
             subset_object = self.get_subset_object(subset) 
             step_object = subset_object.get_step_object(step)
-            filter_object = step_object.data_filter 
+            filter_object = step_object.get_data_filter_object() 
             
         all_ok = self.index_handler.add_filter(filter_object=filter_object, step=step, subset=subset)
         return all_ok
         
+    #==========================================================================
+    def apply_indicator_dator_filter(self, subset=None, indicator=None, step=2):
+        """
+        Applies indicator data filter to the index handler. Step. 
+        
+        Input:                
+            subset:         subset to apply filter on. 
+            
+            indicator:      name of indicator to apply, ex. "din_winter"
+            
+            step:           step_2 is default
+        
+        Output: 
+            True:           If all is ok
+            False:          If something faild
+        """
+        
+        if subset not in self.get_subset_list(): 
+            print('Provides subset "{}" not in subset list'.format(subset))
+            return False
+        else:
+            subset_object = self.get_subset_object(subset) 
+            # Indicator_settings are linked to step 2 by default
+            step_object = subset_object.get_step_object(step) 
+            filter_object = step_object.get_indicator_data_filter_settings(indicator) 
+            
+        all_ok = self.index_handler.add_filter(filter_object=filter_object, step=step, subset=subset, indicator=indicator)
+        return all_ok
         
     #==========================================================================
     def copy_subset(self, source_subset_name=None, target_subset_name=None): 
