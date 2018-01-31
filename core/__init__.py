@@ -2,6 +2,8 @@
 
 from .data_handlers import DataHandler
 
+from .event_handler import Ekostat
+
 from .filters import DataFilter
 from .filters import ToleranceFilter
 from .filters import SettingsFile
@@ -42,3 +44,4 @@ from .ref_values import create_type_area_object
 from .ref_values import RefValues
 
 from .workspaces import WorkSpace
+

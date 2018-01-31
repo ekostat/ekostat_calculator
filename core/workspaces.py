@@ -15,7 +15,8 @@ import uuid
 import re
 
 current_path = os.path.dirname(os.path.realpath(__file__))[:-4]
-sys.path.append(current_path)
+if current_path not in sys.path:
+    sys.path.append(current_path)
 
 import core
 """
