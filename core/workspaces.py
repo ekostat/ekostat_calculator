@@ -147,6 +147,7 @@ class WorkStep(object):
         self.paths['directory_paths']['data_filters'] = self.paths['step_directory'] + '/data_filters'
         self.paths['directory_paths']['settings'] = self.paths['step_directory'] + '/settings'
         self.paths['directory_paths']['indicator_settings'] = self.paths['step_directory'] + '/settings/indicator_settings'
+        self.paths['directory_paths']['water_body_station_filter'] = self.paths['step_directory'] + '/settings/water_body'
         self.paths['directory_paths']['output'] = self.paths['step_directory'] + '/output'
         self.paths['directory_paths']['results'] = self.paths['step_directory'] + '/output/results'
     
@@ -213,7 +214,7 @@ class WorkStep(object):
         """
         if self.name not in self.allowed_indicator_settings_steps:
             return False
-        return self.indicator_tolerance_settings.get(indicator, False)
+        return self.indicator_tolerance_settings.get(indicator, False) 
     
     #==========================================================================
     def get_indicator_ref_settings(self, indicator): 
@@ -225,6 +226,10 @@ class WorkStep(object):
         return self.indicator_ref_settings.get(indicator, False)
     
     #==========================================================================
+    def get_water_body_station_filter(self): 
+        return self.water_body_station_filter
+        
+    #==========================================================================
     def get_indicator_settings_name_list(self):
         return sorted(self.indicator_settings.keys())
     
@@ -233,6 +238,7 @@ class WorkStep(object):
         self._create_file_paths()
         self.load_data_filter()
         self.load_indicator_settings_filters()
+        self.load_water_body_station_filter()
         
     #==========================================================================
     def load_data_filter(self):
@@ -273,6 +279,12 @@ class WorkStep(object):
             self.indicator_tolerance_settings[indicator] = core.SettingsTolerance(obj)
             
     #==========================================================================
+    def load_water_body_station_filter(self):
+        print('load_water_body_station_filter')
+        self.water_body_station_filter = core.WaterBodyStationFilter(water_body_settings_directory=self.paths['directory_paths']['water_body_station_filter'], 
+                                                                     mapping_objects=self.mapping_objects)
+        
+    #==========================================================================
     def set_indicator_settings_data_filter(self, indicator=None, filter_settings=None):
         """
         filter_settings are dicts like: 
@@ -312,6 +324,13 @@ class WorkStep(object):
                     self.paths[name][sub_name] = get_new_path(from_name, to_name, self.paths[name][sub_name], pre_directory)
             else:
                 self.paths[name] = get_new_path(from_name, to_name, self.paths[name], pre_directory) 
+                
+        # Rename paths in settings files 
+        for indicator in self._indicator_setting_files.keys():
+            self._indicator_setting_files[indicator].change_path(self.paths['indicator_settings_paths'][indicator]) 
+            
+        # Rename path in water_body_station_filter 
+        self.water_body_station_filter.change_path(self.paths['directory_paths']['water_body_station_filter'])
             
     #==========================================================================
     def print_all_paths(self): 
@@ -349,6 +368,13 @@ class WorkStep(object):
                                data=data, 
                                save_filter=save_filter)    
         return True
+    
+    #==========================================================================
+    def set_water_body_station_filter(self, water_body=None, include=True, station_list=None): 
+        if include:
+            self.water_body_station_filter.include_stations_in_water_body(station_list=station_list, water_body=water_body)
+        else: 
+            self.water_body_station_filter.exclude_stations_in_water_body(station_list=station_list, water_body=water_body)
             
     #==========================================================================
     def show_settings(self):
@@ -962,14 +988,16 @@ class WorkSpace(object):
         return all_ok
         
     #==========================================================================
-    def apply_indicator_dator_filter(self, subset=None, indicator=None, step=2):
+    def apply_indicator_data_filter(self, subset=None, indicator=None, water_body=None, step=2):
         """
         Applies indicator data filter to the index handler. Step. 
         
         Input:                
             subset:         subset to apply filter on. 
             
-            indicator:      name of indicator to apply, ex. "din_winter"
+            indicator:      name of indicator to apply, ex. "din_winter" 
+            
+            water_body:     water body in question
             
             step:           step_2 is default
         
@@ -982,12 +1010,32 @@ class WorkSpace(object):
             print('Provides subset "{}" not in subset list'.format(subset))
             return False
         else:
+            step = get_step_name(step)
             subset_object = self.get_subset_object(subset) 
             # Indicator_settings are linked to step 2 by default
             step_object = subset_object.get_step_object(step) 
             filter_object = step_object.get_indicator_data_filter_settings(indicator) 
             
-        all_ok = self.index_handler.add_filter(filter_object=filter_object, step=step, subset=subset, indicator=indicator)
+        all_ok = self.index_handler.add_filter(filter_object=filter_object, step=step, subset=subset, indicator=indicator, water_body=water_body)
+        return all_ok
+        
+    #==========================================================================
+    def apply_water_body_station_filter(self, subset=None, water_body=None): 
+        """
+        Filter is applied in step 2. 
+        """
+        step = 2
+        if subset not in self.get_subset_list(): 
+            print('Provides subset "{}" not in subset list'.format(subset))
+            return False
+        else:
+            step = get_step_name(step)
+            subset_object = self.get_subset_object(subset) 
+            # Indicator_settings are linked to step 2 by default
+            step_object = subset_object.get_step_object(step) 
+            filter_object = step_object.get_water_body_station_filter() 
+        
+        all_ok = self.index_handler.add_filter(filter_object=filter_object, step=step, subset=subset, water_body=water_body)
         return all_ok
         
     #==========================================================================
@@ -1149,6 +1197,14 @@ class WorkSpace(object):
         if not step_object:
             return False
         return step_object.get_data_filter_object()
+    
+    #==========================================================================
+    def get_water_body_station_filter(self, subset=None): 
+        step = 2
+        step_object = self.get_step_object(step=step, subset=subset)
+        if not step_object:
+            return False
+        return step_object.get_water_body_station_filter()
         
     #==========================================================================
     def get_data_filter_info(self, step=None, subset=None): 
@@ -1436,7 +1492,36 @@ class WorkSpace(object):
         return step_object.set_indicator_settings_data_filter(indicator=indicator, 
                                                               filter_settings=filter_settings)
 
+    #==========================================================================
+    def set_water_body_station_filter(self, subset='', water_body=None, include=True, station_list=None): 
+        """
+        Sets/changes the data_filter of the given filter_name. 
         
+        Input:               
+            subset:         Subset that the step belog to
+            
+            water_body:     water body to apply filter on
+            
+            include:        True = include
+                            False = exclude
+            
+            station_list:   list of stations
+            
+            step:           Default is 2 (moved outside/below)
+        """
+        step = 2
+        if not self._change_ok():
+            return False
+        
+        step = get_step_name(step)
+        step_object = self.get_step_object(step=step, subset=subset)
+        if not step_object:
+            return False
+
+        return step_object.set_water_body_station_filter(water_body=water_body, 
+                                                         include=include, 
+                                                         station_list=station_list)
+    
     
 #==========================================================================
 #==========================================================================

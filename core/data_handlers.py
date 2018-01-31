@@ -898,6 +898,9 @@ class DataHandler(object):
                     self.all_data = self.all_data.append(self.__getattribute__(dtype).column_data[source], 
                                                          ignore_index=True)
         
+        # MW: Add mont column 
+        self.all_data['MONTH'] = self.all_data['SDATE'].apply(lambda x: int(x[5:7]))
+        
         if save_to_txt:
             self.save_data(df=self.all_data, 
                            file_name='all_data.txt')
