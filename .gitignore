@@ -6,7 +6,6 @@
 **/__pycache__/*
 *.pyc
 *.ipynb
-*.ipynb
-*.ipynb
-*.ipynb
-workspaces/mw/input_data/exports/all_data.txt
+workspaces/mw/*
+workspaces/lv/*
+workspaces/JJ/*
