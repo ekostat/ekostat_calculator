@@ -213,7 +213,7 @@ class IndexHandler(object):
         If water_body is given: subset and step must also be given
         """
         df = self.data_handler_object.get_all_column_data_df()
-        
+        print('step', step)
         step_0, step_1, step_2 = self._get_steps(step=step)
         
 #        print(step_0, subset, step_1, step_2, water_body, indicator)

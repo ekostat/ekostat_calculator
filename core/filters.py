@@ -310,7 +310,63 @@ class DataFilter(object):
             self.save_filter_files()
         return True
     
+
+###############################################################################
+class DataFilterFile(object):
+    """
+    Get and write information to data filet file. 
+    """
+    def __init__(self, file_path=None, directory=None, file_name=None, string_in_file='ekostat'): 
+        if file_path:
+            if not string_in_file in os.path.basename(file_path):
+                self.file_path = None 
+            else:
+                self.file_path = file_path.replace('\\', '/') 
+        elif directory and file_name: 
+            if not string_in_file in file_name:
+                self.file_path = None 
+            else:
+                self.file_path = '{}/{}'.format(directory, file_name).replace('\\', '/')
+            
+        else:
+            self.file_path = None 
+            
         
+        # string_in_file is for safety. Files not containing string_in_file will be discarded. 
+        self.string_in_file = string_in_file 
+            
+    #==========================================================================
+    def set_filter(self, data_list): 
+        if not self.file_path:
+            return False
+        if type(data_list) == str: 
+            data_list = [data_list]
+        with codecs.open(self.file_path, 'w', encoding='cp1252') as fid: 
+            fid.write('\n'.join(data_list)) 
+        return True
+            
+    #==========================================================================
+    def get_filter(self): 
+        if not self.file_path:
+            return False
+        elif not os.path.exists(self.file_path): 
+            return []
+        
+        data_list = []
+        with codecs.open(self.file_path, 'r', encoding='cp1252') as fid: 
+            data_list.append(fid.readline().strip())
+        return data_list 
+    
+    #==========================================================================
+    def clear_filter(self): 
+        if not self.file_path:
+            return False
+        elif not os.path.exists(self.file_path): 
+            return False 
+        # Remove file 
+        os.remove(self.file_path)
+        
+    
 ###############################################################################
 class SettingsFile(object):
     """
@@ -399,10 +455,11 @@ class SettingsFile(object):
         
     #==========================================================================
     def change_path(self, new_file_path):
-        if not os.path.exists(new_file_path): 
-            print('Invalid file_path for file: {}\nOld file_path is {}'.format(new_file_path, self.file_path))
-            return False
+#        if not os.path.exists(new_file_path): 
+#            print('Invalid file_path for file: {}\nOld file_path is {}'.format(new_file_path, self.file_path))
+#            return False
         self.file_path = new_file_path
+        return True
         
     #==========================================================================
     def save_file(self, file_path=None):
@@ -602,14 +659,24 @@ class SettingsFile(object):
     def _get_boolean_from_interval(self, df=None, type_area=None, variable=None): 
         from_value, to_value = self.get_value(type_area=type_area, 
                                               variable=variable)
-        return (self.df[variable] >= from_value) & (df[variable] <= to_value)
+        
+        parameter = variable.split('_')[0]
+#        print(df[parameter])
+#        print(type(df[parameter][0]))
+#        print('variable', parameter)
+#        print('from_value', from_value, type(from_value))
+
+        # TODO: Remove astype(float) when this is changed in data handler
+        return (df[parameter].astype(float) >= from_value) & (df[parameter].apply(float) <= to_value)
 
     #==========================================================================
-    def _get_boolean_from_list(self, df=None, type_area=None, variable=None):
+    def _get_boolean_from_list(self, df=None, type_area=None, variable=None): 
         value_list = self.get_value(type_area=type_area, 
                                     variable=variable)
-        return df[variable].isin(value_list)
-  
+        parameter = variable.split('_')[0] 
+
+        return df[parameter].isin(value_list)
+
 ###############################################################################
 class SettingsBase(object): 
     
@@ -811,6 +878,117 @@ class ToleranceFilter(FilterBase):
         self.filter_items = ['MIN_NR_VALUES', 'TIME_DELTA']  
         # Time delta in hours
        
+###############################################################################
+class WaterBodyStationFilter(object): 
+    """
+    Class to hold filters linked to water body. 
+    Files in settings/water_body can specify which stations should be included 
+    or excluded in the water body. 
+    All cuminication is directly with the files, no data is stored in instance. 
+    Is water_body_mapping_object going to hold link between STATN and Water Body? 
+    """
+    def __init__(self, water_body_settings_directory=None, 
+                       mapping_objects=None):
+        water_body_settings_directory = water_body_settings_directory.replace('\\', '/')
+        if not water_body_settings_directory.endswith('/water_body'):
+            print('Invalid directory given to WaterBodyFilter. Must end with "/water_body"')
+            self.directory = None 
+            self.mapping_objects = None
+            self.mapping_water_body = None
+        else:
+            self.directory = water_body_settings_directory
+            self.mapping_objects = mapping_objects
+            self.mapping_water_body = mapping_objects['water_body']
+            
+        self.water_body_parameter = 'SEA_AREA_NAME'
+        
+    #==========================================================================
+    def clear_filter(self): 
+        for name in os.listdir(self.directory): 
+            if not name.startswith('wb_'):
+                continue
+            file_path = '{}/{}'.format(self.directory, name)
+            os.remove(file_path)
+        
+    #==========================================================================
+    def get_list(self, include=True, water_body=None): 
+        
+        key, file_path = self._get_file_path(wb=water_body, include=include)
+        filter_object = DataFilterFile(file_path=file_path, string_in_file='wb_') 
+        return filter_object.get_filter()
+        
+    #==========================================================================
+    def get_filter_boolean_for_df(self, df=None, water_body=None): 
+        """
+        Get boolean tuple to use for filtering on "area". 
+        Boolean is true for matching water_body excluding the stations in the wb exclude list. 
+        Stations in the wb include list are also True
+        """ 
+        # Check include and exclude list
+        include_stations = self.get_list(include=True, water_body=water_body)
+        exclude_stations = self.get_list(include=False, water_body=water_body)
+        print(include_stations)
+        print(exclude_stations)
+        # self.water_body_parameter is set above. Could be name or number...
+        boolean = ((df[self.water_body_parameter] == water_body) | \
+                  (df['STATN'].isin(include_stations))) & \
+                  (~df['STATN'].isin(exclude_stations ))
+        print(set(df['STATN'][boolean]))
+        return boolean
+        
+        
+    #==========================================================================
+    def include_stations_in_water_body(self, station_list=None, water_body=None): 
+        """
+        Adds information on which stations to include in the given water_body. 
+        """ 
+        key, file_path = self._get_file_path(wb=water_body, include=True)
+        filter_object = DataFilterFile(file_path=file_path, string_in_file='wb_') 
+        filter_object.set_filter(station_list)
+        
+    #==========================================================================
+    def exclude_stations_in_water_body(self, station_list=None, water_body=None): 
+        """
+        Adds information on which stations to excludeclude in the given water_body. 
+        This is probably nopt used. Instead this can be filterd in step_1 data filter. 
+        """ 
+        key, file_path = self._get_file_path(wb=water_body, include=False)
+        filter_object = DataFilterFile(file_path=file_path, string_in_file='wb_') 
+        filter_object.set_filter(station_list)
+    
+    #==========================================================================
+    def _get_file_path(self, wb=None, include=True): 
+        # TODO: Here it might be sutible with something that converts wb name to wb number
+        wb = wb.replace('.', '#').replace(' ', '_')
+        if include:
+            include = 'include'
+        else:
+            include = 'exclude'
+        key = 'wb_{}_{}'.format(include, wb)
+        file_path = '{}/{}.fil'.format(self.directory, key) 
+        return key, file_path
+        
+        
+    #==========================================================================
+    def _get_file_path_list(self): 
+        if not self.directory:
+            return False
+        
+        all_file_names = os.listdir(self.directory)
+        file_path_list = []
+        for name in all_file_names:
+            file_path_list.append('{}/{}'.format(self.directory, name)) 
+            
+        return file_path_list
+    
+    #==========================================================================
+    def change_path(self, directory):
+#        if not os.path.exists(directory): 
+#            print('Invalid directory: {}\nOld file_path is {}'.format(directory, self.directory))
+#            return False
+        self.directory = directory
+        return True
+            
         
 ###############################################################################
 def get_type_area_parts(type_area): 
