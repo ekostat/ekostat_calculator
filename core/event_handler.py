@@ -18,11 +18,6 @@ import pathlib
 
 import logging
 import importlib
-try:
-    logging.shutdown()
-    importlib.reload(logging)
-except:
-    pass
 # TODO: Move this!
 
 current_path = os.path.dirname(os.path.realpath(__file__))[:-4]
@@ -32,59 +27,83 @@ if current_path not in sys.path:
 import core
 """
 Module to handle all events linked to the Django application. 
+Maybe this should be in the root? Maybe not a class, only functions? Maybe __name__ == "__main__"?
 
 MW: Started this to start logging functionality. 
 """ 
 
-class Ekostat(object): 
+class EventHandler(object): 
     def __init__(self, root_path): 
         self.root_path = root_path.replace('\\', '/') 
+        self.workspace_directory = self.root_path + '/workspaces'
+        self.resource_directory = self.root_path + '/resources'
+        
         self.log_directory = self.root_path + '/log'
-        self.setup_log()
+        self.log_id = 'event_handler'
+        
+        # Add logger
+        core.add_log(log_id=self.log_id, 
+                     log_directory=self.log_directory, 
+                     log_level='DEBUG', 
+                     on_screen=True, 
+                     prefix='main')
         
         # Test main logger
-        self._logger = logging.getLogger('Ekostat')
+        self._logger = core.get_log(self.log_id)
+        self._logger.debug('Start EventHandler: {}'.format(self.log_id))
+        self._logger.debug('')
         self._logger.info('TEST info logger')
         self._logger.warning('TEST warning logger')
         self._logger.error('TEST error logger')
         self._logger.debug('TEST debug logger')
         
+        self.workspaces = {}
         
+        for item in os.listdir(self.workspace_directory):
+            self.add_workspace(item)
+        
+    #==========================================================================
+    def add_workspace(self, workspace_name):
+        self.workspaces[workspace_name] = core.WorkSpace(name=workspace_name, 
+                                                       parent_directory=self.workspace_directory,
+                                                       resource_directory=self.resource_directory)
     
     #==========================================================================
-    def setup_log(self):
-        """
-        Usage:
-            self._logger = logging.getLogger('......')
-            self._logger.info('Info message.')
-            self._logger.warning('Warning message.')
-            self._logger.error('Error message.')
-            self._logger.debug('Debug message.')
-            try: ...
-            except Exception as e:
-                self._logger.error('Exception: ' + str(e))
-        """
-        print('setup_log')
-        log = logging.getLogger('Ekostat')
-#        log.setLevel(logging.INFO)
-        log.setLevel(logging.DEBUG)
-
-
-        self._internal_dir_path = pathlib.Path(self.log_directory)
-        self._internal_log_path = pathlib.Path(self._internal_dir_path, 'ekostat_log.txt')
+    def get_workspace(self, workspace_name): 
+        return self.workspaces.get(workspace_name, None)
+    
+    #==========================================================================
+    def create_copy_of_workspace(self, from_workspace_name, to_workspace_name, overwrite=True): 
         
-        # Log directories.
-        if not self._internal_dir_path.exists():
-            self._internal_dir_path.mkdir(parents=True)
+        if from_workspace_name not in self.workspaces.keys(): 
+            self._logger.error('Trying to make copy of workspace "{}" workspace. This workspace is not loaded or non excisting!'.format(from_workspace_name))
+            return False
         
-        # Define rotation log files for internal log files.
-        try:
-            log_handler = logging.handlers.RotatingFileHandler(str(self._internal_log_path),
-                                                       maxBytes = 128*1024,
-                                                       backupCount = 10)
-            log_handler.setFormatter(logging.Formatter('%(asctime)s %(levelname)-10s : %(message)s '))
-            log_handler.setLevel(logging.DEBUG)
-            log.addHandler(log_handler)
-        except Exception as e:
-            print('EKOSTAT logging: Failed to set up logging: ' + str(e))
+        if to_workspace_name in self.workspaces.keys(): 
+            self._logger.debug('Workspace "{}" already excists.'.format(to_workspace_name))
+            return False
+        
+        self.workspaces[to_workspace_name] = self.workspaces[from_workspace_name].make_copy_of_workspace(to_workspace_name, overwrite=overwrite)
+        self._logger.debug('create_copy_of_workspace from "{}" to "{}"'.format(from_workspace_name, to_workspace_name))
+        
+            
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
         

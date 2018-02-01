@@ -2,7 +2,7 @@
 
 from .data_handlers import DataHandler
 
-from .event_handler import Ekostat
+from .event_handler import EventHandler
 
 from .filters import DataFilter
 from .filters import ToleranceFilter
@@ -23,7 +23,8 @@ from .lists import StationList
 from .lists import ParameterList
 from .lists import AreaList
 
-from .load import Load
+from .load import Load 
+from .logger import add_log, get_log
 
 from .mapping import AttributeDict
 from .mapping import ParameterMapping

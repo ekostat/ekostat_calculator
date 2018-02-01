@@ -13,6 +13,7 @@ import codecs
 import pandas as pd
 import uuid
 import re
+import pathlib
 
 current_path = os.path.dirname(os.path.realpath(__file__))[:-4]
 if current_path not in sys.path:
@@ -56,7 +57,6 @@ class WorkStep(object):
         self.paths['step_directory'] = '/'.join([self.paths['parent_directory'], self.name]) 
         self.parent_workspace_object = parent_workspace_object
         self.parent_subset_object = parent_subset_object
-        print('Initiating WorkStep: {}'.format(self.paths['step_directory']))
         
         """ 
         Input argument mapping_objects is a dictionary since there might be several mapping objects in the future. 
@@ -71,6 +71,8 @@ class WorkStep(object):
         self._create_folder_structure()
         self.load_all_files()
         self._check_folder_structure()        
+        
+        print('Initiating WorkStep: {}'.format(self.paths['step_directory']))    
         
     #==========================================================================
     def _create_folder_structure(self):
@@ -112,7 +114,7 @@ class WorkStep(object):
                     raise('PathError')
                 except:
                     pass
-                print('no folder set for: {}'.format(item))
+                self._logger.debug('no folder set for: {}'.format(item))
                 
         return all_ok
         
@@ -134,10 +136,10 @@ class WorkStep(object):
         Check to make sure that the default 
         """
         if self.parent_subset_object and self.parent_workspace_object.name == 'default':
-            print('Not allowed to change default workspace!')
+            self._logger.debug('Not allowed to change default workspace!')
             return False
         elif self.parent_subset_object and self.parent_subset_object.name == 'default_subset':
-            print('Not allowed to change default subset!')
+            self._logger.debug('Not allowed to change default subset!')
             return False
         return True
     
@@ -262,7 +264,7 @@ class WorkStep(object):
         for indicator, file_path in self.paths['indicator_settings_paths'].items(): 
             self._indicator_setting_files[indicator] = core.SettingsFile(file_path, mapping_objects=self.mapping_objects)
             if self._indicator_setting_files[indicator].indicator != indicator:
-                print('Missmatch in indicator name and object name! {}:{}'.format(self._indicator_setting_files[indicator].indicator, indicator))
+                self._logger.debug('Missmatch in indicator name and object name! {}:{}'.format(self._indicator_setting_files[indicator].indicator, indicator))
             
         # Load Filter settings. Filter settings are using indicator_setting_files-objects as data
         self.indicator_data_filter_settings = {} 
@@ -339,22 +341,22 @@ class WorkStep(object):
         Prints all path in the step.
         """
         sep_length = 100
-        print('='*sep_length)
-        print('='*sep_length)
-        print('{} paths'.format(self.name))
-        print('-'*sep_length)
+        self._logger.debug('='*sep_length)
+        self._logger.debug('='*sep_length)
+        self._logger.debug('{} paths'.format(self.name))
+        self._logger.debug('-'*sep_length)
         for item in sorted(self.paths.keys()):
             if type(self.paths[item]) == dict:
                 for path in sorted(self.paths[item].keys()):
                     if type(self.paths[item][path]) == dict:
                         for p in sorted(self.paths[item][path].keys()):
-                            print('-', self.paths[item][path][p])
+                            self._logger.debug('-', self.paths[item][path][p])
                     else:
-                        print(self.paths[item][path])
+                        self._logger.debug(self.paths[item][path])
             else:
-                print(self.paths[item])
+                self._logger.debug(self.paths[item])
                 
-        print('')
+        self._logger.debug('')
                 
     #==========================================================================
     def set_data_filter(self, filter_type='', filter_name='', data=None, save_filter=True): 
@@ -379,7 +381,7 @@ class WorkStep(object):
             
     #==========================================================================
     def show_settings(self):
-        print('first_filter:')
+        self._logger.debug('first_filter:')
         self.data_filter.show_filter()
         
         
@@ -399,6 +401,8 @@ class Subset(object):
         self.paths['parent_directory'] = parent_directory.replace('\\', '/')
         self.paths['subset_directory'] = '/'.join([self.paths['parent_directory'], self.name]) 
         self.parent_workspace_object = parent_workspace_object
+        self.paths['directory_path_log'] = self.parent_workspace_object.paths['directory_path_log']
+        
         print('-'*100)
         print('Initiating Subset: {}'.format(self.paths['subset_directory'])) 
         
@@ -408,6 +412,18 @@ class Subset(object):
         self._load_steps() 
         
         self._load_subset_config()
+        self.get_unique_id()
+        
+        # Check unique_id 
+        if self.name == 'default_subset': 
+            self.config_object.set_unique_id(self.name)
+        
+        self.unique_id = self.get_unique_id() 
+        
+        # Add logger 
+        if self.unique_id:
+            self.set_logger(self.unique_id)
+            self.set_loggers_to_steps()
         
         
     #==========================================================================
@@ -416,28 +432,47 @@ class Subset(object):
         self.steps = {}
             
     #==========================================================================
+    def set_logger(self, log_id):
+        # Add logger 
+        core.add_log(log_id=log_id, 
+                     log_directory=self.paths['directory_path_log'], 
+                     log_level='DEBUG', 
+                     on_screen=True, 
+                     prefix='subset')
+        self._logger = core.get_log(log_id)
+#        self._logger.debug('Logger set for subset {} with unique_id {}'.format(self. name, log_id))
+    
+    #==========================================================================
+    def set_loggers_to_steps(self): 
+        for step in self.steps.keys():
+            self.steps[step]._logger = self._logger
+            
+    #==========================================================================
+    def get_unique_id(self): 
+        return self.config_object.get_unique_id()
+    
+    #==========================================================================
     def _change_ok(self): 
         """
         Check to make sure that the default 
         """
         if self.parent_subset_object and self.parent_workspace_object.name == 'default':
-            print('Not allowed to change default workspace!')
+            self._logger.warning('Not allowed to change default workspace!')
             return False
         elif self.name == 'default_subset':
-            print('Not allowed to change default subset!')
+            self._logger.warning('Not allowed to change default subset!')
             return False
         return True
     
     #==========================================================================
     def _load_subset_config(self): 
-        self.config = Config(self.paths['subset_directory'] + '/subset.cfg')
+        self.config_object = Config(self.paths['subset_directory'] + '/subset.cfg')
         
     #==========================================================================
     def _load_steps(self): 
         if not os.path.exists(self.paths['subset_directory']): 
             os.makedirs(self.paths['subset_directory'])
         step_list = [item for item in os.listdir(self.paths['subset_directory']) if '.' not in item]
-        print('step_list', step_list)
         for step in step_list:
             self._load_workstep(step)
         
@@ -448,7 +483,6 @@ class Subset(object):
         This method is used to copy (branching) an entire subset. 
         """ 
         for step in subset_object.get_step_list(): 
-            print('step:', step)
             self._load_workstep(step)
             step_object = subset_object.get_step_object(step)
             self.steps[step].add_files_from_workstep(step_object=step_object, 
@@ -457,10 +491,10 @@ class Subset(object):
         # Copy config file
         # This is done in Workspace since new uuid needs to be given
 #        if os.path.exists(subset_object.config_file_path):
-#            if os.path.exists(self.config_file_path) and not overwrite: 
+#            if os.path.exists(self.config_object_file_path) and not overwrite: 
 #                return False 
 #            
-#            shutil.copy(subset_object.config_file_path, self.config_file_path)
+#            shutil.copy(subset_object.config_file_path, self.config_object_file_path)
 #            self._load_config()
         return True
             
@@ -489,7 +523,7 @@ class Subset(object):
     
     #==========================================================================
     def deprecated_get_alias(self): 
-        alias = self.config.get_config('alias') 
+        alias = self.config_object.get_config('alias') 
         if not alias:
             return '' 
         
@@ -498,11 +532,7 @@ class Subset(object):
         """
         Sets a unique id (UUID) to the subset. Will not overwrite an existing one. 
         """
-        self.unique_id = self.config.set_unique_id()  
-        
-    #==========================================================================
-    def get_unique_id(self): 
-        return self.unique_id 
+        self.unique_id = self.config_object.set_unique_id()  
         
     #==========================================================================
     def get_all_file_paths_in_subset(self): 
@@ -555,15 +585,15 @@ class Subset(object):
     #==========================================================================
     def load_data(self, step): 
         if step not in self.steps.keys():
-            print('Invalid step "{}" given to load data in subset "{}"!'.format(step, self.name))
+            self._logger.debug('Invalid step "{}" given to load data in subset "{}"!'.format(step, self.name))
             return False 
             
         self.steps[step].load_data()
     
     #==========================================================================
     def deprecated_set_alias(self, alias):
-        print('New alias for subset "{}" => "{}"'.format(self.config.get_config('alias'), alias))
-        self.config.set_config('alias', alias)
+        self._logger.debug('New alias for subset "{}" => "{}"'.format(self.config_object.get_config('alias'), alias))
+        self.config_object.set_config('alias', alias)
         
     #==========================================================================
     def rename_paths(self, from_name, to_name, pre_directory=''): 
@@ -579,7 +609,7 @@ class Subset(object):
     #==========================================================================
     def rename_subset(self, new_name): 
         if new_name.lower() in ['subset', 'default_subset']: 
-            print('Invalid name "{}" for subset!'.format(new_name))
+            self._logger.debug('Invalid name "{}" for subset!'.format(new_name))
             return False 
         
         current_directory = self.paths['subset_directory']
@@ -596,7 +626,7 @@ class Subset(object):
         os.rename(current_directory, new_directory) 
         
         # Set path in config file 
-        self.config.set_path(self.name, new_name, pre_directory='subsets')
+        self.config_object.set_path(self.name, new_name, pre_directory='subsets')
         
         self.name = new_name
         
@@ -613,7 +643,7 @@ class Subset(object):
             self.steps[step].rename_paths(from_name, to_name, pre_directory='workspaces')  
             
         # Set path in config file 
-        self.config.set_path(from_name, to_name, pre_directory='workspaces')
+        self.config_object.set_path(from_name, to_name, pre_directory='workspaces')
         
         return True
             
@@ -623,25 +653,25 @@ class Subset(object):
         Prints all path in the subset.
         """
         sep_length = 100
-        print('='*sep_length)
-        print('='*sep_length) 
-        print('Subset {} paths'.format(self.name))
-        print('-'*sep_length)
+        self._logger.debug('='*sep_length)
+        self._logger.debug('='*sep_length) 
+        self._logger.debug('Subset {} paths'.format(self.name))
+        self._logger.debug('-'*sep_length)
         for item in sorted(self.paths.keys()):
             if type(self.paths[item]) == dict:
                 for path in sorted(self.paths[item].keys()):
                     if type(self.paths[item][path]) == dict:
                         for p in sorted(self.paths[item][path].keys()):
-                            print('-', self.paths[item][path][p])
+                            self._logger.debug('-', self.paths[item][path][p])
                     else:
-                        print(self.paths[item][path])
+                        self._logger.debug(self.paths[item][path])
             else:
-                print(self.paths[item])
+                self._logger.debug(self.paths[item])
             
         for step in sorted(self.steps.keys()):
             self.steps[step].print_all_paths() 
         
-        print('')
+        self._logger.debug('')
                 
     #==========================================================================
     def set_data_filter(self, step='', filter_type='', filter_name='', data=None, save_filter=True):  
@@ -669,23 +699,61 @@ class WorkSpace(object):
         assert all([name, parent_directory])
         assert nr_subsets_allowed
         
+        
+        
         # Initiate paths 
         self.paths = {}
         self.name = name 
         self.paths['parent_directory'] = parent_directory.replace('\\', '/')
         self.paths['resource_directory'] = resource_directory.replace('\\', '/')
         self.nr_subsets_allowed = nr_subsets_allowed
-         
+        
         self._initiate_attributes()
         
         self._setup_workspace()
-        self._load_config_files()
-            
+        
+        # Check unique_id 
+        if self.name == 'default': 
+            self.config_object.set_unique_id(self.name)
+        
+        self.unique_id = self.get_unique_id() 
+        print('==', '"{}"'.format(self.unique_id))
+        
+        # Add logger
+        if self.unique_id:
+            self.set_logger(self.unique_id)
+            self.set_loggers_to_steps()
+        
+        self._load_config_files() 
+        
+    #==========================================================================
+    def set_logger(self, log_id):
+        # Add logger 
+        core.add_log(log_id=log_id, 
+                     log_directory=self.paths['directory_path_log'], 
+                     log_level='DEBUG', 
+                     on_screen=True, 
+                     prefix='workspace')
+        self._logger = core.get_log(log_id)
+#        self._logger.debug('Logger set for workspace {} with unique_id {}'.format(self. name, self.unique_id))
+           
+    #==========================================================================
+    def set_loggers_to_steps(self): 
+        self.step_0._logger = self._logger
+        for subset in self.subset_dict.keys():
+            self.subset_dict[subset].set_loggers_to_steps()
+        
+    #==========================================================================
+    def get_unique_id(self): 
+        return self.config_object.get_unique_id()
+        
     #==========================================================================
     def _initiate_attributes(self): 
+        
         # Setup default paths 
         self.paths['mapping_directory'] = '/'.join([self.paths['resource_directory'], 'mappings'])
         self.paths['workspace_directory'] = '/'.join([self.paths['parent_directory'], self.name]) 
+
         print('')
         print('='*100)
         print('Initiating WorkSpace: {}'.format(self.paths['workspace_directory'])) 
@@ -696,6 +764,7 @@ class WorkSpace(object):
         self.paths['directory_path_input_data'] = self.paths['workspace_directory'] + '/input_data'
         self.paths['directory_path_raw_data'] = self.paths['directory_path_input_data'] + '/raw_data'
         self.paths['directory_path_subset'] = self.paths['workspace_directory'] + '/subsets'
+        self.paths['directory_path_log'] = self.paths['workspace_directory'] + '/log'
         
         # Step
         self.step_0 = None 
@@ -713,7 +782,7 @@ class WorkSpace(object):
         Check to make sure that default workspace is not changed. 
         """
         if self.name == 'default':
-            print('Not allowed to change default workspace!')
+            self._logger.debug('Not allowed to change default workspace!')
             return False
         return True
         
@@ -735,7 +804,7 @@ class WorkSpace(object):
             os.makedirs(self.paths['directory_path_subset'])
             
         subsets = os.listdir(self.paths['directory_path_subset'])
-#        print('subsets', subsets)
+#        self._logger.debug('subsets', subsets)
         if subsets:
             for s in subsets:
                 self._add_subset(s)
@@ -760,7 +829,6 @@ class WorkSpace(object):
         
     #==========================================================================
     def _load_config_files(self):       
-        
         self.cf_df = pd.read_csv(self.paths['resource_directory'] + '/Quality_Elements.cfg', sep='\t', dtype='str', encoding='cp1252')
         assert all(['quality element' in self.cf_df.keys(), 'indicator' in self.cf_df.keys(), 'parameters' in self.cf_df.keys()]), 'configuration file must contain quality element, indicator and parameters information'
         self.cfg = {}
@@ -773,7 +841,8 @@ class WorkSpace(object):
 
     #==========================================================================
     def _load_workspace_config(self): 
-        self.config = Config(self.paths['workspace_directory'] + '/workspace.cfg')   
+        self.config_object = Config(self.paths['workspace_directory'] + '/workspace.cfg')   
+        
 
     #==========================================================================
     def import_file(self, file_path=None, data_type=None):
@@ -804,7 +873,7 @@ class WorkSpace(object):
         
         if os.listdir(self.paths['directory_path_raw_data']): 
             if not force:
-                print('raw_data directory is not empty. Will not copy default files from resource directory!')
+                self._logger.debug('raw_data directory is not empty. Will not copy default files from resource directory!')
                 return False
         
         source_directory = self.paths['resource_directory'] + '/default_data'  
@@ -825,7 +894,7 @@ class WorkSpace(object):
         all_ok = self.dtype_settings.load_and_sync_dtype_settings()
         
         if not all_ok:
-            print('Default data not loaded correctly!')
+            self._logger.debug('Default data not loaded correctly!')
             return False
         return True
         
@@ -851,28 +920,33 @@ class WorkSpace(object):
                                               parent_directory=self.paths['parent_directory'],
                                               resource_directory=self.paths['resource_directory']) 
         
+        # Load config files. One for workspace and one for each subset. 
+        # The config file are copies of the existing ones but with new uuid 
+        # Workspace config 
+        des_path = new_workspace_object.config_object.file_path 
+        new_workspace_object.config_object = self.config_object.make_copy_of_config(des_path)
+        
+        # Set logger
+        new_workspace_object.unique_id = new_workspace_object.config_object.get_unique_id()
+        new_workspace_object.set_logger(new_workspace_object.unique_id)
+        
         # Copy files to new workspace
-        new_workspace_object._add_files_from_workspace(self, overwrite=overwrite)
+        new_workspace_object._add_files_from_workspace(self, overwrite=overwrite) 
+
+        # Subset configs
+        for subset in new_workspace_object.subset_dict.keys(): 
+            des_path = new_workspace_object.subset_dict[subset].config_object.file_path
+            new_workspace_object.subset_dict[subset].config_object = self.subset_dict[subset].config_object.make_copy_of_config(des_path)
         
         # Load data in workspace 
         data_loaded = new_workspace_object.load_all_data()
         
         if data_loaded:
-            print('Data loaded!')
+            self._logger.debug('Data loaded!')
         else:
-            print('No data to load! Consider loading default data by calling <workspace_objetc>.load_default_data()')
+            self._logger.debug('No data to load! Consider loading default data by calling <workspace_objetc>.load_default_data()')
             
-        # Load config files. One for workspace and one for each subset. 
-        # The config file are copies of the existing ones but with new uuid 
-        # Workspace config 
-        des_path = new_workspace_object.config.file_path 
-        new_workspace_object.config = self.config.make_copy_of_config(des_path)
-        print(self.name)
-        print(new_workspace_object.name)
-        # Subset configs
-        for subset in new_workspace_object.subset_dict.keys(): 
-            des_path = new_workspace_object.subset_dict[subset].config.file_path
-            new_workspace_object.subset_dict[subset].config = self.subset_dict[subset].config.make_copy_of_config(des_path)
+        
         
         return new_workspace_object
         
@@ -914,10 +988,10 @@ class WorkSpace(object):
     def _add_subset(self, sub=None): 
         assert sub, 'No subset name given!'
         if sub in self.subset_dict.keys():
-            print('Given subset is already present!')
+            self._logger.debug('Given subset "{}" is already present!'.format(sub))
             return False
         
-#        print('== {}'.format(sub))
+#        self._logger.debug('== {}'.format(sub))
         self.paths['directory_path_subsets'][sub] = self.paths['directory_path_subset'] + '/{}'.format(sub)
         self.subset_dict[sub] = Subset(name=sub, 
                                        parent_directory=self.paths['directory_path_subset'],
@@ -974,11 +1048,11 @@ class WorkSpace(object):
             filter_object = self.step_0.data_filter
             
         elif int(step[-1]) > 2: 
-            print('No data filter in {}'.format(step))
+            self._logger.debug('No data filter in {}'.format(step))
             return False
         
         elif subset not in self.get_subset_list(): 
-            print('Provides subset "{}" not in subset list'.format(subset))
+            self._logger.debug('Provides subset "{}" not in subset list'.format(subset))
             return False
         else:
             subset_object = self.get_subset_object(subset) 
@@ -1008,7 +1082,7 @@ class WorkSpace(object):
         """
         
         if subset not in self.get_subset_list(): 
-            print('Provides subset "{}" not in subset list'.format(subset))
+            self._logger.debug('Provides subset "{}" not in subset list'.format(subset))
             return False
         else:
             step = get_step_name(step)
@@ -1027,7 +1101,7 @@ class WorkSpace(object):
         """
         step = 2
         if subset not in self.get_subset_list(): 
-            print('Provides subset "{}" not in subset list'.format(subset))
+            self._logger.debug('Provides subset "{}" not in subset list'.format(subset))
             return False
         else:
             step = get_step_name(step)
@@ -1073,11 +1147,11 @@ class WorkSpace(object):
         assert all([from_name, to_name]) 
         
         if to_name.lower() in ['subset', 'default_subset']: 
-            print('Invalid name "{}" for subset!'.format(to_name)) 
+            self._logger.debug('Invalid name "{}" for subset!'.format(to_name)) 
             return False 
         
         if to_name in self.subset_dict.keys():
-            print('Invalid name "{}" for subset! subset already excists!'.format(to_name)) 
+            self._logger.debug('Invalid name "{}" for subset! subset already excists!'.format(to_name)) 
             return False 
             
         subset_object = self.get_subset_object(from_name)
@@ -1102,14 +1176,14 @@ class WorkSpace(object):
         """  
         
         if not self._change_ok(): 
-            print('Not allowed to rename workspace!') 
+            self._logger.debug('Not allowed to rename workspace!') 
             return False  
             
         current_directory = self.paths['workspace_directory']
         new_directory = '{}/{}'.format(self.paths['parent_directory'], to_name) 
         
         if os.path.exists(new_directory):
-            print('Workspace "{}" already excists. Can not rename workspace!'.format(to_name))
+            self._logger.debug('Workspace "{}" already excists. Can not rename workspace!'.format(to_name))
             return False
         
         # Rename paths in Workspace 
@@ -1123,11 +1197,11 @@ class WorkSpace(object):
             self.subset_dict[subset].rename_workspace(self.name, to_name)
         
         # Set path in config file 
-        self.config.set_path(self.name, to_name, pre_directory='workspaces') 
+        self.config_object.set_path(self.name, to_name, pre_directory='workspaces') 
         
         # Rename directory 
-#        print(from_path)
-#        print(to_path)
+#        self._logger.debug(from_path)
+#        self._logger.debug(to_path)
         os.rename(current_directory, new_directory)
         
         self.name = to_name 
@@ -1138,27 +1212,27 @@ class WorkSpace(object):
         Prints all path in the workspace.
         """
         sep_length = 100
-        print('='*sep_length)
-        print('='*sep_length)
-        print('Workspace root paths')
-        print('-'*sep_length)
+        self._logger.debug('='*sep_length)
+        self._logger.debug('='*sep_length)
+        self._logger.debug('Workspace root paths')
+        self._logger.debug('-'*sep_length)
         for item in sorted(self.paths.keys()):
             if type(self.paths[item]) == dict:
                 for path in sorted(self.paths[item].keys()):
                     if type(self.paths[item][path]) == dict:
                         for p in sorted(self.paths[item][path].keys()):
-                            print('-', self.paths[item][path][p])
+                            self._logger.debug('-', self.paths[item][path][p])
                     else:
-                        print(self.paths[item][path])
+                        self._logger.debug(self.paths[item][path])
             else:
-                print(self.paths[item])
+                self._logger.debug(self.paths[item])
                 
         self.step_0.print_all_paths()
         
         for subset in sorted(self.subset_dict.keys()):
             self.subset_dict[subset].print_all_paths()
         
-        print('')
+        self._logger.debug('')
         
         
     #==========================================================================
@@ -1222,7 +1296,7 @@ class WorkSpace(object):
         step = get_step_name(step)
         if step == None:
             return False
-        print('STEP', step)
+        self._logger.debug('STEP', step)
         return self.index_handler.get_filtered_data(subset=subset, step=step, water_body=water_body, indicator=indicator)
     
     #==========================================================================
@@ -1309,16 +1383,16 @@ class WorkSpace(object):
 #        for index, row in dtype_settings.iterrows():
 #            
 #            if row.filename.startswith('#'):
-#                print('\nSkipping', row.filename+'\n')
+#                self._logger.debug('\nSkipping', row.filename+'\n')
 #                continue
 #            
-#            print(row.keys())
+#            self._logger.debug(row.keys())
 #            if row['data_type'] == 'phyche':
 #                self.data_handler.physical_chemical.load_source(file_path=raw_data_file_path + row.filename,
 
         self.dtype_settings = core.RawDataFiles(self.paths['directory_path_raw_data'])
         if not self.dtype_settings.has_info:
-            print('No info found')
+            self._logger.debug('No info found')
             return False
         data_loaded = False
         for file_path, data_type in self.dtype_settings.get_active_paths_with_data_type(): 
@@ -1352,7 +1426,7 @@ class WorkSpace(object):
                 data_loaded = True
                 self.data_handler.chlorophyll.save_data_as_txt(directory=output_directory, prefix=u'Column_format')   
             else:
-                print('could not read {} from raw_data directory. Check data type'.format(os.path.basename(file_path)))
+                self._logger.debug('could not read {} from raw_data directory. Check data type'.format(os.path.basename(file_path)))
 
         
         self.data_handler.merge_all_data(save_to_txt=True)
@@ -1365,10 +1439,10 @@ class WorkSpace(object):
 #        
 #        for index, row in dtype_settings.iterrows(): 
 #            if row.filename.startswith('#'):
-#                print('\nSkipping', row.filename+'\n')
+#                self._logger.debug('\nSkipping', row.filename+'\n')
 #                continue
 #            
-#            print(row.keys())
+#            self._logger.debug(row.keys())
 #            if row['data_type'] == 'phyche':
 #                self.data_handler.physical_chemical.load_source(file_path=raw_data_file_path + row.filename,
 #                                                                raw_data_copy=True)
@@ -1386,7 +1460,7 @@ class WorkSpace(object):
 #                                                         raw_data_copy=True)
 #                self.data_handler.chlorophyll.save_data_as_txt(directory=output_directory, prefix=u'Column_format')   
 #            else:
-#                print('could not read {} from raw_data directory. Check data type'.format(row.filename))
+#                self._logger.debug('could not read {} from raw_data directory. Check data type'.format(row.filename))
 #
 #        
 #        self.data_handler.merge_all_data(save_to_txt=True)
@@ -1462,7 +1536,7 @@ class WorkSpace(object):
         if not step_object:
             return False
         if int(step[-1]) > 2:
-            print('Data filter can only be applied on step_2 or lower!')
+            self._logger.debug('Data filter can only be applied on step_2 or lower!')
             return False
         return step_object.set_data_filter(filter_type=filter_type, 
                                             filter_name=filter_name, 
@@ -1528,12 +1602,15 @@ class WorkSpace(object):
 #==========================================================================
 class Config(dict): 
     def __init__(self, file_path): 
+#        self.file_path = pathlib.Path(file_path)
         self.file_path = file_path
-        if not os.path.exists(file_path):
-            with codecs.open(file_path, 'w', encoding='cp1252') as fid: 
+        
+        # Log directories.
+        if not os.path.exists(self.file_path):
+            with codecs.open(self.file_path, 'w', encoding='cp1252') as fid: 
                 fid.write('')
         else:
-            with codecs.open(file_path, encoding='cp1252') as fid:
+            with codecs.open(self.file_path, encoding='cp1252') as fid:
                 for line in fid: 
                     line = line.strip()
                     if not line:
@@ -1552,11 +1629,27 @@ class Config(dict):
         self.save_file()
     
     #==========================================================================
-    def set_unique_id(self): 
+    def set_unique_id(self, unique_id=None): 
         if not self.get('unique_id'):
+#            if unique_id:
+#                self['unique_id'] = unique_id
+#            else:
             self['unique_id'] = str(uuid.uuid4())
             self.save_file()
         return self['unique_id']
+    
+    #==========================================================================
+    def set_name(self, name): 
+        self['name'] = name 
+        self.save_file()
+        
+    #==========================================================================
+    def get_name(self): 
+        return self.get('name', False)
+    
+    #==========================================================================
+    def get_unique_id(self): 
+        return self.get('unique_id', False)
     
     #==========================================================================
     def save_file(self):
@@ -1600,7 +1693,7 @@ class Config(dict):
 #==============================================================================
 #==============================================================================
 def get_step_name(step): 
-#    print('STEP', step)
+#    self._logger.debug('STEP', step)
     if step == None:
         return step
     step = str(step)
@@ -1634,10 +1727,10 @@ if __name__ == '__main__':
         file_list = []
         new_file_list = []
         for root, dirs, files in os.walk(directory): 
-    #            print(root.replace('\\', '/'))
+    #            self._logger.debug(root.replace('\\', '/'))
     #             level = root.replace(directory, '').count(os.sep)
     #             indent = ' ' * 4 * (level)
-    #             print('{}{}/'.format(indent, os.path.basename(root)))
+    #             self._logger.debug('{}{}/'.format(indent, os.path.basename(root)))
     #             subindent = ' ' * 4 * (level + 1)
                 for f in files:
     #                 file_list.append('/'.join([os.path.basename(root), f]))

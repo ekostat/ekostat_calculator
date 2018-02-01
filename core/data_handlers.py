@@ -470,6 +470,9 @@ class DataFrameHandler(ColumnDataHandler, RowDataHandler):
             
         file_path = directory + '_'.join([prefix, self.dtype, 'data.txt'])
         print(u'Saving data to:',file_path)
+        dir_name = os.path.dirname(file_path)
+        if not os.path.exists(dir_name):
+            os.makedirs(dir_name)
         self.df.to_csv(file_path, sep='\t', encoding='cp1252', index=False)
 
     #==========================================================================
