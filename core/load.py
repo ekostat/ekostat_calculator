@@ -53,6 +53,7 @@ class Load(object):
         array will be either a list of dictionaries or one single dictionary 
         depending on what the json file includes
         """
+        print(file_path)
         with open(file_path, 'r') as f:
             array = json.load(f)
         

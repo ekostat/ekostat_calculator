@@ -1,0 +1,85 @@
+{
+    "available_water_districts": [
+        {
+            "label": "",
+            "value": "",
+            "selectable": true
+        },
+        {
+            "label": "",
+            "value": "",
+            "selectable": true
+        }
+    ],
+    "available_water_bodies": [
+        {
+            "label": "",
+            "value": "",
+            "selectable": true
+        },
+        {
+            "label": "",
+            "value": "",
+            "selectable": true
+        }
+    ],
+    "available_types": [
+        {
+            "label": "",
+            "value": "",
+            "selectable": false
+        },
+        {
+            "label": "",
+            "value": "",
+            "selectable": true
+        }
+    ],
+    "available_periods": [
+        {
+            "label": "",
+            "value": "",
+            "selectable": true
+        }
+    ],
+    "available_quality_elements": [
+        {
+            "label": "",
+            "children": [
+                {
+                    "label": "555",
+                    "value": "",
+                    "selectable": true
+                },
+                {
+                    "label": "",
+                    "value": "",
+                    "selectable": true
+                }
+            ]
+        }
+    ],
+    "available_supporting_elements": [
+        {
+            "label": "",
+            "children": [
+                {
+                    "label": "",
+                    "value": "",
+                    "selectable": true
+                },
+                {
+                    "label": "",
+                    "value": "",
+                    "selectable": true
+                }
+            ]
+        }
+    ],
+    "selected_water_district": "",
+    "selected_water_bodies": [],
+    "selected_types": [],
+    "selected_period": "",
+    "selected_quality_elements": [],
+    "selected_supporting_elements": []
+}

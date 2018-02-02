@@ -85,7 +85,7 @@ class IndexHandler(object):
                     
                 else:
                     # No boolean from parent, use new boolean from filter_object
-                    # This one should only be possible fro 'step_0' due to else-sats below..
+                    # This one should only be possible for 'step_0' due to else-sats below..
                     bool_dict[key]['boolean'] = filter_object.get_filter_boolean_for_df(df, water_body=wb)
                 break
             
@@ -95,7 +95,7 @@ class IndexHandler(object):
                     bool_dict[key]['boolean'] = bool_dict.get('boolean').copy()
                 
                 # "dynamic reference" to a specific part of self.booleans
-                bool_dict = bool_dict[key]
+                bool_dict = bool_dict.get(key)
 
 
     #==========================================================================
@@ -128,7 +128,7 @@ class IndexHandler(object):
                 yield key
                 yield from self._get_keys_from_dict(value)
             else:
-                yield key    
+                yield key
                 
                 
     #==========================================================================
@@ -215,12 +215,8 @@ class IndexHandler(object):
         df = self.data_handler_object.get_all_column_data_df()
         
         step_0, step_1, step_2 = self._get_steps(step=step)
-        
-#        print(step_0, subset, step_1, step_2, water_body, indicator)
-        
+                
         self._set_dict(step_0, subset, step_1, step_2, water_body, indicator)
-        
-#        print(self.booleans)
         
         self._add_boolean_to_dict(step_0, subset, step_1, step_2, water_body, indicator,
                                   filter_object=filter_object, 

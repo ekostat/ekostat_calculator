@@ -1,0 +1,85 @@
+{
+	"available_water_districts": [
+		{
+			"label": "Bottenhavet",
+			"value": "Bottenhavet",
+			"selectable": true
+		},
+		{
+			"label": "Skagerakk",
+			"value": "Skagerakk",
+			"selectable": true
+		}
+	],
+	"available_water_bodies": [
+		{
+			"label": "WB 1",
+			"value": "WB 1",
+			"selectable": true
+		},
+		{
+			"label": "WB 2",
+			"value": "WB 2",
+			"selectable": true
+		}
+	],
+	"available_types": [
+		{
+			"label": "Type A",
+			"value": "Type A",
+			"selectable": false
+		},
+		{
+			"label": "Type B",
+			"value": "Type B",
+			"selectable": true
+		}
+	],
+	"available_periods": [
+		{
+			"label": "2006 - 2012",
+			"value": "2006 - 2012",
+			"selectable": true
+		}
+	],
+	"available_quality_elements": [
+		{
+			"label": "Phytoplankton",
+			"children": [
+				{
+					"label": "Chlorophyll - default",
+					"value": "Chlorophyll - default",
+					"selectable": true
+				},
+				{
+					"label": "Chlorophyll *- conc",
+					"value": "Chlorophyll *- conc",
+					"selectable": true
+				}
+			]
+		}
+	],
+	"available_supporting_elements": [
+		{
+			"label": "Nutrients",
+			"children": [
+				{
+					"label": "N, winter",
+					"value": "N, winter",
+					"selectable": true
+				},
+				{
+					"label": "N, summer",
+					"value": "N, summer",
+					"selectable": true
+				}
+			]
+		}
+	],
+	"selected_water_district": "Bottenhavet",
+	"selected_water_bodies": ["WB 1", "WB 2"],
+	"selected_types": ["Type A"],
+	"selected_period": "2006 - 2012",
+	"selected_quality_elements": ["Chlorophyll *- conc"],
+	"selected_supporting_elements": ["N, winter"],
+}

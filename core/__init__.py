@@ -2,6 +2,8 @@
 
 from .data_handlers import DataHandler
 
+from .export import Export
+
 from .filters import DataFilter
 from .filters import ToleranceFilter
 from .filters import SettingsFile

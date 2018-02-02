@@ -1,0 +1,58 @@
+{
+	"info": {
+		"water_district": "",
+		"types": [],
+		"water_bodies": [],
+		"periods": []
+	},
+	"datasets": [
+		[
+			{
+				"label": "",
+				"value": ""
+			},
+			{
+				"label": "",
+				"value": ""
+			},
+			{
+				"label": "",
+				"value": "",
+				"probability": {
+					"labels": [],
+					"values": []
+				}
+			},
+			{
+				"label": "",
+				"value": "",
+				"children": [
+					{
+						"label": "",
+						"value": "",
+						"children": [
+							{
+								"label": "",
+								"value": ""
+							},
+							{
+								"label": "",
+								"value": ""
+							}
+						]
+					},
+				]
+			},
+			{
+				"label": "",
+				"value": "",
+				"children": [
+					{
+						"label": "",
+						"value": ""
+					}
+				]
+			}
+		]
+	]
+}
