@@ -47,25 +47,50 @@ class jsonHandler(object):
         """
         
         self.out_file = []
-                        
+    
+
     #==========================================================================
-    def _check_key(self, key):
+    def _get_dictionary_reference(self, dictionary={}, dict_path=[]):
         """
         """
-        list(self.find_key(key, self.json_file))
-        return 
-        
+        for key in dict_path:
+            if isinstance(key, str) and key not in dictionary:
+                return None
+            dictionary = dictionary[key]
+        return dictionary
+            
         
     #==========================================================================
-    def add_element(self, main_key='', label='', value=''):
+#    def _check_key(self, key):
+#        """
+#        """
+#        list(self.find_key(key, self.json_file))
+#        return 
+        
+
+    #==========================================================================
+    def add_element(self, main_key='', label='', value='', dict_path=None, add_dict={}):
         """
+        main_key: 
+        label: 
+        value: 
+        dict_path: list with a direct path to target key. Ex. ['info','types', 0, 'label']
+        
         """
-        self._check_key(main_key)
-        list(self.find_key(main_key, self.json_file))
+#        self._check_key(main_key)
+        if main_key and self.json_file.get(main_key) is not None:
+            return
+        
+        if dict_path is not None:
+            ref = self._get_dictionary_reference(dictionary=self.json_file,
+                                                 dict_path=dict_path)
         
         
         
-        self.json_file[main_key]
+        
+#        list(self.find_key(main_key, self.json_file))
+#        self.json_file[main_key]
+
 
     #==========================================================================
     def update_element(self, main_key='', label='', value=''):
@@ -104,7 +129,7 @@ class jsonHandler(object):
                                       data_dict=self.json_file)
             
         else:
-            raise UserWarning('No out file specified for export to .json')
+            raise UserWarning('No outfile specified for export to .json')
         
         
     #==========================================================================
@@ -115,17 +140,20 @@ class jsonHandler(object):
         """
         
         if isinstance(dictionary, list):
+            
             for d in dictionary:
                 for result in self.find_key(key, d):
                     yield result
                     
-        else:            
+        else:    
             for k, v in dictionary.items():
                 if k == key:
                     yield v
+                    
                 elif isinstance(v, dict):
                     for result in self.find_key(key, v):
                         yield result
+                        
                 elif isinstance(v, list):
                     for d in v:
                         for result in self.find_key(key, d):
@@ -136,26 +164,31 @@ class jsonHandler(object):
     def get_dict(self, key=None):
         """
         Find a dictionary based on a specific key within the target dictionary
+        json_file could potentially be a list with dictionaries within 
         """
         
         if isinstance(self.json_file, list):
             for element in self.json_file:
                 if key in element:
-                    return element
-                
-            UserWarning('KEY: '+ key + ' not in json file')
+                    return element.get(key)
+            return None
+#            UserWarning('KEY: '+ key + ' not in json file')
             
         elif isinstance(self.json_file, dict):
-            if key in self.json_file:
-                return self.json_file.get(key)
-            else:
-                UserWarning('KEY: '+ key + ' not in json file')
+            return self.json_file.get(key)
                 
         else:
             raise UserWarning('The intended use of a json file has an unrecognizable format', 
                               type(self.json_file))
 
-
+    
+    #==========================================================================
+    def setup_dict(self, keys=[]):
+        """
+        """
+        return {key:True for key in keys}
+        
+        
     #==========================================================================
     def load(self, file_path=u''):
         """
@@ -226,7 +259,7 @@ if __name__ == '__main__':
 #    pprint(list(json_handler.find_key('available_water_bodies', json_handler.json_file.get('available_water_bodies')))) # use pprint instead of print, bra grejer :)
     
     list(json_handler.find_key('selected_period', json_handler.json_file))
-#    json_handler.get_dict(key='available_supporting_elements')
+    json_handler.get_dict(key='available_supporting_elements')
 #    json_handler.export(out_source='sample_sample.json', out_file=d)
     
 
@@ -263,4 +296,3 @@ if __name__ == '__main__':
     print('-'*50)
     print('done')
     print('-'*50)
-  
