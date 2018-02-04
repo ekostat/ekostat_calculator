@@ -78,3 +78,9 @@
 2018-02-01 16:25:20,996	logger.py	86	add_log	DEBUG	========================================================================================================================
 2018-02-01 16:25:20,996	logger.py	87	add_log	DEBUG	### Log added for log_id "8d254cdf-b1ec-401c-baa7-6ec5e4ca59e8" at locaton: D:\Utveckling\git\ekostat_calculator\workspaces\default\log\subset_8d254cdf-b1ec-401c-baa7-6ec5e4ca59e8.log
 2018-02-01 16:25:20,996	logger.py	88	add_log	DEBUG	------------------------------------------------------------------------------------------------------------------------
+2018-02-02 08:25:02,198	logger.py	85	add_log	DEBUG	
+2018-02-02 08:25:02,199	logger.py	86	add_log	DEBUG	========================================================================================================================
+2018-02-02 08:25:02,202	logger.py	87	add_log	DEBUG	### Log added for log_id "8d254cdf-b1ec-401c-baa7-6ec5e4ca59e8" at locaton: ..\workspaces\default\log\subset_8d254cdf-b1ec-401c-baa7-6ec5e4ca59e8.log
+2018-02-02 08:25:02,208	logger.py	88	add_log	DEBUG	------------------------------------------------------------------------------------------------------------------------
+2018-02-02 08:25:36,834	workspaces.py	139	_change_ok	DEBUG	Not allowed to change default workspace!
+2018-02-02 08:25:59,435	workspaces.py	139	_change_ok	DEBUG	Not allowed to change default workspace!

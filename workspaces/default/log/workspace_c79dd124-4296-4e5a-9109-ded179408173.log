@@ -82,3 +82,13 @@
 2018-02-01 16:25:21,190	logger.py	86	add_log	DEBUG	========================================================================================================================
 2018-02-01 16:25:21,190	logger.py	87	add_log	DEBUG	### Log added for log_id "c79dd124-4296-4e5a-9109-ded179408173" at locaton: D:\Utveckling\git\ekostat_calculator\workspaces\default\log\workspace_c79dd124-4296-4e5a-9109-ded179408173.log
 2018-02-01 16:25:21,191	logger.py	88	add_log	DEBUG	------------------------------------------------------------------------------------------------------------------------
+2018-02-02 08:25:02,536	logger.py	85	add_log	DEBUG	
+2018-02-02 08:25:02,536	logger.py	86	add_log	DEBUG	========================================================================================================================
+2018-02-02 08:25:02,536	logger.py	87	add_log	DEBUG	### Log added for log_id "c79dd124-4296-4e5a-9109-ded179408173" at locaton: ..\workspaces\default\log\workspace_c79dd124-4296-4e5a-9109-ded179408173.log
+2018-02-02 08:25:02,536	logger.py	88	add_log	DEBUG	------------------------------------------------------------------------------------------------------------------------
+2018-02-02 08:25:36,821	workspaces.py	785	_change_ok	DEBUG	Not allowed to change default workspace!
+2018-02-02 08:25:36,827	workspaces.py	785	_change_ok	DEBUG	Not allowed to change default workspace!
+2018-02-02 08:25:36,830	workspaces.py	785	_change_ok	DEBUG	Not allowed to change default workspace!
+2018-02-02 08:25:59,419	workspaces.py	785	_change_ok	DEBUG	Not allowed to change default workspace!
+2018-02-02 08:25:59,419	workspaces.py	785	_change_ok	DEBUG	Not allowed to change default workspace!
+2018-02-02 08:25:59,435	workspaces.py	785	_change_ok	DEBUG	Not allowed to change default workspace!

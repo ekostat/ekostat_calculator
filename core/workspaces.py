@@ -1123,8 +1123,8 @@ class WorkSpace(object):
             return all_ok
         
         # Copy subset.cfg. This will give the new subset a new uuid 
-        des_path = self.subset_dict[target_subset_name].config.file_path
-        self.subset_dict[target_subset_name].config = self.subset_dict[source_subset_name].config.make_copy_of_config(des_path) 
+        des_path = self.subset_dict[target_subset_name].config_object.file_path
+        self.subset_dict[target_subset_name].config_object = self.subset_dict[source_subset_name].config_object.make_copy_of_config(des_path) 
         
         return True
     
@@ -1296,7 +1296,7 @@ class WorkSpace(object):
         step = get_step_name(step)
         if step == None:
             return False
-        self._logger.debug('STEP', step)
+        self._logger.debug('STEP: {}'.format(step))
         return self.index_handler.get_filtered_data(subset=subset, step=step, water_body=water_body, indicator=indicator)
     
     #==========================================================================
