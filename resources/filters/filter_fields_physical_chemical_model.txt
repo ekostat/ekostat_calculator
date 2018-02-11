@@ -1,5 +1,5 @@
 compulsory_fields	fields_index	sort_by_fields	use_parameters	visit_id_key	depth_key	parameter_key	value_key	qflag_key
-VISS_EU_ID		VISS_EU_ID	SALT_BTL		DEPH			
+VISS_EU_ID		VISS_EU_ID	SALT_BTL		DEPH	PARAM		
 SDATE		SDATE	DOXY_BTL					
 DEPH		DEPH	PHOS					
 			NTRA					
