@@ -1,7 +1,8 @@
 status	filename	data_type
-1	zoobenthos_2016_row_format_2.txt	zooben
-1	BOS_HAL_2015-2016_row_format_2.txt	phyche
-1	BOS_BAS_2016-2017_column_format.txt	phyche
+0	zoobenthos_2016_row_format_2.txt	zooben
+0	BOS_HAL_2015-2016_row_format_2.txt	phyche
+0	BOS_BAS_2016-2017_column_format.txt	phyche
 1	phyche_2008_2017_column_format.txt	phyche
-1	phytoplankton_2016_row_format.txt	pp
-1	chlorophyll_integrated_2015_2016_row_format.txt	chlorophyll
+0	phytoplankton_2016_row_format.txt	pp
+0	chlorophyll_integrated_2015_2016_row_format.txt	chlorophyll
+1	110001_PROFILER_alldepths_SE652400-223501_toolbox.dat	phyche_model

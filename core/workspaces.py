@@ -1327,11 +1327,11 @@ class WorkSpace(object):
                 data_loaded = True
                 self.data_handler.physical_chemical.save_data_as_txt(directory=output_directory, prefix=u'Column_format') 
                 
-#            elif row['data_type'] == 'phyche_model':
-#                self.data_handler.physical_chemical.load_source(file_path=raw_data_file_path + row.filename,
-#                                                                raw_data_copy=True)
-#                self.data_handler.physical_chemical.save_data_as_txt(directory=output_directory, prefix=u'Column_format')                
-#                
+            elif data_type == 'phyche_model':
+                self.data_handler.physical_chemical.load_source(file_path=file_path, raw_data_copy=True)
+                data_loaded = True
+                self.data_handler.physical_chemical.save_data_as_txt(directory=output_directory, prefix=u'Column_format')
+                
 #            elif row['data_type']== 'zooben':
 #                self.data_handler.zoobenthos.load_source(file_path=raw_data_file_path + row.filename,
 

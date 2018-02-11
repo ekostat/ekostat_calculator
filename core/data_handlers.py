@@ -550,6 +550,7 @@ class DataHandlerPhysicalChemical(DataFrameHandler):
     """
     """
     def __init__(self, filter_path=u'', 
+                 filter_path_model=u'',
                  export_directory='',
                  parameter_mapping=None):
         
@@ -776,7 +777,10 @@ class DataHandler(object):
         self.physical_chemical = DataHandlerPhysicalChemical(filter_path=path_fields_filter+'filter_fields_physical_chemical.txt',
                                                              export_directory=self.export_directory,
                                                              parameter_mapping=self.parameter_mapping)
-        
+
+        self.physical_chemical_model = DataHandlerPhysicalChemical(filter_path=path_fields_filter+'filter_fields_physical_chemical_model.txt',
+                                                                   export_directory=self.export_directory,
+                                                                   parameter_mapping=self.parameter_mapping)        
         
         self.phytoplankton = DataHandlerPhytoplankton(filter_path=path_fields_filter+u'filter_fields_phytoplankton.txt',
                                                       export_directory=self.export_directory,
@@ -886,6 +890,7 @@ class DataHandler(object):
         # All datatypes that might include data for setting ecological status
         all_datatypes = [u'chlorophyll',
                          u'physical_chemical',
+                         u'physical_chemical_model',
                          u'phytoplankton',
                          u'zoobenthos']
         
