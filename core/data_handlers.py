@@ -542,6 +542,7 @@ class NETCDFDataHandler(DataFrameHandler):
         pass
 
 
+
 """
 #==============================================================================
 #==============================================================================
@@ -549,35 +550,42 @@ class NETCDFDataHandler(DataFrameHandler):
 class DataHandlerPhysicalChemical(DataFrameHandler):
     """
     """
-    def __init__(self, filter_path=u'', 
+    def __init__(self, filter_path=u'',
                  export_directory='',
-                 parameter_mapping=None):
+                 parameter_mapping=None,
+                 no_qflags=False): # no_qflags for data that has no quality flags (model data..)
         
         super().__init__()
         self.dtype = u'PhysicalChemical'
         self.export_directory = export_directory
         self.read_filter_file(file_path=filter_path)
         self.parameter_mapping = parameter_mapping
+        self.no_qflags = no_qflags
         
         self.column_data = {} #pd.DataFrame()
         self.row_data = {} #pd.DataFrame()
 
     #==========================================================================
     def _calculate_data(self):
-        """ Rewritten from parent """
-        self.calculate_din()
+        """ 
+        Rewritten from parent
+        If there are no quality flags in data self.no_qflags is initialized 
+        as True
+        """
+        if self.no_qflags:
+            self.calculate_din()
+        else:
+            self.calculate_din(ignore_qf_list=['B','S'])
         
     #==========================================================================
-    def calculate_din(self, ignore_qf_list=['B','S']):
+    def calculate_din(self, ignore_qf_list=[]):
         """ 
         Returns a vector calculated DIN. 
-        If NO3 is not present value is np.nan 
+        If NO3 is not present, value is np.nan 
         """
         din_list = []
-        for no2, no3, nox, nh4 in zip(self.get_float_list(key=u'NTRI', ignore_qf=ignore_qf_list), 
-                                      self.get_float_list(key=u'NTRA', ignore_qf=ignore_qf_list), 
-                                      self.get_float_list(key=u'NTRZ', ignore_qf=ignore_qf_list),
-                                      self.get_float_list(key=u'AMON', ignore_qf=ignore_qf_list)):
+        
+        for no2, no3, nox, nh4 in zip(*self.get_nxx_lists(ignore_qf_list)):
 
             if np.isnan(nox):
                 din = np.nan
@@ -605,10 +613,39 @@ class DataHandlerPhysicalChemical(DataFrameHandler):
                             
     #==========================================================================
     def get_float_list(self, key, ignore_qf=[]):
+        """
+        Get all values as floats
+        """
         return utils.get_float_list_from_str(df=self.column_data[self.source], 
                                              key=key, ignore_qf=ignore_qf)
     
     #==========================================================================
+    def get_nxx_lists(self, ignore_qf_list):
+        """
+        Returns 4 equal in length arrays for NO2, NO3, NO23, NH4..
+        If a parameter does not excist in the loaded dataset, an array filled 
+        with NaNs is returned for that specific parameter
+        """
+        if u'NTRI' in self.column_data[self.source]:
+            ntri = self.get_float_list(key=u'NTRI', ignore_qf=ignore_qf_list)
+        else:
+            ntri = [np.nan]*self.column_data[self.source].shape[0]
+        if u'NTRA' in self.column_data[self.source]:
+            ntra = self.get_float_list(key=u'NTRA', ignore_qf=ignore_qf_list)
+        else:
+            ntra = [np.nan]*self.column_data[self.source].shape[0]
+        if u'NTRZ' in self.column_data[self.source]:
+            ntrz = self.get_float_list(key=u'NTRZ', ignore_qf=ignore_qf_list)
+        else:
+            ntrz = [np.nan]*self.column_data[self.source].shape[0]
+        if u'AMON' in self.column_data[self.source]:
+            amon = self.get_float_list(key=u'AMON', ignore_qf=ignore_qf_list)
+        else:
+            amon = [np.nan]*self.column_data[self.source].shape[0]
+        return ntri, ntra, ntrz, amon
+    
+    #==========================================================================
+                                      
 """
 #==============================================================================
 #==============================================================================
@@ -776,7 +813,11 @@ class DataHandler(object):
         self.physical_chemical = DataHandlerPhysicalChemical(filter_path=path_fields_filter+'filter_fields_physical_chemical.txt',
                                                              export_directory=self.export_directory,
                                                              parameter_mapping=self.parameter_mapping)
-        
+
+        self.physical_chemical_model = DataHandlerPhysicalChemical(filter_path=path_fields_filter+'filter_fields_physical_chemical_model.txt',
+                                                                   export_directory=self.export_directory,
+                                                                   parameter_mapping=self.parameter_mapping,
+                                                                   no_qflags=True)        
         
         self.phytoplankton = DataHandlerPhytoplankton(filter_path=path_fields_filter+u'filter_fields_phytoplankton.txt',
                                                       export_directory=self.export_directory,
@@ -886,6 +927,7 @@ class DataHandler(object):
         # All datatypes that might include data for setting ecological status
         all_datatypes = [u'chlorophyll',
                          u'physical_chemical',
+                         u'physical_chemical_model',
                          u'phytoplankton',
                          u'zoobenthos']
         

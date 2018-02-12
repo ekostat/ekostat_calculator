@@ -101,6 +101,7 @@ def get_float_list_from_str(df=None, key='', ignore_qf=[]):
         return [float(val) if val else np.nan for val in df.get(key)]
     else:
         out_list = []
+
         for val, qf in zip(df.get(key), df.get('Q_'+key)):
             if not val or qf in ignore_qf:
                 val = np.nan
