@@ -209,6 +209,10 @@ class WaterBody(AttributeDict):
     #==========================================================================
     def get_eu_cd_for_water_body(self, wb, key=u'EU_CD'):
         return self.get(wb).get(key)
+    
+    #==========================================================================
+    def get_water_body_for_eu_cd(self, EU_CD, key=u'SEA_AREA_NAME'):
+        return self.get(EU_CD).get(key)
 
     #==========================================================================
     def get_basin_number_for_water_body(self, wb, key=u'BASIN_NUMBER'):

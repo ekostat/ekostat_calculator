@@ -8,7 +8,7 @@ Created on Thu Oct  5 17:03:55 2017
 import difflib
 import random
 import requests
-import ipywidgets as widgets
+#import ipywidgets as widgets
 import core 
 
 

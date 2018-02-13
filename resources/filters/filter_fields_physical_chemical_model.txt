@@ -2,7 +2,13 @@ compulsory_fields	fields_index	sort_by_fields	use_parameters	visit_id_key	depth_
 VISS_EU_ID		VISS_EU_ID	SALT_BTL		DEPH	PARAM		
 SDATE		SDATE	DOXY_BTL					
 DEPH		DEPH	PHOS					
-			NTRA					
+SEA_AREA_NAME		SEA_AREA_NAME	NTRA					
 			AMON					
 			CPHL					
 			SECCHI					
+			NTOT					
+			PTOT					
+								
+								
+								
+								

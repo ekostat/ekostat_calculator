@@ -232,6 +232,7 @@ class IndexHandler(object):
     def get_filtered_data(self, subset=None, step=None, water_body=None, indicator=None): 
         """
         Returns filtered data for the given boolean specification
+        TODO: indicator - if filtering on columns this needs to be changed so that when indicator is given you only get the indicator parameters plus other needed columns like date, water_body, depth etc.
         """
         step_0, step_1, step_2 = self._get_steps(step=step)
         

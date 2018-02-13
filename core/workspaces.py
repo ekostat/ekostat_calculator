@@ -379,7 +379,7 @@ class WorkStep(object):
     #==========================================================================
     def show_settings(self):
         print('first_filter:')
-        self.data_filter.show_filter()
+        self.data_filter.get_filter_info()#show_filter()
         
         
 ###############################################################################
@@ -1286,8 +1286,12 @@ class WorkSpace(object):
         return self.subset_dict[subset].get_step_2_object()
     
     #==========================================================================
-    def initiate_quality_factors(self, ):
-        self.quality_factor_NP = core.QualityFactorNP()
+    def initiate_quality_factors(self, step = None, subset = None):
+        """
+        Intiate quality factor object for given step
+        TODO: create dict for quality factor objects and add to this when a new quality factor is initiated
+        """
+        self.get_step_object(step, subset).quality_factor_NP = core.QualityFactorNP()
         
     #==========================================================================
     def load_all_data(self): 
@@ -1331,6 +1335,7 @@ class WorkSpace(object):
                 self.data_handler.physical_chemical_model.load_source(file_path=file_path, raw_data_copy=True)
                 data_loaded = True
                 self.data_handler.physical_chemical_model.save_data_as_txt(directory=output_directory, prefix=u'Column_format')
+                
                 
 #            elif row['data_type']== 'zooben':
 #                self.data_handler.zoobenthos.load_source(file_path=raw_data_file_path + row.filename,
