@@ -45,61 +45,34 @@ class IndicatorBase(object):
     """
     Class to calculate status for a specific indicator. 
     """ 
-    def __init__(self):
+    def __init__(self, index_handler, data_filter_settings, tolerance_settings, ref_settings):
         self.name = ''
         self.parameter_list = []
         self.class_result = None
+        self.subset = None
+        self.step = None
+        self.index_handler = index_handler
+        self.tolerance_settings = tolerance_settings
+        self.ref_settings = ref_settings
+        
+    def get_filtered_data(self, subset=None, step=None, water_body=None, indicator=None):
+
+        return self.index_handler.get_filtered_data(subset, step, water_body, indicator)
     
-    #========================================================================== 
-    def set_data_handler(self, data_handler=None, parameter=None): 
+    def get_indicator_df(self):
         """
-        Assigns data_handler-object(s) to the parameter objects belonging to self. 
-        if data_handler and parameter is given that parameter is given the data handler. 
-        If "data_handler" is given all parameters will be assigned that data_handler. 
-        If "data_handler_dict" is given the corresponding data_handler under its key will be assigend. 
-        """ 
-        if data_handler and parameter:
-            if not parameter in self.parameter_list:
-                return False
-            attr = getattr(self, parameter.lower())
-            all_ok = attr.set_data_handler(data_handler)
-            return all_ok
-        elif data_handler:
-            for key in self.parameter_list:
-                try:
-                    attr = getattr(self, key.lower())
-                    attr.set_data_handler(data_handler)
-                except AttributeError as e:
-                    print('Class IndicatorBase:\nNo attribute for parameter %s ' % key, e)
-        return True
-    
-    
-    #==========================================================================
-    def filter_data(self, data_filter_object=None, parameter=None):
+        Created:        20180215     by Lena
+        Last modified:  20180215     by Lena
+        df should contain:
+            - all needed columns from get_filtered_data
+            - referencevalues
+            - maybe other info needed for indicator functions
+        skapa df utifrån:
+        self.index_handler 
+        self.tolerance_settings 
+        self.indicator_ref_settings 
         """
-        Filters data in Parameter objects
-        data_filter_object is of type core.settings.FilterData
-        If "data_filter_object" is given all parameters will be filtered using this filter. 
-        If "data_filter_object_dict" is given the corresponding filter under its key will be used. 
-        """
-        self.data_filter_object = data_filter_object
-#        print('parameter', parameter)
-        if data_filter_object and parameter:
-#            print('parameter', parameter)
-            if not parameter in self.parameter_list:
-                return False
-            if not hasattr(self, parameter.lower()):
-                return False
-            attr = getattr(self, parameter.lower())
-            all_ok = attr.filter_data(data_filter_object)
-            return all_ok
-        elif data_filter_object:
-            for key in self.parameter_list:
-#                print('key', key)
-                if hasattr(self, key.lower()):
-                    attr = getattr(self, key.lower())
-                    attr.filter_data(data_filter_object)
-        return True
+        pass
     
     #==========================================================================
     def get_ref_value_for_par_with_salt_ref(self, par=None, salt_par='SALT_CTD', indicator_name=None, tolerance_filter=None):
@@ -127,6 +100,8 @@ class IndicatorBase(object):
         varje enskilt prov. Om mätningar är utförda vid diskreta djup, beräkna EKvärde
         för varje mätning och sedan ett medel-EK för varje specifikt mättillfälle.
         """
+        ref_object = getattr(self.indicator_ref_setting, indicator_name.lower())[self.data_filter_object.TYPE_AREA.value]
+        self.indicator_ref_setting.settings.get_value(variable, type_area_code)
         
         ref_object = getattr(core.RefValues(), indicator_name.lower())[self.data_filter_object.TYPE_AREA.value]
 #        self.ref_object = ref_object
@@ -326,64 +301,7 @@ class IndicatorDIN(IndicatorNutrients):
         
         # Parameter list contains all parameters that is used by the indicator class
         self.parameter_list = ['NTRA', 'NTRI', 'AMON', 'DIN', 'SALT_CTD']
-        
-        self._load_data_objects()
-        self._set_refvalues()
     
-    #==========================================================================
-    def _set_refvalues(self):
-        resources_directory = u'D:/Utveckling/GitHub/ekostat_calculator/resources/'
-        core.RefValues().add_ref_parameter_from_file(self.name, resources_directory + 'classboundaries/nutrients/classboundaries_din_vinter.txt')
-    
-    #==========================================================================
-    def _load_data_objects(self):
-        """
-        Initiates data to work with. Typically parameter class objects. 
-        """
-        
-        self.salt_ctd = core.ParameterSALT_CTD()
-        
-        self.ntra = core.ParameterNTRA()
-        self.ntri = core.ParameterNTRI()
-        self.amon = core.ParameterAMON()
-        self.din = None
-        
-    #==========================================================================
-    def filter_data(self, data_filter_object=None, parameter=None):
-        """
-        Override from Parent class IndicatorBase. 
-        After filtering of parameters the calculated din-parameter is created. 
-        """
-        self.data_filter_object = data_filter_object
-#        print('parameter', parameter)
-        if data_filter_object and parameter:
-#            print('parameter', parameter)
-            if not parameter in self.parameter_list:
-                return False
-            if not hasattr(self, parameter.lower()):
-                return False
-            attr = getattr(self, parameter.lower())
-            all_ok = attr.filter_data(data_filter_object)
-            return all_ok
-        if data_filter_object:
-            for key in self.parameter_list:
-#                print(key)
-#                attr = getattr(self, key.lower())
-#                attr.filter_data(data_filter_object)
-                try:
-                    attr = getattr(self, key.lower())
-                    attr.filter_data(data_filter_object)
-                except AttributeError as e:
-                    print('Class IndicatorDIN:\nNo attribute for parameter {}\nError message: {}'.format(key, e))
-        
-        # Load CalculatedParameterDIN if possible
-        # TODO: Option to load pre-calculated DIN (DIN in dataset). This 
-        if all([self.ntra.data, self.ntri.data, self.amon.data]):
-            self.din = core.CalculatedParameterDIN(ntra=self.ntra.data, 
-                                                       ntri=self.ntri.data, 
-                                                       amon=self.amon.data)
-        return True
-        
     #==========================================================================
     def get_status(self):
         
@@ -407,19 +325,6 @@ class IndicatorTOTN(IndicatorNutrients):
         
         # Parameter list contains all parameters that is used by the indicator class
         self.parameter_list = ['SALT_CTD', 'NTOT']
-        
-        self._load_data_objects()
-        
-    
-    #==========================================================================
-    def _load_data_objects(self):
-        """
-        Initiates data to work with. Typically parameter class objects. 
-        """
-        self.salt_ctd = core.ParameterSALT_CTD()
-        
-        self.ntot = core.ParameterTOTN()
-        
 
     #==========================================================================
     def get_status(self, tolerance_filter):

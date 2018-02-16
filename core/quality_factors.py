@@ -42,21 +42,22 @@ class QualityFactorBase(object):
     """
     Class to hold general information about quality factors. 
     """ 
-    def __init__(self):
+    def __init__(self, indicator_object_dict = {}):
         self.name = '' 
         
-        self._load_indicators()
         self.indicator_list = []
-        self.class_result = None
-        
+        self.class_result = ClassificationResult()
+        self._load_indicators(indicator_object_dict)
     
     #==========================================================================
-    def _load_indicators(self):
+    def _load_indicators(self, indicator_object_dict):
         """
         Load indicator objects that are included in the quality factor. 
         Overwritten by subclasses. 
         """
-        pass
+        for name in self.indicator_list:
+            setattr(self, name, indicator_object_dict[name])
+
     
     #==========================================================================
     def _calculate_quality_factor(self):
@@ -64,62 +65,18 @@ class QualityFactorBase(object):
         Overwritten by subclasses. 
         """
         pass
-    
-    #========================================================================== 
-    def set_data_handler(self, data_handler=None, indicator=None, parameter=None): 
-        """
-        Assigns data_handler-object(s) to the indicator objects belonging to self. 
-        If "data_handler" is given all indicators will be assigned that data_handler. 
-        If "data_handler_dict" is given the corresponding data_handler under its key will be assigend. 
-        """ 
-        if all([data_handler, indicator]):
-            attr = getattr(self, indicator.lower())
-            attr.set_data_handler(data_handler = data_handler, parameter = parameter) 
-            # parameter could be None here. If so, all parameters in the indicator will be assigned the data_handler. 
-        elif data_handler:
-            for key in self.indicator_list:
-                attr = getattr(self, key.lower())
-                attr.set_data_handler(data_handler = data_handler)
-        return True
-    
-    
-    #==========================================================================
-    def filter_data(self, data_filter_object=None, indicator=None, parameter=None):
-        """
-        Filters data in Indicator objects
-        data_filter_object is of type core.settings.FilterData
-        If "data_filter_object" is given all indicators will be filtered using this filter. 
-        If "data_filter_object_dict" is given the corresponding filter under its key will be used. 
-        """
-        if all([data_filter_object, indicator]):
-            attr = getattr(self, indicator.lower())
-            attr.filter_data(data_filter_object = data_filter_object, parameter = parameter)
-        elif data_filter_object:
-            for key in self.indicator_list:
-                attr = getattr(self, key.lower())
-                attr.filter_data(data_filter_object)
-        return True
+
         
 ###############################################################################
 class QualityFactorNP(QualityFactorBase): 
     """
     Class to hold information and calculate the quality factor for Nutrients. 
     """
-    def __init__(self):
+    def __init__(self, indicator_object_dict):
         super().__init__() 
         self.name = 'NP'
         self.indicator_list = ['DIN_winter', 'TOTN_summer', 'TOTN_winter']
-        self._load_indicators()
-        
-    #==========================================================================
-    def _load_indicators(self): 
-        """
-        Make sure the attributes and items in self.indicator_list are matching.
-        (not case sensitive)
-        """        
-        self.din_winter = core.IndicatorDIN() # winter modified by filter on months 
-        self.totn_summer = core.IndicatorTOTN() # summer modified by filter on months 
-        self.totn_winter = core.IndicatorTOTN() # 
+        self._load_indicators(indicator_object_dict)
     
     #==========================================================================
     def calculate_quality_factor(self, tolerance_filter):
@@ -135,8 +92,8 @@ class QualityFactorNP(QualityFactorBase):
         Denna klassificering ska sedan omvandlas till skalan 0-1 med stegen 0.2 mellan statusklasserna. 
         Dessa värden kan sedan jämföras med övriga kvalitetsfaktorer och ingå i sammansvägningen.
         """
-        class_result = ClassificationResult()
-        class_result.add_info('qualityfactor', 'Nutrients')
+        
+        self.class_result.add_info('qualityfactor', 'Nutrients')
         print('\t\tCalculating Indicator EK values.....')
         self.din_winter.calculate_ek_value(tolerance_filter, 'DIN_winter', 'DIN')
         self.totn_winter.calculate_ek_value(tolerance_filter, 'TOTN_winter', 'NTOT')
@@ -154,9 +111,8 @@ class QualityFactorNP(QualityFactorBase):
         # TODO: add the rest of the indicators
         qf_nklass = np.mean([nklass_qf_NP_summer, nklass_qf_NP_winter])
         qf_EQR = {'qf_NP_winter': nklass_qf_NP_winter, 'qf_NP_summer': nklass_qf_NP_summer, 'qf_NP_EQR': qf_nklass}
-        class_result.add_info('qf_EQR', qf_EQR)
+        self.class_result.add_info('qf_EQR', qf_EQR)
         
-        self.class_result = class_result
         
     #==========================================================================
     def get_EQR(self, tolerance_filter = None):
@@ -194,13 +150,6 @@ class QualityFactorNP(QualityFactorBase):
         self.class_result.add_info('EQR', EQR)
         self.class_result.add_info('status', status)
                 
-    #==========================================================================       
-    def get_quality_factor(self, tolerance_filter):
-        """
-        Jag vet inte vad denna def behövs för.
-        """
-        #return self.totn_winter.get_status(tolerance_filter)
-        pass
     
 ###############################################################################
 if __name__ == '__main__':

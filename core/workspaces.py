@@ -557,8 +557,26 @@ class Subset(object):
             print('Invalid step "{}" given to load data in subset "{}"!'.format(step, self.name))
             return False 
             
-        self.steps[step].load_data()
-    
+        self.steps[step].load_data() 
+        
+    #==========================================================================
+    def load_indicators(self, index_handler = None, indicator_list = None):  
+        """
+        Created:        20180215     by Lena
+        Last modified:  20180216     by Lena
+        create dict containing indicator objects according to data availability or choice?
+        """
+        self.indicator_objects = dict.fromkeys(indicator_list)
+        for indicator in self.indicator_objects.keys():
+            # get settings for the indicator
+            data_filter_settings = self.get_step_2_object().get_indicator_data_filter_settings(indicator)
+            tolerance_settings = self.get_step_2_object().get_indicator_tolerance_settings(indicator)
+            ref_settings = self.get_step_2_object().get_indicator_ref_settings(indicator) 
+            # add indicator objects to dictionary
+            self.indicator_objects[indicator] = core.IndicatorBase(index_handler, data_filter_settings, tolerance_settings, ref_settings)
+            # TODO: Indicator objects should be different classes from the Base-class depending on indicator. 
+            #       The Indicator classname should be given in the config file together with the indicator names and parameters
+          
     #==========================================================================
     def deprecated_set_alias(self, alias):
         print('New alias for subset "{}" => "{}"'.format(self.config.get_config('alias'), alias))
@@ -760,15 +778,15 @@ class WorkSpace(object):
     #==========================================================================
     def _load_config_files(self):       
         
-        self.cf_df = pd.read_csv(self.paths['resource_directory'] + '/Quality_Elements.cfg', sep='\t', dtype='str', encoding='cp1252')
-        assert all(['quality element' in self.cf_df.keys(), 'indicator' in self.cf_df.keys(), 'parameters' in self.cf_df.keys()]), 'configuration file must contain quality element, indicator and parameters information'
+        self.cfg_df = pd.read_csv(self.paths['resource_directory'] + '/Quality_Elements.cfg', sep='\t', dtype='str', encoding='cp1252')
+        assert all(['quality element' in self.cfg_df.keys(), 'indicator' in self.cfg_df.keys(), 'parameters' in self.cfg_df.keys()]), 'configuration file must contain quality element, indicator and parameters information'
         self.cfg = {}
-        self.cfg['quality elements'] = self.cf_df.groupby('quality element')['indicator'].unique()
-        self.cfg['indicators'] = self.cf_df.groupby('indicator')['parameters'].unique()
+        self.cfg['quality elements'] = self.cfg_df.groupby('quality element')['indicator'].unique()
+        self.cfg['indicators'] = self.cfg_df.groupby('indicator')['parameters'].unique()
 #        for QE in self.cfg['quality elements']:
-#            self.cfg[QE] = self.cf_df.groupby(QE)['indicator'].unique()
+#            self.cfg[QE] = self.cfg_df.groupby(QE)['indicator'].unique()
 #        for indicator in self.cfg['indicators']:
-#            self.cfg[indicator] = self.cf_df.groupby(QE)['parameters'].split(',')     
+#            self.cfg[indicator] = self.cfg_df.groupby(QE)['parameters'].split(',')     
 
     #==========================================================================
     def _load_workspace_config(self): 
@@ -1225,22 +1243,36 @@ class WorkSpace(object):
         return self.index_handler.get_filtered_data(subset=subset, step=step, water_body=water_body, indicator=indicator)
     
     #==========================================================================
-    def get_available_indicators(self):
+    def get_available_indicators(self, subset = None, step = None):
+        """
+        Created:                 by Lena
+        Last modified:  20180216 by Lena
+        """
         
-        self.available_indicators = []
+        available_indicators = []
         for indicator, parameters in self.cfg['indicators'].items():
-            for param in parameters:
-                if len(param.split('/')) > 1:
-                    for param2 in param.split('/'):
-                        if param2 == 'SALT':
-                            continue
-                        if param2 in self.get_filtered_data(level=0).columns and self.get_filtered_data(level=0)[param2].dropna().count() > 0:
-                            self.available_indicators.append(indicator) 
-                else:
-                    if param in self.get_filtered_data(level=0).columns and self.get_filtered_data(level=0)[param].dropna().count() > 0:
-                        self.available_indicators.append(indicator) 
+            parameter_list = parameters[0].split(', ')
+            try:
+                if (self.get_filtered_data(subset = subset, step = step)[parameter_list].dropna().count() > 0).all():
+                    available_indicators.append(indicator) 
+            except KeyError:
+                continue
+#            for param in parameters:
+#                if len(param.split('/')) > 1:
+#                    for param2 in param.split('/'):
+#                        if param2 == 'SALT':
+#                            #TODO: add condition for salinity availibility to set nutrients as available
+#                            continue
+#                        if param2 in self.get_filtered_data(subset = subset, step = step).columns and self.get_filtered_data(subset = subset, step = step)[param2].dropna().count() > 0:
+#                            available_indicators.append(indicator) 
+#                else:
+#                    if 'SALT' in param:
+#                        #TODO: add condition for salinity availibility to set nutrients as available
+#                        continue
+#                    if param in self.get_filtered_data(subset = subset, step = step).columns and self.get_filtered_data(subset = subset, step = step)[param].dropna().count() > 0:
+#                        available_indicators.append(indicator) 
             
-        return sorted(self.available_indicators)
+        return available_indicators
     
     #==========================================================================
     def get_indicator_settings_data_filter_object(self, subset=None, step=2, indicator=None): 
@@ -1308,22 +1340,13 @@ class WorkSpace(object):
 #        # read settings to match filename and datatype, return pd df
 #        dtype_settings = core.Load().load_txt(file_path=raw_data_file_path + 'dtype_settings.txt', sep='\t')
 #        # TODO:  User should maybe choose which files to load?
-#        #loop filenames in dtype_settings to read with correct datahandler
-#        for index, row in dtype_settings.iterrows():
-#            
-#            if row.filename.startswith('#'):
-#                print('\nSkipping', row.filename+'\n')
-#                continue
-#            
-#            print(row.keys())
-#            if row['data_type'] == 'phyche':
-#                self.data_handler.physical_chemical.load_source(file_path=raw_data_file_path + row.filename,
 
         self.dtype_settings = core.RawDataFiles(self.paths['directory_path_raw_data'])
         if not self.dtype_settings.has_info:
             print('No info found')
             return False
         data_loaded = False
+        # loop filenames in dtype_settings to read with correct datahandler
         for file_path, data_type in self.dtype_settings.get_active_paths_with_data_type(): 
             
             if data_type == 'phyche':
@@ -1335,7 +1358,6 @@ class WorkSpace(object):
                 self.data_handler.physical_chemical_model.load_source(file_path=file_path, raw_data_copy=True)
                 data_loaded = True
                 self.data_handler.physical_chemical_model.save_data_as_txt(directory=output_directory, prefix=u'Column_format')
-                
                 
 #            elif row['data_type']== 'zooben':
 #                self.data_handler.zoobenthos.load_source(file_path=raw_data_file_path + row.filename,
@@ -1358,61 +1380,25 @@ class WorkSpace(object):
             else:
                 print('could not read {} from raw_data directory. Check data type'.format(os.path.basename(file_path)))
 
-        
         self.data_handler.merge_all_data(save_to_txt=True)
         
         return data_loaded
-#        # read settings to match filename and datatype, return pd df
-#        dtype_settings = core.Load().load_txt(file_path=raw_data_file_path + 'dtype_settings.txt', sep='\t')
-#        # TODO:  User should maybe choose which files to load?
-#        #loop filenames in dtype_settings to read with correct datahandler 
-#        
-#        for index, row in dtype_settings.iterrows(): 
-#            if row.filename.startswith('#'):
-#                print('\nSkipping', row.filename+'\n')
-#                continue
-#            
-#            print(row.keys())
-#            if row['data_type'] == 'phyche':
-#                self.data_handler.physical_chemical.load_source(file_path=raw_data_file_path + row.filename,
-#                                                                raw_data_copy=True)
-#                self.data_handler.physical_chemical.save_data_as_txt(directory=output_directory, prefix=u'Column_format')
-#            elif row['data_type']== 'zooben':
-#                self.data_handler.zoobenthos.load_source(file_path=raw_data_file_path + row.filename,
-#                                                         raw_data_copy=True)
-#                self.data_handler.zoobenthos.save_data_as_txt(directory=output_directory, prefix=u'Column_format')
-#            elif row['data_type'] == 'pp':
-#                self.data_handler.phytoplankton.load_source(file_path=raw_data_file_path + row.filename,
-#                                                         raw_data_copy=True)
-#                self.data_handler.phytoplankton.save_data_as_txt(directory=output_directory, prefix=u'Column_format')
-#            elif row['data_type'] == 'hose':
-#                self.data_handler.chlorophyll.load_source(file_path=raw_data_file_path + row.filename,
-#                                                         raw_data_copy=True)
-#                self.data_handler.chlorophyll.save_data_as_txt(directory=output_directory, prefix=u'Column_format')   
-#            else:
-#                print('could not read {} from raw_data directory. Check data type'.format(row.filename))
-#
-#        
-#        self.data_handler.merge_all_data(save_to_txt=True)
-        
-        # Row data
-        # TODO: retrieve from workspace. User should maybe choose which files to load?
-#        fid_zooben = u'zoobenthos_2016_row_format_2.txt'
-#        fid_phyche = u'BOS_HAL_2015-2016_row_format_2.txt'
-#        fid_phyche_col = u'BOS_BAS_2016-2017_column_format.txt' 
-#        
-#        self.data_handler.physical_chemical.load_source(file_path=raw_data_file_path + fid_phyche,
-#                                                        raw_data_copy=True)
-#        self.data_handler.physical_chemical.load_source(file_path=raw_data_file_path + fid_phyche_col,
-#                                                        raw_data_copy=True)
-#        self.data_handler.physical_chemical.save_data_as_txt(directory=output_directory, prefix=u'Column_format')
-#        
-#        
-#        self.data_handler.zoobenthos.load_source(file_path=raw_data_file_path + fid_zooben,
-#                                                 raw_data_copy=True)
-#        self.data_handler.zoobenthos.save_data_as_txt(directory=output_directory, prefix=u'Column_format')
-#        
-#        self.data_handler.merge_all_data(save_to_txt=True)
+
+    #==========================================================================
+    def load_indicators(self, subset = None, indicator_list = None):  
+        """
+        Created:        20180215     by Lena
+        Last modified:  20180216     by Lena
+        create dict containing indicator objects according to data availability or choice?
+        """
+        #only allowed to load indicators in step 2
+        step = get_step_name(2)
+        if step == None:
+            return False
+        if indicator_list is None:
+            indicator_list = self.get_available_indicators(subset, step)
+            print(indicator_list)
+        self.get_subset_object(subset).load_indicators(self.index_handler, indicator_list)
         
     #==========================================================================
     def deprecated_save_indicator_settings(self, indicator=None, subset=None): 

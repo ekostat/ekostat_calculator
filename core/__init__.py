@@ -12,6 +12,7 @@ from .filters import WaterBodyStationFilter
 
 from .index_handler import IndexHandler
 
+from .indicators import IndicatorBase
 from .indicators import IndicatorDIN
 from .indicators import IndicatorTOTN
 
