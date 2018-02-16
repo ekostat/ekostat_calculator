@@ -14,6 +14,7 @@ import pandas as pd
 import uuid
 import re 
 import pathlib
+import getpass
 
 
 import logging
@@ -34,6 +35,7 @@ MW: Started this to start logging functionality.
 
 class EventHandler(object): 
     def __init__(self, root_path): 
+        self.user_id = getpass.getuser()
         self.root_path = root_path.replace('\\', '/') 
         self.workspace_directory = self.root_path + '/workspaces'
         self.resource_directory = self.root_path + '/resources'
@@ -59,18 +61,105 @@ class EventHandler(object):
         
         self.workspaces = {}
         
-        for item in os.listdir(self.workspace_directory):
-            self.add_workspace(item)
+        # Load UUID mapping file for workspaces
+        self.uuid_mapping = core.mapping.UUIDmapping('{}/uuid_mapping.txt'.format(self.workspace_directory))
+        
+        
+        for unique_id in os.listdir(self.workspace_directory):
+            if '.' not in unique_id:
+                self.load_workspace(unique_id, self.user_id)
         
     #==========================================================================
-    def add_workspace(self, workspace_name):
-        self.workspaces[workspace_name] = core.WorkSpace(name=workspace_name, 
-                                                       parent_directory=self.workspace_directory,
-                                                       resource_directory=self.resource_directory)
+    def load_workspace(self, alias=None, unique_id=None, user_id=None): 
+        """
+        Copies the default workspace and sets ist to the given workspace_alias. 
+        """
+        if alias == 'default':
+            unique_id = 'default'
+        elif alias:
+            unique_id = self.uuid_mapping.get_uuid(alias, self.user_id) 
+        elif unique_id:
+            alias = self.uuid_mapping.get_alias(unique_id, self.user_id)
+            
+        if not all([alias, unique_id]):
+            self._logger.warning('Could not load workspace "{}" with alias "{}"'.format(unique_id, alias))
+            return False
+#        # Add UUID for workspace in uuid_mapping 
+#        unique_id = self.uuid_mapping.add_new_uuid_for_alias(unique_id, user_id)
+#        if not unique_id:
+#            self._logger.debug('Could not add workspace with alias "{}". Workspace already exists!') 
+#            return False
+        
+        # Create copy of default workspace
+#        self.workspaces['default'].
+        
+        self.workspaces[unique_id] = core.WorkSpace(alias=alias, 
+                                                    unique_id=unique_id, 
+                                                    parent_directory=self.workspace_directory,
+                                                    resource_directory=self.resource_directory)
     
     #==========================================================================
-    def get_workspace(self, workspace_name): 
-        return self.workspaces.get(workspace_name, None)
+    def copy_workspace(self, source_alias=None, target_alias=None): 
+        
+        if source_alias == 'default':
+            source_uuid = self.uuid_mapping.get_uuid(source_alias, 'default') 
+        else:
+            source_uuid = self.uuid_mapping.get_uuid(source_alias, self.user_id) 
+            
+        if not source_uuid:
+            self._logger.warning('No alias named "{}"'.format(source_alias))
+            return False
+        
+        # Add UUID for workspace in uuid_mapping 
+        target_uuid = self.uuid_mapping.add_new_uuid_for_alias(target_alias, self.user_id)
+        if not target_uuid:
+            self._logger.debug('Could not add workspace with alias "{}". Workspace already exists!'.format(target_alias)) 
+            return False
+        
+        # Copy all directories an files in workspace 
+        source_workspace_path = '/'.join([self.workspace_directory, source_uuid])
+        target_workspace_path = '/'.join([self.workspace_directory, target_uuid])
+        
+        print('source_workspace_path:', source_workspace_path)
+        print('target_workspace_path:', target_workspace_path)
+        
+        # Copy files
+        shutil.copytree(source_workspace_path, target_workspace_path)
+        
+        """
+        No data is loaded yet 
+        Now we need to change uuid for subsets. 
+        Do this by creating an UUID mapping object the subset and: 
+            1: rename in mapping file
+            2: rename subset folder
+        """ 
+        target_subset_uuid_mapping_file = '{}/subsets/uuid_mapping.txt'.format(target_workspace_path) 
+        uuid_object = core.mapping.UUIDmapping(target_subset_uuid_mapping_file)
+        
+        uuid_list = uuid_object.get_uuid_list_for_user(self.user_id)
+        for u_id in uuid_list:
+            new_uuid = uuid_object.set_new_uuid(u_id)
+            current_subset_path = '{}/subsets/{}'.format(target_workspace_path, u_id)
+            new_subset_path = '{}/subsets/{}'.format(target_workspace_path, new_uuid)
+            os.rename(current_subset_path, new_subset_path)
+            
+        # Add workspace
+        self.workspaces[target_uuid] = core.WorkSpace(alias=target_alias, 
+                                                      unique_id=target_uuid, 
+                                                      parent_directory=self.workspace_directory,
+                                                      resource_directory=self.resource_directory)
+                        
+        
+    #==========================================================================
+    def get_workspace(self, alias, user_id=None): 
+        if not user_id:
+            user_id = self.user_id
+        # Get UUID for workspace 
+        unique_id = self.uuid_mapping.get_uuid(alias, user_id)
+        if not unique_id:
+            return False
+        # return matching workspace 
+        return self.workspaces.get(unique_id, None)
     
     #==========================================================================
     def create_copy_of_workspace(self, from_workspace_name, to_workspace_name, overwrite=True): 
@@ -91,12 +180,15 @@ class EventHandler(object):
         
         
         
-        
-        
-        
-        
-        
-        
+if __name__ == '__main__':
+    root_path = os.path.dirname(os.path.dirname(os.path.os.path.abspath(os.path.realpath(__file__))))
+    ekos = core.EventHandler(root_path)
+    
+    ekos.copy_workspace('default', 'mw')
+    # default_workspace
+#    default_workspace = ekos.get_workspace('default')
+    
+
         
         
         

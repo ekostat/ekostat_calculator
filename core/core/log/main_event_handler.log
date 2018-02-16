@@ -1,0 +1,88 @@
+2018-02-16 12:59:43,500	logger.py	85	add_log	DEBUG	
+2018-02-16 12:59:43,500	logger.py	86	add_log	DEBUG	========================================================================================================================
+2018-02-16 12:59:43,500	logger.py	87	add_log	DEBUG	### Log added for log_id "event_handler" at locaton: core\log\main_event_handler.log
+2018-02-16 12:59:43,500	logger.py	88	add_log	DEBUG	------------------------------------------------------------------------------------------------------------------------
+2018-02-16 12:59:43,500	event_handler.py	54	__init__	DEBUG	Start EventHandler: event_handler
+2018-02-16 12:59:43,500	event_handler.py	55	__init__	DEBUG	
+2018-02-16 12:59:43,500	event_handler.py	56	__init__	INFO	TEST info logger
+2018-02-16 12:59:43,500	event_handler.py	57	__init__	WARNING	TEST warning logger
+2018-02-16 12:59:43,500	event_handler.py	58	__init__	ERROR	TEST error logger
+2018-02-16 12:59:43,500	event_handler.py	59	__init__	DEBUG	TEST debug logger
+2018-02-16 13:04:12,523	event_handler.py	54	__init__	DEBUG	Start EventHandler: event_handler
+2018-02-16 13:04:12,523	event_handler.py	55	__init__	DEBUG	
+2018-02-16 13:04:12,523	event_handler.py	56	__init__	INFO	TEST info logger
+2018-02-16 13:04:12,523	event_handler.py	57	__init__	WARNING	TEST warning logger
+2018-02-16 13:04:12,523	event_handler.py	58	__init__	ERROR	TEST error logger
+2018-02-16 13:04:12,523	event_handler.py	59	__init__	DEBUG	TEST debug logger
+2018-02-16 13:04:14,879	event_handler.py	54	__init__	DEBUG	Start EventHandler: event_handler
+2018-02-16 13:04:14,879	event_handler.py	55	__init__	DEBUG	
+2018-02-16 13:04:14,879	event_handler.py	56	__init__	INFO	TEST info logger
+2018-02-16 13:04:14,879	event_handler.py	57	__init__	WARNING	TEST warning logger
+2018-02-16 13:04:14,879	event_handler.py	58	__init__	ERROR	TEST error logger
+2018-02-16 13:04:14,879	event_handler.py	59	__init__	DEBUG	TEST debug logger
+2018-02-16 13:06:30,005	event_handler.py	54	__init__	DEBUG	Start EventHandler: event_handler
+2018-02-16 13:06:30,005	event_handler.py	55	__init__	DEBUG	
+2018-02-16 13:06:30,005	event_handler.py	56	__init__	INFO	TEST info logger
+2018-02-16 13:06:30,005	event_handler.py	57	__init__	WARNING	TEST warning logger
+2018-02-16 13:06:30,005	event_handler.py	58	__init__	ERROR	TEST error logger
+2018-02-16 13:06:30,005	event_handler.py	59	__init__	DEBUG	TEST debug logger
+2018-02-16 13:07:39,054	event_handler.py	54	__init__	DEBUG	Start EventHandler: event_handler
+2018-02-16 13:07:39,054	event_handler.py	55	__init__	DEBUG	
+2018-02-16 13:07:39,054	event_handler.py	56	__init__	INFO	TEST info logger
+2018-02-16 13:07:39,054	event_handler.py	57	__init__	WARNING	TEST warning logger
+2018-02-16 13:07:39,055	event_handler.py	58	__init__	ERROR	TEST error logger
+2018-02-16 13:07:39,055	event_handler.py	59	__init__	DEBUG	TEST debug logger
+2018-02-16 13:09:41,988	event_handler.py	54	__init__	DEBUG	Start EventHandler: event_handler
+2018-02-16 13:09:41,988	event_handler.py	55	__init__	DEBUG	
+2018-02-16 13:09:41,988	event_handler.py	56	__init__	INFO	TEST info logger
+2018-02-16 13:09:41,988	event_handler.py	57	__init__	WARNING	TEST warning logger
+2018-02-16 13:09:41,988	event_handler.py	58	__init__	ERROR	TEST error logger
+2018-02-16 13:09:41,988	event_handler.py	59	__init__	DEBUG	TEST debug logger
+2018-02-16 13:12:35,536	event_handler.py	54	__init__	DEBUG	Start EventHandler: event_handler
+2018-02-16 13:12:35,536	event_handler.py	55	__init__	DEBUG	
+2018-02-16 13:12:35,536	event_handler.py	56	__init__	INFO	TEST info logger
+2018-02-16 13:12:35,536	event_handler.py	57	__init__	WARNING	TEST warning logger
+2018-02-16 13:12:35,536	event_handler.py	58	__init__	ERROR	TEST error logger
+2018-02-16 13:12:35,537	event_handler.py	59	__init__	DEBUG	TEST debug logger
+2018-02-16 13:16:22,453	event_handler.py	54	__init__	DEBUG	Start EventHandler: event_handler
+2018-02-16 13:16:22,453	event_handler.py	55	__init__	DEBUG	
+2018-02-16 13:16:22,453	event_handler.py	56	__init__	INFO	TEST info logger
+2018-02-16 13:16:22,453	event_handler.py	57	__init__	WARNING	TEST warning logger
+2018-02-16 13:16:22,453	event_handler.py	58	__init__	ERROR	TEST error logger
+2018-02-16 13:16:22,453	event_handler.py	59	__init__	DEBUG	TEST debug logger
+2018-02-16 13:23:40,674	event_handler.py	54	__init__	DEBUG	Start EventHandler: event_handler
+2018-02-16 13:23:40,674	event_handler.py	55	__init__	DEBUG	
+2018-02-16 13:23:40,674	event_handler.py	56	__init__	INFO	TEST info logger
+2018-02-16 13:23:40,674	event_handler.py	57	__init__	WARNING	TEST warning logger
+2018-02-16 13:23:40,674	event_handler.py	58	__init__	ERROR	TEST error logger
+2018-02-16 13:23:40,674	event_handler.py	59	__init__	DEBUG	TEST debug logger
+2018-02-16 13:24:16,988	event_handler.py	54	__init__	DEBUG	Start EventHandler: event_handler
+2018-02-16 13:24:16,988	event_handler.py	55	__init__	DEBUG	
+2018-02-16 13:24:16,988	event_handler.py	56	__init__	INFO	TEST info logger
+2018-02-16 13:24:16,988	event_handler.py	57	__init__	WARNING	TEST warning logger
+2018-02-16 13:24:16,988	event_handler.py	58	__init__	ERROR	TEST error logger
+2018-02-16 13:24:16,988	event_handler.py	59	__init__	DEBUG	TEST debug logger
+2018-02-16 13:25:21,647	event_handler.py	54	__init__	DEBUG	Start EventHandler: event_handler
+2018-02-16 13:25:21,647	event_handler.py	55	__init__	DEBUG	
+2018-02-16 13:25:21,647	event_handler.py	56	__init__	INFO	TEST info logger
+2018-02-16 13:25:21,648	event_handler.py	57	__init__	WARNING	TEST warning logger
+2018-02-16 13:25:21,648	event_handler.py	58	__init__	ERROR	TEST error logger
+2018-02-16 13:25:21,648	event_handler.py	59	__init__	DEBUG	TEST debug logger
+2018-02-16 14:49:38,707	event_handler.py	54	__init__	DEBUG	Start EventHandler: event_handler
+2018-02-16 14:49:38,707	event_handler.py	55	__init__	DEBUG	
+2018-02-16 14:49:38,707	event_handler.py	56	__init__	INFO	TEST info logger
+2018-02-16 14:49:38,707	event_handler.py	57	__init__	WARNING	TEST warning logger
+2018-02-16 14:49:38,707	event_handler.py	58	__init__	ERROR	TEST error logger
+2018-02-16 14:49:38,707	event_handler.py	59	__init__	DEBUG	TEST debug logger
+2018-02-16 14:52:43,991	event_handler.py	55	__init__	DEBUG	Start EventHandler: event_handler
+2018-02-16 14:52:43,991	event_handler.py	56	__init__	DEBUG	
+2018-02-16 14:52:43,991	event_handler.py	57	__init__	INFO	TEST info logger
+2018-02-16 14:52:43,991	event_handler.py	58	__init__	WARNING	TEST warning logger
+2018-02-16 14:52:43,991	event_handler.py	59	__init__	ERROR	TEST error logger
+2018-02-16 14:52:43,992	event_handler.py	60	__init__	DEBUG	TEST debug logger
+2018-02-16 14:52:59,263	event_handler.py	55	__init__	DEBUG	Start EventHandler: event_handler
+2018-02-16 14:52:59,264	event_handler.py	56	__init__	DEBUG	
+2018-02-16 14:52:59,264	event_handler.py	57	__init__	INFO	TEST info logger
+2018-02-16 14:52:59,264	event_handler.py	58	__init__	WARNING	TEST warning logger
+2018-02-16 14:52:59,264	event_handler.py	59	__init__	ERROR	TEST error logger
+2018-02-16 14:52:59,264	event_handler.py	60	__init__	DEBUG	TEST debug logger

@@ -8,6 +8,7 @@ import pandas as pd
 import numpy as np
 import core
 import os, sys
+import uuid
 
 #if current_path not in sys.path: 
 #    sys.path.append(os.path.dirname(os.path.realpath(__file__)))
@@ -347,6 +348,61 @@ class RawDataFiles(object):
     #==========================================================================
     def _save_file(self):
         self.df.to_csv(self.info_file_path, index=False, sep='\t')
+        
+#==========================================================================
+#==========================================================================
+class UUIDmapping():
+    """
+    Holds the mapping file fro uuid. 
+    """
+    def __init__(self, file_path=None): 
+        self.file_path = file_path
+        self._load_file()
+        
+    def _load_file(self): 
+        self.df = pd.read_csv(self.file_path, sep='\t')
+        
+    def _save_file(self): 
+        self.df.to_csv(self.file_path, sep='\t', index=False)
+        
+    def get_alias(self, unique_id, user_id): 
+        result = self.df.loc[(self.df['uuid']==unique_id) & (self.df['user_id']==user_id), 'alias']
+        if len(result):
+            return result.values[0]
+        return False
+        
+    def get_uuid(self, alias, user_id): 
+        result = self.df.loc[(self.df['alias']==alias) & (self.df['user_id']==user_id), 'uuid']
+        if len(result):
+            return result.values[0]
+        return False
+        
+    def add_new_uuid_for_alias(self, alias, user_id): 
+        """
+        Adds a new uuid to the mapping file and returns its value. 
+        """
+        print('¤', alias)
+        print('¤', user_id)
+        if self.get_uuid(alias, user_id): 
+            return False 
+        
+        unique_id = str(uuid.uuid4())
+        print('&&&&&')
+        print(unique_id)
+        print(alias)
+        print(user_id)
+        add_df = pd.DataFrame([[unique_id, alias, user_id]], columns=['uuid', 'alias', 'user_id'])
+        self.df = self.df.append(add_df)
+        self._save_file()
+        return unique_id
+    
+    def set_new_uuid(self, current_uuid, user_id):
+        new_uuid = str(uuid.uuid4())
+        self.df.loc[self.df['uuid']==current_uuid, 'uuid'] = new_uuid
+        return new_uuid
+        
+    def get_uuid_list_for_user(self, user_id): 
+        return list(self.df.loc[self.df['user_id']==user_id, 'uuid'])
         
     
 """#========================================================================"""

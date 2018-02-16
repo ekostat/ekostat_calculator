@@ -1,0 +1,10 @@
+2018-02-16 12:56:26,915	logger.py	85	add_log	DEBUG	
+2018-02-16 12:56:26,915	logger.py	86	add_log	DEBUG	========================================================================================================================
+2018-02-16 12:56:26,915	logger.py	87	add_log	DEBUG	### Log added for log_id "event_handler" at locaton: D:\Utveckling\git\ekostat_calculator\core\log\main_event_handler.log
+2018-02-16 12:56:26,915	logger.py	88	add_log	DEBUG	------------------------------------------------------------------------------------------------------------------------
+2018-02-16 12:56:26,915	event_handler.py	54	__init__	DEBUG	Start EventHandler: event_handler
+2018-02-16 12:56:26,925	event_handler.py	55	__init__	DEBUG	
+2018-02-16 12:56:26,925	event_handler.py	56	__init__	INFO	TEST info logger
+2018-02-16 12:56:26,935	event_handler.py	57	__init__	WARNING	TEST warning logger
+2018-02-16 12:56:26,935	event_handler.py	58	__init__	ERROR	TEST error logger
+2018-02-16 12:56:26,935	event_handler.py	59	__init__	DEBUG	TEST debug logger

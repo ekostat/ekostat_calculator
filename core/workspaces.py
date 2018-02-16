@@ -391,12 +391,14 @@ class Subset(object):
     Class to hold subset paths and objects. 
     """
     def __init__(self, 
-                 name=None, 
+                 alias=None, 
+                 unique_id=None, 
                  parent_directory=None, 
                  mapping_objects={}, 
                  parent_workspace_object=None): 
-        assert all([name, parent_directory])
-        self.name = name 
+        assert all([alias, unique_id, parent_directory])
+        self.alias = alias 
+        self.unique_id = unique_id
         self.paths = {}
         self.paths['parent_directory'] = parent_directory.replace('\\', '/')
         self.paths['subset_directory'] = '/'.join([self.paths['parent_directory'], self.name]) 
@@ -411,14 +413,14 @@ class Subset(object):
         self._initiate_attributes()
         self._load_steps() 
         
-        self._load_subset_config()
-        self.get_unique_id()
+#        self._load_subset_config()
+#        self.get_unique_id()
         
-        # Check unique_id 
-        if self.name == 'default_subset': 
-            self.config_object.set_unique_id(self.name)
-        
-        self.unique_id = self.get_unique_id() 
+#        # Check unique_id 
+#        if self.name == 'default_subset': 
+#            self.config_object.set_unique_id(self.name)
+#        
+#        self.unique_id = self.get_unique_id() 
         
         # Add logger 
         if self.unique_id:
@@ -447,9 +449,9 @@ class Subset(object):
         for step in self.steps.keys():
             self.steps[step]._logger = self._logger
             
-    #==========================================================================
-    def get_unique_id(self): 
-        return self.config_object.get_unique_id()
+#    #==========================================================================
+#    def get_unique_id(self): 
+#        return self.config_object.get_unique_id()
     
     #==========================================================================
     def _change_ok(self): 
@@ -472,6 +474,8 @@ class Subset(object):
     def _load_steps(self): 
         if not os.path.exists(self.paths['subset_directory']): 
             os.makedirs(self.paths['subset_directory'])
+        print('===')
+        print(self.paths['subset_directory'])
         step_list = [item for item in os.listdir(self.paths['subset_directory']) if '.' not in item]
         for step in step_list:
             self._load_workstep(step)
@@ -689,40 +693,52 @@ class WorkSpace(object):
     """
     Class to hold and alter a workspace. 
     Holds step_0 and subsets. 
+    name is UUID. 
     """
     def __init__(self, 
-                 name=None, 
+                 alias=None, 
+                 unique_id=None, 
                  parent_directory=None, 
                  resource_directory=None,
                  nr_subsets_allowed=4): 
         
-        assert all([name, parent_directory])
+        assert all([alias, unique_id, parent_directory])
         assert nr_subsets_allowed
         
         
         
         # Initiate paths 
         self.paths = {}
-        self.name = name 
+        self.alias = alias 
+        self.unique_id = unique_id
+
+
         self.paths['parent_directory'] = parent_directory.replace('\\', '/')
         self.paths['resource_directory'] = resource_directory.replace('\\', '/')
-        self.nr_subsets_allowed = nr_subsets_allowed
+        self.nr_subsets_allowed = nr_subsets_allowed 
         
         self._initiate_attributes()
         
+        # Load UUID mapping file for subsets
+        self.uuid_mapping = core.mapping.UUIDmapping('{}/uuid_mapping.txt'.format(self.paths['directory_path_subset']))
+        
         self._setup_workspace()
         
-        # Check unique_id 
-        if self.name == 'default': 
-            self.config_object.set_unique_id(self.name)
-        
-        self.unique_id = self.get_unique_id() 
-        print('==', '"{}"'.format(self.unique_id))
-        
         # Add logger
-        if self.unique_id:
+        if self.unique_id: 
             self.set_logger(self.unique_id)
             self.set_loggers_to_steps()
+        
+        
+        
+#        # Check unique_id 
+#        if self.name == 'default': 
+#            self.config_object.set_unique_id(self.name)
+#        
+#        self.unique_id = self.get_unique_id() 
+#        print('==', '"{}"'.format(self.unique_id))
+#        
+        
         
         self._load_config_files() 
         
@@ -752,7 +768,7 @@ class WorkSpace(object):
         
         # Setup default paths 
         self.paths['mapping_directory'] = '/'.join([self.paths['resource_directory'], 'mappings'])
-        self.paths['workspace_directory'] = '/'.join([self.paths['parent_directory'], self.name]) 
+        self.paths['workspace_directory'] = '/'.join([self.paths['parent_directory'], self.unique_id]) 
 
         print('')
         print('='*100)
@@ -803,7 +819,7 @@ class WorkSpace(object):
         if not os.path.exists(self.paths['directory_path_subset']):
             os.makedirs(self.paths['directory_path_subset'])
             
-        subsets = os.listdir(self.paths['directory_path_subset'])
+        subsets = [item for item in os.listdir(self.paths['directory_path_subset']) if '.' not in item]
 #        self._logger.debug('subsets', subsets)
         if subsets:
             for s in subsets:
@@ -812,7 +828,7 @@ class WorkSpace(object):
             self._add_subset('default_subset')
             
         # Load config file 
-        self._load_workspace_config()
+#        self._load_workspace_config()
             
         # Step 0
         self.step_0 = WorkStep(name='step_0', 
@@ -899,7 +915,10 @@ class WorkSpace(object):
         return True
         
     #==========================================================================
-    def make_copy_of_workspace(self, workspace_name='', overwrite=False): 
+    def make_copy_of_workspace(self, 
+                               alias=None, 
+                               unique_id=None, 
+                               overwrite=False): 
         """
         Makes a copy of the workspace and loads all data and settings files. 
         
@@ -912,11 +931,12 @@ class WorkSpace(object):
         """ 
         
         # Initiating workspace
-        new_workspace_path = '/'.join([self.paths['parent_directory'], workspace_name])
+        new_workspace_path = '/'.join([self.paths['parent_directory'], unique_id])
         if os.path.exists(new_workspace_path): 
-            print('New workspace already excists!')
+            self._logger.debug('New workspace already excists!')
             return False
-        new_workspace_object = core.WorkSpace(name=workspace_name, 
+        new_workspace_object = core.WorkSpace(alias=alias, 
+                                              unique_id=unique_id,  
                                               parent_directory=self.paths['parent_directory'],
                                               resource_directory=self.paths['resource_directory']) 
         
@@ -1673,6 +1693,8 @@ class Config(dict):
     #==========================================================================
     def set_path(self, from_name, to_name, pre_directory): 
         self.file_path = get_new_path(from_name, to_name, self.file_path, pre_directory)
+      
+        
         
 """
 ###############################################################################

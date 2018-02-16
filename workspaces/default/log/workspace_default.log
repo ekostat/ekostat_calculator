@@ -1,0 +1,4 @@
+2018-02-16 15:43:43,685	logger.py	85	add_log	DEBUG	
+2018-02-16 15:43:43,687	logger.py	86	add_log	DEBUG	========================================================================================================================
+2018-02-16 15:43:43,689	logger.py	87	add_log	DEBUG	### Log added for log_id "default" at locaton: D:\Utveckling\git\ekostat_calculator\workspaces\default\log\workspace_default.log
+2018-02-16 15:43:43,691	logger.py	88	add_log	DEBUG	------------------------------------------------------------------------------------------------------------------------
