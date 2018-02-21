@@ -1,6 +1,0 @@
-2018-02-20 17:42:32,179	logger.py	85	add_log	DEBUG	
-2018-02-20 17:42:32,180	logger.py	86	add_log	DEBUG	========================================================================================================================
-2018-02-20 17:42:32,184	logger.py	87	add_log	DEBUG	### Log added for log_id "1dff0c95-8e01-43a9-a574-49f540a95d11" at locaton: ..\workspaces\1dff0c95-8e01-43a9-a574-49f540a95d11\log\workspace_1dff0c95-8e01-43a9-a574-49f540a95d11.log
-2018-02-20 17:42:32,187	logger.py	88	add_log	DEBUG	------------------------------------------------------------------------------------------------------------------------
-2018-02-20 17:42:41,554	workspaces.py	930	import_default_data	DEBUG	Default data has been copied to workspace raw data folder.
-2018-02-20 17:42:49,893	workspaces.py	1349	load_all_data	DEBUG	could not read chlorophyll_integrated_2015_2016_row_format.txt from raw_data directory. Check data type

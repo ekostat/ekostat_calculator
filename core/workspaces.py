@@ -1075,7 +1075,8 @@ class WorkSpace(object):
             
     
     #==========================================================================
-    def json_subset_info(self):
+    def request_subset_list(self):
+        # TODO: update this! 
         """
         Created     20180219    by Magnus Wenzer
         Updated     20180219    by Magnus Wenzer 
@@ -1089,7 +1090,7 @@ class WorkSpace(object):
         return_list = [] 
         for alias in self.uuid_mapping.get_alias_list_for_user(self.user_id, status=self.all_status):
             return_list.append({'alias': alias, 
-                                'uid': self.uuid_mapping.get_uuid(alias, self.user_id, self.all_status),
+                                'uuid': self.uuid_mapping.get_uuid(alias, self.user_id, self.all_status),
                                 'status': self.uuid_mapping.get_status(alias, self.user_id)})
         return return_list
         

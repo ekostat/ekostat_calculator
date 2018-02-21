@@ -373,9 +373,8 @@ class UUIDmapping():
         return sorted(set(self.df['status']))
         
     #==========================================================================
-    def get_alias(self, unique_id, user_id, status=['editable', 'readable']): 
+    def get_alias(self, unique_id, status=['editable', 'readable']): 
         result = self.df.loc[(self.df['uuid']==unique_id) & \
-                             (self.df['user_id']==user_id) & \
                              (self.df['status'].isin(status)), 'alias']
         if len(result):
             return result.values[0]
@@ -383,13 +382,24 @@ class UUIDmapping():
         
     
     #==========================================================================
-    def get_status(self, alias, user_id): 
-        result = self.df.loc[(self.df['alias']==alias) & \
-                             (self.df['user_id']==user_id), 'status']
+    def get_status(self, alias=None, user_id=None, unique_id=None): 
+        if unique_id:
+            result = self.df.loc[self.df['uuid']==unique_id, 'status']
+        else:
+            result = self.df.loc[(self.df['alias']==alias) & \
+                                 (self.df['user_id']==user_id), 'status']
         if len(result):
             return result.values[0]
         return False
     
+    #==========================================================================
+    def get_user_id(self, unique_id, status=['editable', 'readable']): 
+        result = self.df.loc[(self.df['uuid']==unique_id) & \
+                             (self.df['status'].isin(status)), 'user_id']
+        if len(result):
+            return result.values[0]
+        return False
+                 
     #==========================================================================
     def get_uuid(self, alias, user_id, status=['editable', 'readable']): 
         result = self.df.loc[(self.df['alias']==alias) & \
@@ -402,7 +412,6 @@ class UUIDmapping():
     
     #==========================================================================
     def permanent_delete_uuid(self, unique_id):
-        self.df.drop(self.df['uuid']==unique_id)
         self.df = self.df.drop(self.df.index[self.df['uuid']==unique_id])
         self._save_file()
         
@@ -443,10 +452,15 @@ class UUIDmapping():
         
     
     #==========================================================================
-    def set_alias(self, unique_id, new_alias):
+    def set_alias(self, unique_id, new_alias): 
+        user_id = self.get_user_id(unique_id, status=self._get_status_list())
+        if new_alias in self.get_alias_list_for_user(user_id, status=self._get_status_list()):
+            return False
         self.df.loc[self.df['uuid']==unique_id, 'alias'] = new_alias
         self._save_file()
+        return True
         
+    
     #==========================================================================
     def set_new_uuid(self, current_uuid):
         new_uuid = str(uuid.uuid4())
