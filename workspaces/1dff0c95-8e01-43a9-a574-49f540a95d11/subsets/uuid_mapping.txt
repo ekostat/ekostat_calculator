@@ -1,0 +1,6 @@
+uuid	alias	user_id	status
+default_subset	default_subset	default	readable
+d20a70db-64fc-4f1a-acb9-39b6f2af12f8	test_subset_1	test_user	editable
+69ec441b-e02f-4265-a942-4427966402cd	test_subset_2	test_user	editable
+057c9193-b13a-4360-bb0f-4529ff19b24f	test_subset_3	test_user	editable
+9602088f-0ee3-4119-a368-91fb9e95f395	test_subset_4	test_user	editable

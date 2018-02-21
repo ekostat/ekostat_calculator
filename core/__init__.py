@@ -2,8 +2,6 @@
 
 from .data_handlers import DataHandler
 
-from .event_handler import EventHandler
-
 from .filters import DataFilter
 from .filters import ToleranceFilter
 from .filters import SettingsFile

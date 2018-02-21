@@ -1,2 +1,7 @@
-uuid	alias	user_id
-default	default	default
+uuid	alias	user_id	status
+default_workspace	default_workspace	default	readable
+9cfee37a-a31a-49ce-83f2-fbffe2574c26	mw1	a001985	editable
+dfff3333-38b1-4c76-87d0-4cf7f9c11701	mw2	a001985	editable
+c131149c-5775-4152-819c-4d0567d45495	mw3	a001985	editable
+bd310360-8a24-44fa-9f58-93e9fa417374	test_workspace_1	test_user	editable
+1dff0c95-8e01-43a9-a574-49f540a95d11	test_workspace_2	test_user	editable

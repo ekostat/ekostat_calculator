@@ -396,12 +396,14 @@ class Subset(object):
                  parent_directory=None, 
                  mapping_objects={}, 
                  parent_workspace_object=None): 
+        
         assert all([alias, unique_id, parent_directory])
+        
         self.alias = alias 
         self.unique_id = unique_id
         self.paths = {}
         self.paths['parent_directory'] = parent_directory.replace('\\', '/')
-        self.paths['subset_directory'] = '/'.join([self.paths['parent_directory'], self.name]) 
+        self.paths['subset_directory'] = '/'.join([self.paths['parent_directory'], self.unique_id]) 
         self.parent_workspace_object = parent_workspace_object
         self.paths['directory_path_log'] = self.parent_workspace_object.paths['directory_path_log']
         
@@ -413,19 +415,10 @@ class Subset(object):
         self._initiate_attributes()
         self._load_steps() 
         
-#        self._load_subset_config()
-#        self.get_unique_id()
-        
-#        # Check unique_id 
-#        if self.name == 'default_subset': 
-#            self.config_object.set_unique_id(self.name)
-#        
-#        self.unique_id = self.get_unique_id() 
-        
         # Add logger 
         if self.unique_id:
-            self.set_logger(self.unique_id)
-            self.set_loggers_to_steps()
+            self._set_logger(self.unique_id)
+            self._set_loggers_to_steps()
         
         
     #==========================================================================
@@ -434,7 +427,7 @@ class Subset(object):
         self.steps = {}
             
     #==========================================================================
-    def set_logger(self, log_id):
+    def _set_logger(self, log_id):
         # Add logger 
         core.add_log(log_id=log_id, 
                      log_directory=self.paths['directory_path_log'], 
@@ -445,29 +438,25 @@ class Subset(object):
 #        self._logger.debug('Logger set for subset {} with unique_id {}'.format(self. name, log_id))
     
     #==========================================================================
-    def set_loggers_to_steps(self): 
+    def _set_loggers_to_steps(self): 
         for step in self.steps.keys():
             self.steps[step]._logger = self._logger
-            
-#    #==========================================================================
-#    def get_unique_id(self): 
-#        return self.config_object.get_unique_id()
     
     #==========================================================================
     def _change_ok(self): 
         """
         Check to make sure that the default 
         """
-        if self.parent_subset_object and self.parent_workspace_object.name == 'default':
+        if self.parent_subset_object and self.parent_workspace_object.unique_id == 'default_workspace':
             self._logger.warning('Not allowed to change default workspace!')
             return False
-        elif self.name == 'default_subset':
+        elif self.unique_id == 'default_subset':
             self._logger.warning('Not allowed to change default subset!')
             return False
         return True
     
     #==========================================================================
-    def _load_subset_config(self): 
+    def deprecated__load_subset_config(self): 
         self.config_object = Config(self.paths['subset_directory'] + '/subset.cfg')
         
     #==========================================================================
@@ -481,7 +470,7 @@ class Subset(object):
             self._load_workstep(step)
         
     #==========================================================================
-    def _add_files_from_subset(self, subset_object=None, overwrite=False):
+    def deprecated__add_files_from_subset(self, subset_object=None, overwrite=False):
         """
         Copy files from given subset. Option to overwrite or not. 
         This method is used to copy (branching) an entire subset. 
@@ -532,7 +521,7 @@ class Subset(object):
             return '' 
         
     #==========================================================================
-    def _set_unique_id(self): 
+    def deprecated__set_unique_id(self): 
         """
         Sets a unique id (UUID) to the subset. Will not overwrite an existing one. 
         """
@@ -600,7 +589,7 @@ class Subset(object):
         self.config_object.set_config('alias', alias)
         
     #==========================================================================
-    def rename_paths(self, from_name, to_name, pre_directory=''): 
+    def deprecated_rename_paths(self, from_name, to_name, pre_directory=''): 
         
         for name in self.paths.keys(): 
             if type(self.paths[name]) == dict:
@@ -611,7 +600,7 @@ class Subset(object):
 
 
     #==========================================================================
-    def rename_subset(self, new_name): 
+    def deprecated_rename_subset(self, new_name): 
         if new_name.lower() in ['subset', 'default_subset']: 
             self._logger.debug('Invalid name "{}" for subset!'.format(new_name))
             return False 
@@ -637,7 +626,7 @@ class Subset(object):
         return True 
     
     #==========================================================================
-    def rename_workspace(self, from_name, to_name): 
+    def deprecated_rename_workspace(self, from_name, to_name): 
         
         # Rename all paths in subset 
         self.rename_paths(from_name, to_name, pre_directory='workspaces')
@@ -691,6 +680,9 @@ class Subset(object):
 ###############################################################################
 class WorkSpace(object):
     """
+    Created     ????????    by Magnus Wenzer
+    Updated     20180220    by Magnus Wenzer
+        
     Class to hold and alter a workspace. 
     Holds step_0 and subsets. 
     name is UUID. 
@@ -700,17 +692,20 @@ class WorkSpace(object):
                  unique_id=None, 
                  parent_directory=None, 
                  resource_directory=None,
-                 nr_subsets_allowed=4): 
+                 nr_subsets_allowed=4, 
+                 user_id=None): 
         
-        assert all([alias, unique_id, parent_directory])
+        assert all([alias, unique_id, parent_directory, user_id])
         assert nr_subsets_allowed
         
-        
-        
+
         # Initiate paths 
         self.paths = {}
         self.alias = alias 
         self.unique_id = unique_id
+        self.user_id = user_id
+        
+        self.all_status = ['editable', 'readable', 'deleted']
 
 
         self.paths['parent_directory'] = parent_directory.replace('\\', '/')
@@ -726,43 +721,48 @@ class WorkSpace(object):
         
         # Add logger
         if self.unique_id: 
-            self.set_logger(self.unique_id)
-            self.set_loggers_to_steps()
-        
-        
-        
-#        # Check unique_id 
-#        if self.name == 'default': 
-#            self.config_object.set_unique_id(self.name)
-#        
-#        self.unique_id = self.get_unique_id() 
-#        print('==', '"{}"'.format(self.unique_id))
-#        
+            self._set_logger(self.unique_id)
+            self._set_loggers_to_steps()
         
         
         self._load_config_files() 
         
     #==========================================================================
-    def set_logger(self, log_id):
-        # Add logger 
-        core.add_log(log_id=log_id, 
-                     log_directory=self.paths['directory_path_log'], 
-                     log_level='DEBUG', 
-                     on_screen=True, 
-                     prefix='workspace')
-        self._logger = core.get_log(log_id)
-#        self._logger.debug('Logger set for workspace {} with unique_id {}'.format(self. name, self.unique_id))
-           
-    #==========================================================================
-    def set_loggers_to_steps(self): 
-        self.step_0._logger = self._logger
-        for subset in self.subset_dict.keys():
-            self.subset_dict[subset].set_loggers_to_steps()
+    def _add_subset(self, unique_id=None): 
+        assert unique_id, 'No subset name given!'
+        print('===', unique_id)
+        if unique_id == 'default_subset':
+            alias = 'default_subset' 
+        else:
+            alias = self.uuid_mapping.get_alias(unique_id, user_id=self.user_id)
+        if unique_id in self.subset_dict.keys():
+            self._logger.debug('Given subset "{}" with alias "{}" is already present!'.format(unique_id, alias))
+            return False
         
-    #==========================================================================
-    def get_unique_id(self): 
-        return self.config_object.get_unique_id()
         
+        self.paths['directory_path_subsets'][unique_id] = self.paths['directory_path_subset'] + '/{}'.format(unique_id)
+        print('!!!', alias)
+        print('!!!', unique_id)
+        print('!!!', self.paths['directory_path_subset'])
+        self.subset_dict[unique_id] = Subset(alias=alias, 
+                                             unique_id=unique_id, 
+                                             parent_directory=self.paths['directory_path_subset'],
+                                             mapping_objects=self.mapping_objects, 
+                                             parent_workspace_object=self)
+        return unique_id 
+    
+    
+    #==========================================================================
+    def _change_ok(self): 
+        """
+        Check to make sure that default workspace is not changed. 
+        """
+        if self.unique_id == 'default_workspace':
+            self._logger.debug('Not allowed to change default workspace!')
+            return False
+        return True    
+    
+    
     #==========================================================================
     def _initiate_attributes(self): 
         
@@ -792,15 +792,48 @@ class WorkSpace(object):
         self.mapping_objects = {}
         self.mapping_objects['water_body'] = core.WaterBody(file_path=self.paths['mapping_directory'] + '/water_body_match.txt')
         
+        self.dtype_settings = core.RawDataFiles(self.paths['directory_path_raw_data'])
+        
+    
     #==========================================================================
-    def _change_ok(self): 
-        """
-        Check to make sure that default workspace is not changed. 
-        """
-        if self.name == 'default':
-            self._logger.debug('Not allowed to change default workspace!')
-            return False
-        return True
+    def _load_config_files(self):       
+        self.cf_df = pd.read_csv(self.paths['resource_directory'] + '/Quality_Elements.cfg', sep='\t', dtype='str', encoding='cp1252')
+        assert all(['quality element' in self.cf_df.keys(), 'indicator' in self.cf_df.keys(), 'parameters' in self.cf_df.keys()]), 'configuration file must contain quality element, indicator and parameters information'
+        self.cfg = {}
+        self.cfg['quality elements'] = self.cf_df.groupby('quality element')['indicator'].unique()
+        self.cfg['indicators'] = self.cf_df.groupby('indicator')['parameters'].unique()
+#        for QE in self.cfg['quality elements']:
+#            self.cfg[QE] = self.cf_df.groupby(QE)['indicator'].unique()
+#        for indicator in self.cfg['indicators']:
+#            self.cfg[indicator] = self.cf_df.groupby(QE)['parameters'].split(',') 
+
+
+    #==========================================================================
+    def _load_workstep(self, subset=None, step=None): 
+        subset_object = self.get_subset_object(subset) 
+        if not subset_object:
+            return False 
+        return subset_object._load_workstep(step)
+    
+    
+    #==========================================================================
+    def _set_logger(self, log_id):
+        # Add logger 
+        core.add_log(log_id=log_id, 
+                     log_directory=self.paths['directory_path_log'], 
+                     log_level='DEBUG', 
+                     on_screen=True, 
+                     prefix='workspace')
+        self._logger = core.get_log(log_id)
+#        self._logger.debug('Logger set for workspace {} with unique_id {}'.format(self. name, self.unique_id))
+           
+
+    #==========================================================================
+    def _set_loggers_to_steps(self): 
+        self.step_0._logger = self._logger
+        for subset in self.subset_dict.keys():
+            self.subset_dict[subset]._set_loggers_to_steps()
+        
         
     #==========================================================================
     def _setup_workspace(self):
@@ -843,26 +876,15 @@ class WorkSpace(object):
         self.index_handler = core.IndexHandler(workspace_object=self, 
                                                data_handler_object=self.data_handler)
         
-    #==========================================================================
-    def _load_config_files(self):       
-        self.cf_df = pd.read_csv(self.paths['resource_directory'] + '/Quality_Elements.cfg', sep='\t', dtype='str', encoding='cp1252')
-        assert all(['quality element' in self.cf_df.keys(), 'indicator' in self.cf_df.keys(), 'parameters' in self.cf_df.keys()]), 'configuration file must contain quality element, indicator and parameters information'
-        self.cfg = {}
-        self.cfg['quality elements'] = self.cf_df.groupby('quality element')['indicator'].unique()
-        self.cfg['indicators'] = self.cf_df.groupby('indicator')['parameters'].unique()
-#        for QE in self.cfg['quality elements']:
-#            self.cfg[QE] = self.cf_df.groupby(QE)['indicator'].unique()
-#        for indicator in self.cfg['indicators']:
-#            self.cfg[indicator] = self.cf_df.groupby(QE)['parameters'].split(',')     
-
-    #==========================================================================
-    def _load_workspace_config(self): 
-        self.config_object = Config(self.paths['workspace_directory'] + '/workspace.cfg')   
+    
         
 
     #==========================================================================
     def import_file(self, file_path=None, data_type=None):
         """
+        Created     ????????    by 
+        Updated     ????????    by 
+        
         Imports a data file to the raw_data directory in the workspace. 
         Also adds information to the dtype_settings-object. 
         """ 
@@ -881,6 +903,9 @@ class WorkSpace(object):
     #==========================================================================
     def import_default_data(self, force=False):
         """
+        Created     ????????    by Lena
+        Updated     20180220    by Magnus Wenzer
+        
         Imports default data from the resources directory to input raw_data directory in workspace.
         """
         # Not able to load data into default workspace
@@ -902,154 +927,29 @@ class WorkSpace(object):
             src = '/'.join([source_directory, file_name])
             tar = '/'.join([self.paths['directory_path_raw_data'], file_name])
             shutil.copyfile(src, tar)
+        self._logger.debug('Default data has been copied to workspace raw data folder.')
             
-        # Load data 
-        self.load_all_data() 
+#        # Load data 
+#        self.load_all_data() 
+#        self._logger.debug('Data has been loaded in import_default_data. flag "load_data" was set to True')
         
         # Update dtype_settings object
         all_ok = self.dtype_settings.load_and_sync_dtype_settings()
         
         if not all_ok:
-            self._logger.debug('Default data not loaded correctly!')
+            self._logger.warning('Default data not loaded correctly!')
             return False
         return True
         
-    #==========================================================================
-    def make_copy_of_workspace(self, 
-                               alias=None, 
-                               unique_id=None, 
-                               overwrite=False): 
-        """
-        Makes a copy of the workspace and loads all data and settings files. 
-        
-        Input: 
-            workspace_name - name of the new workspace 
-            overwrite - Tue/False
-        Return: 
-            workspace object for the new workspace
-            Returns False if something went wrong 
-        """ 
-        
-        # Initiating workspace
-        new_workspace_path = '/'.join([self.paths['parent_directory'], unique_id])
-        if os.path.exists(new_workspace_path): 
-            self._logger.debug('New workspace already excists!')
-            return False
-        new_workspace_object = core.WorkSpace(alias=alias, 
-                                              unique_id=unique_id,  
-                                              parent_directory=self.paths['parent_directory'],
-                                              resource_directory=self.paths['resource_directory']) 
-        
-        # Load config files. One for workspace and one for each subset. 
-        # The config file are copies of the existing ones but with new uuid 
-        # Workspace config 
-        des_path = new_workspace_object.config_object.file_path 
-        new_workspace_object.config_object = self.config_object.make_copy_of_config(des_path)
-        
-        # Set logger
-        new_workspace_object.unique_id = new_workspace_object.config_object.get_unique_id()
-        new_workspace_object.set_logger(new_workspace_object.unique_id)
-        
-        # Copy files to new workspace
-        new_workspace_object._add_files_from_workspace(self, overwrite=overwrite) 
-
-        # Subset configs
-        for subset in new_workspace_object.subset_dict.keys(): 
-            des_path = new_workspace_object.subset_dict[subset].config_object.file_path
-            new_workspace_object.subset_dict[subset].config_object = self.subset_dict[subset].config_object.make_copy_of_config(des_path)
-        
-        # Load data in workspace 
-        data_loaded = new_workspace_object.load_all_data()
-        
-        if data_loaded:
-            self._logger.debug('Data loaded!')
-        else:
-            self._logger.debug('No data to load! Consider loading default data by calling <workspace_objetc>.load_default_data()')
-            
-        
-        
-        return new_workspace_object
-        
-        
-    #==========================================================================
-    def _add_files_from_workspace(self, workspace_object=None, overwrite=False):
-        """
-        Copy files from given workspace. Option to overwrite or not. 
-        This method is used when copy an entire workspace. 
-        """ 
-        # Step 0
-        if workspace_object.step_0: 
-            self.step_0 = WorkStep(name='step_0', 
-                          parent_directory=self.paths['workspace_directory'], 
-                          mapping_objects=self.mapping_objects, 
-                          parent_workspace_object=self) 
-            self.step_0.add_files_from_workstep(step_object=workspace_object.step_0, 
-                                                overwrite=overwrite)
-                
-        # Subsets
-        for subset in workspace_object.get_subset_list():
-            self._add_subset(subset)
-            self.subset_dict[subset]._add_files_from_subset(subset_object=workspace_object.subset_dict[subset], 
-                                                           overwrite=overwrite)
-            
-        # Data         
-        for from_file_path in workspace_object.get_all_file_paths_in_input_data():
-            to_file_path = from_file_path.replace(workspace_object.paths['workspace_directory'], self.paths['workspace_directory'])
-            if os.path.exists(to_file_path) and not overwrite:
-                continue
-            to_directory = os.path.dirname(to_file_path)
-            if not os.path.exists(to_directory):
-                # If directory has been added in later versions of the ekostat calculator
-                os.makedirs(to_directory)
-            # Copy file
-            shutil.copy(from_file_path, to_file_path)
-        
-    #==========================================================================
-    def _add_subset(self, sub=None): 
-        assert sub, 'No subset name given!'
-        if sub in self.subset_dict.keys():
-            self._logger.debug('Given subset "{}" is already present!'.format(sub))
-            return False
-        
-#        self._logger.debug('== {}'.format(sub))
-        self.paths['directory_path_subsets'][sub] = self.paths['directory_path_subset'] + '/{}'.format(sub)
-        self.subset_dict[sub] = Subset(name=sub, 
-                                       parent_directory=self.paths['directory_path_subset'],
-                                       mapping_objects=self.mapping_objects, 
-                                       parent_workspace_object=self)
-        return sub 
     
-    #==========================================================================
-    def _load_workstep(self, subset=None, step=None): 
-        subset_object = self.get_subset_object(subset) 
-        if not subset_object:
-            return False 
-        return subset_object._load_workstep(step)
-        
-    #==========================================================================
-    def deprecated_apply_data_filter_step_0(self): 
-        """
-        Applies the first filter to the index_handler. 
-        """
-        all_ok = self.index_handler.add_filter(filter_object=self.step_0.data_filter, step='step_0')
-        return all_ok
-        
-    #==========================================================================
-    def deprecated_apply_subset_data_filter(self, subset):
-        """
-        Applies the data filter for the given subset. 
-        This is not fully handled by the index_handler. 
-        Filter is applyed in step 1.
-        """
-        if subset not in self.get_subset_list():
-            return False
-        sub_object = self.get_step_1_object(subset)
-        all_ok = self.index_handler.add_filter(filter_object=sub_object.data_filter, filter_step=1, subset=subset)
-        return all_ok
     
     #==========================================================================
     def apply_data_filter(self, step=None, subset=None):
         """
+        Created     ????????    by Magnus Wenzer
+        Updated     20180220    by Magnus Wenzer
+        
+        
         Applies data filter to the index handler. 
         
         Input: 
@@ -1134,97 +1034,65 @@ class WorkSpace(object):
         return all_ok
         
     #==========================================================================
-    def copy_subset(self, source_subset_name=None, target_subset_name=None): 
-        assert all([source_subset_name, target_subset_name])
-        if not self._add_subset(sub=target_subset_name):
-            return False
-        all_ok = self.subset_dict[target_subset_name]._add_files_from_subset(self.subset_dict[source_subset_name], overwrite=True) 
-        if not all_ok:
-            return all_ok
-        
-        # Copy subset.cfg. This will give the new subset a new uuid 
-        des_path = self.subset_dict[target_subset_name].config_object.file_path
-        self.subset_dict[target_subset_name].config_object = self.subset_dict[source_subset_name].config_object.make_copy_of_config(des_path) 
-        
-        return True
-    
-    #==========================================================================
-    def rename_paths(self, from_name, to_name, pre_directory=''): 
-        
-        for name in self.paths.keys(): 
-            if type(self.paths[name]) == dict:
-                for sub_name in self.paths[name].keys():
-                    self.paths[name][sub_name] = get_new_path(from_name, to_name, self.paths[name][sub_name], pre_directory)
-            else:
-                self.paths[name] = get_new_path(from_name, to_name, self.paths[name], pre_directory)
-            
-                
-    #==========================================================================
-    def rename_subset(self, from_name=None, to_name=None): 
+    def copy_subset(self, source_alias=None, target_alias=None):
         """
-        Renames the subset and changes all the paths. 
-        """ 
-        assert all([from_name, to_name]) 
+        Created     20180219    by Magnus Wenzer
+        Updated     20180219    by Magnus Wenzer
         
-        if to_name.lower() in ['subset', 'default_subset']: 
-            self._logger.debug('Invalid name "{}" for subset!'.format(to_name)) 
-            return False 
-        
-        if to_name in self.subset_dict.keys():
-            self._logger.debug('Invalid name "{}" for subset! subset already excists!'.format(to_name)) 
-            return False 
-            
-        subset_object = self.get_subset_object(from_name)
-        
-        subset_object.rename_subset(to_name)
-        
-        # Rename paths in Workspace 
-        self.rename_paths(from_name, to_name, pre_directory='subsets')
-        
-        # Rename paths in step_0 
-        self.step_0.rename_paths(from_name, to_name, pre_directory='subsets')
-        
-        # Rename key in dict 
-        self.subset_dict[to_name] = self.subset_dict[from_name]
-        self.subset_dict.pop(from_name)
-        
-    
-    #==========================================================================
-    def rename_workspace(self, to_name=None): 
+        Creates a copy of a subset. 
         """
-        Renames the workspace and changes all the paths. 
-        """  
+        assert all([source_alias, target_alias])
         
-        if not self._change_ok(): 
-            self._logger.debug('Not allowed to rename workspace!') 
-            return False  
+        if source_alias == 'default_subset':
+            source_uuid = self.uuid_mapping.get_uuid(source_alias, 'default') 
+        else:
+            source_uuid = self.uuid_mapping.get_uuid(source_alias, self.user_id) 
             
-        current_directory = self.paths['workspace_directory']
-        new_directory = '{}/{}'.format(self.paths['parent_directory'], to_name) 
-        
-        if os.path.exists(new_directory):
-            self._logger.debug('Workspace "{}" already excists. Can not rename workspace!'.format(to_name))
+        if not source_uuid:
+            self._logger.warning('No alias named "{}"'.format(source_alias))
             return False
         
-        # Rename paths in Workspace 
-        self.rename_paths(self.name, to_name, pre_directory='workspaces')
+        # Add UUID for workspace in uuid_mapping 
+        target_uuid = self.uuid_mapping.add_new_uuid_for_alias(target_alias, self.user_id)
+        if not target_uuid:
+            self._logger.debug('Could not add subset with alias "{}". Workspace already exists!'.format(target_alias)) 
+            return False
         
-        # Rename paths in step_0 
-        self.step_0.rename_paths(self.name, to_name, pre_directory='workspaces') 
+        # Copy all directories and files in subset 
+        source_subset_path = '/'.join([self.paths['directory_path_subset'], source_uuid])
+        target_subset_path = '/'.join([self.paths['directory_path_subset'], target_uuid]) 
         
-        # Rename subsets 
-        for subset in self.subset_dict.keys():
-            self.subset_dict[subset].rename_workspace(self.name, to_name)
         
-        # Set path in config file 
-        self.config_object.set_path(self.name, to_name, pre_directory='workspaces') 
+        print('source_subset_path:', source_subset_path)
+        print('target_subset_path:', target_subset_path)
         
-        # Rename directory 
-#        self._logger.debug(from_path)
-#        self._logger.debug(to_path)
-        os.rename(current_directory, new_directory)
+        # Copy files
+        shutil.copytree(source_subset_path, target_subset_path)
         
-        self.name = to_name 
+        
+        # Load subset 
+        self._add_subset(target_uuid)
+            
+    
+    #==========================================================================
+    def json_subset_info(self):
+        """
+        Created     20180219    by Magnus Wenzer
+        Updated     20180219    by Magnus Wenzer 
+        
+        Returns a list with dicts with keys: 
+            alias 
+            uid 
+            status
+        Information is taken from uuid_mapping. No data has to be loaded. 
+        """
+        return_list = [] 
+        for alias in self.uuid_mapping.get_alias_list_for_user(self.user_id, status=self.all_status):
+            return_list.append({'alias': alias, 
+                                'uid': self.uuid_mapping.get_uuid(alias, self.user_id, self.all_status),
+                                'status': self.uuid_mapping.get_status(alias, self.user_id)})
+        return return_list
+        
         
     #==========================================================================
     def print_all_paths(self): 
@@ -1256,16 +1124,42 @@ class WorkSpace(object):
         
         
     #==========================================================================
-    def delete_subset(self, subset_name=None): 
+    def delete_subset(self, alias=None, unique_id=None, permanently=False): 
         """
-        subset_name is like 'A', 'B' and so on. Consider to use alias as option. 
+        Created     20180219    by Magnus Wenzer
+        Updated     20180219    by Magnus Wenzer
+        
+        Permanatly deletes the given subset. 
         """
-        if subset_name in self.subset_dict.keys(): 
-            # TODO: Delete files and directories. How to make this safe? 
-            self.subset_dict.pop(subset_name)
-            self.paths['directory_path_subsets'].pop(subset_name)
-            return True
-        return False
+        if alias:
+            unique_id = self.uuid_mapping.get_uuid(alias, self.user_id)
+        
+#        if unique_id not in self.subset_dict.keys(): 
+#            self._logger.warning('Subset "{}" with alias "{}" does not exist!'.format(unique_id, alias))
+#            return False
+        
+        if permanently:
+            path_to_remove = self.paths['directory_path_subsets'].get(unique_id)
+            if not ('workspace' in path_to_remove) & ('subset' in path_to_remove):
+                self._logger.error('Trying to remove subset but the path to delete is not secure!') 
+                return False
+            
+            self._logger.warning('Permanently deleting subset "{}" with alias "{}".'.format(unique_id, alias))
+            # Delete files and folders: 
+            shutil.rmtree(path_to_remove)
+            
+            # Remove objects and links 
+            if unique_id in self.subset_dict.keys():
+                self.subset_dict.pop(unique_id)
+                self.paths['directory_path_subsets'].pop(unique_id) 
+            
+            # Remove in uuid_mapping
+            self.uuid_mapping.permanent_delete_uuid(unique_id) 
+        else:
+            self._logger.warning('Removing subset "{}" with alias "{}".'.format(unique_id, alias)) 
+            self.uuid_mapping.set_status(unique_id, 'deleted')
+        
+        return True 
             
     #==========================================================================
     def get_all_file_paths_in_workspace(self): 
@@ -1286,6 +1180,10 @@ class WorkSpace(object):
                     file_list.append('/'.join([root, f]).replace('\\', '/'))
         return sorted(file_list)
     
+    #==========================================================================
+    def get_unique_id_for_alias(self, alias):
+        return self.uuid_mapping.get_uuid(alias, self.user_id)
+        
     #==========================================================================
     def get_data_filter_object(self, step=None, subset=None): 
         step_object = self.get_step_object(step=step, subset=subset)
@@ -1349,6 +1247,9 @@ class WorkSpace(object):
     
     #==========================================================================
     def get_subset_list(self):
+        """
+        Used
+        """
         return sorted(self.subset_dict.keys())
     
     #==========================================================================
@@ -1385,7 +1286,7 @@ class WorkSpace(object):
         self.quality_factor_NP = core.QualityFactorNP()
         
     #==========================================================================
-    def load_all_data(self): 
+    def load_all_data(self, only_all_data=False): 
         """ 
         Loads all data from the input_data/raw_data-directory belonging to the workspace. 
         """
@@ -1410,7 +1311,6 @@ class WorkSpace(object):
 #            if row['data_type'] == 'phyche':
 #                self.data_handler.physical_chemical.load_source(file_path=raw_data_file_path + row.filename,
 
-        self.dtype_settings = core.RawDataFiles(self.paths['directory_path_raw_data'])
         if not self.dtype_settings.has_info:
             self._logger.debug('No info found')
             return False
@@ -1504,28 +1404,7 @@ class WorkSpace(object):
 #        
 #        self.data_handler.merge_all_data(save_to_txt=True)
         
-    #==========================================================================
-    def deprecated_save_indicator_settings(self, indicator=None, subset=None): 
-        """
-        Saving indicator settings is only possible in step 2. 
-        """
-        # TODO: Chould later steps be removed if indicator settings are saved (saving only possible at level 2)?
-        if not self._change_ok(): 
-            return 
-        step_object = self.get_step_2_object(subset)
-        step_object.indicator_settings[indicator].save_file() # Overwrites existing file if no file_path is given
-        return True 
     
-    #==========================================================================
-    def deprecated_save_all_indicator_settings_in_subset(self, subset): 
-        if not self._change_ok(): 
-            return 
-        all_ok = True
-        step_object = self.get_step_2_object(subset)
-        for obj in step_object.indicator_settings.values():
-            if not obj.save_file():
-                all_ok = False
-        return all_ok 
     
     #==========================================================================
     def set_data_filter(self, step='', subset='', filter_type='', filter_name='', data=None, save_filter=True): 
@@ -1547,6 +1426,7 @@ class WorkSpace(object):
             
             save filter:    option to save text file. default is true
         """
+        
         assert filter_type in ['include_list','exclude_list'], 'filter_type must be include_list or exclude_list'
         if not self._change_ok():
             return False
@@ -1556,7 +1436,7 @@ class WorkSpace(object):
         if not step_object:
             return False
         if int(step[-1]) > 2:
-            self._logger.debug('Data filter can only be applied on step_2 or lower!')
+            self._logger.warning('Data filter can only be applied on step_2 or lower!')
             return False
         return step_object.set_data_filter(filter_type=filter_type, 
                                             filter_name=filter_name, 
@@ -1617,6 +1497,242 @@ class WorkSpace(object):
                                                          include=include, 
                                                          station_list=station_list)
     
+    #==========================================================================
+    def deprecated_get_unique_id(self): 
+        return self.config_object.get_unique_id()
+    
+
+    #==========================================================================
+    def deprecated_load_workspace_config(self): 
+        self.config_object = Config(self.paths['workspace_directory'] + '/workspace.cfg')   
+    
+    #==========================================================================
+    def deprecated_save_indicator_settings(self, indicator=None, subset=None): 
+        """
+        Saving indicator settings is only possible in step 2. 
+        """
+        # TODO: Chould later steps be removed if indicator settings are saved (saving only possible at level 2)?
+        if not self._change_ok(): 
+            return 
+        step_object = self.get_step_2_object(subset)
+        step_object.indicator_settings[indicator].save_file() # Overwrites existing file if no file_path is given
+        return True 
+    
+    #==========================================================================
+    def deprecated_save_all_indicator_settings_in_subset(self, subset): 
+        if not self._change_ok(): 
+            return 
+        all_ok = True
+        step_object = self.get_step_2_object(subset)
+        for obj in step_object.indicator_settings.values():
+            if not obj.save_file():
+                all_ok = False
+        return all_ok 
+    
+    #==========================================================================
+    def deprecated_copy_subset(self, source_subset_name=None, target_subset_name=None): 
+        assert all([source_subset_name, target_subset_name])
+        if not self._add_subset(sub=target_subset_name):
+            return False
+        all_ok = self.subset_dict[target_subset_name]._add_files_from_subset(self.subset_dict[source_subset_name], overwrite=True) 
+        if not all_ok:
+            return all_ok
+        
+        # Copy subset.cfg. This will give the new subset a new uuid 
+        des_path = self.subset_dict[target_subset_name].config_object.file_path
+        self.subset_dict[target_subset_name].config_object = self.subset_dict[source_subset_name].config_object.make_copy_of_config(des_path) 
+        
+        return True
+    
+    #==========================================================================
+    def deprecated_rename_paths(self, from_name, to_name, pre_directory=''): 
+        
+        for name in self.paths.keys(): 
+            if type(self.paths[name]) == dict:
+                for sub_name in self.paths[name].keys():
+                    self.paths[name][sub_name] = get_new_path(from_name, to_name, self.paths[name][sub_name], pre_directory)
+            else:
+                self.paths[name] = get_new_path(from_name, to_name, self.paths[name], pre_directory)
+            
+                
+    #==========================================================================
+    def deprecated_rename_subset(self, from_name=None, to_name=None): 
+        """
+        Renames the subset and changes all the paths. 
+        """ 
+        assert all([from_name, to_name]) 
+        
+        if to_name.lower() in ['subset', 'default_subset']: 
+            self._logger.debug('Invalid name "{}" for subset!'.format(to_name)) 
+            return False 
+        
+        if to_name in self.subset_dict.keys():
+            self._logger.debug('Invalid name "{}" for subset! subset already excists!'.format(to_name)) 
+            return False 
+            
+        subset_object = self.get_subset_object(from_name)
+        
+        subset_object.rename_subset(to_name)
+        
+        # Rename paths in Workspace 
+        self.rename_paths(from_name, to_name, pre_directory='subsets')
+        
+        # Rename paths in step_0 
+        self.step_0.rename_paths(from_name, to_name, pre_directory='subsets')
+        
+        # Rename key in dict 
+        self.subset_dict[to_name] = self.subset_dict[from_name]
+        self.subset_dict.pop(from_name)
+        
+    
+    #==========================================================================
+    def deprecated_rename_workspace(self, to_name=None): 
+        """
+        Renames the workspace and changes all the paths. 
+        """  
+        
+        if not self._change_ok(): 
+            self._logger.debug('Not allowed to rename workspace!') 
+            return False  
+            
+        current_directory = self.paths['workspace_directory']
+        new_directory = '{}/{}'.format(self.paths['parent_directory'], to_name) 
+        
+        if os.path.exists(new_directory):
+            self._logger.debug('Workspace "{}" already excists. Can not rename workspace!'.format(to_name))
+            return False
+        
+        # Rename paths in Workspace 
+        self.rename_paths(self.name, to_name, pre_directory='workspaces')
+        
+        # Rename paths in step_0 
+        self.step_0.rename_paths(self.name, to_name, pre_directory='workspaces') 
+        
+        # Rename subsets 
+        for subset in self.subset_dict.keys():
+            self.subset_dict[subset].rename_workspace(self.name, to_name)
+        
+        # Set path in config file 
+        self.config_object.set_path(self.name, to_name, pre_directory='workspaces') 
+        
+        # Rename directory 
+#        self._logger.debug(from_path)
+#        self._logger.debug(to_path)
+        os.rename(current_directory, new_directory)
+        
+        self.name = to_name 
+        
+    #==========================================================================
+    def deprecated_make_copy_of_workspace(self, 
+                               alias=None, 
+                               unique_id=None, 
+                               overwrite=False): 
+        """
+        Makes a copy of the workspace and loads all data and settings files. 
+        
+        Input: 
+            workspace_name - name of the new workspace 
+            overwrite - Tue/False
+        Return: 
+            workspace object for the new workspace
+            Returns False if something went wrong 
+        """ 
+        
+        # Initiating workspace
+        new_workspace_path = '/'.join([self.paths['parent_directory'], unique_id])
+        if os.path.exists(new_workspace_path): 
+            self._logger.debug('New workspace already excists!')
+            return False
+        new_workspace_object = core.WorkSpace(alias=alias, 
+                                              unique_id=unique_id,  
+                                              parent_directory=self.paths['parent_directory'],
+                                              resource_directory=self.paths['resource_directory']) 
+        
+        # Load config files. One for workspace and one for each subset. 
+        # The config file are copies of the existing ones but with new uuid 
+        # Workspace config 
+        des_path = new_workspace_object.config_object.file_path 
+        new_workspace_object.config_object = self.config_object.make_copy_of_config(des_path)
+        
+        # Set logger
+        new_workspace_object.unique_id = new_workspace_object.config_object.get_unique_id()
+        new_workspace_object.set_logger(new_workspace_object.unique_id)
+        
+        # Copy files to new workspace
+        new_workspace_object._add_files_from_workspace(self, overwrite=overwrite) 
+
+        # Subset configs
+        for subset in new_workspace_object.subset_dict.keys(): 
+            des_path = new_workspace_object.subset_dict[subset].config_object.file_path
+            new_workspace_object.subset_dict[subset].config_object = self.subset_dict[subset].config_object.make_copy_of_config(des_path)
+        
+        # Load data in workspace 
+        data_loaded = new_workspace_object.load_all_data()
+        
+        if data_loaded:
+            self._logger.debug('Data loaded!')
+        else:
+            self._logger.debug('No data to load! Consider loading default data by calling <workspace_objetc>.load_default_data()')
+            
+        
+        
+        return new_workspace_object
+        
+        
+    #==========================================================================
+    def deprecated_add_files_from_workspace(self, workspace_object=None, overwrite=False):
+        """
+        Copy files from given workspace. Option to overwrite or not. 
+        This method is used when copy an entire workspace. 
+        """ 
+        # Step 0
+        if workspace_object.step_0: 
+            self.step_0 = WorkStep(name='step_0', 
+                          parent_directory=self.paths['workspace_directory'], 
+                          mapping_objects=self.mapping_objects, 
+                          parent_workspace_object=self) 
+            self.step_0.add_files_from_workstep(step_object=workspace_object.step_0, 
+                                                overwrite=overwrite)
+                
+        # Subsets
+        for subset in workspace_object.get_subset_list():
+            self._add_subset(subset)
+            self.subset_dict[subset]._add_files_from_subset(subset_object=workspace_object.subset_dict[subset], 
+                                                           overwrite=overwrite)
+            
+        # Data         
+        for from_file_path in workspace_object.get_all_file_paths_in_input_data():
+            to_file_path = from_file_path.replace(workspace_object.paths['workspace_directory'], self.paths['workspace_directory'])
+            if os.path.exists(to_file_path) and not overwrite:
+                continue
+            to_directory = os.path.dirname(to_file_path)
+            if not os.path.exists(to_directory):
+                # If directory has been added in later versions of the ekostat calculator
+                os.makedirs(to_directory)
+            # Copy file
+            shutil.copy(from_file_path, to_file_path)
+        
+ 
+    #==========================================================================
+    def deprecated_apply_data_filter_step_0(self): 
+        """
+        Applies the first filter to the index_handler. 
+        """
+        all_ok = self.index_handler.add_filter(filter_object=self.step_0.data_filter, step='step_0')
+        return all_ok
+        
+    #==========================================================================
+    def deprecated_apply_subset_data_filter(self, subset):
+        """
+        Applies the data filter for the given subset. 
+        This is not fully handled by the index_handler. 
+        Filter is applyed in step 1.
+        """
+        if subset not in self.get_subset_list():
+            return False
+        sub_object = self.get_step_1_object(subset)
+        all_ok = self.index_handler.add_filter(filter_object=sub_object.data_filter, filter_step=1, subset=subset)
+        return all_ok
     
 #==========================================================================
 #==========================================================================
