@@ -70,7 +70,7 @@ class DataFilter(object):
         statn = sorted(set([item.strip() for item in statn]))
         self.include_list_filter['STATN'] = statn
          
-        water_body_list = self.include_list_filter['WATER_BODY_NAME'][:] 
+        water_body_list = self.include_list_filter['WATERBODY_NAME'][:] 
         # Add water bodies
         for s in statn: 
             #TODO: Link between statn and water body
@@ -91,7 +91,7 @@ class DataFilter(object):
         type_area = sorted(set([item.strip() for item in type_area]))
         self.include_list_filter['TYPE_AREA_NUMBER'] = type_area 
          
-        water_district_list = self.include_list_filter['WATER_DISTRICT_NAME'][:] 
+        water_district_list = self.include_list_filter['WATER_DISTRICT'][:] 
         # Add water districts
         for ta in type_area: 
             #TODO: Link between type area and water district
@@ -106,7 +106,7 @@ class DataFilter(object):
         include_current nor used
         """
         water_district = sorted(set([item.strip() for item in water_district]))
-        self.include_list_filter['WATER_DISTRICT_NAME'] = water_district
+        self.include_list_filter['WATER_DISTRICT'] = water_district
         
     #==========================================================================
     def include_water_body(self, water_body, include_current=False): 
@@ -118,7 +118,7 @@ class DataFilter(object):
             water_body = list(water_body) 
         
         water_body = sorted(set([item.strip() for item in water_body]))
-        self.include_list_filter['WATER_BODY_NAME'] = water_body[:]
+        self.include_list_filter['WATERBODY_NAME'] = water_body[:]
         
         # Get current type areas
         type_area_list = self.include_list_filter['TYPE_AREA_NUMBER'][:] 
@@ -290,8 +290,8 @@ class DataFilter(object):
         if filter_name not in self.include_list_filter.keys():
             return False
         
-        print('filter_name')
-        if filter_name == 'WATER_BODY_NAME':
+        print('filter name:\t{}'.format(filter_name))
+        if filter_name == 'WATERBODY_NAME':
             self.include_water_body(filter_list)
         else:
             filter_list = sorted(set([item.strip() for item in filter_list]))
