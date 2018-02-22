@@ -404,3 +404,251 @@
 2018-02-21 14:03:40,996	event_handler.py	70	__init__	DEBUG	TEST debug logger
 2018-02-21 14:03:41,005	event_handler.py	235	delete_workspace	WARNING	Permanently deleting workspace "7cf9dc7c-4806-4d99-a4f5-bb3df578cc2e" with alias "test_workspace_1_renamed".
 2018-02-21 14:03:41,040	event_handler.py	235	delete_workspace	WARNING	Permanently deleting workspace "ee323fa9-ee2a-4bd0-b84e-1a14cbf26214" with alias "test_workspace_2 (copy of test_workspace_1_renamed)".
+2018-02-21 14:27:34,056	logger.py	85	add_log	DEBUG	
+2018-02-21 14:27:34,066	logger.py	86	add_log	DEBUG	========================================================================================================================
+2018-02-21 14:27:34,066	logger.py	87	add_log	DEBUG	### Log added for log_id "event_handler" at locaton: ..\log\main_event_handler.log
+2018-02-21 14:27:34,066	logger.py	88	add_log	DEBUG	------------------------------------------------------------------------------------------------------------------------
+2018-02-21 14:27:34,066	event_handler.py	65	__init__	DEBUG	Start EventHandler: event_handler
+2018-02-21 14:27:34,067	event_handler.py	66	__init__	DEBUG	
+2018-02-21 14:27:34,067	event_handler.py	67	__init__	INFO	TEST info logger
+2018-02-21 14:27:34,067	event_handler.py	68	__init__	WARNING	TEST warning logger
+2018-02-21 14:27:34,067	event_handler.py	69	__init__	ERROR	TEST error logger
+2018-02-21 14:27:34,068	event_handler.py	70	__init__	DEBUG	TEST debug logger
+2018-02-21 14:27:35,334	event_handler.py	160	copy_workspace	DEBUG	Trying to copy workspace "default_workspace" with alias "default_workspace". Copy has alias "test_workspace_1 (copy of default_workspace)"
+2018-02-21 14:27:37,320	event_handler.py	160	copy_workspace	DEBUG	Trying to copy workspace "d625d880-7c31-4113-aaa1-2c0c53420513" with alias "test_workspace_1_renamed". Copy has alias "test_workspace_2 (copy of test_workspace_1_renamed)"
+2018-02-21 14:27:38,570	event_handler.py	246	delete_workspace	WARNING	Removing workspace "f9211334-0f43-4deb-a97a-7843e265e991" with alias "None".
+2018-02-21 17:22:43,148	logger.py	85	add_log	DEBUG	
+2018-02-21 17:22:43,148	logger.py	86	add_log	DEBUG	========================================================================================================================
+2018-02-21 17:22:43,158	logger.py	87	add_log	DEBUG	### Log added for log_id "event_handler" at locaton: ..\log\main_event_handler.log
+2018-02-21 17:22:43,158	logger.py	88	add_log	DEBUG	------------------------------------------------------------------------------------------------------------------------
+2018-02-21 17:22:43,158	event_handler.py	65	__init__	DEBUG	Start EventHandler: event_handler
+2018-02-21 17:22:43,158	event_handler.py	66	__init__	DEBUG	
+2018-02-21 17:22:43,159	event_handler.py	67	__init__	INFO	TEST info logger
+2018-02-21 17:22:43,159	event_handler.py	68	__init__	WARNING	TEST warning logger
+2018-02-21 17:22:43,159	event_handler.py	69	__init__	ERROR	TEST error logger
+2018-02-21 17:22:43,159	event_handler.py	70	__init__	DEBUG	TEST debug logger
+2018-02-21 17:22:43,168	event_handler.py	246	delete_workspace	WARNING	Permanently deleting workspace "d625d880-7c31-4113-aaa1-2c0c53420513" with alias "test_workspace_1_renamed".
+2018-02-21 17:22:43,201	event_handler.py	246	delete_workspace	WARNING	Permanently deleting workspace "f9211334-0f43-4deb-a97a-7843e265e991" with alias "test_workspace_2 (copy of test_workspace_1_renamed)".
+2018-02-21 17:22:45,083	event_handler.py	170	copy_workspace	DEBUG	Trying to copy workspace "default_workspace" with alias "default_workspace". Copy has alias "test_workspace_1 (copy of default_workspace)"
+2018-02-21 17:22:47,673	event_handler.py	170	copy_workspace	DEBUG	Trying to copy workspace "01ea90fd-0598-4b8a-b99c-81312726c11d" with alias "test_workspace_1_renamed". Copy has alias "test_workspace_2 (copy of test_workspace_1_renamed)"
+2018-02-21 17:23:14,675	event_handler.py	257	delete_workspace	WARNING	Removing workspace "d1bd0cc3-c523-47f7-a72c-9670e874399b" with alias "None".
+2018-02-21 22:00:09,669	logger.py	85	add_log	DEBUG	
+2018-02-21 22:00:09,669	logger.py	86	add_log	DEBUG	========================================================================================================================
+2018-02-21 22:00:09,669	logger.py	87	add_log	DEBUG	### Log added for log_id "event_handler" at locaton: ..\log\main_event_handler.log
+2018-02-21 22:00:09,679	logger.py	88	add_log	DEBUG	------------------------------------------------------------------------------------------------------------------------
+2018-02-21 22:00:09,679	event_handler.py	65	__init__	DEBUG	Start EventHandler: event_handler
+2018-02-21 22:00:09,679	event_handler.py	66	__init__	DEBUG	
+2018-02-21 22:00:09,679	event_handler.py	67	__init__	INFO	TEST info logger
+2018-02-21 22:00:09,679	event_handler.py	68	__init__	WARNING	TEST warning logger
+2018-02-21 22:00:09,689	event_handler.py	69	__init__	ERROR	TEST error logger
+2018-02-21 22:00:09,689	event_handler.py	70	__init__	DEBUG	TEST debug logger
+2018-02-21 22:00:34,422	event_handler.py	65	__init__	DEBUG	Start EventHandler: event_handler
+2018-02-21 22:00:34,422	event_handler.py	66	__init__	DEBUG	
+2018-02-21 22:00:34,422	event_handler.py	67	__init__	INFO	TEST info logger
+2018-02-21 22:00:34,422	event_handler.py	68	__init__	WARNING	TEST warning logger
+2018-02-21 22:00:34,432	event_handler.py	69	__init__	ERROR	TEST error logger
+2018-02-21 22:00:34,432	event_handler.py	70	__init__	DEBUG	TEST debug logger
+2018-02-21 22:00:36,286	event_handler.py	174	copy_workspace	DEBUG	Trying to copy workspace "default_workspace" with alias "default_workspace". Copy has alias "test_workspace_1 (copy of default_workspace)"
+2018-02-21 22:00:46,298	event_handler.py	174	copy_workspace	DEBUG	Trying to copy workspace "77d02e27-12ea-49cf-a307-3deffef8f3b0" with alias "test_workspace_1_renamed". Copy has alias "test_workspace_2 (copy of test_workspace_1_renamed)"
+2018-02-21 22:00:48,791	event_handler.py	261	delete_workspace	WARNING	Removing workspace "204fc1ac-d761-4f8c-87bb-37d72fc4280a" with alias "None".
+2018-02-21 22:01:46,792	event_handler.py	261	delete_workspace	WARNING	Removing workspace "204fc1ac-d761-4f8c-87bb-37d72fc4280a" with alias "None".
+2018-02-21 22:05:13,325	event_handler.py	261	delete_workspace	WARNING	Removing workspace "204fc1ac-d761-4f8c-87bb-37d72fc4280a" with alias "None".
+2018-02-21 22:11:20,752	event_handler.py	430	load_workspace	DEBUG	Trying to load workspace "77d02e27-12ea-49cf-a307-3deffef8f3b0" with alias "test_workspace_1_renamed"
+2018-02-22 06:21:03,080	logger.py	85	add_log	DEBUG	
+2018-02-22 06:21:03,080	logger.py	86	add_log	DEBUG	========================================================================================================================
+2018-02-22 06:21:03,080	logger.py	87	add_log	DEBUG	### Log added for log_id "event_handler" at locaton: ..\log\main_event_handler.log
+2018-02-22 06:21:03,080	logger.py	88	add_log	DEBUG	------------------------------------------------------------------------------------------------------------------------
+2018-02-22 06:21:03,090	event_handler.py	65	__init__	DEBUG	Start EventHandler: event_handler
+2018-02-22 06:21:03,090	event_handler.py	66	__init__	DEBUG	
+2018-02-22 06:21:03,090	event_handler.py	67	__init__	INFO	TEST info logger
+2018-02-22 06:21:03,090	event_handler.py	68	__init__	WARNING	TEST warning logger
+2018-02-22 06:21:03,101	event_handler.py	69	__init__	ERROR	TEST error logger
+2018-02-22 06:21:03,103	event_handler.py	70	__init__	DEBUG	TEST debug logger
+2018-02-22 06:21:03,122	event_handler.py	250	delete_workspace	WARNING	Permanently deleting workspace "77d02e27-12ea-49cf-a307-3deffef8f3b0" with alias "test_workspace_1_renamed".
+2018-02-22 06:21:03,197	event_handler.py	250	delete_workspace	WARNING	Permanently deleting workspace "204fc1ac-d761-4f8c-87bb-37d72fc4280a" with alias "test_workspace_2 (copy of test_workspace_1_renamed)".
+2018-02-22 06:21:04,599	event_handler.py	174	copy_workspace	DEBUG	Trying to copy workspace "default_workspace" with alias "default_workspace". Copy has alias "test_workspace_1 (copy of default_workspace)"
+2018-02-22 06:21:12,385	event_handler.py	174	copy_workspace	DEBUG	Trying to copy workspace "aafe4c1b-cf6e-44fd-9445-0609741a5a41" with alias "test_workspace_1_renamed". Copy has alias "test_workspace_2 (copy of test_workspace_1_renamed)"
+2018-02-22 06:21:34,595	event_handler.py	261	delete_workspace	WARNING	Removing workspace "947282be-75b8-4e12-9044-88b5ef7d252f" with alias "None".
+2018-02-22 06:21:38,836	event_handler.py	430	load_workspace	DEBUG	Trying to load workspace "aafe4c1b-cf6e-44fd-9445-0609741a5a41" with alias "test_workspace_1_renamed"
+2018-02-22 07:52:16,662	logger.py	85	add_log	DEBUG	
+2018-02-22 07:52:16,662	logger.py	86	add_log	DEBUG	========================================================================================================================
+2018-02-22 07:52:16,662	logger.py	87	add_log	DEBUG	### Log added for log_id "event_handler" at locaton: ..\log\main_event_handler.log
+2018-02-22 07:52:16,662	logger.py	88	add_log	DEBUG	------------------------------------------------------------------------------------------------------------------------
+2018-02-22 07:52:16,662	event_handler.py	65	__init__	DEBUG	Start EventHandler: event_handler
+2018-02-22 07:52:16,663	event_handler.py	66	__init__	DEBUG	
+2018-02-22 07:52:16,663	event_handler.py	67	__init__	INFO	TEST info logger
+2018-02-22 07:52:16,663	event_handler.py	68	__init__	WARNING	TEST warning logger
+2018-02-22 07:52:16,663	event_handler.py	69	__init__	ERROR	TEST error logger
+2018-02-22 07:52:16,665	event_handler.py	70	__init__	DEBUG	TEST debug logger
+2018-02-22 07:52:16,858	event_handler.py	250	delete_workspace	WARNING	Permanently deleting workspace "aafe4c1b-cf6e-44fd-9445-0609741a5a41" with alias "test_workspace_1_renamed".
+2018-02-22 07:52:16,873	event_handler.py	250	delete_workspace	WARNING	Permanently deleting workspace "947282be-75b8-4e12-9044-88b5ef7d252f" with alias "test_workspace_2 (copy of test_workspace_1_renamed)".
+2018-02-22 07:52:18,105	event_handler.py	174	copy_workspace	DEBUG	Trying to copy workspace "default_workspace" with alias "default_workspace". Copy has alias "test_workspace_1 (copy of default_workspace)"
+2018-02-22 07:52:19,499	event_handler.py	174	copy_workspace	DEBUG	Trying to copy workspace "5791ae64-134e-45d4-8c7e-c89d8df137a4" with alias "test_workspace_1_renamed". Copy has alias "test_workspace_2 (copy of test_workspace_1_renamed)"
+2018-02-22 07:52:20,508	event_handler.py	261	delete_workspace	WARNING	Removing workspace "98263e2f-df4f-4ce5-8d66-e93deb315594" with alias "None".
+2018-02-22 07:52:21,510	event_handler.py	510	load_workspace	DEBUG	Trying to load workspace "5791ae64-134e-45d4-8c7e-c89d8df137a4" with alias "test_workspace_1_renamed"
+2018-02-22 08:06:03,462	logger.py	85	add_log	DEBUG	
+2018-02-22 08:06:03,472	logger.py	86	add_log	DEBUG	========================================================================================================================
+2018-02-22 08:06:03,472	logger.py	87	add_log	DEBUG	### Log added for log_id "event_handler" at locaton: ..\log\main_event_handler.log
+2018-02-22 08:06:03,472	logger.py	88	add_log	DEBUG	------------------------------------------------------------------------------------------------------------------------
+2018-02-22 08:06:03,472	event_handler.py	65	__init__	DEBUG	Start EventHandler: event_handler
+2018-02-22 08:06:03,472	event_handler.py	66	__init__	DEBUG	
+2018-02-22 08:06:03,473	event_handler.py	67	__init__	INFO	TEST info logger
+2018-02-22 08:06:03,473	event_handler.py	68	__init__	WARNING	TEST warning logger
+2018-02-22 08:06:03,473	event_handler.py	69	__init__	ERROR	TEST error logger
+2018-02-22 08:06:03,473	event_handler.py	70	__init__	DEBUG	TEST debug logger
+2018-02-22 08:06:03,648	event_handler.py	250	delete_workspace	WARNING	Permanently deleting workspace "5791ae64-134e-45d4-8c7e-c89d8df137a4" with alias "test_workspace_1_renamed".
+2018-02-22 08:06:03,660	event_handler.py	250	delete_workspace	WARNING	Permanently deleting workspace "98263e2f-df4f-4ce5-8d66-e93deb315594" with alias "test_workspace_2 (copy of test_workspace_1_renamed)".
+2018-02-22 08:06:04,667	event_handler.py	174	copy_workspace	DEBUG	Trying to copy workspace "default_workspace" with alias "default_workspace". Copy has alias "test_workspace_1 (copy of default_workspace)"
+2018-02-22 08:06:06,339	event_handler.py	174	copy_workspace	DEBUG	Trying to copy workspace "ac383ddf-3a1f-4c30-b72f-3f6ff92a43fb" with alias "test_workspace_1_renamed". Copy has alias "test_workspace_2 (copy of test_workspace_1_renamed)"
+2018-02-22 08:06:07,321	event_handler.py	261	delete_workspace	WARNING	Removing workspace "df1b4004-3e1a-4c56-b4ee-0241b8a18554" with alias "None".
+2018-02-22 08:06:08,310	event_handler.py	510	load_workspace	DEBUG	Trying to load workspace "ac383ddf-3a1f-4c30-b72f-3f6ff92a43fb" with alias "test_workspace_1_renamed"
+2018-02-22 08:19:40,408	logger.py	85	add_log	DEBUG	
+2018-02-22 08:19:40,408	logger.py	86	add_log	DEBUG	========================================================================================================================
+2018-02-22 08:19:40,408	logger.py	87	add_log	DEBUG	### Log added for log_id "event_handler" at locaton: ..\log\main_event_handler.log
+2018-02-22 08:19:40,409	logger.py	88	add_log	DEBUG	------------------------------------------------------------------------------------------------------------------------
+2018-02-22 08:19:40,409	event_handler.py	65	__init__	DEBUG	Start EventHandler: event_handler
+2018-02-22 08:19:40,409	event_handler.py	66	__init__	DEBUG	
+2018-02-22 08:19:40,409	event_handler.py	67	__init__	INFO	TEST info logger
+2018-02-22 08:19:40,409	event_handler.py	68	__init__	WARNING	TEST warning logger
+2018-02-22 08:19:40,412	event_handler.py	69	__init__	ERROR	TEST error logger
+2018-02-22 08:19:40,414	event_handler.py	70	__init__	DEBUG	TEST debug logger
+2018-02-22 08:19:40,587	event_handler.py	250	delete_workspace	WARNING	Permanently deleting workspace "ac383ddf-3a1f-4c30-b72f-3f6ff92a43fb" with alias "test_workspace_1_renamed".
+2018-02-22 08:19:40,620	event_handler.py	250	delete_workspace	WARNING	Permanently deleting workspace "df1b4004-3e1a-4c56-b4ee-0241b8a18554" with alias "test_workspace_2 (copy of test_workspace_1_renamed)".
+2018-02-22 08:19:40,848	event_handler.py	174	copy_workspace	DEBUG	Trying to copy workspace "default_workspace" with alias "default_workspace". Copy has alias "test_workspace_1 (copy of default_workspace)"
+2018-02-22 08:19:41,337	event_handler.py	174	copy_workspace	DEBUG	Trying to copy workspace "4607f255-a53e-4e36-9f38-473f33552586" with alias "test_workspace_1_renamed". Copy has alias "test_workspace_2 (copy of test_workspace_1_renamed)"
+2018-02-22 08:19:41,634	event_handler.py	261	delete_workspace	WARNING	Removing workspace "1bb392f4-c7ae-4512-8403-d21b7edc7ae4" with alias "None".
+2018-02-22 08:19:41,873	event_handler.py	510	load_workspace	DEBUG	Trying to load workspace "4607f255-a53e-4e36-9f38-473f33552586" with alias "test_workspace_1_renamed"
+2018-02-22 08:24:09,409	logger.py	85	add_log	DEBUG	
+2018-02-22 08:24:09,419	logger.py	86	add_log	DEBUG	========================================================================================================================
+2018-02-22 08:24:09,419	logger.py	87	add_log	DEBUG	### Log added for log_id "event_handler" at locaton: ..\log\main_event_handler.log
+2018-02-22 08:24:09,419	logger.py	88	add_log	DEBUG	------------------------------------------------------------------------------------------------------------------------
+2018-02-22 08:24:09,419	event_handler.py	65	__init__	DEBUG	Start EventHandler: event_handler
+2018-02-22 08:24:09,420	event_handler.py	66	__init__	DEBUG	
+2018-02-22 08:24:09,420	event_handler.py	67	__init__	INFO	TEST info logger
+2018-02-22 08:24:09,420	event_handler.py	68	__init__	WARNING	TEST warning logger
+2018-02-22 08:24:09,420	event_handler.py	69	__init__	ERROR	TEST error logger
+2018-02-22 08:24:09,420	event_handler.py	70	__init__	DEBUG	TEST debug logger
+2018-02-22 08:24:09,576	event_handler.py	250	delete_workspace	WARNING	Permanently deleting workspace "4607f255-a53e-4e36-9f38-473f33552586" with alias "test_workspace_1_renamed".
+2018-02-22 08:24:09,590	event_handler.py	250	delete_workspace	WARNING	Permanently deleting workspace "1bb392f4-c7ae-4512-8403-d21b7edc7ae4" with alias "test_workspace_2 (copy of test_workspace_1_renamed)".
+2018-02-22 08:24:11,657	event_handler.py	174	copy_workspace	DEBUG	Trying to copy workspace "default_workspace" with alias "default_workspace". Copy has alias "test_workspace_1 (copy of default_workspace)"
+2018-02-22 08:24:14,165	event_handler.py	174	copy_workspace	DEBUG	Trying to copy workspace "925ab248-3ba8-4d74-bf29-e5d418b20c03" with alias "test_workspace_1_renamed". Copy has alias "test_workspace_2 (copy of test_workspace_1_renamed)"
+2018-02-22 08:24:15,444	event_handler.py	261	delete_workspace	WARNING	Removing workspace "4f259a35-d481-4ca8-af54-bd6469a190ac" with alias "None".
+2018-02-22 08:24:16,669	event_handler.py	514	load_workspace	DEBUG	Trying to load workspace "925ab248-3ba8-4d74-bf29-e5d418b20c03" with alias "test_workspace_1_renamed"
+2018-02-22 08:25:18,259	logger.py	85	add_log	DEBUG	
+2018-02-22 08:25:18,261	logger.py	86	add_log	DEBUG	========================================================================================================================
+2018-02-22 08:25:18,265	logger.py	87	add_log	DEBUG	### Log added for log_id "event_handler" at locaton: ..\log\main_event_handler.log
+2018-02-22 08:25:18,268	logger.py	88	add_log	DEBUG	------------------------------------------------------------------------------------------------------------------------
+2018-02-22 08:25:18,273	event_handler.py	65	__init__	DEBUG	Start EventHandler: event_handler
+2018-02-22 08:25:18,275	event_handler.py	66	__init__	DEBUG	
+2018-02-22 08:25:18,278	event_handler.py	67	__init__	INFO	TEST info logger
+2018-02-22 08:25:18,279	event_handler.py	68	__init__	WARNING	TEST warning logger
+2018-02-22 08:25:18,282	event_handler.py	69	__init__	ERROR	TEST error logger
+2018-02-22 08:25:18,284	event_handler.py	70	__init__	DEBUG	TEST debug logger
+2018-02-22 08:25:18,461	event_handler.py	250	delete_workspace	WARNING	Permanently deleting workspace "925ab248-3ba8-4d74-bf29-e5d418b20c03" with alias "test_workspace_1_renamed".
+2018-02-22 08:25:18,477	event_handler.py	250	delete_workspace	WARNING	Permanently deleting workspace "4f259a35-d481-4ca8-af54-bd6469a190ac" with alias "test_workspace_2 (copy of test_workspace_1_renamed)".
+2018-02-22 08:25:18,935	event_handler.py	174	copy_workspace	DEBUG	Trying to copy workspace "default_workspace" with alias "default_workspace". Copy has alias "test_workspace_1 (copy of default_workspace)"
+2018-02-22 08:25:19,916	event_handler.py	174	copy_workspace	DEBUG	Trying to copy workspace "98ce485c-571e-4c92-9b15-8caa0ab42289" with alias "test_workspace_1_renamed". Copy has alias "test_workspace_2 (copy of test_workspace_1_renamed)"
+2018-02-22 08:25:20,796	event_handler.py	261	delete_workspace	WARNING	Removing workspace "ea4ea04b-ef89-478f-a6e6-25faa93b72d5" with alias "None".
+2018-02-22 08:25:21,755	event_handler.py	516	load_workspace	DEBUG	Trying to load workspace "98ce485c-571e-4c92-9b15-8caa0ab42289" with alias "test_workspace_1_renamed"
+2018-02-22 08:57:04,442	event_handler.py	439	get_workspace	DEBUG	Getting workspace "98ce485c-571e-4c92-9b15-8caa0ab42289" with alias "test_workspace_1_renamed"
+2018-02-22 09:38:25,443	logger.py	85	add_log	DEBUG	
+2018-02-22 09:38:25,444	logger.py	86	add_log	DEBUG	========================================================================================================================
+2018-02-22 09:38:25,446	logger.py	87	add_log	DEBUG	### Log added for log_id "event_handler" at locaton: ..\log\main_event_handler.log
+2018-02-22 09:38:25,448	logger.py	88	add_log	DEBUG	------------------------------------------------------------------------------------------------------------------------
+2018-02-22 09:38:25,451	event_handler.py	65	__init__	DEBUG	Start EventHandler: event_handler
+2018-02-22 09:38:25,453	event_handler.py	66	__init__	DEBUG	
+2018-02-22 09:38:25,457	event_handler.py	67	__init__	INFO	TEST info logger
+2018-02-22 09:38:25,459	event_handler.py	68	__init__	WARNING	TEST warning logger
+2018-02-22 09:38:25,461	event_handler.py	69	__init__	ERROR	TEST error logger
+2018-02-22 09:38:25,463	event_handler.py	70	__init__	DEBUG	TEST debug logger
+2018-02-22 09:38:25,652	event_handler.py	251	delete_workspace	WARNING	Permanently deleting workspace "98ce485c-571e-4c92-9b15-8caa0ab42289" with alias "test_workspace_1_renamed".
+2018-02-22 09:38:25,686	event_handler.py	251	delete_workspace	WARNING	Permanently deleting workspace "ea4ea04b-ef89-478f-a6e6-25faa93b72d5" with alias "test_workspace_2 (copy of test_workspace_1_renamed)".
+2018-02-22 09:38:26,003	event_handler.py	175	copy_workspace	DEBUG	Trying to copy workspace "default_workspace" with alias "default_workspace". Copy has alias "test_workspace_1 (copy of default_workspace)"
+2018-02-22 09:38:26,935	event_handler.py	175	copy_workspace	DEBUG	Trying to copy workspace "a7e4fa1a-0d29-409e-8303-c5e63772c648" with alias "test_workspace_1_renamed". Copy has alias "test_workspace_2 (copy of test_workspace_1_renamed)"
+2018-02-22 09:38:27,506	event_handler.py	262	delete_workspace	WARNING	Removing workspace "9959b0bc-0df5-4810-8ecb-785a5ebcd3b7" with alias "None".
+2018-02-22 09:38:28,040	event_handler.py	704	load_workspace	DEBUG	Trying to load workspace "a7e4fa1a-0d29-409e-8303-c5e63772c648" with alias "test_workspace_1_renamed"
+2018-02-22 09:38:29,354	event_handler.py	499	get_workspace	DEBUG	Getting workspace "a7e4fa1a-0d29-409e-8303-c5e63772c648" with alias "test_workspace_1_renamed"
+2018-02-22 10:01:56,388	logger.py	85	add_log	DEBUG	
+2018-02-22 10:01:56,398	logger.py	86	add_log	DEBUG	========================================================================================================================
+2018-02-22 10:01:56,398	logger.py	87	add_log	DEBUG	### Log added for log_id "event_handler" at locaton: ..\log\main_event_handler.log
+2018-02-22 10:01:56,398	logger.py	88	add_log	DEBUG	------------------------------------------------------------------------------------------------------------------------
+2018-02-22 10:01:56,398	event_handler.py	65	__init__	DEBUG	Start EventHandler: event_handler
+2018-02-22 10:01:56,399	event_handler.py	66	__init__	DEBUG	
+2018-02-22 10:01:56,399	event_handler.py	67	__init__	INFO	TEST info logger
+2018-02-22 10:01:56,399	event_handler.py	68	__init__	WARNING	TEST warning logger
+2018-02-22 10:01:56,399	event_handler.py	69	__init__	ERROR	TEST error logger
+2018-02-22 10:01:56,399	event_handler.py	70	__init__	DEBUG	TEST debug logger
+2018-02-22 10:01:56,901	event_handler.py	176	copy_workspace	DEBUG	Trying to copy workspace "default_workspace" with alias "default_workspace". Copy has alias "test_workspace_1 (copy of default_workspace)"
+2018-02-22 10:05:20,092	logger.py	85	add_log	DEBUG	
+2018-02-22 10:05:20,102	logger.py	86	add_log	DEBUG	========================================================================================================================
+2018-02-22 10:05:20,102	logger.py	87	add_log	DEBUG	### Log added for log_id "event_handler" at locaton: ..\log\main_event_handler.log
+2018-02-22 10:05:20,102	logger.py	88	add_log	DEBUG	------------------------------------------------------------------------------------------------------------------------
+2018-02-22 10:05:20,102	event_handler.py	65	__init__	DEBUG	Start EventHandler: event_handler
+2018-02-22 10:05:20,103	event_handler.py	66	__init__	DEBUG	
+2018-02-22 10:05:20,103	event_handler.py	67	__init__	INFO	TEST info logger
+2018-02-22 10:05:20,103	event_handler.py	68	__init__	WARNING	TEST warning logger
+2018-02-22 10:05:20,103	event_handler.py	69	__init__	ERROR	TEST error logger
+2018-02-22 10:05:20,103	event_handler.py	70	__init__	DEBUG	TEST debug logger
+2018-02-22 10:05:58,403	logger.py	85	add_log	DEBUG	
+2018-02-22 10:05:58,403	logger.py	86	add_log	DEBUG	========================================================================================================================
+2018-02-22 10:05:58,403	logger.py	87	add_log	DEBUG	### Log added for log_id "event_handler" at locaton: ..\log\main_event_handler.log
+2018-02-22 10:05:58,404	logger.py	88	add_log	DEBUG	------------------------------------------------------------------------------------------------------------------------
+2018-02-22 10:05:58,404	event_handler.py	65	__init__	DEBUG	Start EventHandler: event_handler
+2018-02-22 10:05:58,404	event_handler.py	66	__init__	DEBUG	
+2018-02-22 10:05:58,406	event_handler.py	67	__init__	INFO	TEST info logger
+2018-02-22 10:05:58,408	event_handler.py	68	__init__	WARNING	TEST warning logger
+2018-02-22 10:05:58,410	event_handler.py	69	__init__	ERROR	TEST error logger
+2018-02-22 10:05:58,412	event_handler.py	70	__init__	DEBUG	TEST debug logger
+2018-02-22 10:12:08,747	logger.py	85	add_log	DEBUG	
+2018-02-22 10:12:08,757	logger.py	86	add_log	DEBUG	========================================================================================================================
+2018-02-22 10:12:08,757	logger.py	87	add_log	DEBUG	### Log added for log_id "event_handler" at locaton: ..\log\main_event_handler.log
+2018-02-22 10:12:08,757	logger.py	88	add_log	DEBUG	------------------------------------------------------------------------------------------------------------------------
+2018-02-22 10:12:08,757	event_handler.py	65	__init__	DEBUG	Start EventHandler: event_handler
+2018-02-22 10:12:08,758	event_handler.py	66	__init__	DEBUG	
+2018-02-22 10:12:08,758	event_handler.py	67	__init__	INFO	TEST info logger
+2018-02-22 10:12:08,759	event_handler.py	68	__init__	WARNING	TEST warning logger
+2018-02-22 10:12:08,761	event_handler.py	69	__init__	ERROR	TEST error logger
+2018-02-22 10:12:08,763	event_handler.py	70	__init__	DEBUG	TEST debug logger
+2018-02-22 10:12:30,096	event_handler.py	65	__init__	DEBUG	Start EventHandler: event_handler
+2018-02-22 10:12:30,096	event_handler.py	66	__init__	DEBUG	
+2018-02-22 10:12:30,096	event_handler.py	67	__init__	INFO	TEST info logger
+2018-02-22 10:12:30,106	event_handler.py	68	__init__	WARNING	TEST warning logger
+2018-02-22 10:12:30,106	event_handler.py	69	__init__	ERROR	TEST error logger
+2018-02-22 10:12:30,106	event_handler.py	70	__init__	DEBUG	TEST debug logger
+2018-02-22 10:16:03,690	event_handler.py	65	__init__	DEBUG	Start EventHandler: event_handler
+2018-02-22 10:16:03,690	event_handler.py	66	__init__	DEBUG	
+2018-02-22 10:16:03,690	event_handler.py	67	__init__	INFO	TEST info logger
+2018-02-22 10:16:03,690	event_handler.py	68	__init__	WARNING	TEST warning logger
+2018-02-22 10:16:03,690	event_handler.py	69	__init__	ERROR	TEST error logger
+2018-02-22 10:16:03,700	event_handler.py	70	__init__	DEBUG	TEST debug logger
+2018-02-22 13:40:59,282	event_handler.py	65	__init__	DEBUG	Start EventHandler: event_handler
+2018-02-22 13:40:59,285	event_handler.py	66	__init__	DEBUG	
+2018-02-22 13:40:59,287	event_handler.py	67	__init__	INFO	TEST info logger
+2018-02-22 13:40:59,289	event_handler.py	68	__init__	WARNING	TEST warning logger
+2018-02-22 13:40:59,292	event_handler.py	69	__init__	ERROR	TEST error logger
+2018-02-22 13:40:59,294	event_handler.py	70	__init__	DEBUG	TEST debug logger
+2018-02-22 13:40:59,497	event_handler.py	253	delete_workspace	WARNING	Permanently deleting workspace "a7e4fa1a-0d29-409e-8303-c5e63772c648" with alias "test_workspace_1_renamed".
+2018-02-22 13:40:59,535	event_handler.py	253	delete_workspace	WARNING	Permanently deleting workspace "9959b0bc-0df5-4810-8ecb-785a5ebcd3b7" with alias "test_workspace_2 (copy of test_workspace_1_renamed)".
+2018-02-22 13:40:59,576	event_handler.py	253	delete_workspace	WARNING	Permanently deleting workspace "5c9f66dd-0538-4693-886c-0a4c3fb54711" with alias "test_workspace_1 (copy of default_workspace)".
+2018-02-22 13:41:06,223	event_handler.py	177	copy_workspace	DEBUG	Trying to copy workspace "default_workspace" with alias "default_workspace". Copy has alias "test_workspace_1 (copy of default_workspace)"
+2018-02-22 13:41:36,540	event_handler.py	166	copy_workspace	DEBUG	Could not add workspace with alias "test_workspace_1 (copy of default_workspace)". Workspace already exists!
+2018-02-22 13:41:41,850	event_handler.py	177	copy_workspace	DEBUG	Trying to copy workspace "fae01a09-13fa-4243-b3d3-50d1a81b059d" with alias "test_workspace_1_renamed". Copy has alias "test_workspace_2 (copy of test_workspace_1_renamed)"
+2018-02-22 13:41:43,602	event_handler.py	264	delete_workspace	WARNING	Removing workspace "5302c790-0c27-4c9c-8df9-ea9c3de602fa" with alias "None".
+2018-02-22 13:41:47,052	event_handler.py	733	load_workspace	DEBUG	Trying to load workspace "fae01a09-13fa-4243-b3d3-50d1a81b059d" with alias "test_workspace_1_renamed"
+2018-02-22 13:42:25,710	event_handler.py	733	load_workspace	DEBUG	Trying to load workspace "fae01a09-13fa-4243-b3d3-50d1a81b059d" with alias "test_workspace_1_renamed"
+2018-02-22 14:04:30,029	logger.py	85	add_log	DEBUG	
+2018-02-22 14:04:30,031	logger.py	86	add_log	DEBUG	========================================================================================================================
+2018-02-22 14:04:30,033	logger.py	87	add_log	DEBUG	### Log added for log_id "event_handler" at locaton: ..\log\main_event_handler.log
+2018-02-22 14:04:30,035	logger.py	88	add_log	DEBUG	------------------------------------------------------------------------------------------------------------------------
+2018-02-22 14:04:30,039	event_handler.py	65	__init__	DEBUG	Start EventHandler: event_handler
+2018-02-22 14:04:30,043	event_handler.py	66	__init__	DEBUG	
+2018-02-22 14:04:30,045	event_handler.py	67	__init__	INFO	TEST info logger
+2018-02-22 14:04:30,047	event_handler.py	68	__init__	WARNING	TEST warning logger
+2018-02-22 14:04:30,049	event_handler.py	69	__init__	ERROR	TEST error logger
+2018-02-22 14:04:30,052	event_handler.py	70	__init__	DEBUG	TEST debug logger
+2018-02-22 14:04:30,231	event_handler.py	254	delete_workspace	WARNING	Permanently deleting workspace "fae01a09-13fa-4243-b3d3-50d1a81b059d" with alias "test_workspace_1_renamed".
+2018-02-22 14:04:30,265	event_handler.py	254	delete_workspace	WARNING	Permanently deleting workspace "5302c790-0c27-4c9c-8df9-ea9c3de602fa" with alias "test_workspace_2 (copy of test_workspace_1_renamed)".
+2018-02-22 14:04:31,861	event_handler.py	178	copy_workspace	DEBUG	Trying to copy workspace "default_workspace" with alias "default_workspace". Copy has alias "test_workspace_1 (copy of default_workspace)"
+2018-02-22 14:04:34,470	event_handler.py	178	copy_workspace	DEBUG	Trying to copy workspace "cf7775cb-9d7f-4ead-9bd9-6b5d3bfe0e9e" with alias "test_workspace_1_renamed". Copy has alias "test_workspace_2 (copy of test_workspace_1_renamed)"
+2018-02-22 14:04:35,968	event_handler.py	265	delete_workspace	WARNING	Removing workspace "6dbce038-a9a9-4200-a94c-8d65e56b2bd8" with alias "None".
+2018-02-22 14:04:38,830	event_handler.py	734	load_workspace	DEBUG	Trying to load workspace "cf7775cb-9d7f-4ead-9bd9-6b5d3bfe0e9e" with alias "test_workspace_1_renamed"

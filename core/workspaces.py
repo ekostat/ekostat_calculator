@@ -567,13 +567,6 @@ class Subset(object):
         step = get_step_name(step)
         return self.steps.get(step, False)
         
-    #==========================================================================
-    def get_step_1_object(self): 
-        return self.get_step_object('step_1')
-    
-    #==========================================================================
-    def get_step_2_object(self): 
-        return self.get_step_object('step_2')
     
     #==========================================================================
     def load_data(self, step): 
@@ -582,6 +575,14 @@ class Subset(object):
             return False 
             
         self.steps[step].load_data()
+        
+    #==========================================================================
+    def deprecated_get_step_1_object(self): 
+        return self.get_step_object('step_1')
+    
+    #==========================================================================
+    def deprecated_get_step_2_object(self): 
+        return self.get_step_object('step_2')
     
     #==========================================================================
     def deprecated_set_alias(self, alias):
@@ -715,7 +716,7 @@ class WorkSpace(object):
         self._initiate_attributes()
         
         # Load UUID mapping file for subsets
-        self.uuid_mapping = core.mapping.UUIDmapping('{}/uuid_mapping.txt'.format(self.paths['directory_path_subset']))
+        self.uuid_mapping = core.UUIDmapping('{}/uuid_mapping.txt'.format(self.paths['directory_path_subset']))
         
         self._setup_workspace()
         
@@ -1057,7 +1058,7 @@ class WorkSpace(object):
         if not target_uuid:
             self._logger.debug('Could not add subset with alias "{}". Workspace already exists!'.format(target_alias)) 
             return False
-        
+
         # Copy all directories and files in subset 
         source_subset_path = '/'.join([self.paths['directory_path_subset'], source_uuid])
         target_subset_path = '/'.join([self.paths['directory_path_subset'], target_uuid]) 
@@ -1072,7 +1073,12 @@ class WorkSpace(object):
         
         # Load subset 
         self._add_subset(target_uuid)
-            
+        
+        target_status = self.uuid_mapping.get_status(unique_id=target_uuid) # Check in case default is changed
+        
+        return {'alias': target_alias, 
+                'uuid': target_uuid, 
+                'status': target_status}
     
     #==========================================================================
     def request_subset_list(self):
@@ -1133,12 +1139,14 @@ class WorkSpace(object):
         Permanatly deletes the given subset. 
         """
         if alias:
-            unique_id = self.uuid_mapping.get_uuid(alias, self.user_id)
+            unique_id = self.uuid_mapping.get_uuid(alias=alias, user_id=self.user_id)
+        else:
+            alias = self.uuid_mapping.get_alias(unique_id=unique_id)
         
 #        if unique_id not in self.subset_dict.keys(): 
 #            self._logger.warning('Subset "{}" with alias "{}" does not exist!'.format(unique_id, alias))
-#            return False
-        
+#            return False 
+
         if permanently:
             path_to_remove = self.paths['directory_path_subsets'].get(unique_id)
             if not ('workspace' in path_to_remove) & ('subset' in path_to_remove):
@@ -1160,7 +1168,8 @@ class WorkSpace(object):
             self._logger.warning('Removing subset "{}" with alias "{}".'.format(unique_id, alias)) 
             self.uuid_mapping.set_status(unique_id, 'deleted')
         
-        return True 
+        return {'alias': alias, 
+                'uuid': unique_id} 
             
     #==========================================================================
     def get_all_file_paths_in_workspace(self): 
@@ -1180,6 +1189,10 @@ class WorkSpace(object):
                 for f in files:
                     file_list.append('/'.join([root, f]).replace('\\', '/'))
         return sorted(file_list)
+    
+    #==========================================================================
+    def get_alias_for_unique_id(self, unique_id):
+        return self.uuid_mapping.get_alias(unique_id=unique_id)
     
     #==========================================================================
     def get_unique_id_for_alias(self, alias):

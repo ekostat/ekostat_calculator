@@ -1,2 +1,4 @@
-uuid	alias	user_id	status
-default_workspace	default_workspace	default	readable
+uuid	alias	user_id	status	active
+default_workspace	default_workspace	default	readable	False
+cf7775cb-9d7f-4ead-9bd9-6b5d3bfe0e9e	test_workspace_1_renamed	test_user	editable	True
+6dbce038-a9a9-4200-a94c-8d65e56b2bd8	test_workspace_2 (copy of test_workspace_1_renamed)	test_user	deleted	True

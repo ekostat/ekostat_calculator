@@ -147,7 +147,16 @@ class ParameterMapping(AttributeDict):
         return self.get_mapping_dict(para_list)
         
     #==========================================================================
-
+    def get_mapping(self, item=None, from_column=None, to_column=None):
+        """
+        Created     20180222    by Magnus Wenzer
+        Updated     20180222    by Magnus Wenzer
+            
+        """ 
+        result = self.mapping_file.loc[self.mapping_file[from_column]==item, to_column]
+        if len(result):
+            return result.values[0]
+        return item
 
 
 
@@ -171,19 +180,23 @@ class WaterBody(AttributeDict):
             
     #==========================================================================
     def load_water_body_match(self, file_path=u'', sep='\t', encoding='cp1252'):
+        """
+        Created     ????????    by Johannes Johansson
+        Updated     20180222    by Magnus Wenzer
+        """
         
-        water_bodies = core.Load().load_txt(file_path, sep=sep, 
+        self.water_bodies = core.Load().load_txt(file_path, sep=sep, 
                                                  encoding=encoding, 
                                                  fill_nan=u'')
         
-        key_list = list(water_bodies.keys())
+        key_list = list(self.water_bodies.keys())
         key_list.remove(u'NAME')
         
-        self.add_info_dict(df=water_bodies, 
+        self.add_info_dict(df=self.water_bodies, 
                            first_key=u'NAME',
                            key_list=key_list)
         
-        self.add_corresponding_arrays(df=water_bodies,
+        self.add_corresponding_arrays(df=self.water_bodies,
                                       first_key=u'TYPE_AREA_NUMBER', 
                                       second_key=u'TYPE_AREA_SUFFIX',
                                       match_key=u'NAME')
@@ -192,6 +205,27 @@ class WaterBody(AttributeDict):
     def get_water_bodies_in_type_area(self, type_area):
         return self.get(type_area)
     
+    #==========================================================================
+    def get_water_body_list(self):
+        """
+        Created     20180222    by Magnus Wenzer
+        Updated     20180222    by Magnus Wenzer
+        
+        Returns a list with all water bodies. 
+        """
+        return sorted(set(self.water_bodies['NAME']))
+    
+    #==========================================================================
+    def get_type_area_list(self):
+        """
+        Created     20180222    by Magnus Wenzer
+        Updated     20180222    by Magnus Wenzer
+        
+        Returns a list with all type areas. 
+        """
+        return sorted(set(self.water_bodies['TYPE_AREA_NUMBER']))
+    
+        
     #==========================================================================
     def get_type_area_for_water_body(self, wb, include_suffix=False, 
                                      key_number=u'TYPE_AREA_NUMBER', 
@@ -229,9 +263,39 @@ class WaterBody(AttributeDict):
         return {'lat': self.get(wb).get(key_lat),
                 'lon': self.get(wb).get(key_lon)}
         
-    #==========================================================================
+    #========================================================================== 
+        
+        
+"""
+#==============================================================================
+#==============================================================================
+""" 
+class QualityElement(object): 
+    """
+    Created     20180222    by Magnus Wenzer
+    Updated     20180222    by Magnus Wenzer
     
-
+    """ 
+    
+    def __init__(self, file_path): 
+        self.file_path = file_path
+        self.cf_df = pd.read_csv(self.file_path, sep='\t', dtype='str', encoding='cp1252')
+        assert all(['quality element' in self.cf_df.keys(), 'indicator' in self.cf_df.keys(), 'parameters' in self.cf_df.keys()]), 'configuration file must contain quality element, indicator and parameters information'
+        self.cfg = {}
+        self.cfg['quality elements'] = self.cf_df.groupby('quality element')['indicator'].unique()
+        self.cfg['indicators'] = self.cf_df.groupby('indicator')['parameters'].unique() 
+    
+    
+    #==========================================================================
+    def get_quality_element_list(self):
+        return sorted(self.cfg['quality elements'].keys())
+    
+    
+    #==========================================================================
+    def get_indicator_list_for_quality_element(self, quality_element):
+        return sorted(self.cfg['quality elements'][quality_element])
+    
+    
 """
 #==============================================================================
 #==============================================================================
@@ -357,23 +421,54 @@ class UUIDmapping():
     """
     def __init__(self, file_path=None): 
         self.file_path = file_path
+        self.all_status = ['editable', 'readable', 'deleted']
         self._load_file()
+        
         
     #==========================================================================
     def _load_file(self): 
         print('FILE_PATH:', self.file_path)
         self.df = pd.read_csv(self.file_path, sep='\t')
         
+        
     #==========================================================================
     def _save_file(self): 
         self.df.to_csv(self.file_path, sep='\t', index=False)
+        
         
     #==========================================================================
     def _get_status_list(self): 
         return sorted(set(self.df['status']))
         
+    
     #==========================================================================
-    def get_alias(self, unique_id, status=['editable', 'readable']): 
+    def add_new_uuid_for_alias(self, alias=None, user_id=None): 
+        """
+        Adds a new uuid to the mapping file and returns its value. 
+        """
+        print('¤', alias)
+        print('¤', user_id)
+        status = self.all_status
+        if self.get_uuid(alias, user_id, status=status): 
+            return False 
+        
+        unique_id = str(uuid.uuid4())
+#        print('&&&&&')
+#        print(unique_id)
+#        print(alias)
+#        print(user_id)
+        add_df = pd.DataFrame([[unique_id, alias, user_id, 'editable', 'True']], columns=['uuid', 'alias', 'user_id', 'status', 'active'])
+        self.df = self.df.append(add_df)
+        self.df = self.df.reset_index(drop=True)
+        self._save_file()
+        return unique_id
+    
+    
+    #==========================================================================
+    def get_alias(self, unique_id, status=None): 
+        if not status:
+            status = self.all_status
+            
         result = self.df.loc[(self.df['uuid']==unique_id) & \
                              (self.df['status'].isin(status)), 'alias']
         if len(result):
@@ -393,7 +488,9 @@ class UUIDmapping():
         return False
     
     #==========================================================================
-    def get_user_id(self, unique_id, status=['editable', 'readable']): 
+    def get_user_id(self, unique_id, status=None): 
+        if not status:
+            status = self.all_status 
         result = self.df.loc[(self.df['uuid']==unique_id) & \
                              (self.df['status'].isin(status)), 'user_id']
         if len(result):
@@ -401,7 +498,9 @@ class UUIDmapping():
         return False
                  
     #==========================================================================
-    def get_uuid(self, alias, user_id, status=['editable', 'readable']): 
+    def get_uuid(self, alias=None, user_id=None, status=None): 
+        if not status:
+            status = self.all_status
         result = self.df.loc[(self.df['alias']==alias) & \
                              (self.df['user_id']==user_id) & \
                              (self.df['status'].isin(status)), 'uuid']
@@ -411,50 +510,53 @@ class UUIDmapping():
         
     
     #==========================================================================
-    def permanent_delete_uuid(self, unique_id):
-        self.df = self.df.drop(self.df.index[self.df['uuid']==unique_id])
-        self._save_file()
-        
-    
-    #==========================================================================
-    def add_new_uuid_for_alias(self, alias, user_id): 
-        """
-        Adds a new uuid to the mapping file and returns its value. 
-        """
-        print('¤', alias)
-        print('¤', user_id)
-        status = ['editable', 'readable', 'removed']
-        if self.get_uuid(alias, user_id, status=status): 
-            return False 
-        
-        unique_id = str(uuid.uuid4())
-#        print('&&&&&')
-#        print(unique_id)
-#        print(alias)
-#        print(user_id)
-        add_df = pd.DataFrame([[unique_id, alias, user_id, 'editable']], columns=['uuid', 'alias', 'user_id', 'status'])
-        self.df = self.df.append(add_df)
-        self.df = self.df.reset_index(drop=True)
-        self._save_file()
-        return unique_id
-
-    
-    #==========================================================================
-    def get_alias_list_for_user(self, user_id, status=['editable', 'readable']): 
+    def get_alias_list_for_user(self, user_id, status=None): 
+        if not status:
+            status = self.all_status
         return list(self.df.loc[(self.df['user_id']==user_id) & \
                                 (self.df['status'].isin(status)), 'alias'])
     
     
     #==========================================================================
-    def get_uuid_list_for_user(self, user_id, status=['editable', 'readable']): 
+    def get_uuid_list_for_user(self, user_id, status=None): 
+        if not status:
+            status = self.all_status 
         return list(self.df.loc[(self.df['user_id']==user_id) & \
                                 (self.df['status'].isin(status)), 'uuid'])
         
     
     #==========================================================================
+    def is_active(self, unique_id):
+        result = self.df.loc[self.df['uuid']==unique_id, 'active']
+        if len(result):
+            result = str(result.values[0]).lower()
+            if result == 'true':
+                return True
+            elif result == 'false':
+                return False 
+        return None
+    
+    
+    #==========================================================================
+    def permanent_delete_uuid(self, unique_id):
+        self.df = self.df.drop(self.df.index[self.df['uuid']==unique_id])
+        self._save_file()
+        
+        
+    #==========================================================================
+    def set_active(self, unique_id): 
+        self.df.loc[self.df['uuid']==unique_id, 'active'] = 'True'
+        
+    
+    #==========================================================================
+    def set_inactive(self, unique_id): 
+        self.df.loc[self.df['uuid']==unique_id, 'active'] = 'False'
+        
+        
+    #==========================================================================
     def set_alias(self, unique_id, new_alias): 
-        user_id = self.get_user_id(unique_id, status=self._get_status_list())
-        if new_alias in self.get_alias_list_for_user(user_id, status=self._get_status_list()):
+        user_id = self.get_user_id(unique_id)
+        if new_alias in self.get_alias_list_for_user(user_id):
             return False
         self.df.loc[self.df['uuid']==unique_id, 'alias'] = new_alias
         self._save_file()

@@ -1,0 +1,25 @@
+internal_name	display_en
+nutrients	Nutrients
+nutrients	Nutrients
+nutrients	Nutrients
+nutrients	Nutrients
+nutrients	Nutrients
+nutrients	Nutrients
+bottom fauna	Bottom fauna
+macroalgae and macrophytes	Macroalgae and macrophytes
+oxygen balance	Oxygen balance
+phytoplankton	Phytoplankton
+phytoplankton	Phytoplankton
+secchi depth	Secchi depth
+din_winter	Din winter
+ntot_summer	Ntot summer
+ntot_winter	Ntot winter
+dip_winter	Dip winter
+ptot_summer	Ptot summer
+ptot_winter	Ptot winter
+bqi	BQI
+msmdi	MSMDI
+o2	Oxygen
+biov	Biovolume
+chl	Chlorophyll
+secchi 	Secchi 

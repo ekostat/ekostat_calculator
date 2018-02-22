@@ -72,7 +72,14 @@ class EventHandler(object):
         self.workspaces = {}
         
         # Load UUID mapping file for workspaces
-        self.uuid_mapping = core.mapping.UUIDmapping('{}/uuid_mapping.txt'.format(self.workspace_directory))
+        self.uuid_mapping = core.UUIDmapping('{}/uuid_mapping.txt'.format(self.workspace_directory))
+        
+        # Mapping objects
+        self.mapping_objects = {}
+        self.mapping_objects['water_body'] = core.WaterBody(file_path=self.root_path + '/resources/mappings/water_body_match.txt')
+        self.mapping_objects['quality_element'] = core.QualityElement(file_path=self.root_path + '/resources/Quality_Elements.cfg')
+        self.mapping_objects['display_mapping'] = core.ParameterMapping()
+        self.mapping_objects['display_mapping'].load_mapping_settings(file_path=self.root_path + '/resources/mappings/display_mapping.txt')
         
     
     #==========================================================================
@@ -84,12 +91,21 @@ class EventHandler(object):
     
     
     #==========================================================================
-    def _get_workspace_object_from_alias(self, alias): 
-        unique_id = self.uuid_mapping.get_uuid(alias, user_id) 
+    def _get_workspace_object(self, user_id=None, alias=None, unique_id=None): 
+        if user_id and alias:
+            unique_id = self.uuid_mapping.get_uuid(alias, user_id) 
         if not unique_id:
             return False
         return self.workspaces.get(unique_id, None)
     
+    
+    #==========================================================================
+    def apply_data_filter(self, 
+                          user_id=None,  
+                          workspace_uuid=None): 
+        pass
+        
+        
     #==========================================================================
     def change_workspace_alias(self, user_id, current_alias, new_alias): 
         
@@ -100,13 +116,14 @@ class EventHandler(object):
     
     
     #==========================================================================
-    def copy_subset(self, user_id, workspace_alias=None, subset_source_alias=None, subset_source_uuid=None, subset_target_alias=None): 
+    def copy_subset(self, user_id, workspace_alias=None, workspace_uuid=None, subset_source_alias=None, subset_source_uuid=None, subset_target_alias=None): 
         """
         Created     20180219    by Magnus Wenzer
         Updated     20180219    by Magnus Wenzer
         
         """
-        workspace_uuid = self.uuid_mapping.get_uuid(workspace_alias, user_id)
+        if workspace_alias:
+            workspace_uuid = self.uuid_mapping.get_uuid(workspace_alias, user_id)
         if not workspace_uuid:
             print('workspace_unique_id')
             return False
@@ -120,8 +137,9 @@ class EventHandler(object):
             subset_source_alias = self.uuid_mapping.get_alias(subset_source_uuid, user_id) 
             
         self._logger.debug('Trying to copy subset "{}". Copy has alias "{}"'.format(subset_source_alias, subset_target_alias))
-        workspace_object.copy_subset(subset_source_alias, subset_target_alias)
+        return_dict = workspace_object.copy_subset(subset_source_alias, subset_target_alias)
         
+        return return_dict
         
     #==========================================================================
     def copy_workspace(self, user_id, source_alias=None, source_uuid=None, target_alias=None): 
@@ -170,7 +188,7 @@ class EventHandler(object):
             2: rename subset folder
         """ 
         target_subset_uuid_mapping_file = '{}/subsets/uuid_mapping.txt'.format(target_workspace_path) 
-        uuid_object = core.mapping.UUIDmapping(target_subset_uuid_mapping_file)
+        uuid_object = core.UUIDmapping(target_subset_uuid_mapping_file)
         
         uuid_list = uuid_object.get_uuid_list_for_user(user_id)
         for u_id in uuid_list:
@@ -184,9 +202,10 @@ class EventHandler(object):
         return {'alias': target_alias,
                 'uuid': target_uuid,
             	  'status': status}
-        
+    
+    
     #==========================================================================
-    def delete_subset(self, user_id, workspace_alias=None, subset_alias=None, permanently=False): 
+    def delete_subset(self, user_id=None, workspace_alias=None, subset_alias=None, subset_unique_id=None, permanently=False): 
         """
         Created     20180219    by Magnus Wenzer
         Updated     20180220    by Magnus Wenzer
@@ -197,7 +216,7 @@ class EventHandler(object):
             return False 
         if not self._change_ok(subset_alias):
             return False
-        
+            
         workspace_unique_id = self.uuid_mapping.get_uuid(workspace_alias, user_id)
         if not workspace_unique_id:
             return False
@@ -205,8 +224,8 @@ class EventHandler(object):
         if not workspace_object:
             return False
         
-        workspace_object.delete_subset(alias=subset_alias, permanently=permanently)
-    
+        return workspace_object.delete_subset(unique_id=subset_unique_id, permanently=permanently)
+        
     
     #==========================================================================
     def delete_workspace(self, user_id=None, alias=None, unique_id=None, permanently=False):
@@ -247,11 +266,205 @@ class EventHandler(object):
             self.uuid_mapping.set_status(unique_id, 'deleted')
         
         return True 
+     
+    
+    #==========================================================================
+    def dict_indicator(self, workspace_unique_id=None, subset_unique_id=None, indicator=None): 
+        """
+        Created     20180222    by Magnus Wenzer
+        Updated     20180222    by Magnus Wenzer
         
+        dict like: 
+            {
+							"label": "Biovolume - default",
+							"status": "selectable",
+							"selected": true,
+							"value": "Biovolume - default"
+						}
+        """
+        workspace_object = self._get_workspace_object(unique_id=workspace_unique_id) 
+        subset_object = workspace_object.get_subset_object(subset_unique_id) 
+        if not subset_object:
+            self._logger.warning('Could not find subset object {}. Subset is probably not loaded.'.format(subset_unique_id))
+            return {"label": "",
+					   "status": "",
+					   "selected": False,
+					   "value": ""}
+        
+        # TODO: Check if indicator is selectable
+        return_dict = {"label": self.mapping_objects['display_mapping'].get_mapping(indicator, 'internal_name', 'display_en'),
+							"status": "selectable",
+							"selected": True,
+							"value": indicator}
+        
+        return return_dict
+    
+    #==========================================================================
+    def dict_period(self, workspace_unique_id=None, subset_unique_id=None): 
+        """
+        Created     20180221    by Magnus Wenzer
+        Updated     20180222    by Magnus Wenzer
+        
+        NOT USED YET! 
+        
+        Information is taken from data filter in step 1. 
+        This should be more dynamic in the future. For example not set ranges but min and max year. 
+        """ 
+            
+        workspace_object = self._get_workspace_object(unique_id=workspace_unique_id) 
+        subset_object = workspace_object.get_subset_object(subset_unique_id) 
+        if not subset_object:
+            self._logger.warning('Could not find subset object {}. Subset is probably not loaded.'.format(subset_unique_id))
+            return {}
+        
+        data_filter_object = subset_object.get_data_filter_object('step_1')
+        
+        year_list = data_filter_object.get_include_list_filter('MYEAR')
 
+        return {"label": "2006-2012",
+				  "status": "selectable",
+				  "selected": True,
+				  "value": "2006-2012"}
+        
+        
+    #==========================================================================
+    def dict_quality_element(self, workspace_unique_id=None, subset_unique_id=None, quality_element=None): 
+        """
+        Created     20180222    by Magnus Wenzer
+        Updated     20180222    by Magnus Wenzer
+        
+        dict like: 
+            {
+					"label": "Phytoplankton", 
+					"children": []
+				}
+        """
+        workspace_object = self._get_workspace_object(unique_id=workspace_unique_id) 
+        subset_object = workspace_object.get_subset_object(subset_unique_id) 
+        if not subset_object:
+            self._logger.warning('Could not find subset object {}. Subset is probably not loaded.'.format(subset_unique_id))
+            return {"label": '',
+    					"children": []}
+        
+        
+        return_dict = {'label': quality_element, 
+                       "children": self.list_indicators(workspace_unique_id=workspace_unique_id, 
+                                                        subset_unique_id=subset_unique_id, 
+                                                        quality_element=quality_element)} 
+        
+        return return_dict
+        
+        
+    #==========================================================================
+    def dict_subset(self, workspace_unique_id=None, subset_unique_id=None):  
+        """
+        Created     20180222    by Magnus Wenzer
+        Updated     20180222    by Magnus Wenzer
+        
+        """
+        workspace_object = self._get_workspace_object(unique_id=workspace_unique_id)
+        alias = workspace_object.uuid_mapping.get_alias(subset_unique_id, status=self.all_status) 
+        status = workspace_object.uuid_mapping.get_status(unique_id=subset_unique_id) 
+        active = workspace_object.uuid_mapping.is_active(unique_id=subset_unique_id)
+        return {'alias': alias,
+                'uuid': subset_unique_id,
+                'status': status,
+            	  'active': active,
+            	  'periods': [], 
+                'water_bodies': [], 
+                'water_districts': [], 
+                'supporting_elements': [], 
+                'quality_elements': []}
+                                
+    
+    #==========================================================================
+    def dict_type_area(self, workspace_unique_id=None, subset_unique_id=None, type_area=None): 
+        """
+        Created     20180222    by Magnus Wenzer
+        Updated     20180222    by Magnus Wenzer
+        
+        type_area is "TYPE_AREA_NUMBER" at the moment. 
+        "selectable" needs to be checked against water district. 
+        """
+        workspace_object = self._get_workspace_object(unique_id=workspace_unique_id) 
+        subset_object = workspace_object.get_subset_object(subset_unique_id) 
+        if not subset_object:
+            self._logger.warning('Could not find subset object {}. Subset is probably not loaded.'.format(subset_unique_id))
+            return {"label": '',
+    					"status": '',
+    					"selected": False,
+    					"value": ''}
+            
+        selected = False 
+        data_filter_object = subset_object.get_data_filter_object('step_1')
+        type_area_active_list = data_filter_object.get_include_list_filter('TYPE_AREA_NUMBER')
+        if type_area in type_area_active_list:
+            selected = True
+            
+        return {"label": self.mapping_objects['display_mapping'].get_mapping(type_area, 'internal_name', 'display_en'),
+				  "status": "selectable",
+				  "selected": selected,
+				  "value": type_area}
+        
+    
+    #==========================================================================
+    def dict_water_body(self, workspace_unique_id=None, subset_unique_id=None, water_body=None): 
+        """
+        Created     20180222    by Magnus Wenzer
+        Updated     20180222    by Magnus Wenzer
+        
+        water_body is "SEA_AREA_NAME". 
+        "selectable" needs to be checked against water district and type. 
+        """
+        workspace_object = self._get_workspace_object(unique_id=workspace_unique_id) 
+        subset_object = workspace_object.get_subset_object(subset_unique_id) 
+        if not subset_object:
+            self._logger.warning('Could not find subset object {}. Subset is probably not loaded.'.format(subset_unique_id))
+            return {"label": '',
+    					"status": '',
+    					"selected": False,
+    					"value": ''}
+            
+        selected = False 
+        data_filter_object = subset_object.get_data_filter_object('step_1')
+        wb_active_list = data_filter_object.get_include_list_filter('SEA_AREA_NAME')
+        if water_body in wb_active_list:
+            selected = True
+            
+        return {"label": self.mapping_objects['display_mapping'].get_mapping(water_body, 'internal_name', 'display_en'),
+				  "status": "selectable",
+				  "selected": selected,
+				  "value": water_body}
+                          
+                
+                
+    #==========================================================================
+    def dict_workspace(self, unique_id=None): 
+        """
+        Created     20180221    by Magnus Wenzer
+        Updated     20180221    by Magnus Wenzer
+        
+        """
+        alias = self.uuid_mapping.get_alias(unique_id, status=self.all_status) 
+        status = self.uuid_mapping.get_status(unique_id=unique_id)
+        
+        return {'alias': alias, 
+                'uuid': unique_id,
+                'status': status}
+    
+    #==========================================================================
+    def get_alias_for_unique_id(self, workspace_unique_id=None, subset_unique_id=None): 
+        if workspace_unique_id and subset_unique_id: 
+            workspace_object = self.workspaces.get(workspace_unique_id, None)
+            if not workspace_object:
+                return False
+            return workspace_object.get_alias_for_unique_id(subset_unique_id)
+        
+        
     #==========================================================================
     def get_unique_id_for_alias(self, user_id, workspace_alias=None, subset_alias=None):
         if workspace_alias and subset_alias: 
+            workspace_object = self._get_workspace_object(alias=workspace_alias, user_id=user_id)
             workspace_unique_id = self.uuid_mapping.get_uuid(workspace_alias, user_id)
             workspace_object = self.workspaces.get(workspace_unique_id, None) 
             if not workspace_object:
@@ -261,8 +474,13 @@ class EventHandler(object):
             return self.uuid_mapping.get_uuid(workspace_alias, user_id)
         else:
             return False
-                   
-                      
+           
+            
+    #==========================================================================
+    def get_subset_list(self, workspace_unique_id): 
+        workspace_object = self.workspaces.get(workspace_unique_id, None)
+        return workspace_object.get_subset_list()
+                    
     #==========================================================================
     def get_workspace(self, user_id, alias=None, include_deleted=False): 
         """
@@ -302,6 +520,166 @@ class EventHandler(object):
         
     
     #==========================================================================
+    def list_indicators(self, workspace_unique_id=None, subset_unique_id=None, quality_element=None): 
+        """
+        Created     20180222    by Magnus Wenzer
+        Updated     20180222    by Magnus Wenzer
+        
+        """ 
+        workspace_object = self._get_workspace_object(unique_id=workspace_unique_id) 
+        subset_object = workspace_object.get_subset_object(subset_unique_id)
+        
+        indicator_list = self.mapping_objects['quality_element'].get_indicator_list_for_quality_element(quality_element)
+        
+        return_list = []
+        for indicator in indicator_list:
+            indicator_dict = self.dict_indicator(workspace_unique_id=workspace_unique_id, 
+                                                 subset_unique_id=subset_unique_id, 
+                                                 indicator=indicator)
+        
+            return_list.append(indicator_dict)
+        
+        return return_list
+        
+    #==========================================================================
+    def list_periods(self): 
+        """
+        Created     20180222    by Magnus Wenzer
+        Updated     20180222    by Magnus Wenzer
+        
+        Temporary method to give static periods.
+        """
+        return [{"label": "2007-2012",
+    				"status": "selectable",
+    				"selected": False,
+    				"value": "2007-2012"}, 
+    
+                {"label": "2013-2018",
+    				"status": "selectable",
+    				"selected": True,
+    				"value": "2013-2018"}]
+        
+    
+    #==========================================================================
+    def list_quality_elements(self, workspace_unique_id=None, subset_unique_id=None): 
+        """
+        Created     20180222    by Magnus Wenzer
+        Updated     20180222    by Magnus Wenzer
+        
+        """ 
+#        workspace_object = self._get_workspace_object(unique_id=workspace_unique_id) 
+#        subset_object = workspace_object.get_subset_object(subset_unique_id)
+        
+        quality_element_list = self.mapping_objects['quality_element'].get_quality_element_list() 
+        exclude = ['secchi depth'] 
+        quality_element_list = [item for item in quality_element_list if item not in exclude]
+        
+        
+        return_list = []
+        for quality_element in quality_element_list:
+            quality_element_dict = self.dict_quality_element(workspace_unique_id=workspace_unique_id, 
+                                                             subset_unique_id=subset_unique_id, 
+                                                             quality_element=quality_element)
+        
+            return_list.append(quality_element_dict)
+        
+        return return_list
+    
+    #==========================================================================
+    def list_supporting_elements(self, workspace_unique_id=None, subset_unique_id=None): 
+        """
+        Created     20180222    by Magnus Wenzer
+        Updated     20180222    by Magnus Wenzer
+        
+        """ 
+#        workspace_object = self._get_workspace_object(unique_id=workspace_unique_id) 
+#        subset_object = workspace_object.get_subset_object(subset_unique_id)
+        
+        quality_element_list = ['secchi depth']
+        
+        return_list = []
+        for quality_element in quality_element_list:
+            quality_element_dict = self.dict_quality_element(workspace_unique_id=workspace_unique_id, 
+                                                             subset_unique_id=subset_unique_id, 
+                                                             quality_element=quality_element)
+        
+            return_list.append(quality_element_dict)
+        
+        return return_list
+    
+    
+        
+    #==========================================================================
+    def list_type_areas(self, workspace_unique_id=None, subset_unique_id=None): 
+        """
+        Created     20180222    by Magnus Wenzer
+        Updated     20180222    by Magnus Wenzer
+        
+        Lists information for type areas. 
+        """
+        return_list = []
+        for type_area in self.mapping_objects['water_body'].get_type_area_list():
+            type_area_dict = self.dict_type_area(workspace_unique_id=workspace_unique_id, 
+                                                   subset_unique_id=subset_unique_id, 
+                                                   type_area=type_area)
+            return_list.append(type_area_dict)
+    
+        return return_list
+    
+    
+    #==========================================================================
+    def list_water_bodies(self, workspace_unique_id=None, subset_unique_id=None): 
+        """
+        Created     20180222    by Magnus Wenzer
+        Updated     20180222    by Magnus Wenzer
+        
+        Lists information for water bodies.
+        """
+        return_list = []
+        for water_body in self.mapping_objects['water_body'].get_water_body_list():
+            water_body_dict = self.dict_water_body(workspace_unique_id=workspace_unique_id, 
+                                                   subset_unique_id=subset_unique_id, 
+                                                   water_body=water_body)
+            return_list.append(water_body_dict)
+    
+        return return_list
+    
+    
+    #==========================================================================
+    def list_water_district(self, workspace_unique_id=None, subset_unique_id=None): 
+        """
+        Created     20180222    by Magnus Wenzer
+        Updated     20180222    by Magnus Wenzer
+        
+        NOT DYNAMIC YET. NEEDS TO BE MAPPED! 
+        
+        Lists information for water district. 
+        """
+        return_list = [{
+        					"label": "Bottenhavet",
+        					"status": "selectable",
+        					"selected": True,
+        					"value": "Bottenhavet"
+        				},
+        				{
+        					"label": "Skagerakk", 
+        					"status": "selectable",
+        					"selected": False,
+        					"value": "Skagerakk"
+        				}] 
+        
+        return return_list
+    
+#        for water_body in self.mapping_objects['water_body'].get_water_body_list():
+#            water_body_dict = self.dict_water_body(workspace_unique_id=workspace_unique_id, 
+#                                                   subset_unique_id=subset_unique_id, 
+#                                                   water_body=water_body)
+#            return_list.append(water_body_dict)
+#    
+#        return return_list
+    
+    
+    #==========================================================================
     def load_all_workspaces_for_user(self, user_id, with_status=None):
         """
         Created     20180219    by Magnus Wenzer
@@ -322,7 +700,7 @@ class EventHandler(object):
     
     #==========================================================================
     def load_data(self, user_id, workspace_alias): 
-        workspace_object = self._get_workspace_object_from_alias(workspace_alias) 
+        workspace_object = self._get_workspace_object_from_alias(user_id=user_id, alias=workspace_alias) 
         if not workspace_object:
             return False 
         
@@ -369,7 +747,313 @@ class EventHandler(object):
         for alias in alias_id_list:
             print('DELETING:', alias)
             self.delete_workspace(user_id=user_id, alias=alias, permanently=True)
+           
+    
+    #==========================================================================
+    def request_subset_create(self, request):
+        """
+        Created     20180222    by Magnus Wenzer
+        Updated     20180222    by Magnus Wenzer
+        
+        "request" must contain: 
+            user_id 
+            workspace_uuid
+            subset_uuid
+            alias (for new subset)
+        
+        Returns a dict like:
+            {
+            	"alias": "My Subset 1",
+            	"uuid": "...",
+            	"active": true,
+            	"periods": [
+            		{
+            			"label": "2006-2012",
+            			"status": "selectable",
+            			"selected": true,
+            			"value": "2006-2012"
+            		},
+            		{
+            			"label": "2012-2017",
+            			"status": "selectable",
+            			"selected": false,
+            			"value": "2012-2017"
+            		}
+            	],
+            	"water_bodies": [
+            		{
+            			"label": "WB 1",
+            			"status": "selectable",
+            			"selected": true,
+            			"value": "WB 1"
+            		},
+            		{
+            			"label": "WB 2",
+            			"status": "selectable",
+            			"selected": true,
+            			"value": "WB 2"
+            		},
+            		{
+            			"label": "WB 3",
+            			"status": "selectable",
+            			"selected": false,
+            			"value": "WB 3"
+            		},
+            		{
+            			"label": "WB 4",
+            			"status": "selectable",
+            			"selected": true,
+            			"value": "WB 4"
+            		}
+            	],
+            	"water_districts": [
+            		{
+            			"label": "Bottenhavet",
+            			"status": "selectable",
+            			"selected": true,
+            			"value": "Bottenhavet"
+            		},
+            		{
+            			"label": "Skagerakk",
+            			"status": "selectable",
+            			"selected": false,
+            			"value": "Skagerakk"
+            		}
+            	],
+            	"supporting_elements": [
+            		{
+            			"label": "Secchi",
+            			"children": [
+            				{
+            					"label": "Secchi - default",
+            					"status": "selectable",
+            					"selected": false,
+            					"value": "Secchi - default"
+            				}
+            			]
+            		}
+            	],
+            	"quality_elements": [
+            		{
+            			"label": "Phytoplankton",
+            			"children": [
+            				{
+            					"label": "Chlorophyll - default",
+            					"status": "selectable",
+            					"selected": true,
+            					"value": "Chlorophyll - default"
+            				},
+            				{
+            					"label": "Biovolume - default",
+            					"status": "selectable",
+            					"selected": true,
+            					"value": "Biovolume - default"
+            				}
+            			]
+            		}
+            	]
+            }
+
+        """
+        user_id = request['user_id']
+        workspace_uuid = request['workspace_uuid']
+        subset_uuid = request['subset_uuid']
+        new_alias = request['alias']
+        
+        return_dict = self.copy_subset(user_id, 
+                                       workspace_uuid=workspace_uuid, 
+                                       subset_source_uuid=subset_uuid, 
+                                       subset_target_alias=new_alias)
+        subset_uuid = return_dict['uuid']
+        respons = self.dict_subset(workspace_unique_id=workspace_uuid, 
+                                   subset_unique_id=subset_uuid)
+        
+        return respons
+    
+    #==========================================================================
+    def request_subset_delete(self, request):
+        """
+        Created     20180221    by Magnus Wenzer
+        Updated     20180221    by Magnus Wenzer
+        
+        "request" must contain: 
+            workspace_uuid
+            subset_uuid
+        
+        Returns a dict like:
+            {
+            	"alias": "My Workspace",
+            	"uuid": "..."
+            }
+        """
+        workspace_uuid = request['workspace_uuid']
+        subset_uuid = request['subset_uuid']
+#        print('###', user_id)
+#        print('###', alias)
+#        print('###', source_uuid)
+        
+        workspace_alias = self.uuid_mapping.get_alias(workspace_uuid) 
+        respons = self.delete_subset(workspace_alias=workspace_alias, subset_unique_id=subset_uuid)
+        
+        return respons
+    
             
+    #==========================================================================
+    def request_subset_list(self, request):
+        """
+        Created     20180221    by Magnus Wenzer
+        Updated     20180221    by Magnus Wenzer
+        
+        "request" must contain: 
+            workspace_uuid 
+        
+        Returns a dict like:
+            {
+            	"workspace": {
+            		"alias": "My Workspace",
+            		"uuid": "...",
+            		"status": "editable"
+            	},
+            	"subsets": [
+            		{
+            			"alias": "My Subset 1",
+            			"uuid": "...",
+            			"active": true,
+            			"periods": [
+            				{
+            					"label": "2006-2012",
+            					"status": "selectable",
+            					"selected": true,
+            					"value": "2006-2012"
+            				},
+            				{
+            					"label": "2012-2017",
+            					"status": "selectable",
+            					"selected": false,
+            					"value": "2012-2017"
+            				}
+            			],
+            			"water_bodies": [
+            				{
+            					"label": "WB 1",
+            					"status": "selectable",
+            					"selected": true,
+            					"value": "WB 1"
+            				},
+            				{
+            					"label": "WB 2",
+            					"status": "selectable",
+            					"selected": true,
+            					"value": "WB 2"
+            				},
+            				{
+            					"label": "WB 3",
+            					"status": "selectable",
+            					"selected": false,
+            					"value": "WB 3"
+            				},
+            				{
+            					"label": "WB 4",
+            					"status": "selectable",
+            					"selected": true,
+            					"value": "WB 4"
+            				}
+            			],
+            			"water_districts": [
+            				{
+            					"label": "Bottenhavet",
+            					"status": "selectable",
+            					"selected": true,
+            					"value": "Bottenhavet"
+            				},
+            				{
+            					"label": "Skagerakk",
+            					"status": "selectable",
+            					"selected": false,
+            					"value": "Skagerakk"
+            				}
+            			],
+            			"supporting_elements": [
+            				{
+            					"label": "Secchi",
+            					"children": [
+            						{
+            							"label": "Secchi - default",
+            							"status": "selectable",
+            							"selected": false,
+            							"value": "Secchi - default"
+            						}
+            					]
+            				}
+            			],
+            			"quality_elements": [
+            				{
+            					"label": "Phytoplankton",
+            					"children": [
+            						{
+            							"label": "Chlorophyll - default",
+            							"status": "selectable",
+            							"selected": true,
+            							"value": "Chlorophyll - default"
+            						},
+            						{
+            							"label": "Biovolume - default",
+            							"status": "selectable",
+            							"selected": true,
+            							"value": "Biovolume - default"
+            						}
+            					]
+            				}
+            			]
+            		}
+            	]
+            }
+        """
+        workspace_uuid = request['workspace_uuid'] 
+        
+        # Initiate structure 
+        respons = {'workspace': {}, 
+                   'subsets': []}
+        
+        # Add workspace info
+        workspace_dict = self.dict_workspace(unique_id=workspace_uuid)
+                    
+        respons['workspace'] = workspace_dict
+               
+        # Add subset info 
+        for subset_uuid in self.get_subset_list(workspace_uuid):
+            
+            # Get subset dict
+            subset_dict = self.dict_subset(workspace_unique_id=workspace_uuid, 
+                                           subset_unique_id=subset_uuid)
+            
+            # Temporary default list for periods
+            subset_dict['periods'] = self.list_periods()
+            
+            # Water bodies 
+            subset_dict['water_bodies'] = self.list_water_bodies(workspace_unique_id=workspace_uuid, 
+                                                                 subset_unique_id=subset_uuid)
+            
+            # Type area
+            subset_dict['type_area'] = self.list_water_bodies(workspace_unique_id=workspace_uuid, 
+                                                              subset_unique_id=subset_uuid)
+            
+            # Type area
+            subset_dict['water_districts'] = self.list_water_district(workspace_unique_id=workspace_uuid, 
+                                                                      subset_unique_id=subset_uuid)
+            
+            # Quality elements 
+            subset_dict['quality_elements'] = self.list_quality_elements(workspace_unique_id=workspace_uuid, 
+                                                                         subset_unique_id=subset_uuid)
+            
+            # Quality elements 
+            subset_dict['supporting_elements'] = self.list_supporting_elements(workspace_unique_id=workspace_uuid, 
+                                                                               subset_unique_id=subset_uuid)
+            
+            # Add subset dict to subset list
+            respons['subsets'].append(subset_dict)
+               
+        return respons
     
     #==========================================================================
     def request_workspace_add(self, request):
@@ -385,7 +1069,7 @@ class EventHandler(object):
         Returns a dict like:
             {
             	"alias": "My Workspace",
-            	"uid": "my_workspace",
+            	"uuid": "my_workspace",
             	"status": "editable"
             }
         """
@@ -408,12 +1092,12 @@ class EventHandler(object):
         Updated     20180221    by Magnus Wenzer
         
         "request" must contain: 
-            uid 
+            uuid 
         
         Returns a dict like:
             {
             	"alias": "My Workspace",
-            	"uid": "..."
+            	"uuid": "..."
             }
         """
         unique_id = request['uuid']
@@ -471,23 +1155,24 @@ class EventHandler(object):
             	"workspaces": [
             		{
             			"alias": "My Workspace",
-            			"uid": "my_workspace",
+            			"uuid": "my_workspace",
             			"status": "editable"
             		}
             	]
             }
         """
+        
         user_id = request['user_id'] 
         
         respons = {'workspaces': []}
-        for alias in self.uuid_mapping.get_alias_list_for_user(user_id, status=self.all_status):
-            respons['workspaces'].append({'alias': alias, 
-                                          'uuid': self.uuid_mapping.get_uuid(alias, user_id, self.all_status),
-                                          'status': self.uuid_mapping.get_status(alias, user_id)})
-                    
-        respons['workspaces'].append({'alias': 'default_workspace', 
-                                      'uuid': 'default_workspace',
-                                      'status': 'readable'})
+        for unique_id in self.uuid_mapping.get_uuid_list_for_user(user_id, status=self.all_status):
+            respons['workspaces'].append(self.dict_workspace(unique_id=unique_id))
+              
+        respons['workspaces'].append(self.dict_workspace(unique_id='default_workspace'))
+        
+#        respons['workspaces'].append({'alias': 'default_workspace', 
+#                                      'uuid': 'default_workspace',
+#                                      'status': 'readable'})
                     
         return respons
     
@@ -512,10 +1197,17 @@ class EventHandler(object):
     def set_data_filter(self, 
                         user_id, 
                         workspace_alias=None, 
-                        step='', subset='', 
+                        step='', 
+                        subset='', 
                         filter_type='', 
                         filter_name='', 
-                        data=None):
+                        data=None): 
+        """
+        Created     20180220    by Magnus Wenzer
+        Updated     20180221    by Magnus Wenzer
+        
+        Sets the data filter as described. 
+        """
         assert all([workspace_alias, step, subset, filter_type, filter_name, data])
         workspace_object = self._get_workspace_object_from_alias(workspace_alias) 
         if not workspace_object:
