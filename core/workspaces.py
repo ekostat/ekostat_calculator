@@ -1257,20 +1257,6 @@ class WorkSpace(object):
                     available_indicators.append(indicator) 
             except KeyError:
                 continue
-#            for param in parameters:
-#                if len(param.split('/')) > 1:
-#                    for param2 in param.split('/'):
-#                        if param2 == 'SALT':
-#                            #TODO: add condition for salinity availibility to set nutrients as available
-#                            continue
-#                        if param2 in self.get_filtered_data(subset = subset, step = step).columns and self.get_filtered_data(subset = subset, step = step)[param2].dropna().count() > 0:
-#                            available_indicators.append(indicator) 
-#                else:
-#                    if 'SALT' in param:
-#                        #TODO: add condition for salinity availibility to set nutrients as available
-#                        continue
-#                    if param in self.get_filtered_data(subset = subset, step = step).columns and self.get_filtered_data(subset = subset, step = step)[param].dropna().count() > 0:
-#                        available_indicators.append(indicator) 
             
         return available_indicators
     
