@@ -290,7 +290,7 @@ class DataFilter(object):
         if filter_name not in self.include_list_filter.keys():
             return False
         
-        print('filter_name')
+        print('filter_name: {}'.format(filter_name))
         if filter_name == 'WATER_BODY_NAME':
             self.include_water_body(filter_list)
         else:

@@ -1,0 +1,98 @@
+2018-02-01 15:19:50,321	logger.py	85	add_log	DEBUG	
+2018-02-01 15:19:50,321	logger.py	86	add_log	DEBUG	========================================================================================================================
+2018-02-01 15:19:50,321	logger.py	87	add_log	DEBUG	### Log added for log_id "c79dd124-4296-4e5a-9109-ded179408173" at locaton: D:\Utveckling\git\ekostat_calculator\workspaces\default\log\workspace_c79dd124-4296-4e5a-9109-ded179408173.log
+2018-02-01 15:19:50,321	logger.py	88	add_log	DEBUG	------------------------------------------------------------------------------------------------------------------------
+2018-02-01 15:23:43,503	logger.py	85	add_log	DEBUG	
+2018-02-01 15:23:43,504	logger.py	86	add_log	DEBUG	========================================================================================================================
+2018-02-01 15:23:43,504	logger.py	87	add_log	DEBUG	### Log added for log_id "c79dd124-4296-4e5a-9109-ded179408173" at locaton: D:\Utveckling\git\ekostat_calculator\workspaces\default\log\workspace_c79dd124-4296-4e5a-9109-ded179408173.log
+2018-02-01 15:23:43,504	logger.py	88	add_log	DEBUG	------------------------------------------------------------------------------------------------------------------------
+2018-02-01 15:23:52,040	logger.py	85	add_log	DEBUG	
+2018-02-01 15:23:52,041	logger.py	86	add_log	DEBUG	========================================================================================================================
+2018-02-01 15:23:52,041	logger.py	87	add_log	DEBUG	### Log added for log_id "c79dd124-4296-4e5a-9109-ded179408173" at locaton: D:\Utveckling\git\ekostat_calculator\workspaces\default\log\workspace_c79dd124-4296-4e5a-9109-ded179408173.log
+2018-02-01 15:23:52,041	logger.py	88	add_log	DEBUG	------------------------------------------------------------------------------------------------------------------------
+2018-02-01 15:25:24,633	logger.py	85	add_log	DEBUG	
+2018-02-01 15:25:24,633	logger.py	86	add_log	DEBUG	========================================================================================================================
+2018-02-01 15:25:24,634	logger.py	87	add_log	DEBUG	### Log added for log_id "c79dd124-4296-4e5a-9109-ded179408173" at locaton: D:\Utveckling\git\ekostat_calculator\workspaces\default\log\workspace_c79dd124-4296-4e5a-9109-ded179408173.log
+2018-02-01 15:25:24,634	logger.py	88	add_log	DEBUG	------------------------------------------------------------------------------------------------------------------------
+2018-02-01 15:26:49,760	logger.py	85	add_log	DEBUG	
+2018-02-01 15:26:49,760	logger.py	86	add_log	DEBUG	========================================================================================================================
+2018-02-01 15:26:49,760	logger.py	87	add_log	DEBUG	### Log added for log_id "c79dd124-4296-4e5a-9109-ded179408173" at locaton: D:\Utveckling\git\ekostat_calculator\workspaces\default\log\workspace_c79dd124-4296-4e5a-9109-ded179408173.log
+2018-02-01 15:26:49,761	logger.py	88	add_log	DEBUG	------------------------------------------------------------------------------------------------------------------------
+2018-02-01 15:27:54,968	logger.py	85	add_log	DEBUG	
+2018-02-01 15:27:54,968	logger.py	86	add_log	DEBUG	========================================================================================================================
+2018-02-01 15:27:54,968	logger.py	87	add_log	DEBUG	### Log added for log_id "c79dd124-4296-4e5a-9109-ded179408173" at locaton: D:\Utveckling\git\ekostat_calculator\workspaces\default\log\workspace_c79dd124-4296-4e5a-9109-ded179408173.log
+2018-02-01 15:27:54,969	logger.py	88	add_log	DEBUG	------------------------------------------------------------------------------------------------------------------------
+2018-02-01 15:28:17,551	logger.py	85	add_log	DEBUG	
+2018-02-01 15:28:17,551	logger.py	86	add_log	DEBUG	========================================================================================================================
+2018-02-01 15:28:17,551	logger.py	87	add_log	DEBUG	### Log added for log_id "c79dd124-4296-4e5a-9109-ded179408173" at locaton: D:\Utveckling\git\ekostat_calculator\workspaces\default\log\workspace_c79dd124-4296-4e5a-9109-ded179408173.log
+2018-02-01 15:28:17,552	logger.py	88	add_log	DEBUG	------------------------------------------------------------------------------------------------------------------------
+2018-02-01 15:28:18,228	workspaces.py	947	make_copy_of_workspace	DEBUG	No data to load! Consider loading default data by calling <workspace_objetc>.load_default_data()
+2018-02-01 15:29:22,712	logger.py	85	add_log	DEBUG	
+2018-02-01 15:29:22,712	logger.py	86	add_log	DEBUG	========================================================================================================================
+2018-02-01 15:29:22,712	logger.py	87	add_log	DEBUG	### Log added for log_id "c79dd124-4296-4e5a-9109-ded179408173" at locaton: D:\Utveckling\git\ekostat_calculator\workspaces\default\log\workspace_c79dd124-4296-4e5a-9109-ded179408173.log
+2018-02-01 15:29:22,712	logger.py	88	add_log	DEBUG	------------------------------------------------------------------------------------------------------------------------
+2018-02-01 15:30:32,502	logger.py	85	add_log	DEBUG	
+2018-02-01 15:30:32,502	logger.py	86	add_log	DEBUG	========================================================================================================================
+2018-02-01 15:30:32,502	logger.py	87	add_log	DEBUG	### Log added for log_id "c79dd124-4296-4e5a-9109-ded179408173" at locaton: D:\Utveckling\git\ekostat_calculator\workspaces\default\log\workspace_c79dd124-4296-4e5a-9109-ded179408173.log
+2018-02-01 15:30:32,502	logger.py	88	add_log	DEBUG	------------------------------------------------------------------------------------------------------------------------
+2018-02-01 15:31:28,092	logger.py	85	add_log	DEBUG	
+2018-02-01 15:31:28,093	logger.py	86	add_log	DEBUG	========================================================================================================================
+2018-02-01 15:31:28,093	logger.py	87	add_log	DEBUG	### Log added for log_id "c79dd124-4296-4e5a-9109-ded179408173" at locaton: D:\Utveckling\git\ekostat_calculator\workspaces\default\log\workspace_c79dd124-4296-4e5a-9109-ded179408173.log
+2018-02-01 15:31:28,093	logger.py	88	add_log	DEBUG	------------------------------------------------------------------------------------------------------------------------
+2018-02-01 15:32:26,392	logger.py	85	add_log	DEBUG	
+2018-02-01 15:32:26,392	logger.py	86	add_log	DEBUG	========================================================================================================================
+2018-02-01 15:32:26,392	logger.py	87	add_log	DEBUG	### Log added for log_id "c79dd124-4296-4e5a-9109-ded179408173" at locaton: D:\Utveckling\git\ekostat_calculator\workspaces\default\log\workspace_c79dd124-4296-4e5a-9109-ded179408173.log
+2018-02-01 15:32:26,393	logger.py	88	add_log	DEBUG	------------------------------------------------------------------------------------------------------------------------
+2018-02-01 15:32:26,873	workspaces.py	947	make_copy_of_workspace	DEBUG	No data to load! Consider loading default data by calling <workspace_objetc>.load_default_data()
+2018-02-01 15:35:58,703	logger.py	85	add_log	DEBUG	
+2018-02-01 15:35:58,703	logger.py	86	add_log	DEBUG	========================================================================================================================
+2018-02-01 15:35:58,703	logger.py	87	add_log	DEBUG	### Log added for log_id "c79dd124-4296-4e5a-9109-ded179408173" at locaton: D:\Utveckling\git\ekostat_calculator\workspaces\default\log\workspace_c79dd124-4296-4e5a-9109-ded179408173.log
+2018-02-01 15:35:58,703	logger.py	88	add_log	DEBUG	------------------------------------------------------------------------------------------------------------------------
+2018-02-01 16:12:05,760	logger.py	85	add_log	DEBUG	
+2018-02-01 16:12:05,760	logger.py	86	add_log	DEBUG	========================================================================================================================
+2018-02-01 16:12:05,760	logger.py	87	add_log	DEBUG	### Log added for log_id "c79dd124-4296-4e5a-9109-ded179408173" at locaton: D:\Utveckling\git\ekostat_calculator\workspaces\default\log\workspace_c79dd124-4296-4e5a-9109-ded179408173.log
+2018-02-01 16:12:05,760	logger.py	88	add_log	DEBUG	------------------------------------------------------------------------------------------------------------------------
+2018-02-01 16:16:41,959	logger.py	85	add_log	DEBUG	
+2018-02-01 16:16:41,959	logger.py	86	add_log	DEBUG	========================================================================================================================
+2018-02-01 16:16:41,959	logger.py	87	add_log	DEBUG	### Log added for log_id "c79dd124-4296-4e5a-9109-ded179408173" at locaton: D:\Utveckling\git\ekostat_calculator\workspaces\default\log\workspace_c79dd124-4296-4e5a-9109-ded179408173.log
+2018-02-01 16:16:41,960	logger.py	88	add_log	DEBUG	------------------------------------------------------------------------------------------------------------------------
+2018-02-01 16:20:02,001	logger.py	85	add_log	DEBUG	
+2018-02-01 16:20:02,001	logger.py	86	add_log	DEBUG	========================================================================================================================
+2018-02-01 16:20:02,002	logger.py	87	add_log	DEBUG	### Log added for log_id "c79dd124-4296-4e5a-9109-ded179408173" at locaton: D:\Utveckling\git\ekostat_calculator\workspaces\default\log\workspace_c79dd124-4296-4e5a-9109-ded179408173.log
+2018-02-01 16:20:02,002	logger.py	88	add_log	DEBUG	------------------------------------------------------------------------------------------------------------------------
+2018-02-01 16:20:31,752	logger.py	85	add_log	DEBUG	
+2018-02-01 16:20:31,753	logger.py	86	add_log	DEBUG	========================================================================================================================
+2018-02-01 16:20:31,753	logger.py	87	add_log	DEBUG	### Log added for log_id "c79dd124-4296-4e5a-9109-ded179408173" at locaton: D:\Utveckling\git\ekostat_calculator\workspaces\default\log\workspace_c79dd124-4296-4e5a-9109-ded179408173.log
+2018-02-01 16:20:31,753	logger.py	88	add_log	DEBUG	------------------------------------------------------------------------------------------------------------------------
+2018-02-01 16:21:51,083	logger.py	85	add_log	DEBUG	
+2018-02-01 16:21:51,083	logger.py	86	add_log	DEBUG	========================================================================================================================
+2018-02-01 16:21:51,083	logger.py	87	add_log	DEBUG	### Log added for log_id "c79dd124-4296-4e5a-9109-ded179408173" at locaton: D:\Utveckling\git\ekostat_calculator\workspaces\default\log\workspace_c79dd124-4296-4e5a-9109-ded179408173.log
+2018-02-01 16:21:51,083	logger.py	88	add_log	DEBUG	------------------------------------------------------------------------------------------------------------------------
+2018-02-01 16:21:51,564	workspaces.py	947	make_copy_of_workspace	DEBUG	No data to load! Consider loading default data by calling <workspace_objetc>.load_default_data()
+2018-02-01 16:22:43,562	logger.py	85	add_log	DEBUG	
+2018-02-01 16:22:43,562	logger.py	86	add_log	DEBUG	========================================================================================================================
+2018-02-01 16:22:43,563	logger.py	87	add_log	DEBUG	### Log added for log_id "c79dd124-4296-4e5a-9109-ded179408173" at locaton: D:\Utveckling\git\ekostat_calculator\workspaces\default\log\workspace_c79dd124-4296-4e5a-9109-ded179408173.log
+2018-02-01 16:22:43,563	logger.py	88	add_log	DEBUG	------------------------------------------------------------------------------------------------------------------------
+2018-02-01 16:24:49,124	logger.py	85	add_log	DEBUG	
+2018-02-01 16:24:49,125	logger.py	86	add_log	DEBUG	========================================================================================================================
+2018-02-01 16:24:49,125	logger.py	87	add_log	DEBUG	### Log added for log_id "c79dd124-4296-4e5a-9109-ded179408173" at locaton: D:\Utveckling\git\ekostat_calculator\workspaces\default\log\workspace_c79dd124-4296-4e5a-9109-ded179408173.log
+2018-02-01 16:24:49,125	logger.py	88	add_log	DEBUG	------------------------------------------------------------------------------------------------------------------------
+2018-02-01 16:24:49,679	workspaces.py	947	make_copy_of_workspace	DEBUG	No data to load! Consider loading default data by calling <workspace_objetc>.load_default_data()
+2018-02-01 16:25:21,190	logger.py	85	add_log	DEBUG	
+2018-02-01 16:25:21,190	logger.py	86	add_log	DEBUG	========================================================================================================================
+2018-02-01 16:25:21,190	logger.py	87	add_log	DEBUG	### Log added for log_id "c79dd124-4296-4e5a-9109-ded179408173" at locaton: D:\Utveckling\git\ekostat_calculator\workspaces\default\log\workspace_c79dd124-4296-4e5a-9109-ded179408173.log
+2018-02-01 16:25:21,191	logger.py	88	add_log	DEBUG	------------------------------------------------------------------------------------------------------------------------
+2018-02-02 08:25:02,536	logger.py	85	add_log	DEBUG	
+2018-02-02 08:25:02,536	logger.py	86	add_log	DEBUG	========================================================================================================================
+2018-02-02 08:25:02,536	logger.py	87	add_log	DEBUG	### Log added for log_id "c79dd124-4296-4e5a-9109-ded179408173" at locaton: ..\workspaces\default\log\workspace_c79dd124-4296-4e5a-9109-ded179408173.log
+2018-02-02 08:25:02,536	logger.py	88	add_log	DEBUG	------------------------------------------------------------------------------------------------------------------------
+2018-02-02 08:25:36,821	workspaces.py	785	_change_ok	DEBUG	Not allowed to change default workspace!
+2018-02-02 08:25:36,827	workspaces.py	785	_change_ok	DEBUG	Not allowed to change default workspace!
+2018-02-02 08:25:36,830	workspaces.py	785	_change_ok	DEBUG	Not allowed to change default workspace!
+2018-02-02 08:25:59,419	workspaces.py	785	_change_ok	DEBUG	Not allowed to change default workspace!
+2018-02-02 08:25:59,419	workspaces.py	785	_change_ok	DEBUG	Not allowed to change default workspace!
+2018-02-02 08:25:59,435	workspaces.py	785	_change_ok	DEBUG	Not allowed to change default workspace!
+2018-02-16 13:12:35,911	logger.py	85	add_log	DEBUG	
+2018-02-16 13:12:35,911	logger.py	86	add_log	DEBUG	========================================================================================================================
+2018-02-16 13:12:35,911	logger.py	87	add_log	DEBUG	### Log added for log_id "c79dd124-4296-4e5a-9109-ded179408173" at locaton: D:\Utveckling\git\ekostat_calculator\workspaces\default\log\workspace_c79dd124-4296-4e5a-9109-ded179408173.log
+2018-02-16 13:12:35,911	logger.py	88	add_log	DEBUG	------------------------------------------------------------------------------------------------------------------------

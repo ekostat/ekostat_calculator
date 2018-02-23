@@ -102,8 +102,14 @@ class EventHandler(object):
     #==========================================================================
     def apply_data_filter(self, 
                           user_id=None,  
-                          workspace_uuid=None): 
-        pass
+                          workspace_uuid=None,
+                          subset_uuid=None,
+                          step='step_1'): 
+        """
+        Updated     20180223    by Lena Viktorsson
+        """
+        w = self._get_workspace_object(user_id, None, workspace_uuid)
+        w.apply_data_filter(subset=subset_uuid,step=step)
         
         
     #==========================================================================
@@ -146,7 +152,7 @@ class EventHandler(object):
     def copy_workspace(self, user_id, source_alias=None, source_uuid=None, target_alias=None): 
         """
         Created     20180219    by Magnus Wenzer
-        Updated     20180220    by Magnus Wenzer
+        Updated     20180223    by Lena Viktorsson
         
         """
         if source_alias == 'default_workspace':
@@ -161,7 +167,6 @@ class EventHandler(object):
         if not source_alias:
             source_alias = self.uuid_mapping.get_alias(source_uuid)
             
-        target_alias = '{} (copy of {})'.format(target_alias, source_alias)
         # Add UUID for workspace in uuid_mapping 
         target_uuid = self.uuid_mapping.add_new_uuid_for_alias(target_alias, user_id)
         if not target_uuid:
@@ -232,7 +237,7 @@ class EventHandler(object):
     def delete_workspace(self, user_id=None, alias=None, unique_id=None, permanently=False):
         """
         Created     20180219    by Magnus Wenzer
-        Updated     20180221    by Magnus Wenzer
+        Updated     20180223    by Lena Viktorsson
         
         Deletes the given workspace. 
         """ 
@@ -250,6 +255,9 @@ class EventHandler(object):
             path_to_remove = '/'.join([self.workspace_directory, unique_id])
             if 'workspace' not in path_to_remove:
                 self._logger.error('Trying to delete workspace "{}" with alias "{}" but the path to delete is not secure!'.format(unique_id, alias)) 
+                return False
+            if os.path.exists(path_to_remove) is False:
+                self._logger.error('Trying to delete workspace "{}" with alias "{}" but cannot find workspace with this uuid!'.format(unique_id, alias)) 
                 return False
             
             self._logger.warning('Permanently deleting workspace "{}" with alias "{}".'.format(unique_id, alias))
@@ -637,7 +645,7 @@ class EventHandler(object):
     def list_quality_elements(self, workspace_unique_id=None, subset_unique_id=None, request=None): 
         """
         Created     20180222    by Magnus Wenzer
-        Updated     20180222    by Magnus Wenzer
+        Updated     20180223    by Lena Viktorsson
         
         """ 
         print('list_quality_elements', request)
@@ -645,7 +653,7 @@ class EventHandler(object):
 #        subset_object = workspace_object.get_subset_object(subset_unique_id)
         
         quality_element_list = self.mapping_objects['quality_element'].get_quality_element_list() 
-        exclude = ['secchi depth'] 
+        exclude = ['secchi depth', 'nutrients', 'oxygen balance']
         quality_element_list = [item for item in quality_element_list if item not in exclude]
         
         
@@ -760,14 +768,14 @@ class EventHandler(object):
     def list_supporting_elements(self, workspace_unique_id=None, subset_unique_id=None, request=None): 
         """
         Created     20180222    by Magnus Wenzer
-        Updated     20180222    by Magnus Wenzer
+        Updated     20180223    by Lena Viktorsson
         
         """ 
         print('list_supporting_elements', request)
 #        workspace_object = self._get_workspace_object(unique_id=workspace_unique_id) 
 #        subset_object = workspace_object.get_subset_object(subset_unique_id)
         
-        quality_element_list = ['secchi depth']
+        quality_element_list = ['secchi depth', 'nutrients', 'oxygen balance']
         print('request', request)
         return_list = []
         for quality_element in quality_element_list: 
