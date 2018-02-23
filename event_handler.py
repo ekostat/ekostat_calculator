@@ -102,8 +102,11 @@ class EventHandler(object):
     #==========================================================================
     def apply_data_filter(self, 
                           user_id=None,  
-                          workspace_uuid=None): 
-        pass
+                          workspace_uuid=None,
+                          subset_uuid=None,
+                          step='step_1'): 
+        w = self._get_workspace_object(user_id, None, workspace_uuid)
+        w.apply_data_filter(subset=subset_uuid,step=step)
         
         
     #==========================================================================
