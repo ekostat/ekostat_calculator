@@ -9,6 +9,7 @@ Created on Wed Nov 22 10:18:45 2017
 #import numpy as np
 import pandas as pd
 import json
+import codecs
 #import netcdf
 """
 #==============================================================================
@@ -40,7 +41,7 @@ class Load(object):
     
     #==========================================================================
     def load_txt(self, file_path=u'', sep='\t', encoding='cp1252', fill_nan=u''):
-        with open(file_path, 'r') as f:
+        with codecs.open(file_path, 'r', encoding=encoding) as f:
             header = f.readline().strip('\n').strip('\r').split(sep) # is .strip('\r') necessary?
 
         return pd.read_csv(file_path, sep='\t', encoding='cp1252',
