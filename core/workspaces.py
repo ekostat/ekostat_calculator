@@ -135,10 +135,10 @@ class WorkStep(object):
         """
         Check to make sure that the default 
         """
-        if self.parent_subset_object and self.parent_workspace_object.name == 'default':
+        if self.parent_subset_object and self.parent_workspace_object.alias == 'default_workspace':
             self._logger.debug('Not allowed to change default workspace!')
             return False
-        elif self.parent_subset_object and self.parent_subset_object.name == 'default_subset':
+        elif self.parent_subset_object and self.parent_subset_object.alias == 'default_subset':
             self._logger.debug('Not allowed to change default subset!')
             return False
         return True
@@ -735,7 +735,7 @@ class WorkSpace(object):
         if unique_id == 'default_subset':
             alias = 'default_subset' 
         else:
-            alias = self.uuid_mapping.get_alias(unique_id, user_id=self.user_id)
+            alias = self.uuid_mapping.get_alias(unique_id)
         if unique_id in self.subset_dict.keys():
             self._logger.debug('Given subset "{}" with alias "{}" is already present!'.format(unique_id, alias))
             return False
@@ -1042,7 +1042,9 @@ class WorkSpace(object):
         
         Creates a copy of a subset. 
         """
-        assert all([source_alias, target_alias])
+        print(source_alias, target_alias)
+        print('self.user_id', self.user_id)
+        assert all([source_alias, target_alias, self.user_id])
         
         if source_alias == 'default_subset':
             source_uuid = self.uuid_mapping.get_uuid(source_alias, 'default') 
@@ -1055,6 +1057,7 @@ class WorkSpace(object):
         
         # Add UUID for workspace in uuid_mapping 
         target_uuid = self.uuid_mapping.add_new_uuid_for_alias(target_alias, self.user_id)
+        print('target_uuid', target_uuid)
         if not target_uuid:
             self._logger.debug('Could not add subset with alias "{}". Workspace already exists!'.format(target_alias)) 
             return False
@@ -1232,22 +1235,41 @@ class WorkSpace(object):
         return self.index_handler.get_filtered_data(subset=subset, step=step, water_body=water_body, indicator=indicator)
     
     #==========================================================================
-    def get_available_indicators(self):
+    def get_available_indicators(self, subset=None, step=None):
+        """
+        Created:                 by Lena
+        Last modified:  20180216 by Lena
+        """
         
-        self.available_indicators = []
+        available_indicators = []
         for indicator, parameters in self.cfg['indicators'].items():
-            for param in parameters:
-                if len(param.split('/')) > 1:
-                    for param2 in param.split('/'):
-                        if param2 == 'SALT':
-                            continue
-                        if param2 in self.get_filtered_data(level=0).columns and self.get_filtered_data(level=0)[param2].dropna().count() > 0:
-                            self.available_indicators.append(indicator) 
-                else:
-                    if param in self.get_filtered_data(level=0).columns and self.get_filtered_data(level=0)[param].dropna().count() > 0:
-                        self.available_indicators.append(indicator) 
+            parameter_list = [item.strip() for item in parameters[0].split(', ')]
+            try:
+                if (self.get_filtered_data(subset = subset, step = step)[parameter_list].dropna().count() > 0).all():
+                    available_indicators.append(indicator) 
+            except KeyError:
+                continue
             
-        return sorted(self.available_indicators)
+        return available_indicators
+
+
+#    #==========================================================================
+#    def get_available_indicators(self):
+#        
+#        self.available_indicators = []
+#        for indicator, parameters in self.cfg['indicators'].items():
+#            for param in parameters:
+#                if len(param.split('/')) > 1:
+#                    for param2 in param.split('/'):
+#                        if param2 == 'SALT':
+#                            continue
+#                        if param2 in self.get_filtered_data(level=0).columns and self.get_filtered_data(level=0)[param2].dropna().count() > 0:
+#                            self.available_indicators.append(indicator) 
+#                else:
+#                    if param in self.get_filtered_data(level=0).columns and self.get_filtered_data(level=0)[param].dropna().count() > 0:
+#                        self.available_indicators.append(indicator) 
+#            
+#        return sorted(self.available_indicators)
     
     #==========================================================================
     def get_indicator_settings_data_filter_object(self, subset=None, step=2, indicator=None): 

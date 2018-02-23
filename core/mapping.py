@@ -469,6 +469,7 @@ class UUIDmapping():
         if not status:
             status = self.all_status
             
+#        print('status', status)
         result = self.df.loc[(self.df['uuid']==unique_id) & \
                              (self.df['status'].isin(status)), 'alias']
         if len(result):
