@@ -640,7 +640,7 @@ class EventHandler(object):
     def list_quality_elements(self, workspace_unique_id=None, subset_unique_id=None, request=None): 
         """
         Created     20180222    by Magnus Wenzer
-        Updated     20180222    by Magnus Wenzer
+        Updated     20180223    by Lena Viktorsson
         
         """ 
         print('list_quality_elements', request)
@@ -648,7 +648,7 @@ class EventHandler(object):
 #        subset_object = workspace_object.get_subset_object(subset_unique_id)
         
         quality_element_list = self.mapping_objects['quality_element'].get_quality_element_list() 
-        exclude = ['secchi depth'] 
+        exclude = ['secchi depth', 'nutrients', 'oxygen balance']
         quality_element_list = [item for item in quality_element_list if item not in exclude]
         
         
@@ -763,14 +763,14 @@ class EventHandler(object):
     def list_supporting_elements(self, workspace_unique_id=None, subset_unique_id=None, request=None): 
         """
         Created     20180222    by Magnus Wenzer
-        Updated     20180222    by Magnus Wenzer
+        Updated     20180223    by Lena Viktorsson
         
         """ 
         print('list_supporting_elements', request)
 #        workspace_object = self._get_workspace_object(unique_id=workspace_unique_id) 
 #        subset_object = workspace_object.get_subset_object(subset_unique_id)
         
-        quality_element_list = ['secchi depth']
+        quality_element_list = ['secchi depth', 'nutrients', 'oxygen balance']
         print('request', request)
         return_list = []
         for quality_element in quality_element_list: 
