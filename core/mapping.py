@@ -247,6 +247,9 @@ class WaterBody(AttributeDict):
 
     #==========================================================================
     def get_basin_number_for_water_body(self, wb, key=u'BASIN_NUMBER'):
+        """
+        basin number refers to basin number in kustzonsmodellen
+        """
         return self.get(wb).get(key)
         
     #==========================================================================
