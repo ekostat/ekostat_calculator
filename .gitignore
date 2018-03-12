@@ -5,7 +5,8 @@
 .spyproject/codestyle.ini
 **/__pycache__/*
 *.pyc
-*.ipynb
+workspaces/*
 workspaces/mw/*
 workspaces/lv/*
 workspaces/JJ/*
+log/main_event_handler.log

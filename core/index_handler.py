@@ -112,8 +112,8 @@ class IndexHandler(object):
                 bool_dict = bool_dict[key]
             else:
                 break
-            
-        return bool_dict.get('boolean')
+        # MW:  Added [] as defaul so that if no filter applied lenght is 0
+        return bool_dict.get('boolean', [])
         
         
     #==========================================================================

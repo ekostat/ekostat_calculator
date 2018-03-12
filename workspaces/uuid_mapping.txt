@@ -1,0 +1,4 @@
+uuid	alias	user_id	status	active
+default_workspace	default_workspace	default	readable	False
+5dedc406-e0c8-4663-97b9-94287036dcc6	test_workspace_1_renamed	test_user	editable	True
+daef5ce7-2180-44e6-864a-032ed111ddb8	test_workspace_2	test_user	deleted	True

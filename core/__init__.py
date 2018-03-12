@@ -21,12 +21,15 @@ from .lists import StationList
 from .lists import ParameterList
 from .lists import AreaList
 
-from .load import Load
+from .load import Load 
+from .logger import add_log, get_log
 
 from .mapping import AttributeDict
 from .mapping import ParameterMapping
 from .mapping import WaterBody 
 from .mapping import RawDataFiles
+from .mapping import QualityElement
+from .mapping import UUIDmapping
 
 from .parameters import ParameterSALT_CTD
 from .parameters import ParameterNTRA 
@@ -42,3 +45,4 @@ from .ref_values import create_type_area_object
 from .ref_values import RefValues
 
 from .workspaces import WorkSpace
+
