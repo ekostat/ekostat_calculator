@@ -771,3 +771,15 @@
 2018-02-23 01:24:50,170	event_handler.py	557	import_default_data	DEBUG	Trying to load default data in workspace "96cc80f2-43b5-439f-9a06-73d69bb3b720" with alias "test_workspace_1_renamed"
 2018-02-23 01:25:05,382	event_handler.py	544	get_workspace	DEBUG	Getting workspace "96cc80f2-43b5-439f-9a06-73d69bb3b720" with alias "None"
 2018-02-23 01:25:46,551	event_handler.py	140	copy_subset	DEBUG	Trying to copy subset "default_subset". Copy has alias "subset_A"
+2018-03-13 10:44:32,813	logger.py	85	add_log	DEBUG	
+2018-03-13 10:44:32,815	logger.py	86	add_log	DEBUG	========================================================================================================================
+2018-03-13 10:44:32,817	logger.py	87	add_log	DEBUG	### Log added for log_id "event_handler" at locaton: ..\ekostat_calculator\log\main_event_handler.log
+2018-03-13 10:44:32,820	logger.py	88	add_log	DEBUG	------------------------------------------------------------------------------------------------------------------------
+2018-03-13 10:44:32,825	event_handler.py	65	__init__	DEBUG	Start EventHandler: event_handler
+2018-03-13 10:44:32,828	event_handler.py	66	__init__	DEBUG	
+2018-03-13 10:44:32,831	event_handler.py	67	__init__	INFO	TEST info logger
+2018-03-13 10:44:32,834	event_handler.py	68	__init__	WARNING	TEST warning logger
+2018-03-13 10:44:32,837	event_handler.py	69	__init__	ERROR	TEST error logger
+2018-03-13 10:44:32,840	event_handler.py	70	__init__	DEBUG	TEST debug logger
+2018-03-13 10:44:33,050	event_handler.py	263	delete_workspace	WARNING	Permanently deleting workspace "5dedc406-e0c8-4663-97b9-94287036dcc6" with alias "test_workspace_1_renamed".
+2018-03-13 10:44:33,166	event_handler.py	263	delete_workspace	WARNING	Permanently deleting workspace "daef5ce7-2180-44e6-864a-032ed111ddb8" with alias "test_workspace_2".
