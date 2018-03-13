@@ -5,8 +5,6 @@
 .spyproject/codestyle.ini
 **/__pycache__/*
 *.pyc
-.workspaces/**
-workspaces/mw/*
-workspaces/lv/*
-workspaces/JJ/*
+workspaces/*
+!workspaces/default_workspace
 *.log
