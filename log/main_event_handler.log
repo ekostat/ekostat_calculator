@@ -783,3 +783,15 @@
 2018-03-13 10:44:32,840	event_handler.py	70	__init__	DEBUG	TEST debug logger
 2018-03-13 10:44:33,050	event_handler.py	263	delete_workspace	WARNING	Permanently deleting workspace "5dedc406-e0c8-4663-97b9-94287036dcc6" with alias "test_workspace_1_renamed".
 2018-03-13 10:44:33,166	event_handler.py	263	delete_workspace	WARNING	Permanently deleting workspace "daef5ce7-2180-44e6-864a-032ed111ddb8" with alias "test_workspace_2".
+2018-03-13 13:10:55,593	logger.py	85	add_log	DEBUG	
+2018-03-13 13:10:55,593	logger.py	86	add_log	DEBUG	========================================================================================================================
+2018-03-13 13:10:55,593	logger.py	87	add_log	DEBUG	### Log added for log_id "event_handler" at locaton: ..\ekostat_calculator\log\main_event_handler.log
+2018-03-13 13:10:55,593	logger.py	88	add_log	DEBUG	------------------------------------------------------------------------------------------------------------------------
+2018-03-13 13:10:55,594	event_handler.py	65	__init__	DEBUG	Start EventHandler: event_handler
+2018-03-13 13:10:55,594	event_handler.py	66	__init__	DEBUG	
+2018-03-13 13:10:55,596	event_handler.py	67	__init__	INFO	TEST info logger
+2018-03-13 13:10:55,598	event_handler.py	68	__init__	WARNING	TEST warning logger
+2018-03-13 13:10:55,601	event_handler.py	69	__init__	ERROR	TEST error logger
+2018-03-13 13:10:55,603	event_handler.py	70	__init__	DEBUG	TEST debug logger
+2018-03-13 13:10:55,791	event_handler.py	263	delete_workspace	WARNING	Permanently deleting workspace "5dedc406-e0c8-4663-97b9-94287036dcc6" with alias "test_workspace_1_renamed".
+2018-03-13 13:10:55,941	event_handler.py	263	delete_workspace	WARNING	Permanently deleting workspace "daef5ce7-2180-44e6-864a-032ed111ddb8" with alias "test_workspace_2".
