@@ -803,3 +803,37 @@
 2018-03-13 13:19:05,638	event_handler.py	70	__init__	DEBUG	TEST debug logger
 2018-03-13 13:19:05,938	event_handler.py	263	delete_workspace	WARNING	Permanently deleting workspace "5dedc406-e0c8-4663-97b9-94287036dcc6" with alias "test_workspace_1_renamed".
 2018-03-13 13:19:06,043	event_handler.py	263	delete_workspace	WARNING	Permanently deleting workspace "daef5ce7-2180-44e6-864a-032ed111ddb8" with alias "test_workspace_2".
+2018-03-13 13:22:19,704	event_handler.py	65	__init__	DEBUG	Start EventHandler: event_handler
+2018-03-13 13:22:19,738	event_handler.py	66	__init__	DEBUG	
+2018-03-13 13:22:19,738	event_handler.py	67	__init__	INFO	TEST info logger
+2018-03-13 13:22:19,738	event_handler.py	68	__init__	WARNING	TEST warning logger
+2018-03-13 13:22:19,738	event_handler.py	69	__init__	ERROR	TEST error logger
+2018-03-13 13:22:19,739	event_handler.py	70	__init__	DEBUG	TEST debug logger
+2018-03-13 13:22:19,950	event_handler.py	263	delete_workspace	WARNING	Permanently deleting workspace "5dedc406-e0c8-4663-97b9-94287036dcc6" with alias "test_workspace_1_renamed".
+2018-03-13 13:22:20,030	event_handler.py	263	delete_workspace	WARNING	Permanently deleting workspace "daef5ce7-2180-44e6-864a-032ed111ddb8" with alias "test_workspace_2".
+2018-03-13 14:12:03,142	event_handler.py	65	__init__	DEBUG	Start EventHandler: event_handler
+2018-03-13 14:12:03,142	event_handler.py	66	__init__	DEBUG	
+2018-03-13 14:12:03,142	event_handler.py	67	__init__	INFO	TEST info logger
+2018-03-13 14:12:03,142	event_handler.py	68	__init__	WARNING	TEST warning logger
+2018-03-13 14:12:03,142	event_handler.py	69	__init__	ERROR	TEST error logger
+2018-03-13 14:12:03,143	event_handler.py	70	__init__	DEBUG	TEST debug logger
+2018-03-13 14:12:03,355	event_handler.py	263	delete_workspace	WARNING	Permanently deleting workspace "5dedc406-e0c8-4663-97b9-94287036dcc6" with alias "test_workspace_1_renamed".
+2018-03-13 14:12:03,416	event_handler.py	263	delete_workspace	WARNING	Permanently deleting workspace "daef5ce7-2180-44e6-864a-032ed111ddb8" with alias "test_workspace_2".
+2018-03-13 14:12:45,207	event_handler.py	65	__init__	DEBUG	Start EventHandler: event_handler
+2018-03-13 14:12:45,207	event_handler.py	66	__init__	DEBUG	
+2018-03-13 14:12:45,207	event_handler.py	67	__init__	INFO	TEST info logger
+2018-03-13 14:12:45,222	event_handler.py	68	__init__	WARNING	TEST warning logger
+2018-03-13 14:12:45,222	event_handler.py	69	__init__	ERROR	TEST error logger
+2018-03-13 14:12:45,222	event_handler.py	70	__init__	DEBUG	TEST debug logger
+2018-03-13 14:13:15,441	event_handler.py	65	__init__	DEBUG	Start EventHandler: event_handler
+2018-03-13 14:13:15,441	event_handler.py	66	__init__	DEBUG	
+2018-03-13 14:13:15,441	event_handler.py	67	__init__	INFO	TEST info logger
+2018-03-13 14:13:15,441	event_handler.py	68	__init__	WARNING	TEST warning logger
+2018-03-13 14:13:15,442	event_handler.py	69	__init__	ERROR	TEST error logger
+2018-03-13 14:13:15,442	event_handler.py	70	__init__	DEBUG	TEST debug logger
+2018-03-13 14:15:16,489	event_handler.py	65	__init__	DEBUG	Start EventHandler: event_handler
+2018-03-13 14:15:16,489	event_handler.py	66	__init__	DEBUG	
+2018-03-13 14:15:16,489	event_handler.py	67	__init__	INFO	TEST info logger
+2018-03-13 14:15:16,489	event_handler.py	68	__init__	WARNING	TEST warning logger
+2018-03-13 14:15:16,490	event_handler.py	69	__init__	ERROR	TEST error logger
+2018-03-13 14:15:16,490	event_handler.py	70	__init__	DEBUG	TEST debug logger
