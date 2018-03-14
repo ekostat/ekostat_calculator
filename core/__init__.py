@@ -15,8 +15,6 @@ from .index_handler import IndexHandler
 from .indicators import IndicatorDIN
 from .indicators import IndicatorTOTN
 
-from .jupyter_eventhandlers import MultiCheckboxWidget
-
 from .lists import StationList 
 from .lists import ParameterList
 from .lists import AreaList
