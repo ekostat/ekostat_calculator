@@ -7,4 +7,5 @@
 *.pyc
 workspaces/*
 !workspaces/default_workspace
+log/*
 *.log
