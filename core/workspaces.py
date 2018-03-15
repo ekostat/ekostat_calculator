@@ -578,6 +578,24 @@ class Subset(object):
         self.steps[step].load_data()
         
     #==========================================================================
+    def load_indicators(self, index_handler = None, indicator_list = None):  
+        """
+        Created:        20180215     by Lena
+        Last modified:  20180216     by Lena
+        create dict containing indicator objects according to data availability or choice?
+        """
+        self.indicator_objects = dict.fromkeys(indicator_list)
+        for indicator in self.indicator_objects.keys():
+            # get settings for the indicator
+            data_filter_settings = self.get_step_2_object().get_indicator_data_filter_settings(indicator)
+            tolerance_settings = self.get_step_2_object().get_indicator_tolerance_settings(indicator)
+            ref_settings = self.get_step_2_object().get_indicator_ref_settings(indicator) 
+            # add indicator objects to dictionary
+            self.indicator_objects[indicator] = core.IndicatorBase(index_handler, data_filter_settings, tolerance_settings, ref_settings)
+            # TODO: Indicator objects should be different classes from the Base-class depending on indicator. 
+            #       The Indicator classname should be given in the config file together with the indicator names and parameters
+             
+    #==========================================================================
     def deprecated_get_step_1_object(self): 
         return self.get_step_object('step_1')
     
