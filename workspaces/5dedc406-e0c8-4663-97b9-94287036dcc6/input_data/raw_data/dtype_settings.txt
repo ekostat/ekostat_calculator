@@ -1,7 +1,0 @@
-status	filename	data_type
-1	zoobenthos_2016_row_format_2.txt	zooben
-1	BOS_HAL_2015-2016_row_format_2.txt	phyche
-1	BOS_BAS_2016-2017_column_format.txt	phyche
-1	phyche_2008_2017_column_format.txt	phyche
-1	phytoplankton_2016_row_format.txt	pp
-1	chlorophyll_integrated_2015_2016_row_format.txt	chlorophyll

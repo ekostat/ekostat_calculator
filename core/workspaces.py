@@ -1240,10 +1240,14 @@ class WorkSpace(object):
         Created:                 by Lena
         Last modified:  20180216 by Lena
         """
+        if not self.data_handler.all_data:
+            # Try does not work here for some reason...
+            return []
         
         available_indicators = []
         for indicator, parameters in self.cfg['indicators'].items():
             parameter_list = [item.strip() for item in parameters[0].split(', ')]
+            print('subset', subset)
             try:
                 if (self.get_filtered_data(subset = subset, step = step)[parameter_list].dropna().count() > 0).all():
                     available_indicators.append(indicator) 

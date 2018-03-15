@@ -7,5 +7,6 @@
 *.pyc
 workspaces/*
 !workspaces/default_workspace
+!workspaces/uuid_mapping_default.txt
 log/*
 *.log

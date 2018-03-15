@@ -118,7 +118,7 @@ class RowDataHandler(object):
                                           new_key=u'TEMP_VALUE',
                                           sep='__')
             index_fields = self._get_index_fields(data_keys=self.df.keys())
-            
+            print(len(index_fields), index_fields)
             self._set_pivot_table(u'TEMP_VALUE', index_fields)
 
     #==========================================================================
@@ -998,8 +998,8 @@ if __name__ == '__main__':
     
     
     # Handler
-#    raw_data = core.DataHandler('raw')
-#    raw_data.add_txt_file(raw_data_file_path, data_type='column')
+    raw_data = core.DataHandler('raw')
+    raw_data.add_txt_file(raw_data_file_path, data_type='column')
     
     print('-'*50)
     print('done')

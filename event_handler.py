@@ -42,6 +42,10 @@ class EventHandler(object):
         Created     20180219    by Magnus Wenzer
         Updated     20180219    by Magnus Wenzer
         
+        Not clear if it should be one common event handler one for each user. 
+        In terms of user_id this does not really matter at the moment. 
+        user_id must be given in every call and the corresponding uuid_mapping 
+        file is loaded in the method call if neaded. 
         """
         self.root_path = root_path.replace('\\', '/') 
         self.workspace_directory = self.root_path + '/workspaces'
@@ -71,9 +75,6 @@ class EventHandler(object):
         
         self.workspaces = {}
         
-        # Load UUID mapping file for workspaces
-        self.uuid_mapping = core.UUIDmapping('{}/uuid_mapping.txt'.format(self.workspace_directory))
-        
         # Mapping objects
         self.mapping_objects = {}
         self.mapping_objects['water_body'] = core.WaterBody(file_path=self.root_path + '/resources/mappings/water_body_match.txt')
@@ -81,6 +82,8 @@ class EventHandler(object):
         self.mapping_objects['display_mapping'] = core.ParameterMapping()
         self.mapping_objects['display_mapping'].load_mapping_settings(file_path=self.root_path + '/resources/mappings/display_mapping.txt')
         
+        # Initiate uuid_mapping file for user if not present
+#        uuid_mapping = self._get_uuid_mapping_object(user_id) 
     
     #==========================================================================
     def _change_ok(self, alias): 
@@ -93,12 +96,29 @@ class EventHandler(object):
     #==========================================================================
     def _get_workspace_object(self, user_id=None, alias=None, unique_id=None): 
         if user_id and alias:
-            unique_id = self.uuid_mapping.get_uuid(alias, user_id) 
+            uuid_mapping = self._get_uuid_mapping_object(user_id)
+            unique_id = uuid_mapping.get_uuid(alias, user_id) 
         if not unique_id:
+            return False
+        if unique_id not in self.workspaces.keys():
             return False
         return self.workspaces.get(unique_id, None)
     
+    #==========================================================================
+    def _get_uuid_mapping_object(self, user_id): 
+        if not user_id: 
+            error
+            return False
+        file_path = '{}/uuid_mapping_{}.txt'.format(self.workspace_directory, user_id)
+        if not os.path.exists(file_path):
+#            print('=file_path'.upper(), file_path)
+            shutil.copy('{}/templates/uuid_mapping.txt'.format(self.resource_directory), 
+                        file_path)
+#            print('-file_path'.upper(), file_path)
+        uuid_mapping_object = core.UUIDmapping(file_path)
+        return uuid_mapping_object
     
+        
     #==========================================================================
     def apply_data_filter(self, 
                           user_id=None,  
@@ -114,11 +134,11 @@ class EventHandler(object):
         
     #==========================================================================
     def change_workspace_alias(self, user_id, current_alias, new_alias): 
-        
-        unique_id = self.uuid_mapping.get_uuid(current_alias, user_id) 
+        uuid_mapping = self._get_uuid_mapping_object(user_id)
+        unique_id = uuid_mapping.get_uuid(current_alias, user_id) 
         if not unique_id:
             return False
-        self.uuid_mapping.set_alias(unique_id, new_alias)
+        uuid_mapping.set_alias(unique_id, new_alias)
     
     
     #==========================================================================
@@ -129,7 +149,8 @@ class EventHandler(object):
         
         """
         if workspace_alias:
-            workspace_uuid = self.uuid_mapping.get_uuid(workspace_alias, user_id)
+            uuid_mapping = self._get_uuid_mapping_object(user_id)
+            workspace_uuid = uuid_mapping.get_uuid(workspace_alias, user_id)
         if not workspace_uuid:
             print('workspace_unique_id')
             return False
@@ -155,20 +176,21 @@ class EventHandler(object):
         Updated     20180223    by Lena Viktorsson
         
         """
+        uuid_mapping = self._get_uuid_mapping_object(user_id)
         if source_alias == 'default_workspace':
-            source_uuid = self.uuid_mapping.get_uuid(source_alias, 'default') 
+            source_uuid = uuid_mapping.get_uuid(source_alias, 'default') 
         elif source_alias:
-            source_uuid = self.uuid_mapping.get_uuid(source_alias, user_id) 
+            source_uuid = uuid_mapping.get_uuid(source_alias, user_id) 
             
         if not source_uuid:
             self._logger.warning('No alias named "{}"'.format(source_alias))
             return False
         
         if not source_alias:
-            source_alias = self.uuid_mapping.get_alias(source_uuid)
+            source_alias = uuid_mapping.get_alias(source_uuid)
             
         # Add UUID for workspace in uuid_mapping 
-        target_uuid = self.uuid_mapping.add_new_uuid_for_alias(target_alias, user_id)
+        target_uuid = uuid_mapping.add_new_uuid_for_alias(target_alias, user_id)
         if not target_uuid:
             self._logger.debug('Could not add workspace with alias "{}". Workspace already exists!'.format(target_alias)) 
             return False
@@ -203,7 +225,7 @@ class EventHandler(object):
             new_subset_path = '{}/subsets/{}'.format(target_workspace_path, new_uuid)
             os.rename(current_subset_path, new_subset_path)
         
-        status = self.uuid_mapping.get_status(unique_id=target_uuid) # Check in case default is changed
+        status = uuid_mapping.get_status(unique_id=target_uuid) # Check in case default is changed
         
         return {'alias': target_alias,
                 'uuid': target_uuid,
@@ -222,8 +244,9 @@ class EventHandler(object):
             return False 
         if not self._change_ok(subset_alias):
             return False
-            
-        workspace_unique_id = self.uuid_mapping.get_uuid(workspace_alias, user_id)
+        
+        uuid_mapping = self._get_uuid_mapping_object(user_id)
+        workspace_unique_id = uuid_mapping.get_uuid(workspace_alias, user_id)
         if not workspace_unique_id:
             return False
         workspace_object = self.workspaces.get(workspace_unique_id)
@@ -244,8 +267,10 @@ class EventHandler(object):
         if not self._change_ok(alias):
             return False  
         
+        uuid_mapping = self._get_uuid_mapping_object(user_id)
+        
         if alias:
-            unique_id = self.uuid_mapping.get_uuid(alias, user_id, status=self.all_status)
+            unique_id = uuid_mapping.get_uuid(alias, user_id, status=self.all_status)
         
 #        if unique_id not in self.workspaces.keys(): 
 #            self._logger.warning('Workspace "{}" with alias "{}" is not loaded!'.format(unique_id, alias))
@@ -269,10 +294,10 @@ class EventHandler(object):
                 self.workspaces.pop(unique_id)
             
             # Remove in uuid_mapping
-            self.uuid_mapping.permanent_delete_uuid(unique_id)
+            uuid_mapping.permanent_delete_uuid(unique_id)
         else:
             self._logger.warning('Removing workspace "{}" with alias "{}".'.format(unique_id, alias)) 
-            self.uuid_mapping.set_status(unique_id, 'deleted')
+            uuid_mapping.set_status(unique_id, 'deleted')
         
         return True 
      
@@ -409,8 +434,8 @@ class EventHandler(object):
             return {'alias': alias,
                     'uuid': subset_unique_id,
                     'status': status,
-                	  'active': active,
-                	  'periods': [], 
+                	   'active': active,
+                	   'periods': [], 
                     'water_bodies': [], 
                     'water_districts': [], 
                     'supporting_elements': [], 
@@ -487,14 +512,15 @@ class EventHandler(object):
                 
                 
     #==========================================================================
-    def dict_workspace(self, unique_id=None): 
+    def dict_workspace(self, unique_id=None, user_id=None): 
         """
         Created     20180221    by Magnus Wenzer
         Updated     20180221    by Magnus Wenzer
         
         """
-        alias = self.uuid_mapping.get_alias(unique_id, status=self.all_status) 
-        status = self.uuid_mapping.get_status(unique_id=unique_id)
+        uuid_mapping = self._get_uuid_mapping_object(user_id)
+        alias = uuid_mapping.get_alias(unique_id, status=self.all_status) 
+        status = uuid_mapping.get_status(unique_id=unique_id)
         
         return {'alias': alias, 
                 'uuid': unique_id,
@@ -511,21 +537,25 @@ class EventHandler(object):
         
     #==========================================================================
     def get_unique_id_for_alias(self, user_id, workspace_alias=None, subset_alias=None):
+        uuid_mapping = self._get_uuid_mapping_object(user_id)
         if workspace_alias and subset_alias: 
             workspace_object = self._get_workspace_object(alias=workspace_alias, user_id=user_id)
-            workspace_unique_id = self.uuid_mapping.get_uuid(workspace_alias, user_id)
+            workspace_unique_id = uuid_mapping.get_uuid(workspace_alias, user_id)
             workspace_object = self.workspaces.get(workspace_unique_id, None) 
             if not workspace_object:
                 return False 
             return workspace_object.get_unique_id_for_alias(subset_alias)
         elif workspace_alias:
-            return self.uuid_mapping.get_uuid(workspace_alias, user_id)
+            return uuid_mapping.get_uuid(workspace_alias, user_id)
         else:
             return False
            
             
     #==========================================================================
-    def get_subset_list(self, workspace_unique_id): 
+    def get_subset_list(self, workspace_unique_id=None, user_id=None): 
+        # Load workspace if not loaded
+        if workspace_unique_id not in self.workspaces.keys():
+            self.load_workspace(user_id, unique_id=workspace_unique_id)
         workspace_object = self.workspaces.get(workspace_unique_id, None)
         return workspace_object.get_subset_list()
     
@@ -541,15 +571,17 @@ class EventHandler(object):
         if alias == 'default_workspace':
             unique_id = 'default_workspace'
         else:
+            uuid_mapping = self._get_uuid_mapping_object(user_id)
             status = self.include_status[:]
             if include_deleted:
                 status.append('deleted')
             if not unique_id:
-                unique_id = self.uuid_mapping.get_uuid(alias, user_id, status=status)
+                unique_id = uuid_mapping.get_uuid(alias, user_id, status=status)
         if not unique_id:
             return False
         # return matching workspace 
-        self._logger.debug('Getting workspace "{}" with alias "{}"'.format(unique_id, alias))
+        self._logger.debug('Getting workspace "{}" with alias "{}"'.format(unique_id, alias)) 
+        
         return self.workspaces.get(unique_id, None)
     
     
@@ -561,7 +593,8 @@ class EventHandler(object):
         
         Loads default data to the workspace with alias workspace_alias. 
         """ 
-        unique_id = self.uuid_mapping.get_uuid(workspace_alias, user_id)
+        uuid_mapping = self._get_uuid_mapping_object(user_id)
+        unique_id = uuid_mapping.get_uuid(workspace_alias, user_id)
         self._logger.debug('Trying to load default data in workspace "{}" with alias "{}"'.format(unique_id, workspace_alias))
         workspace_object = self.workspaces.get(unique_id, None)
         if not workspace_object:
@@ -670,7 +703,7 @@ class EventHandler(object):
     
     
     #==========================================================================
-    def list_subsets(self, workspace_unique_id=None, request=None): 
+    def list_subsets(self, workspace_unique_id=None, user_id=None, request=None): 
         """
         Created     20180222    by Magnus Wenzer
         Updated     20180222    by Magnus Wenzer 
@@ -679,7 +712,7 @@ class EventHandler(object):
         """
 #        print('list_subsets_request', request)
         subset_list = []
-        for subset_uuid in self.get_subset_list(workspace_unique_id):
+        for subset_uuid in self.get_subset_list(workspace_unique_id=workspace_unique_id, user_id=user_id):
             
             # Check uuid for subset in request (if given) 
             if request:
@@ -910,7 +943,8 @@ class EventHandler(object):
             if type(with_status) != list:
                 with_status = [with_status]
             status = with_status
-        workspace_list = ['default_workspace'] + self.uuid_mapping.get_uuid_list_for_user(user_id, status=status) 
+        uuid_mapping = self._get_uuid_mapping_object(user_id)
+        workspace_list = ['default_workspace'] + uuid_mapping.get_uuid_list_for_user(user_id, status=status) 
         for unique_id in workspace_list: 
             self.load_workspace(unique_id=unique_id)
         
@@ -931,14 +965,15 @@ class EventHandler(object):
         
         Loads the given workspace. Subsets in workspace are also loaded. 
         """
+        uuid_mapping = self._get_uuid_mapping_object(user_id)
         if alias == 'default_workspace':
             unique_id = 'default_workspace'
         elif unique_id == 'default_workspace':
             alias = 'default_workspace'
         elif alias:
-            unique_id = self.uuid_mapping.get_uuid(alias, user_id) 
+            unique_id = uuid_mapping.get_uuid(alias=alias, user_id=user_id) 
         elif unique_id:
-            alias = self.uuid_mapping.get_alias(unique_id, user_id)
+            alias = uuid_mapping.get_alias(unique_id=unique_id, user_id=user_id)
         
         print('¤¤¤ alias', alias)
         print('¤¤¤ unique_id', unique_id) 
@@ -960,7 +995,8 @@ class EventHandler(object):
     def remove_test_user_workspaces(self):
         user_id = 'test_user'
         status = ['editable', 'readable', 'deleted']
-        alias_id_list = self.uuid_mapping.get_alias_list_for_user(user_id, status=status)
+        uuid_mapping = self._get_uuid_mapping_object(user_id)
+        alias_id_list = uuid_mapping.get_alias_list_for_user(user_id, status=status)
         for alias in alias_id_list:
             print('DELETING:', alias)
             self.delete_workspace(user_id=user_id, alias=alias, permanently=True)
@@ -1084,7 +1120,8 @@ class EventHandler(object):
         if return_dict:
             subset_uuid = return_dict['uuid']
         else:
-            subset_uuid = self.uuid_mapping.get_uuid(alias=new_alias, user_id=user_id)
+            uuid_mapping = self._get_uuid_mapping_object(user_id)
+            subset_uuid = uuid_mapping.get_uuid(alias=new_alias, user_id=user_id)
         response = self.dict_subset(workspace_unique_id=workspace_uuid, 
                                    subset_unique_id=subset_uuid)
         
@@ -1111,8 +1148,8 @@ class EventHandler(object):
 #        print('###', user_id)
 #        print('###', alias)
 #        print('###', source_uuid)
-        
-        workspace_alias = self.uuid_mapping.get_alias(workspace_uuid) 
+        uuid_mapping = self._get_uuid_mapping_object(workspace_uuid)
+        workspace_alias = uuid_mapping.get_alias(workspace_uuid) 
         response = self.delete_subset(workspace_alias=workspace_alias, subset_unique_id=subset_uuid)
         
         return response
@@ -1125,11 +1162,12 @@ class EventHandler(object):
         
         "request" and "response" is the output from a request_subset_list
         """
+        user_id = request['user_id']
         workspace_uuid = request['workspace']['uuid']
         request_list = None
         if 'subsets' in request.keys():
             request_list = request['subsets']
-        response = self.list_subsets(workspace_unique_id=workspace_uuid, request=request_list)
+        response = self.list_subsets(workspace_unique_id=workspace_uuid, user_id=user_id, request=request_list)
         
         return response
             
@@ -1140,6 +1178,7 @@ class EventHandler(object):
         Updated     20180221    by Magnus Wenzer
         
         "request" must contain: 
+            user_id
             workspace_uuid 
         
         Returns a dict like:
@@ -1244,6 +1283,7 @@ class EventHandler(object):
             	]
             }
         """
+        user_id = request['user_id']
         workspace_uuid = request['workspace_uuid'] 
         
         # Initiate structure 
@@ -1251,11 +1291,11 @@ class EventHandler(object):
                    'subsets': []}
         
         # Add workspace info
-        workspace_dict = self.dict_workspace(unique_id=workspace_uuid)
+        workspace_dict = self.dict_workspace(unique_id=workspace_uuid, user_id=user_id)
                     
         response['workspace'] = workspace_dict
                
-        subset_list = self.list_subsets(workspace_unique_id=workspace_uuid)
+        subset_list = self.list_subsets(workspace_unique_id=workspace_uuid, user_id=user_id)
         
         # Add subset info   
         response['subsets'] = subset_list
@@ -1313,7 +1353,8 @@ class EventHandler(object):
 #        print('###', alias)
 #        print('###', source_uuid)
         
-        alias = self.uuid_mapping.get_alias(unique_id)
+        uuid_mapping = self._get_uuid_mapping_object(user_id)
+        alias = uuid_mapping.get_alias(unique_id)
         self.delete_workspace(unique_id=unique_id)
         
         response = {'alias': alias, 
@@ -1341,8 +1382,9 @@ class EventHandler(object):
         alias = request['alias'] 
         unique_id = request['uuid'] 
         
-        self.uuid_mapping.set_alias(unique_id, alias)
-        alias = self.uuid_mapping.get_alias(unique_id, status=['editable', 'readable']) 
+        uuid_mapping = self._get_uuid_mapping_object(unique_id)
+        uuid_mapping.set_alias(unique_id, alias)
+        alias = uuid_mapping.get_alias(unique_id, status=['editable', 'readable']) 
         
         response = {'alias': alias, 
                    'uuid': unique_id}
@@ -1373,10 +1415,11 @@ class EventHandler(object):
         user_id = request['user_id'] 
         
         response = {'workspaces': []}
-        for unique_id in self.uuid_mapping.get_uuid_list_for_user(user_id, status=self.all_status):
-            response['workspaces'].append(self.dict_workspace(unique_id=unique_id))
+        uuid_mapping = self._get_uuid_mapping_object(user_id)
+        for unique_id in uuid_mapping.get_uuid_list_for_user(user_id, status=self.all_status):
+            response['workspaces'].append(self.dict_workspace(unique_id=unique_id, user_id=user_id))
               
-        response['workspaces'].append(self.dict_workspace(unique_id='default_workspace'))
+        response['workspaces'].append(self.dict_workspace(unique_id='default_workspace', user_id='default'))
         
 #        response['workspaces'].append({'alias': 'default_workspace', 
 #                                      'uuid': 'default_workspace',
@@ -1434,11 +1477,37 @@ class EventHandler(object):
 #===============================================================================
 #===============================================================================
 #"""     
-#if __name__ == '__main__':
-##    root_path = os.path.dirname(os.path.dirname(os.path.os.path.abspath(os.path.realpath(__file__))))
-#    root_path = os.path.dirname(os.path.os.path.abspath(os.path.realpath(__file__)))
-#    user_id = getpass.getuser()
-#    ekos = EventHandler(root_path)
+if __name__ == '__main__':
+#    root_path = os.path.dirname(os.path.dirname(os.path.os.path.abspath(os.path.realpath(__file__))))
+    root_path = os.path.dirname(os.path.os.path.abspath(os.path.realpath(__file__)))
+    user_id_1 = 'user_1'
+    user_id_2 = 'user_2'
+    ekos = EventHandler(root_path)
+    ekos = EventHandler(root_path)
+    user_1_ws_1 = 'mw1'
+    
+    ekos.copy_workspace(user_id_1, source_alias='default_workspace', target_alias=user_1_ws_1)
+    ekos.copy_workspace(user_id_1, source_alias='default_workspace', target_alias='mw2')
+    
+    ekos.copy_workspace(user_id_2, source_alias='default_workspace', target_alias='test1')
+    ekos.copy_workspace(user_id_2, source_alias='default_workspace', target_alias='test2')
+    
+    # Request workspace list 
+    request = {'user_id': user_id_1}
+    workspace_list_user_1 = ekos.request_workspace_list(request) 
+    
+    
+    # Request subset list 
+    request = {'user_id': user_id_1, 
+               'workspace_uuid': ekos.get_unique_id_for_alias(user_id_1, workspace_alias=user_1_ws_1)}
+    subset_list_uesr_1_workspace_mw1 = ekos.request_subset_list(request)
+    
+    
+    
+    w = ekos.get_workspace(user_id=user_id_1, alias='mw1')
+    
+    
+    
 ##    ekos.load_all_workspaces_for_user()
 #    
 #    ekos.copy_workspace(user_id, source_alias='default_workspace', target_alias='mw1')

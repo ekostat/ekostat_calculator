@@ -430,7 +430,7 @@ class UUIDmapping():
         
     #==========================================================================
     def _load_file(self): 
-        print('FILE_PATH:', self.file_path)
+#        print('FILE_PATH:', self.file_path)
         self.df = pd.read_csv(self.file_path, sep='\t')
         
         
@@ -468,10 +468,11 @@ class UUIDmapping():
     
     
     #==========================================================================
-    def get_alias(self, unique_id, status=None): 
+    def get_alias(self, unique_id=None, user_id=None, status=None): 
         if not status:
             status = self.all_status
-            
+        
+        print('status', status)
 #        print('status', status)
         result = self.df.loc[(self.df['uuid']==unique_id) & \
                              (self.df['status'].isin(status)), 'alias']
