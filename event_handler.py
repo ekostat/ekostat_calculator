@@ -92,7 +92,23 @@ class EventHandler(object):
             return False
         return True
     
-    
+    #==========================================================================
+    def _get_active_values_in_list_with_dicts(self, dict_list): 
+        """
+        Created     20180315    by Magnus Wenzer
+        Updated     20180315    by Magnus Wenzer
+        
+        Checks a list containing dictionaries. For each dict in list, if active, 
+        value is put in return list. 
+        """
+        return_list = []
+        for item in dict_list:
+            if item['active']: 
+                return_list.append(item['value'])
+        return return_list
+        
+        
+        
     #==========================================================================
     def _get_workspace_object(self, user_id=None, alias=None, unique_id=None): 
         if user_id and alias:
@@ -443,73 +459,161 @@ class EventHandler(object):
                                 
     
     #==========================================================================
-    def dict_type_area(self, workspace_unique_id=None, subset_unique_id=None, type_area=None, request=None): 
+    def dict_water_body(self, workspace_unique_id=None, subset_unique_id=None, water_body=None, request=None): 
         """
         Created     20180222    by Magnus Wenzer
-        Updated     20180222    by Magnus Wenzer
+        Updated     20180315    by Magnus Wenzer
         
-        type_area is "TYPE_AREA_NUMBER" at the moment. 
-        "selected" needs to be checked against water district. 
+        Internally its only possible to filter water bodies.  
         """
         workspace_object = self._get_workspace_object(unique_id=workspace_unique_id) 
         subset_object = workspace_object.get_subset_object(subset_unique_id) 
         if not subset_object:
             self._logger.warning('Could not find subset object {}. Subset is probably not loaded.'.format(subset_unique_id))
-            return {"label": '',
-    					"status": '',
-    					"selected": False,
-    					"value": ''}
-            
+            return {"label": "",
+                      "value": "",
+                      "type": "",
+                      "status": "", 
+                      "url": "", 
+                      "active": False}
+        
         if request: 
-            # Return request. information about selected is taken in one step up
+            # Return request. information about selected is taken from one step up
             return request
         else:
-            selected = False 
+            active = False 
             data_filter_object = subset_object.get_data_filter_object('step_1')
-            type_area_active_list = data_filter_object.get_include_list_filter('TYPE_AREA_NUMBER')
-            if type_area in type_area_active_list:
-                selected = True
+            wb_active_list = data_filter_object.get_include_list_filter('WATER_BODY')
+            water_body_mapping = self.mapping_objects['water_body']
+            if water_body in wb_active_list:
+                active = True
                 
-            return {"label": self.mapping_objects['display_mapping'].get_mapping(type_area, 'internal_name', 'display_en'),
-    				  "status": "selectable",
-    				  "selected": selected,
-    				  "value": type_area}
+            # Always selectable if no request
+            return {"label": water_body_mapping.get_display_name(water_body=water_body),
+                      "value": water_body,
+                      "type": "water_body",
+                      "status": "selectable", 
+                      "url": water_body_mapping.get_url(water_body), 
+                      "active": active}
+                          
         
-    
     #==========================================================================
-    def dict_water_body(self, workspace_unique_id=None, subset_unique_id=None, water_body=None, request=None): 
+    def dict_type_area(self, workspace_unique_id=None, subset_unique_id=None, type_area=None, request=None): 
         """
         Created     20180222    by Magnus Wenzer
-        Updated     20180222    by Magnus Wenzer
+        Updated     20180315    by Magnus Wenzer
         
-        water_body is "SEA_AREA_NAME". 
+        "selectable" is not checked at the moment....
+        """
+        
+        workspace_object = self._get_workspace_object(unique_id=workspace_unique_id) 
+        subset_object = workspace_object.get_subset_object(subset_unique_id) 
+        if not subset_object:
+            self._logger.warning('Could not find subset object {}. Subset is probably not loaded.'.format(subset_unique_id))
+            return {"label": "",
+                      "value": "",
+                      "type": "",
+                      "status": "", 
+                      "active": False, 
+                      "children": []}
+            
+        if request: 
+            # Add active water bodies to include filter 
+            active_water_bodies = self._get_active_values_in_list_with_dicts(request['children'])
+            subset_object.set_data_filter(step='step_1', 
+                                          filter_type='include_list', 
+                                          filter_name='WATER_BODY', 
+                                          data=active_water_bodies, 
+                                          append_items=True)
+            return request
+        else:
+            active = False 
+            data_filter_object = subset_object.get_data_filter_object('step_1')
+            water_body_active_list = data_filter_object.get_include_list_filter('WATER_BODY')
+            water_body_mapping = self.mapping_objects['water_body']
+            
+            type_area_active_list = water_body_mapping.get_list('type_area', water_body=water_body_active_list)
+            
+            if type_area in type_area_active_list:
+                active = True
+                
+            return_dict = {"label": water_body_mapping.get_display_name(type_area=type_area),
+                          "value": type_area,
+                          "type": "type_area",
+                          "status": "selectable", 
+                          "active": active, 
+                          "children": []}
+            
+            children_list = []
+            for water_body in water_body_mapping.get_list('water_body', type_area=type_area):
+                children_list.append(self.dict_water_body(workspace_unique_id=workspace_unique_id, 
+                                                          subset_unique_id=subset_unique_id, 
+                                                          water_body=water_body, 
+                                                          request=request)) 
+                # request not active here...
+            return_dict['children'] = children_list 
+        
+            return return_dict
+        
+        
+    #==========================================================================
+    def dict_water_district(self, workspace_unique_id=None, subset_unique_id=None, water_district=None, request=None): 
+        """
+        Created     20180315    by Magnus Wenzer
+        Updated     20180315    by Magnus Wenzer
+        
+        Internally its only possible to filter water bodies.  
         "selectable" needs to be checked against water district and type. 
         """
         workspace_object = self._get_workspace_object(unique_id=workspace_unique_id) 
         subset_object = workspace_object.get_subset_object(subset_unique_id) 
+        water_body_mapping = self.mapping_objects['water_body']
+        
         if not subset_object:
             self._logger.warning('Could not find subset object {}. Subset is probably not loaded.'.format(subset_unique_id))
-            return {"label": '',
-    					"status": '',
-    					"selected": False,
-    					"value": ''}
-        
+            return {"label": "",
+                      "value": "",
+                      "type": "",
+                      "status": "", 
+                      "active": False, 
+                      "children": []}
+            
         if request: 
-            # Return request. information about selected is taken in one step up
+#            for child in request['children']
+            for type_area in water_body_mapping.get_list('type_area', water_district=water_district):
+                self.dict_type_area(workspace_unique_id=workspace_unique_id, 
+                                                          subset_unique_id=subset_unique_id, 
+                                                          type_area=type_area, 
+                                                          request=request)
             return request
         else:
-            selected = False 
+            
+            active = False 
             data_filter_object = subset_object.get_data_filter_object('step_1')
-            wb_active_list = data_filter_object.get_include_list_filter('SEA_AREA_NAME')
-            if water_body in wb_active_list:
-                selected = True
+            water_body_active_list = data_filter_object.get_include_list_filter('WATER_BODY')
+            
+            water_district_active_list = water_body_mapping.get_list('water_district', water_body=water_body_active_list)
+            
+            if water_district in water_district_active_list:
+                active = True
                 
-            return {"label": self.mapping_objects['display_mapping'].get_mapping(water_body, 'internal_name', 'display_en'),
-    				  "status": "selectable",
-    				  "selected": selected,
-    				  "value": water_body}
-                          
-                
+            return_dict = {"label": water_body_mapping.get_display_name(water_district=water_district),
+                          "value": water_district,
+                          "type": "water_district",
+                          "status": "selectable", 
+                          "active": active, 
+                          "children": []}
+            
+            children_list = []
+            for type_area in water_body_mapping.get_list('type_area', water_district=water_district):
+                children_list.append(self.dict_type_area(workspace_unique_id=workspace_unique_id, 
+                                                          subset_unique_id=subset_unique_id, 
+                                                          type_area=type_area, 
+                                                          request=request)) 
+                # request not active here...
+            return_dict['children'] = children_list 
+        
+            return return_dict
                 
     #==========================================================================
     def dict_workspace(self, unique_id=None, user_id=None): 
@@ -831,9 +935,40 @@ class EventHandler(object):
         return return_list
     
     
+    #==========================================================================
+    def list_areas(self, workspace_unique_id=None, subset_unique_id=None, request=None): 
+        """
+        Created     20180315    by Magnus Wenzer
+        Updated     20180315    by Magnus Wenzer
+        
+        Lists information for "areas". Areas are hierarchically structured like: 
+            "areas": [
+                {
+                  "label": "Bottenhavet",
+                  "value": "bottenhavet",
+                  "type": "district",
+                  "status": "selectable",
+                  "active": true,
+                  "children": [
+                    {
+                      "label": "ABC",
+                      "value": "abc",
+                      "type": "area",
+                      "status": "disabled",
+                      "active": false
+                    }
+                  ]
+                }
+              ]
+        """
+        if request:
+            pass 
+        else:
+            pass
+        
         
     #==========================================================================
-    def list_type_areas(self, workspace_unique_id=None, subset_unique_id=None, request=None): 
+    def deprecated_list_type_areas(self, workspace_unique_id=None, subset_unique_id=None, request=None): 
         """
         Created     20180222    by Magnus Wenzer
         Updated     20180222    by Magnus Wenzer
@@ -864,26 +999,29 @@ class EventHandler(object):
     
     
     #==========================================================================
-    def list_water_bodies(self, workspace_unique_id=None, subset_unique_id=None, request=None): 
+    def list_water_bodies(self, workspace_unique_id=None, subset_unique_id=None, type_area=None, request=None): 
         """
         Created     20180222    by Magnus Wenzer
-        Updated     20180222    by Magnus Wenzer
+        Updated     20180315    by Magnus Wenzer
         
         Lists information for water bodies.
         """
+        if not all([workspace_unique_id, subset_unique_id, type_area]):
+            return []
+        
         # Check request 
         if request:
             workspace_object = self._get_workspace_object(unique_id=workspace_unique_id) 
             # Create list of type areas 
             water_body_list = [req['value'] for req in request if req['selected']]
             # Set data filter 
-            workspace_object.set_data_filter(step='step_1', subset=subset_unique_id, filter_type='include_list', filter_name='WATER_BODY_NAME', data=water_body_list)
+            workspace_object.set_data_filter(step='step_1', subset=subset_unique_id, filter_type='include_list', filter_name='WATER_BODY', data=water_body_list)
             
             return request
         else:
             
             return_list = []
-            for water_body in self.mapping_objects['water_body'].get_water_body_list(): 
+            for water_body in self.mapping_objects['water_body'].get_list('water_body', type_area=type_area): 
                 
                 water_body_dict = self.dict_water_body(workspace_unique_id=workspace_unique_id, 
                                                        subset_unique_id=subset_unique_id, 
@@ -1452,7 +1590,8 @@ class EventHandler(object):
                         subset='', 
                         filter_type='', 
                         filter_name='', 
-                        data=None): 
+                        data=None, 
+                        append_items=False): 
         """
         Created     20180220    by Magnus Wenzer
         Updated     20180221    by Magnus Wenzer
@@ -1468,7 +1607,8 @@ class EventHandler(object):
                                                 subset=subset, 
                                                 filter_type=filter_type, 
                                                 filter_name=filter_name, 
-                                                data=data)
+                                                data=data, 
+                                                append_items=append_items)
         
         
         
@@ -1506,6 +1646,7 @@ if __name__ == '__main__':
     
     w = ekos.get_workspace(user_id=user_id_1, alias='mw1')
     
+    wb_mapping = ekos.mapping_objects['water_body']
     
     
 ##    ekos.load_all_workspaces_for_user()

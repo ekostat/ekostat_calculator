@@ -58,7 +58,7 @@ class DataFilter(object):
 
     
     #==========================================================================
-    def include_statn(self, statn, include_current=False):
+    def deprecate_include_statn(self, statn, include_current=False):
         """
         statn => water_body => type_area => water_district
         Makes sure that the water_body containing the station is included in the include_water_body filter. 
@@ -80,7 +80,7 @@ class DataFilter(object):
         
     
     #==========================================================================
-    def include_type_area(self, type_area, include_current=False): 
+    def deprecate_include_type_area(self, type_area, include_current=False): 
         """
         type_area => water_district
         include_current nor used
@@ -100,7 +100,7 @@ class DataFilter(object):
         self.include_water_district(water_district_list)
 
     #==========================================================================
-    def include_water_district(self, water_district, include_current=False): 
+    def deprecate_include_water_district(self, water_district, include_current=False): 
         """
         water_district
         include_current nor used
@@ -109,7 +109,7 @@ class DataFilter(object):
         self.include_list_filter['WATER_DISTRICT_NAME'] = water_district
         
     #==========================================================================
-    def include_water_body(self, water_body, include_current=False): 
+    def deprecate_include_water_body(self, water_body, include_current=False): 
         """
         water_body => type_area => water_district
         include_current nor used
@@ -259,7 +259,7 @@ class DataFilter(object):
                     fid.write('\n')
               
     #==========================================================================
-    def set_filter(self, filter_type=None, filter_name=None, data=None, save_filter=True): 
+    def set_filter(self, filter_type=None, filter_name=None, data=None, save_filter=True, append_items=False): 
         """
         Sets the given filter_name of the given filter_type to data. 
         Option to save or not. 
@@ -278,32 +278,46 @@ class DataFilter(object):
         if filter_type == 'exclude_list':
             return self.set_exclude_list_filter(filter_name=filter_name, 
                                                 filter_list=data, 
-                                                save_files=save_filter)
+                                                save_files=save_filter, 
+                                                append_items=append_items)
         elif filter_type == 'include_list':
             return self.set_include_list_filter(filter_name=filter_name, 
                                                 filter_list=data, 
-                                                save_files=save_filter)
+                                                save_files=save_filter, 
+                                                append_items=append_items)
         
     #==========================================================================
-    def set_include_list_filter(self, filter_name=None, filter_list=None, save_files=True): 
+    def set_include_list_filter(self, filter_name=None, filter_list=None, save_files=True, append_items=False): 
+        """
+        Created     ????????    by Magnus Wenzer
+        Updated     20180315    by Magnus Wenzer
+        """
         filter_name = filter_name.upper()
         if filter_name not in self.include_list_filter.keys():
             return False
+
+#        if filter_name == 'WATER_BODY_NAME':
+#            self.include_water_body(filter_list)
+#        else:
+#            filter_list = sorted(set([item.strip() for item in filter_list]))
+#                
+#            self.include_list_filter[filter_name] = filter_list
+
+        if append_items:
+            filter_list = filter_list + self.get_include_list_filter(filter_name)
+        filter_list = sorted(set([item.strip() for item in filter_list]))
+        self.include_list_filter[filter_name] = filter_list
         
-        print('filter_name: {}'.format(filter_name))
-        if filter_name == 'WATER_BODY_NAME':
-            self.include_water_body(filter_list)
-        else:
-            filter_list = sorted(set([item.strip() for item in filter_list]))
-            self.include_list_filter[filter_name] = filter_list
         if save_files: 
             self.save_filter_files() 
         return True
     
     #==========================================================================
-    def set_exclude_list_filter(self, filter_name, filter_list, save_files=True): 
+    def set_exclude_list_filter(self, filter_name, filter_list, save_files=True, append_items=False): 
         if filter_name not in self.exclude_list_filter.keys():
             return False
+        if append_items:
+            filter_list = filter_list + self.get_exclude_list_filter(filter_name)
         filter_list = sorted(set([item.strip() for item in filter_list]))
         self.exclude_list_filter[filter_name] = filter_list
         if save_files: 

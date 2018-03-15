@@ -359,7 +359,7 @@ class WorkStep(object):
         self._logger.debug('')
                 
     #==========================================================================
-    def set_data_filter(self, filter_type='', filter_name='', data=None, save_filter=True): 
+    def set_data_filter(self, filter_type='', filter_name='', data=None, save_filter=True, append_items=False): 
         """
         Sets the data_filter. See core.filters.data_filter.set_filter for more information. 
         """ 
@@ -369,7 +369,8 @@ class WorkStep(object):
         data_filter.set_filter(filter_type=filter_type, 
                                filter_name=filter_name, 
                                data=data, 
-                               save_filter=save_filter)    
+                               save_filter=save_filter, 
+                               append_items=append_items)    
         return True
     
     #==========================================================================
@@ -668,11 +669,15 @@ class Subset(object):
         self._logger.debug('')
                 
     #==========================================================================
-    def set_data_filter(self, step='', filter_type='', filter_name='', data=None, save_filter=True):  
+    def set_data_filter(self, step='', filter_type='', filter_name='', data=None, save_filter=True, append_items=False):  
         step_object = self.get_step_object(step)
         if not step_object:
             return False 
-        return step_object.set_data_filter(filter_type=filter_type, filter_name=filter_name, data=data, save_filter=save_filter)
+        return step_object.set_data_filter(filter_type=filter_type, 
+                                           filter_name=filter_name, 
+                                           data=data, 
+                                           save_filter=save_filter, 
+                                           append_items=append_items)
     
     
     
@@ -1447,7 +1452,7 @@ class WorkSpace(object):
     
     
     #==========================================================================
-    def set_data_filter(self, step='', subset='', filter_type='', filter_name='', data=None, save_filter=True): 
+    def set_data_filter(self, step='', subset='', filter_type='', filter_name='', data=None, save_filter=True, append_items=False): 
         """
         Sets/changes the data_filter of the given filter_name. 
         
@@ -1481,7 +1486,8 @@ class WorkSpace(object):
         return step_object.set_data_filter(filter_type=filter_type, 
                                             filter_name=filter_name, 
                                             data=data, 
-                                            save_filter=save_filter)
+                                            save_filter=save_filter, 
+                                            append_items=append_items)
         
     #==========================================================================
     def set_indicator_settings_data_filter(self, indicator=None, filter_settings=None, subset=None, step=2): 

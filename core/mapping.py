@@ -171,7 +171,21 @@ class WaterBody(AttributeDict):
     - get list on different water bodies within a specific type area
     """
     def __init__(self, **kwargs):
+        """
+        Created     ????????    by Johannes Johansson
+        Updated     20180315    by Magnus Wenzer
+        """
         super().__init__()
+        self.column_name = {}
+        self.column_name['water_body'] = {'internal': 'VISS_EU_CD', 
+                                          'display': 'WATERBODY_NAME'}
+        
+        self.column_name['type_area'] = {'internal': 'TYPE_AREA_CODE', 
+                                          'display': 'TYPE_AREA_NAME'}
+        
+        self.column_name['water_district'] = {'internal': 'WATER_DISTRICT', 
+                                              'display': 'WATER_DISTRICT'}
+        
         
         #TODO Add Parametermapping for water body names
         #TODO Map against .lower() letters 
@@ -182,7 +196,7 @@ class WaterBody(AttributeDict):
     def load_water_body_match(self, file_path=u'', sep='\t', encoding='cp1252'):
         """
         Created     ????????    by Johannes Johansson
-        Updated     20180222    by Magnus Wenzer
+        Updated     20180315    by Magnus Wenzer
         """
         
         self.water_bodies = core.Load().load_txt(file_path, sep=sep, 
@@ -190,45 +204,136 @@ class WaterBody(AttributeDict):
                                                  fill_nan=u'')
         
         key_list = list(self.water_bodies.keys())
-        key_list.remove(u'NAME')
+        key_list.remove(self.column_name['water_body']['internal'])
         
         self.add_info_dict(df=self.water_bodies, 
-                           first_key=u'NAME',
+                           first_key=self.column_name['water_body']['internal'],
                            key_list=key_list)
         
         self.add_corresponding_arrays(df=self.water_bodies,
-                                      first_key=u'TYPE_AREA_NUMBER', 
+                                      first_key=u'TYPE_AREA_NO', 
                                       second_key=u'TYPE_AREA_SUFFIX',
-                                      match_key=u'NAME')
+                                      match_key=self.column_name['water_body']['internal'])
         
     #==========================================================================
     def get_water_bodies_in_type_area(self, type_area):
         return self.get(type_area)
     
-    #==========================================================================
-    def get_water_body_list(self):
-        """
-        Created     20180222    by Magnus Wenzer
-        Updated     20180222    by Magnus Wenzer
-        
-        Returns a list with all water bodies. 
-        """
-        return sorted(set(self.water_bodies['NAME']))
     
     #==========================================================================
-    def get_type_area_list(self):
+    def get_display_name(self, **kwargs): 
         """
-        Created     20180222    by Magnus Wenzer
-        Updated     20180222    by Magnus Wenzer
+        Created     20180315    by Magnus Wenzer
+        Updated     20180315    by Magnus Wenzer
+        """
+        area = list(kwargs.keys())[0]
+        value = kwargs[area]
+        result = self.water_bodies.loc[self.water_bodies[self.column_name[area]['internal']]==value, self.column_name[area]['display']]
+        if len(result):
+            return result.values[0]
+        return False
+    
+    
+    #==========================================================================
+    def get_internal_name(self, **kwargs): 
+        """
+        Created     20180315    by Magnus Wenzer
+        Updated     20180315    by Magnus Wenzer
+        """
+        area = list(kwargs.keys())[0] 
+        value = kwargs[area]
+        result = self.water_bodies.loc[self.water_bodies[self.column_name[area]['display']]==value, self.column_name[area]['internal']]
+        if len(result):
+            return result.values[0]
+        return False
+    
+    #==========================================================================
+    def get_list(self, area_level, **kwargs): 
+        """
+        Created     20180315    by Magnus Wenzer
+        Updated     20180315    by Magnus Wenzer
+        """
+        if kwargs:
+            area = list(kwargs.keys())[0] 
+            value = kwargs[area]
+            if type(value) != list:
+                value = [value]
+            result = self.water_bodies.loc[self.water_bodies[self.column_name[area]['internal']].isin(value), self.column_name[area_level]['internal']]
+            if len(result):
+                return sorted(set(result.values))
+            return False
+        else:
+            return sorted(set(self.water_bodies[self.column_name[area_level]['internal']]))
+
+    #==========================================================================
+    def get_url(self, water_body): 
+        result = self.water_bodies.loc[self.water_bodies[self.column_name['water_body']['internal']]==water_body, 'URL_VISS']
+        if len(result):
+            return result.values[0]
+        return False
         
-        Returns a list with all type areas. 
-        """
-        return sorted(set(self.water_bodies['TYPE_AREA_NUMBER']))
+#    #==========================================================================
+#    def get_type_area_list(self, water_district=None, water_body=None):
+#        """
+#        Created     20180222    by Magnus Wenzer
+#        Updated     20180315    by Magnus Wenzer
+#        
+#        Returns a list with type areas. 
+#        """
+#        if water_district: 
+#            if type(water_district) != list:
+#                water_district = [water_district]
+#            return sorted(set(self.water_bodies.loc[self.water_bodies[self.column_name['water_district']['internal']].isin(water_district), self.column_name['type_area']['internal']].values))
+#        elif water_body:
+#            if type(water_body) != list:
+#                water_body = [water_body]
+#            return sorted(set(self.water_bodies.loc[self.water_bodies[self.column_name['water_body']['internal']].isin(water_body), self.column_name['type_area']['internal']].values))
+#        else:
+#            return sorted(set(self.water_bodies[self.column_name['type_area']['internal']]))
+#        
+#        
+#    #==========================================================================
+#    def get_water_body_list(self, type_area=None, water_district=None):
+#        """
+#        Created     20180222    by Magnus Wenzer
+#        Updated     20180315    by Magnus Wenzer
+#        
+#        Returns a list with water bodies. 
+#        """
+#        if type_area: 
+#            if type(type_area) != list:
+#                type_area = [type_area]
+#            return sorted(set(self.water_bodies.loc[self.water_bodies[self.column_name['type_area']['internal']].isin(type_area), self.column_name['water_body']['internal']].values))
+#        elif water_district: 
+#            if type(water_district) != list:
+#                water_district = [water_district]
+#            return sorted(set(self.water_bodies.loc[self.water_bodies[self.column_name['water_district']['internal']].isin(water_district), self.column_name['water_body']['internal']].values))
+#        else:
+#            return sorted(set(self.water_bodies[self.column_name['water_body']['internal']]))
+#    
+#    #==========================================================================
+#    def get_water_district_list(self, type_area=None, water_body=None):
+#        """
+#        Created     20180315    by Magnus Wenzer
+#        Updated     20180315    by Magnus Wenzer
+#        
+#        Returns a list with water districts. 
+#        """
+#        if type_area: 
+#            if type(type_area) != list:
+#                type_area = [type_area]
+#            return sorted(set(self.water_bodies.loc[self.water_bodies[self.column_name['type_area']['internal']].isin(type_area), self.column_name['water_distric']['internal']].values))
+#        elif water_body:
+#            if type(water_body) != list:
+#                water_body = [water_body]
+#            return sorted(set(self.water_bodies.loc[self.water_bodies[self.column_name['water_body']['internal']].isin(water_body), self.column_name['water_distric']['internal']].values))
+#        else:
+#            return sorted(set(self.water_bodies[self.column_name['water_distric']['internal']]))
     
         
     #==========================================================================
     def get_type_area_for_water_body(self, wb, include_suffix=False, 
-                                     key_number=u'TYPE_AREA_NUMBER', 
+                                     key_number=u'TYPE_AREA_NO', 
                                      key_suffix=u'TYPE_AREA_SUFFIX'):
         if include_suffix:
             string = self.get(wb).get(key_number) + '-' + \
