@@ -1260,23 +1260,30 @@ class WorkSpace(object):
     #==========================================================================
     def get_available_indicators(self, subset=None, step=None):
         """
-        Created:                 by Lena
-        Last modified:  20180216 by Lena
+        Created:        201801   by Lena
+        Last modified:  20180316 by Lena
         """
-        if not self.data_handler.all_data:
-            # Try does not work here for some reason...
-            return []
+        #TODO: nu kollar den bara om det finns fler än 0 rader med givna parameters för indikatorn, kanske öka den gräns?
+        try:
+            self.data_handler.all_data
+        except AttributeError as e:
+            #TODO: lägga till felmeddelande i log?
+            print(e)
+            return False
         
         available_indicators = []
         for indicator, parameters in self.cfg['indicators'].items():
             parameter_list = [item.strip() for item in parameters[0].split(', ')]
             print('subset', subset)
             try:
-                if (self.get_filtered_data(subset = subset, step = step)[parameter_list].dropna().count() > 0).all():
-                    available_indicators.append(indicator) 
-            except KeyError:
-                continue
-            
+                #TODO: speed of pd.to_numeric?
+                self.get_filtered_data(step = step, subset = subset)[parameter_list].apply(pd.to_numeric).dropna(thresh = len(parameter_list))
+                available_indicators.append(indicator)
+            except KeyError as e:
+                #TODO: lägga till felmeddelande i log?
+                print(e)
+                return False
+                    
         return available_indicators
 
 
