@@ -9,6 +9,7 @@ import os
 import shutil
 
 import json
+import codecs
 
 
 import logging
@@ -101,7 +102,14 @@ class EventHandler(object):
                 return_list.append(item['value'])
         return return_list
         
-        
+    #==========================================================================
+    def _get_mapping_for_name_in_dict(self, name, list_of_dicts): 
+        return_mapping = {} 
+        if not list_of_dicts:
+            return return_mapping
+        for item in list_of_dicts:
+            return_mapping[item[name]] = item
+        return return_mapping
         
     #==========================================================================
     def _get_workspace_object(self, user_id=None, alias=None, unique_id=None): 
@@ -586,6 +594,8 @@ class EventHandler(object):
             data_filter_object = subset_object.get_data_filter_object('step_1')
             water_body_active_list = data_filter_object.get_include_list_filter('WATER_BODY')
             
+            print('****')
+            print(water_body_active_list)
             water_district_active_list = water_body_mapping.get_list('water_district', water_body=water_body_active_list)
             
             if water_district in water_district_active_list:
@@ -653,7 +663,9 @@ class EventHandler(object):
     def get_subset_list(self, workspace_unique_id=None, user_id=None): 
         # Load workspace if not loaded
         if workspace_unique_id not in self.workspaces.keys():
-            self.load_workspace(user_id, unique_id=workspace_unique_id)
+            all_ok = self.load_workspace(user_id, unique_id=workspace_unique_id)
+            if not all_ok:
+                return []
         workspace_object = self.workspaces.get(workspace_unique_id, None)
         return workspace_object.get_subset_list()
     
@@ -810,84 +822,102 @@ class EventHandler(object):
         """
 #        print('list_subsets_request', request)
         subset_list = []
+#        subset_uuid_list = [] 
+#        sub_request_list = []
+        request_for_subset_uuid = self._get_mapping_for_name_in_dict('uuid', request)
+#                subset_uuid_list.append(sub['uuid'])
+#                sub_request_list.append(sub)
+#        else: 
+#            subset_uuid_list = self.get_subset_list(workspace_unique_id=workspace_unique_id, user_id=user_id)
+#            sub_request_list = [None]*len(subset_uuid_list)
+            
+#        for subset_uuid, sub_request in zip(subset_uuid_list, sub_request_list):
         for subset_uuid in self.get_subset_list(workspace_unique_id=workspace_unique_id, user_id=user_id):
+            sub_request = request_for_subset_uuid.get(subset_uuid, {})
             
             # Check uuid for subset in request (if given) 
-            if request:
-                for sub in request:
-#                    print(sub)
-                    if sub['uuid'] == subset_uuid:
-                        break
+#            if request:
+#                for sub in request:
+#    #                    print(sub)
+#                    if sub['uuid'] == subset_uuid:
+#                        break
+        
+            # Get subset dict
+            subset_dict = self.dict_subset(workspace_unique_id=workspace_unique_id, 
+                                           subset_unique_id=subset_uuid, 
+                                           request=sub_request)
             
-                # Get subset dict
-                subset_dict = self.dict_subset(workspace_unique_id=workspace_unique_id, 
-                                               subset_unique_id=subset_uuid, 
-                                               request=sub)
-                
-                # Temporary default list for periods
-                subset_dict['periods'] = self.list_periods(workspace_unique_id=workspace_unique_id, 
-                                                           subset_unique_id=subset_uuid, 
-                                                           request=sub['periods'])
-                
-                # Water bodies 
-                subset_dict['water_bodies'] = self.list_water_bodies(workspace_unique_id=workspace_unique_id, 
-                                                                     subset_unique_id=subset_uuid, 
-                                                                     request=sub['water_bodies'])
-                
-                # Type area
-                subset_dict['type_area'] = self.list_water_bodies(workspace_unique_id=workspace_unique_id, 
-                                                                  subset_unique_id=subset_uuid, 
-                                                                  request=sub['type_area'])
-                
-                # Type area
-                subset_dict['water_districts'] = self.list_water_district(workspace_unique_id=workspace_unique_id, 
-                                                                          subset_unique_id=subset_uuid, 
-                                                                          request=sub['water_districts'])
-                
-                # Quality elements 
-                subset_dict['quality_elements'] = self.list_quality_elements(workspace_unique_id=workspace_unique_id, 
-                                                                             subset_unique_id=subset_uuid, 
-                                                                             request=sub['quality_elements'])
-                
-                # Quality elements 
-                subset_dict['supporting_elements'] = self.list_supporting_elements(workspace_unique_id=workspace_unique_id, 
-                                                                                   subset_unique_id=subset_uuid, 
-                                                                                   request=sub['supporting_elements'])
-            else:
-                # Get subset dict
-                subset_dict = self.dict_subset(workspace_unique_id=workspace_unique_id, 
-                                               subset_unique_id=subset_uuid, 
-                                               request=None)
-                
-                # Temporary default list for periods
-                subset_dict['periods'] = self.list_periods(workspace_unique_id=workspace_unique_id, 
-                                                           subset_unique_id=subset_uuid, 
-                                                           request=None)
-                
-                # Water bodies 
-                subset_dict['water_bodies'] = self.list_water_bodies(workspace_unique_id=workspace_unique_id, 
-                                                                     subset_unique_id=subset_uuid, 
-                                                                     request=None)
-                
-                # Type area
-                subset_dict['type_area'] = self.list_water_bodies(workspace_unique_id=workspace_unique_id, 
-                                                                  subset_unique_id=subset_uuid, 
-                                                                  request=None)
-                
-                # Type area
-                subset_dict['water_districts'] = self.list_water_district(workspace_unique_id=workspace_unique_id, 
-                                                                          subset_unique_id=subset_uuid, 
-                                                                          request=None)
-                
-                # Quality elements 
-                subset_dict['quality_elements'] = self.list_quality_elements(workspace_unique_id=workspace_unique_id, 
-                                                                             subset_unique_id=subset_uuid, 
-                                                                             request=None)
-                
-                # Quality elements 
-                subset_dict['supporting_elements'] = self.list_supporting_elements(workspace_unique_id=workspace_unique_id, 
-                                                                                   subset_unique_id=subset_uuid, 
-                                                                                   request=None)
+            # Temporary default list for periods
+            subset_dict['periods'] = self.list_periods(workspace_unique_id=workspace_unique_id, 
+                                                       subset_unique_id=subset_uuid, 
+                                                       request=sub_request.get('periods', {}))
+            
+            # Areas (contains water_district, type_area and water_body in a tree structure) 
+            subset_dict['areas'] = self.list_areas(workspace_unique_id=workspace_unique_id, 
+                                                            subset_unique_id=subset_uuid, 
+                                                            request=sub_request.get('areas', {}))
+            
+#                # Water bodies 
+#                subset_dict['water_bodies'] = self.list_water_bodies(workspace_unique_id=workspace_unique_id, 
+#                                                                     subset_unique_id=subset_uuid, 
+#                                                                     request=sub['water_bodies'])
+#                
+#                # Type area
+#                subset_dict['type_area'] = self.list_water_bodies(workspace_unique_id=workspace_unique_id, 
+#                                                                  subset_unique_id=subset_uuid, 
+#                                                                  request=sub['type_area'])
+#                
+#                # Type area
+#                subset_dict['water_districts'] = self.list_water_district(workspace_unique_id=workspace_unique_id, 
+#                                                                          subset_unique_id=subset_uuid, 
+#                                                                          request=sub['water_districts'])
+            
+            # Quality elements 
+            subset_dict['quality_elements'] = self.list_quality_elements(workspace_unique_id=workspace_unique_id, 
+                                                                         subset_unique_id=subset_uuid, 
+                                                                         request=sub_request.get('quality_elements', {}))
+            
+            # Quality elements 
+            subset_dict['supporting_elements'] = self.list_supporting_elements(workspace_unique_id=workspace_unique_id, 
+                                                                               subset_unique_id=subset_uuid, 
+                                                                               request=sub_request.get('supporting_elements', {}))
+
+#==============================================================================                                                                               request=sub['supporting_elements'])
+#            else:
+#                # Get subset dict
+#                subset_dict = self.dict_subset(workspace_unique_id=workspace_unique_id, 
+#                                               subset_unique_id=subset_uuid, 
+#                                               request=None)
+#                
+#                # Temporary default list for periods
+#                subset_dict['periods'] = self.list_periods(workspace_unique_id=workspace_unique_id, 
+#                                                           subset_unique_id=subset_uuid, 
+#                                                           request=None)
+#                
+#                # Water bodies 
+#                subset_dict['water_bodies'] = self.list_water_bodies(workspace_unique_id=workspace_unique_id, 
+#                                                                     subset_unique_id=subset_uuid, 
+#                                                                     request=None)
+#                
+#                # Type area
+#                subset_dict['type_area'] = self.list_water_bodies(workspace_unique_id=workspace_unique_id, 
+#                                                                  subset_unique_id=subset_uuid, 
+#                                                                  request=None)
+#                
+#                # Type area
+#                subset_dict['water_districts'] = self.list_water_district(workspace_unique_id=workspace_unique_id, 
+#                                                                          subset_unique_id=subset_uuid, 
+#                                                                          request=None)
+#                
+#                # Quality elements 
+#                subset_dict['quality_elements'] = self.list_quality_elements(workspace_unique_id=workspace_unique_id, 
+#                                                                             subset_unique_id=subset_uuid, 
+#                                                                             request=None)
+#                
+#                # Quality elements 
+#                subset_dict['supporting_elements'] = self.list_supporting_elements(workspace_unique_id=workspace_unique_id, 
+#                                                                                   subset_unique_id=subset_uuid, 
+#                                                                                   request=None)
             
             # Add subset dict to subset list
             subset_list.append(subset_dict)
@@ -936,29 +966,49 @@ class EventHandler(object):
         Updated     20180315    by Magnus Wenzer
         
         Lists information for "areas". Areas are hierarchically structured like: 
-            "areas": [
+            [
                 {
-                  "label": "Bottenhavet",
-                  "value": "bottenhavet",
+                  "label": "SE5",
+                  "value": "SE5",
                   "type": "district",
                   "status": "selectable",
                   "active": true,
                   "children": [
-                    {
-                      "label": "ABC",
-                      "value": "abc",
-                      "type": "area",
-                      "status": "disabled",
-                      "active": false
-                    }
-                  ]
-                }
-              ]
+                        {
+                          "label": "1s - Västkustens inre kustvatten, södra",
+                          "value": "1s",
+                          "type": "type_area",
+                          "status": "selectable",
+                          "active": true,
+                          "children": [
+                                {
+                                  "label": "Balgöarkipelagen",
+                                  "value": "SE570900-121060",
+                                  "type": "water_body",
+                                  "status": "disabled",
+                                  "active": false
+                                }
+                              ]
+                          }
+                      ]
+                  }
+               ]
         """
-        if request:
-            pass 
-        else:
-            pass
+        
+        area_list = [] 
+        
+        request_for_water_district = self._get_mapping_for_name_in_dict('water_district', request)
+
+        for water_district in self.mapping_objects['water_body'].get_list('water_district'):
+            sub_request = request_for_water_district.get(water_district, None)
+        
+            response = self.dict_water_district(workspace_unique_id=workspace_unique_id, 
+                                                subset_unique_id=subset_unique_id, 
+                                                water_district=water_district, 
+                                                request=sub_request)
+            area_list.append(response)
+        
+        return area_list
         
         
     #==========================================================================
@@ -1094,8 +1144,10 @@ class EventHandler(object):
         self.test_requests = {} 
         directory = '{}/test_data/requests'.format(self.root_path)
         for file_name in os.listdir(directory):
+            if 'response' in file_name:
+                continue
             file_path = os.path.join(directory, file_name)
-            with open(file_path, 'r') as fid: 
+            with codecs.open(file_path, 'r', encoding='cp1252') as fid: 
 #                print(file_path)
                 self.test_requests[file_name[:-4]] = json.load(fid)
         
@@ -1104,7 +1156,7 @@ class EventHandler(object):
         if name.startswith('request_'):
             name = name[8:]
         file_path = '{}/test_data/requests/response_{}.txt'.format(self.root_path, name)
-        with open(file_path, 'w') as fid:
+        with codecs.open(file_path, 'w', encoding='cp1252') as fid:
             json.dump(response, fid, indent=4)
         
     #==========================================================================
@@ -1357,7 +1409,7 @@ class EventHandler(object):
             					"value": "2012-2017"
             				}
             			],
-            			"water_bodies": [
+            			"areas": [
             				{
             					"label": "WB 1",
             					"status": "selectable",

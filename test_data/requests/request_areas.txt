@@ -1,20 +1,29 @@
 {
   "areas": [
     {
-      "label": "Bottenhavet",
-      "value": "bottenhavet",
+      "label": "SE5",
+      "value": "SE5",
       "type": "district",
       "status": "selectable",
       "active": true,
       "children": [
-        {
-          "label": "ABC",
-          "value": "abc",
-          "type": "area",
-          "status": "disabled",
-          "active": false
-        }
-      ]
-    }
-  ]
+            {
+              "label": "1s - Västkustens inre kustvatten, södra",
+              "value": "1s",
+              "type": "type_area",
+              "status": "selectable",
+              "active": true,
+              "children": [
+                    {
+                      "label": "Balgöarkipelagen",
+                      "value": "SE570900-121060",
+                      "type": "water_body",
+                      "status": "disabled",
+                      "active": false
+                    }
+                  ]
+              }
+          ]
+      }
+   ]
 }

@@ -608,3 +608,258 @@
 2018-03-15 14:19:55,140	event_handler.py	195	copy_workspace	DEBUG	Could not add workspace with alias "test2". Workspace already exists!
 2018-03-15 14:19:55,179	event_handler.py	1013	load_workspace	DEBUG	Trying to load workspace "0e52fe67-9af2-47be-a61f-88c575242baf" with alias "mw1"
 2018-03-15 14:19:56,739	event_handler.py	583	get_workspace	DEBUG	Getting workspace "0e52fe67-9af2-47be-a61f-88c575242baf" with alias "mw1"
+2018-03-16 07:34:20,605	logger.py	85	add_log	DEBUG	
+2018-03-16 07:34:20,615	logger.py	86	add_log	DEBUG	========================================================================================================================
+2018-03-16 07:34:20,615	logger.py	87	add_log	DEBUG	### Log added for log_id "event_handler" at locaton: D:\Utveckling\git\ekostat_calculator\log\main_event_handler.log
+2018-03-16 07:34:20,625	logger.py	88	add_log	DEBUG	------------------------------------------------------------------------------------------------------------------------
+2018-03-16 07:34:20,625	event_handler.py	69	__init__	DEBUG	Start EventHandler: event_handler
+2018-03-16 07:34:20,635	event_handler.py	70	__init__	DEBUG	
+2018-03-16 07:34:20,635	event_handler.py	71	__init__	INFO	TEST info logger
+2018-03-16 07:34:20,635	event_handler.py	72	__init__	WARNING	TEST warning logger
+2018-03-16 07:34:20,645	event_handler.py	73	__init__	ERROR	TEST error logger
+2018-03-16 07:34:20,645	event_handler.py	74	__init__	DEBUG	TEST debug logger
+2018-03-16 07:34:20,975	event_handler.py	69	__init__	DEBUG	Start EventHandler: event_handler
+2018-03-16 07:34:20,985	event_handler.py	70	__init__	DEBUG	
+2018-03-16 07:34:20,985	event_handler.py	71	__init__	INFO	TEST info logger
+2018-03-16 07:34:20,985	event_handler.py	72	__init__	WARNING	TEST warning logger
+2018-03-16 07:34:20,995	event_handler.py	73	__init__	ERROR	TEST error logger
+2018-03-16 07:34:20,995	event_handler.py	74	__init__	DEBUG	TEST debug logger
+2018-03-16 07:34:21,365	event_handler.py	211	copy_workspace	DEBUG	Could not add workspace with alias "mw1". Workspace already exists!
+2018-03-16 07:34:21,375	event_handler.py	211	copy_workspace	DEBUG	Could not add workspace with alias "mw2". Workspace already exists!
+2018-03-16 07:34:21,395	event_handler.py	211	copy_workspace	DEBUG	Could not add workspace with alias "test1". Workspace already exists!
+2018-03-16 07:34:21,405	event_handler.py	211	copy_workspace	DEBUG	Could not add workspace with alias "test2". Workspace already exists!
+2018-03-16 07:34:21,455	event_handler.py	1124	load_workspace	DEBUG	Trying to load workspace "0e52fe67-9af2-47be-a61f-88c575242baf" with alias "mw1"
+2018-03-16 07:34:22,265	event_handler.py	687	get_workspace	DEBUG	Getting workspace "0e52fe67-9af2-47be-a61f-88c575242baf" with alias "mw1"
+2018-03-16 07:41:14,616	event_handler.py	63	__init__	DEBUG	Start EventHandler: event_handler
+2018-03-16 07:41:14,626	event_handler.py	64	__init__	DEBUG	
+2018-03-16 07:41:14,626	event_handler.py	65	__init__	INFO	TEST info logger
+2018-03-16 07:41:14,626	event_handler.py	66	__init__	WARNING	TEST warning logger
+2018-03-16 07:41:14,636	event_handler.py	67	__init__	ERROR	TEST error logger
+2018-03-16 07:41:14,636	event_handler.py	68	__init__	DEBUG	TEST debug logger
+2018-03-16 07:41:14,806	event_handler.py	63	__init__	DEBUG	Start EventHandler: event_handler
+2018-03-16 07:41:14,816	event_handler.py	64	__init__	DEBUG	
+2018-03-16 07:41:14,816	event_handler.py	65	__init__	INFO	TEST info logger
+2018-03-16 07:41:14,816	event_handler.py	66	__init__	WARNING	TEST warning logger
+2018-03-16 07:41:14,816	event_handler.py	67	__init__	ERROR	TEST error logger
+2018-03-16 07:41:14,826	event_handler.py	68	__init__	DEBUG	TEST debug logger
+2018-03-16 07:41:14,996	event_handler.py	205	copy_workspace	DEBUG	Could not add workspace with alias "mw1". Workspace already exists!
+2018-03-16 07:41:15,006	event_handler.py	205	copy_workspace	DEBUG	Could not add workspace with alias "mw2". Workspace already exists!
+2018-03-16 07:41:15,016	event_handler.py	205	copy_workspace	DEBUG	Could not add workspace with alias "test1". Workspace already exists!
+2018-03-16 07:41:15,026	event_handler.py	205	copy_workspace	DEBUG	Could not add workspace with alias "test2". Workspace already exists!
+2018-03-16 07:41:15,056	event_handler.py	1118	load_workspace	DEBUG	Trying to load workspace "0e52fe67-9af2-47be-a61f-88c575242baf" with alias "mw1"
+2018-03-16 07:41:15,466	event_handler.py	681	get_workspace	DEBUG	Getting workspace "0e52fe67-9af2-47be-a61f-88c575242baf" with alias "mw1"
+2018-03-16 07:41:51,929	event_handler.py	63	__init__	DEBUG	Start EventHandler: event_handler
+2018-03-16 07:41:51,939	event_handler.py	64	__init__	DEBUG	
+2018-03-16 07:41:51,939	event_handler.py	65	__init__	INFO	TEST info logger
+2018-03-16 07:41:51,939	event_handler.py	66	__init__	WARNING	TEST warning logger
+2018-03-16 07:41:51,939	event_handler.py	67	__init__	ERROR	TEST error logger
+2018-03-16 07:41:51,939	event_handler.py	68	__init__	DEBUG	TEST debug logger
+2018-03-16 07:41:52,149	event_handler.py	63	__init__	DEBUG	Start EventHandler: event_handler
+2018-03-16 07:41:52,159	event_handler.py	64	__init__	DEBUG	
+2018-03-16 07:41:52,159	event_handler.py	65	__init__	INFO	TEST info logger
+2018-03-16 07:41:52,159	event_handler.py	66	__init__	WARNING	TEST warning logger
+2018-03-16 07:41:52,159	event_handler.py	67	__init__	ERROR	TEST error logger
+2018-03-16 07:41:52,159	event_handler.py	68	__init__	DEBUG	TEST debug logger
+2018-03-16 07:41:52,339	event_handler.py	205	copy_workspace	DEBUG	Could not add workspace with alias "mw1". Workspace already exists!
+2018-03-16 07:41:52,349	event_handler.py	205	copy_workspace	DEBUG	Could not add workspace with alias "mw2". Workspace already exists!
+2018-03-16 07:41:52,359	event_handler.py	205	copy_workspace	DEBUG	Could not add workspace with alias "test1". Workspace already exists!
+2018-03-16 07:41:52,369	event_handler.py	205	copy_workspace	DEBUG	Could not add workspace with alias "test2". Workspace already exists!
+2018-03-16 07:41:52,399	event_handler.py	1118	load_workspace	DEBUG	Trying to load workspace "0e52fe67-9af2-47be-a61f-88c575242baf" with alias "mw1"
+2018-03-16 07:41:52,799	event_handler.py	681	get_workspace	DEBUG	Getting workspace "0e52fe67-9af2-47be-a61f-88c575242baf" with alias "mw1"
+2018-03-16 08:16:11,251	event_handler.py	63	__init__	DEBUG	Start EventHandler: event_handler
+2018-03-16 08:16:11,256	event_handler.py	64	__init__	DEBUG	
+2018-03-16 08:16:11,258	event_handler.py	65	__init__	INFO	TEST info logger
+2018-03-16 08:16:11,260	event_handler.py	66	__init__	WARNING	TEST warning logger
+2018-03-16 08:16:11,262	event_handler.py	67	__init__	ERROR	TEST error logger
+2018-03-16 08:16:11,264	event_handler.py	68	__init__	DEBUG	TEST debug logger
+2018-03-16 08:17:14,987	event_handler.py	63	__init__	DEBUG	Start EventHandler: event_handler
+2018-03-16 08:17:14,993	event_handler.py	64	__init__	DEBUG	
+2018-03-16 08:17:14,995	event_handler.py	65	__init__	INFO	TEST info logger
+2018-03-16 08:17:14,997	event_handler.py	66	__init__	WARNING	TEST warning logger
+2018-03-16 08:17:14,999	event_handler.py	67	__init__	ERROR	TEST error logger
+2018-03-16 08:17:15,001	event_handler.py	68	__init__	DEBUG	TEST debug logger
+2018-03-16 08:17:41,682	event_handler.py	63	__init__	DEBUG	Start EventHandler: event_handler
+2018-03-16 08:17:41,688	event_handler.py	64	__init__	DEBUG	
+2018-03-16 08:17:41,690	event_handler.py	65	__init__	INFO	TEST info logger
+2018-03-16 08:17:41,691	event_handler.py	66	__init__	WARNING	TEST warning logger
+2018-03-16 08:17:41,693	event_handler.py	67	__init__	ERROR	TEST error logger
+2018-03-16 08:17:41,697	event_handler.py	68	__init__	DEBUG	TEST debug logger
+2018-03-16 08:18:15,626	event_handler.py	63	__init__	DEBUG	Start EventHandler: event_handler
+2018-03-16 08:18:15,633	event_handler.py	64	__init__	DEBUG	
+2018-03-16 08:18:15,636	event_handler.py	65	__init__	INFO	TEST info logger
+2018-03-16 08:18:15,637	event_handler.py	66	__init__	WARNING	TEST warning logger
+2018-03-16 08:18:15,638	event_handler.py	67	__init__	ERROR	TEST error logger
+2018-03-16 08:18:15,640	event_handler.py	68	__init__	DEBUG	TEST debug logger
+2018-03-16 08:18:15,848	event_handler.py	1129	load_workspace	DEBUG	Trying to load workspace "0e52fe67-9af2-47be-a61f-88c575242baf" with alias "mw1"
+2018-03-16 08:18:16,335	event_handler.py	681	get_workspace	DEBUG	Getting workspace "0e52fe67-9af2-47be-a61f-88c575242baf" with alias "mw1"
+2018-03-16 08:20:34,430	event_handler.py	63	__init__	DEBUG	Start EventHandler: event_handler
+2018-03-16 08:20:34,436	event_handler.py	64	__init__	DEBUG	
+2018-03-16 08:20:34,438	event_handler.py	65	__init__	INFO	TEST info logger
+2018-03-16 08:20:34,441	event_handler.py	66	__init__	WARNING	TEST warning logger
+2018-03-16 08:20:34,442	event_handler.py	67	__init__	ERROR	TEST error logger
+2018-03-16 08:20:34,444	event_handler.py	68	__init__	DEBUG	TEST debug logger
+2018-03-16 08:20:58,957	event_handler.py	63	__init__	DEBUG	Start EventHandler: event_handler
+2018-03-16 08:20:58,963	event_handler.py	64	__init__	DEBUG	
+2018-03-16 08:20:58,964	event_handler.py	65	__init__	INFO	TEST info logger
+2018-03-16 08:20:58,966	event_handler.py	66	__init__	WARNING	TEST warning logger
+2018-03-16 08:20:58,969	event_handler.py	67	__init__	ERROR	TEST error logger
+2018-03-16 08:20:58,972	event_handler.py	68	__init__	DEBUG	TEST debug logger
+2018-03-16 08:20:59,183	event_handler.py	1129	load_workspace	DEBUG	Trying to load workspace "0e52fe67-9af2-47be-a61f-88c575242baf" with alias "mw1"
+2018-03-16 08:20:59,588	event_handler.py	681	get_workspace	DEBUG	Getting workspace "0e52fe67-9af2-47be-a61f-88c575242baf" with alias "mw1"
+2018-03-16 08:22:44,517	event_handler.py	63	__init__	DEBUG	Start EventHandler: event_handler
+2018-03-16 08:22:44,524	event_handler.py	64	__init__	DEBUG	
+2018-03-16 08:22:44,525	event_handler.py	65	__init__	INFO	TEST info logger
+2018-03-16 08:22:44,528	event_handler.py	66	__init__	WARNING	TEST warning logger
+2018-03-16 08:22:44,530	event_handler.py	67	__init__	ERROR	TEST error logger
+2018-03-16 08:22:44,532	event_handler.py	68	__init__	DEBUG	TEST debug logger
+2018-03-16 08:23:35,006	event_handler.py	63	__init__	DEBUG	Start EventHandler: event_handler
+2018-03-16 08:23:35,011	event_handler.py	64	__init__	DEBUG	
+2018-03-16 08:23:35,013	event_handler.py	65	__init__	INFO	TEST info logger
+2018-03-16 08:23:35,016	event_handler.py	66	__init__	WARNING	TEST warning logger
+2018-03-16 08:23:35,018	event_handler.py	67	__init__	ERROR	TEST error logger
+2018-03-16 08:23:35,019	event_handler.py	68	__init__	DEBUG	TEST debug logger
+2018-03-16 08:23:58,312	event_handler.py	63	__init__	DEBUG	Start EventHandler: event_handler
+2018-03-16 08:23:58,318	event_handler.py	64	__init__	DEBUG	
+2018-03-16 08:23:58,320	event_handler.py	65	__init__	INFO	TEST info logger
+2018-03-16 08:23:58,321	event_handler.py	66	__init__	WARNING	TEST warning logger
+2018-03-16 08:23:58,323	event_handler.py	67	__init__	ERROR	TEST error logger
+2018-03-16 08:23:58,327	event_handler.py	68	__init__	DEBUG	TEST debug logger
+2018-03-16 08:23:58,540	event_handler.py	1129	load_workspace	DEBUG	Trying to load workspace "0e52fe67-9af2-47be-a61f-88c575242baf" with alias "mw1"
+2018-03-16 08:23:58,972	event_handler.py	681	get_workspace	DEBUG	Getting workspace "0e52fe67-9af2-47be-a61f-88c575242baf" with alias "mw1"
+2018-03-16 08:24:45,888	event_handler.py	63	__init__	DEBUG	Start EventHandler: event_handler
+2018-03-16 08:24:45,896	event_handler.py	64	__init__	DEBUG	
+2018-03-16 08:24:45,899	event_handler.py	65	__init__	INFO	TEST info logger
+2018-03-16 08:24:45,901	event_handler.py	66	__init__	WARNING	TEST warning logger
+2018-03-16 08:24:45,903	event_handler.py	67	__init__	ERROR	TEST error logger
+2018-03-16 08:24:45,906	event_handler.py	68	__init__	DEBUG	TEST debug logger
+2018-03-16 08:24:46,126	event_handler.py	1129	load_workspace	DEBUG	Trying to load workspace "0e52fe67-9af2-47be-a61f-88c575242baf" with alias "mw1"
+2018-03-16 08:24:46,535	event_handler.py	681	get_workspace	DEBUG	Getting workspace "0e52fe67-9af2-47be-a61f-88c575242baf" with alias "mw1"
+2018-03-16 08:29:25,922	event_handler.py	63	__init__	DEBUG	Start EventHandler: event_handler
+2018-03-16 08:29:25,928	event_handler.py	64	__init__	DEBUG	
+2018-03-16 08:29:25,930	event_handler.py	65	__init__	INFO	TEST info logger
+2018-03-16 08:29:25,932	event_handler.py	66	__init__	WARNING	TEST warning logger
+2018-03-16 08:29:25,933	event_handler.py	67	__init__	ERROR	TEST error logger
+2018-03-16 08:29:25,935	event_handler.py	68	__init__	DEBUG	TEST debug logger
+2018-03-16 08:29:26,142	event_handler.py	1136	load_workspace	DEBUG	Trying to load workspace "0e52fe67-9af2-47be-a61f-88c575242baf" with alias "mw1"
+2018-03-16 08:29:26,564	event_handler.py	681	get_workspace	DEBUG	Getting workspace "0e52fe67-9af2-47be-a61f-88c575242baf" with alias "mw1"
+2018-03-16 08:31:16,534	event_handler.py	63	__init__	DEBUG	Start EventHandler: event_handler
+2018-03-16 08:31:16,542	event_handler.py	64	__init__	DEBUG	
+2018-03-16 08:31:16,544	event_handler.py	65	__init__	INFO	TEST info logger
+2018-03-16 08:31:16,546	event_handler.py	66	__init__	WARNING	TEST warning logger
+2018-03-16 08:31:16,548	event_handler.py	67	__init__	ERROR	TEST error logger
+2018-03-16 08:31:16,551	event_handler.py	68	__init__	DEBUG	TEST debug logger
+2018-03-16 08:31:16,815	event_handler.py	1136	load_workspace	DEBUG	Trying to load workspace "0e52fe67-9af2-47be-a61f-88c575242baf" with alias "mw1"
+2018-03-16 08:31:17,274	event_handler.py	681	get_workspace	DEBUG	Getting workspace "0e52fe67-9af2-47be-a61f-88c575242baf" with alias "mw1"
+2018-03-16 08:32:03,164	event_handler.py	63	__init__	DEBUG	Start EventHandler: event_handler
+2018-03-16 08:32:03,169	event_handler.py	64	__init__	DEBUG	
+2018-03-16 08:32:03,171	event_handler.py	65	__init__	INFO	TEST info logger
+2018-03-16 08:32:03,172	event_handler.py	66	__init__	WARNING	TEST warning logger
+2018-03-16 08:32:03,174	event_handler.py	67	__init__	ERROR	TEST error logger
+2018-03-16 08:32:03,176	event_handler.py	68	__init__	DEBUG	TEST debug logger
+2018-03-16 08:32:22,961	event_handler.py	63	__init__	DEBUG	Start EventHandler: event_handler
+2018-03-16 08:32:22,967	event_handler.py	64	__init__	DEBUG	
+2018-03-16 08:32:22,968	event_handler.py	65	__init__	INFO	TEST info logger
+2018-03-16 08:32:22,970	event_handler.py	66	__init__	WARNING	TEST warning logger
+2018-03-16 08:32:22,971	event_handler.py	67	__init__	ERROR	TEST error logger
+2018-03-16 08:32:22,973	event_handler.py	68	__init__	DEBUG	TEST debug logger
+2018-03-16 08:32:33,834	event_handler.py	63	__init__	DEBUG	Start EventHandler: event_handler
+2018-03-16 08:32:33,840	event_handler.py	64	__init__	DEBUG	
+2018-03-16 08:32:33,842	event_handler.py	65	__init__	INFO	TEST info logger
+2018-03-16 08:32:33,843	event_handler.py	66	__init__	WARNING	TEST warning logger
+2018-03-16 08:32:33,845	event_handler.py	67	__init__	ERROR	TEST error logger
+2018-03-16 08:32:33,846	event_handler.py	68	__init__	DEBUG	TEST debug logger
+2018-03-16 11:12:48,069	event_handler.py	63	__init__	DEBUG	Start EventHandler: event_handler
+2018-03-16 11:12:48,077	event_handler.py	64	__init__	DEBUG	
+2018-03-16 11:12:48,080	event_handler.py	65	__init__	INFO	TEST info logger
+2018-03-16 11:12:48,082	event_handler.py	66	__init__	WARNING	TEST warning logger
+2018-03-16 11:12:48,086	event_handler.py	67	__init__	ERROR	TEST error logger
+2018-03-16 11:12:48,088	event_handler.py	68	__init__	DEBUG	TEST debug logger
+2018-03-16 11:14:54,504	event_handler.py	64	__init__	DEBUG	Start EventHandler: event_handler
+2018-03-16 11:14:54,510	event_handler.py	65	__init__	DEBUG	
+2018-03-16 11:14:54,512	event_handler.py	66	__init__	INFO	TEST info logger
+2018-03-16 11:14:54,514	event_handler.py	67	__init__	WARNING	TEST warning logger
+2018-03-16 11:14:54,516	event_handler.py	68	__init__	ERROR	TEST error logger
+2018-03-16 11:14:54,518	event_handler.py	69	__init__	DEBUG	TEST debug logger
+2018-03-16 11:15:44,753	event_handler.py	64	__init__	DEBUG	Start EventHandler: event_handler
+2018-03-16 11:15:44,759	event_handler.py	65	__init__	DEBUG	
+2018-03-16 11:15:44,760	event_handler.py	66	__init__	INFO	TEST info logger
+2018-03-16 11:15:44,762	event_handler.py	67	__init__	WARNING	TEST warning logger
+2018-03-16 11:15:44,764	event_handler.py	68	__init__	ERROR	TEST error logger
+2018-03-16 11:15:44,765	event_handler.py	69	__init__	DEBUG	TEST debug logger
+2018-03-16 11:16:27,782	event_handler.py	64	__init__	DEBUG	Start EventHandler: event_handler
+2018-03-16 11:16:27,788	event_handler.py	65	__init__	DEBUG	
+2018-03-16 11:16:27,789	event_handler.py	66	__init__	INFO	TEST info logger
+2018-03-16 11:16:27,791	event_handler.py	67	__init__	WARNING	TEST warning logger
+2018-03-16 11:16:27,792	event_handler.py	68	__init__	ERROR	TEST error logger
+2018-03-16 11:16:27,793	event_handler.py	69	__init__	DEBUG	TEST debug logger
+2018-03-16 11:16:28,021	event_handler.py	1139	load_workspace	DEBUG	Trying to load workspace "0e52fe67-9af2-47be-a61f-88c575242baf" with alias "mw1"
+2018-03-16 11:16:28,497	event_handler.py	682	get_workspace	DEBUG	Getting workspace "0e52fe67-9af2-47be-a61f-88c575242baf" with alias "mw1"
+2018-03-16 12:01:59,942	event_handler.py	64	__init__	DEBUG	Start EventHandler: event_handler
+2018-03-16 12:01:59,952	event_handler.py	65	__init__	DEBUG	
+2018-03-16 12:01:59,958	event_handler.py	66	__init__	INFO	TEST info logger
+2018-03-16 12:01:59,961	event_handler.py	67	__init__	WARNING	TEST warning logger
+2018-03-16 12:01:59,964	event_handler.py	68	__init__	ERROR	TEST error logger
+2018-03-16 12:01:59,968	event_handler.py	69	__init__	DEBUG	TEST debug logger
+2018-03-16 12:03:29,157	event_handler.py	64	__init__	DEBUG	Start EventHandler: event_handler
+2018-03-16 12:03:29,163	event_handler.py	65	__init__	DEBUG	
+2018-03-16 12:03:29,164	event_handler.py	66	__init__	INFO	TEST info logger
+2018-03-16 12:03:29,167	event_handler.py	67	__init__	WARNING	TEST warning logger
+2018-03-16 12:03:29,168	event_handler.py	68	__init__	ERROR	TEST error logger
+2018-03-16 12:03:29,170	event_handler.py	69	__init__	DEBUG	TEST debug logger
+2018-03-16 12:03:29,391	event_handler.py	1184	load_workspace	DEBUG	Trying to load workspace "0e52fe67-9af2-47be-a61f-88c575242baf" with alias "mw1"
+2018-03-16 12:05:16,543	event_handler.py	64	__init__	DEBUG	Start EventHandler: event_handler
+2018-03-16 12:05:16,548	event_handler.py	65	__init__	DEBUG	
+2018-03-16 12:05:16,550	event_handler.py	66	__init__	INFO	TEST info logger
+2018-03-16 12:05:16,552	event_handler.py	67	__init__	WARNING	TEST warning logger
+2018-03-16 12:05:16,554	event_handler.py	68	__init__	ERROR	TEST error logger
+2018-03-16 12:05:16,559	event_handler.py	69	__init__	DEBUG	TEST debug logger
+2018-03-16 12:05:16,818	event_handler.py	1184	load_workspace	DEBUG	Trying to load workspace "0e52fe67-9af2-47be-a61f-88c575242baf" with alias "mw1"
+2018-03-16 12:05:54,868	event_handler.py	64	__init__	DEBUG	Start EventHandler: event_handler
+2018-03-16 12:05:54,873	event_handler.py	65	__init__	DEBUG	
+2018-03-16 12:05:54,874	event_handler.py	66	__init__	INFO	TEST info logger
+2018-03-16 12:05:54,876	event_handler.py	67	__init__	WARNING	TEST warning logger
+2018-03-16 12:05:54,878	event_handler.py	68	__init__	ERROR	TEST error logger
+2018-03-16 12:05:54,881	event_handler.py	69	__init__	DEBUG	TEST debug logger
+2018-03-16 12:05:55,114	event_handler.py	1186	load_workspace	DEBUG	Trying to load workspace "0e52fe67-9af2-47be-a61f-88c575242baf" with alias "mw1"
+2018-03-16 12:09:23,123	logger.py	85	add_log	DEBUG	
+2018-03-16 12:09:23,129	logger.py	86	add_log	DEBUG	========================================================================================================================
+2018-03-16 12:09:23,131	logger.py	87	add_log	DEBUG	### Log added for log_id "event_handler" at locaton: D:\Utveckling\git\ekostat_calculator\log\main_event_handler.log
+2018-03-16 12:09:23,134	logger.py	88	add_log	DEBUG	------------------------------------------------------------------------------------------------------------------------
+2018-03-16 12:09:23,137	event_handler.py	64	__init__	DEBUG	Start EventHandler: event_handler
+2018-03-16 12:09:23,144	event_handler.py	65	__init__	DEBUG	
+2018-03-16 12:09:23,146	event_handler.py	66	__init__	INFO	TEST info logger
+2018-03-16 12:09:23,148	event_handler.py	67	__init__	WARNING	TEST warning logger
+2018-03-16 12:09:23,152	event_handler.py	68	__init__	ERROR	TEST error logger
+2018-03-16 12:09:23,154	event_handler.py	69	__init__	DEBUG	TEST debug logger
+2018-03-16 12:09:23,374	event_handler.py	224	copy_workspace	DEBUG	Trying to copy workspace "default_workspace" with alias "default_workspace". Copy has alias "mw1"
+2018-03-16 12:09:23,619	event_handler.py	224	copy_workspace	DEBUG	Trying to copy workspace "default_workspace" with alias "default_workspace". Copy has alias "mw2"
+2018-03-16 12:09:23,832	event_handler.py	224	copy_workspace	DEBUG	Trying to copy workspace "default_workspace" with alias "default_workspace". Copy has alias "test1"
+2018-03-16 12:09:24,038	event_handler.py	224	copy_workspace	DEBUG	Trying to copy workspace "default_workspace" with alias "default_workspace". Copy has alias "test2"
+2018-03-16 12:09:24,261	event_handler.py	1183	load_workspace	WARNING	Could not load workspace "0e52fe67-9af2-47be-a61f-88c575242baf" with alias "False"
+2018-03-16 12:46:14,861	event_handler.py	64	__init__	DEBUG	Start EventHandler: event_handler
+2018-03-16 12:46:14,869	event_handler.py	65	__init__	DEBUG	
+2018-03-16 12:46:14,872	event_handler.py	66	__init__	INFO	TEST info logger
+2018-03-16 12:46:14,873	event_handler.py	67	__init__	WARNING	TEST warning logger
+2018-03-16 12:46:14,877	event_handler.py	68	__init__	ERROR	TEST error logger
+2018-03-16 12:46:14,881	event_handler.py	69	__init__	DEBUG	TEST debug logger
+2018-03-16 12:46:15,090	event_handler.py	213	copy_workspace	DEBUG	Could not add workspace with alias "mw1". Workspace already exists!
+2018-03-16 12:46:15,100	event_handler.py	213	copy_workspace	DEBUG	Could not add workspace with alias "mw2". Workspace already exists!
+2018-03-16 12:46:15,112	event_handler.py	213	copy_workspace	DEBUG	Could not add workspace with alias "test1". Workspace already exists!
+2018-03-16 12:46:15,123	event_handler.py	213	copy_workspace	DEBUG	Could not add workspace with alias "test2". Workspace already exists!
+2018-03-16 12:46:15,160	event_handler.py	1183	load_workspace	WARNING	Could not load workspace "0e52fe67-9af2-47be-a61f-88c575242baf" with alias "False"
+2018-03-16 12:51:40,868	event_handler.py	64	__init__	DEBUG	Start EventHandler: event_handler
+2018-03-16 12:51:40,873	event_handler.py	65	__init__	DEBUG	
+2018-03-16 12:51:40,875	event_handler.py	66	__init__	INFO	TEST info logger
+2018-03-16 12:51:40,879	event_handler.py	67	__init__	WARNING	TEST warning logger
+2018-03-16 12:51:40,881	event_handler.py	68	__init__	ERROR	TEST error logger
+2018-03-16 12:51:40,883	event_handler.py	69	__init__	DEBUG	TEST debug logger
+2018-03-16 12:51:41,105	event_handler.py	1188	load_workspace	DEBUG	Trying to load workspace "335af11c-a7d4-4edf-bc21-d90ffb762c70" with alias "mw1"
+2018-03-16 12:51:41,530	event_handler.py	693	get_workspace	DEBUG	Getting workspace "335af11c-a7d4-4edf-bc21-d90ffb762c70" with alias "mw1"
+2018-03-16 12:55:02,590	event_handler.py	64	__init__	DEBUG	Start EventHandler: event_handler
+2018-03-16 12:55:02,598	event_handler.py	65	__init__	DEBUG	
+2018-03-16 12:55:02,599	event_handler.py	66	__init__	INFO	TEST info logger
+2018-03-16 12:55:02,601	event_handler.py	67	__init__	WARNING	TEST warning logger
+2018-03-16 12:55:02,602	event_handler.py	68	__init__	ERROR	TEST error logger
+2018-03-16 12:55:02,607	event_handler.py	69	__init__	DEBUG	TEST debug logger
+2018-03-16 12:55:02,829	event_handler.py	1188	load_workspace	DEBUG	Trying to load workspace "335af11c-a7d4-4edf-bc21-d90ffb762c70" with alias "mw1"
+2018-03-16 12:55:03,277	event_handler.py	693	get_workspace	DEBUG	Getting workspace "335af11c-a7d4-4edf-bc21-d90ffb762c70" with alias "mw1"
