@@ -1,0 +1,6 @@
+{
+  "user_id": "user_1", 
+  "alias": "mw1",
+  "status": "editable",
+  "workspace_uuid": "0e52fe67-9af2-47be-a61f-88c575242baf"
+}

@@ -7,14 +7,8 @@ Created on Wed Jan 31 15:05:36 2018
 
 import os
 import shutil
-import sys
-import datetime
-import codecs
-import pandas as pd
-import uuid
-import re 
-import pathlib
-import getpass
+
+import json
 
 
 import logging
@@ -579,12 +573,12 @@ class EventHandler(object):
                       "children": []}
             
         if request: 
-#            for child in request['children']
-            for type_area in water_body_mapping.get_list('type_area', water_district=water_district):
+            for child in request['children']: 
+                type_area = child['value']
                 self.dict_type_area(workspace_unique_id=workspace_unique_id, 
                                                           subset_unique_id=subset_unique_id, 
                                                           type_area=type_area, 
-                                                          request=request)
+                                                          request=child)
             return request
         else:
             
@@ -1094,6 +1088,24 @@ class EventHandler(object):
             return False 
         
         workspace_object.load_all_data()
+        
+    #==========================================================================
+    def load_test_requests(self): 
+        self.test_requests = {} 
+        directory = '{}/test_data/requests'.format(self.root_path)
+        for file_name in os.listdir(directory):
+            file_path = os.path.join(directory, file_name)
+            with open(file_path, 'r') as fid: 
+#                print(file_path)
+                self.test_requests[file_name[:-4]] = json.load(fid)
+        
+    #==========================================================================
+    def write_test_response(self, name, response): 
+        if name.startswith('request_'):
+            name = name[8:]
+        file_path = '{}/test_data/requests/response_{}.txt'.format(self.root_path, name)
+        with open(file_path, 'w') as fid:
+            json.dump(response, fid, indent=4)
         
     #==========================================================================
     def load_workspace(self, user_id, alias=None, unique_id=None): 
@@ -1611,6 +1623,9 @@ class EventHandler(object):
                                                 append_items=append_items)
         
         
+def print_json(data): 
+    json_string = json.dumps(data, indent=2, sort_keys=True)
+    print(json_string)
         
 #"""
 #===============================================================================
@@ -1623,31 +1638,32 @@ if __name__ == '__main__':
     user_id_1 = 'user_1'
     user_id_2 = 'user_2'
     ekos = EventHandler(root_path)
-    ekos = EventHandler(root_path)
     user_1_ws_1 = 'mw1'
     
-    ekos.copy_workspace(user_id_1, source_alias='default_workspace', target_alias=user_1_ws_1)
-    ekos.copy_workspace(user_id_1, source_alias='default_workspace', target_alias='mw2')
+    if 0:
+        ekos.copy_workspace(user_id_1, source_alias='default_workspace', target_alias=user_1_ws_1)
+        ekos.copy_workspace(user_id_1, source_alias='default_workspace', target_alias='mw2')
+        
+        ekos.copy_workspace(user_id_2, source_alias='default_workspace', target_alias='test1')
+        ekos.copy_workspace(user_id_2, source_alias='default_workspace', target_alias='test2')
     
-    ekos.copy_workspace(user_id_2, source_alias='default_workspace', target_alias='test1')
-    ekos.copy_workspace(user_id_2, source_alias='default_workspace', target_alias='test2')
+    ekos.load_test_requests()
     
     # Request workspace list 
-    request = {'user_id': user_id_1}
-    workspace_list_user_1 = ekos.request_workspace_list(request) 
+    request = ekos.test_requests['request_workspace_list']
+    response = workspace_list_user_1 = ekos.request_workspace_list(request) 
+    ekos.write_test_response('request_workspace_list', response)
     
     
     # Request subset list 
-    request = {'user_id': user_id_1, 
-               'workspace_uuid': ekos.get_unique_id_for_alias(user_id_1, workspace_alias=user_1_ws_1)}
-    subset_list_uesr_1_workspace_mw1 = ekos.request_subset_list(request)
-    
+    request = ekos.test_requests['request_subset_list']
+    response = subset_list_user_1_workspace_mw1 = ekos.request_subset_list(request)
+    ekos.write_test_response('request_subset_list', response)
     
     
     w = ekos.get_workspace(user_id=user_id_1, alias='mw1')
     
     wb_mapping = ekos.mapping_objects['water_body']
-    
     
 ##    ekos.load_all_workspaces_for_user()
 #    

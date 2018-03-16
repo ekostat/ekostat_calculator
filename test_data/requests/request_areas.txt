@@ -1,0 +1,20 @@
+{
+  "areas": [
+    {
+      "label": "Bottenhavet",
+      "value": "bottenhavet",
+      "type": "district",
+      "status": "selectable",
+      "active": true,
+      "children": [
+        {
+          "label": "ABC",
+          "value": "abc",
+          "type": "area",
+          "status": "disabled",
+          "active": false
+        }
+      ]
+    }
+  ]
+}
