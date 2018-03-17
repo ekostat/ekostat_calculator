@@ -6,10 +6,12 @@
     },
     "subsets": [
         {
-            "alias": "default_subset",
-            "uuid": "default_subset",
-            "status": "readable",
-            "active": false,
+            "time": {
+                "year_range": [
+                    2013,
+                    2019
+                ]
+            },
             "periods": [
                 {
                     "label": "2007-2012",
@@ -35,47 +37,6 @@
                             "status": "not selectable",
                             "selected": false,
                             "value": "secchi"
-                        }
-                    ]
-                },
-                {
-                    "label": "nutrients",
-                    "children": [
-                        {
-                            "label": "Din winter",
-                            "status": "not selectable",
-                            "selected": false,
-                            "value": "din_winter"
-                        },
-                        {
-                            "label": "Dip winter",
-                            "status": "not selectable",
-                            "selected": false,
-                            "value": "dip_winter"
-                        },
-                        {
-                            "label": "Ntot summer",
-                            "status": "not selectable",
-                            "selected": false,
-                            "value": "ntot_summer"
-                        },
-                        {
-                            "label": "Ntot winter",
-                            "status": "not selectable",
-                            "selected": false,
-                            "value": "ntot_winter"
-                        },
-                        {
-                            "label": "Ptot summer",
-                            "status": "not selectable",
-                            "selected": false,
-                            "value": "ptot_summer"
-                        },
-                        {
-                            "label": "Ptot winter",
-                            "status": "not selectable",
-                            "selected": false,
-                            "value": "ptot_winter"
                         }
                     ]
                 },
