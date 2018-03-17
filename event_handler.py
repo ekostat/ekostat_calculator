@@ -343,7 +343,9 @@ class EventHandler(object):
 					   "selected": False,
 					   "value": ""}
         
-        if not available_indicators:
+        if subset_unique_id == 'default_subset': 
+            available_indicators = []
+        else:
             available_indicators = workspace_object.get_available_indicators(subset=subset_unique_id, step='step_1')
             
         # Check request 
@@ -591,6 +593,7 @@ class EventHandler(object):
         else:
             
             active = False 
+            self.temp_subset_object =subset_object
             data_filter_object = subset_object.get_data_filter_object('step_1')
             water_body_active_list = data_filter_object.get_include_list_filter('WATER_BODY')
             
@@ -725,8 +728,13 @@ class EventHandler(object):
         
         indicator_list = self.mapping_objects['quality_element'].get_indicator_list_for_quality_element(quality_element)
         
-        # Check available indicators. Check this onse (here) and send list to dict_indicators to avoid multiple calls
-        available_indicators = workspace_object.get_available_indicators(subset=subset_unique_id, step='step_1')
+        # Check available indicators. Check this onse (here) and send list to dict_indicators to avoid multiple calls 
+        if subset_unique_id == 'default_subset':
+            available_indicators = []
+        else:
+            if not len(workspace_object.data_handler.all_data): # use len, all_data is a pandas dataframe
+                workspace_object.load_all_data()
+            available_indicators = workspace_object.get_available_indicators(subset=subset_unique_id, step='step_1')
         
         return_list = []
         for indicator in indicator_list:
@@ -831,8 +839,14 @@ class EventHandler(object):
 #            subset_uuid_list = self.get_subset_list(workspace_unique_id=workspace_unique_id, user_id=user_id)
 #            sub_request_list = [None]*len(subset_uuid_list)
             
-#        for subset_uuid, sub_request in zip(subset_uuid_list, sub_request_list):
+#        for subset_uuid, sub_request in zip(subset_uuid_list, sub_request_list): 
+#        print('=====SUBSET_UUID=====')
+#        print(workspace_unique_id)
+#        print(user_id)
+#        print(self.workspaces)
+#        print('=====================')
         for subset_uuid in self.get_subset_list(workspace_unique_id=workspace_unique_id, user_id=user_id):
+            print('=====SUBSET_UUID', '"{}"'.format(subset_uuid))
             sub_request = request_for_subset_uuid.get(subset_uuid, {})
             
             # Check uuid for subset in request (if given) 
@@ -1191,7 +1205,7 @@ class EventHandler(object):
                                                     parent_directory=self.workspace_directory,
                                                     resource_directory=self.resource_directory, 
                                                     user_id=user_id)
-    
+        return True
     
     #==========================================================================
     def remove_test_user_workspaces(self):
@@ -1709,10 +1723,10 @@ if __name__ == '__main__':
     
     # Request subset list 
     request = ekos.test_requests['request_subset_list']
-    response = subset_list_user_1_workspace_mw1 = ekos.request_subset_list(request)
+    response = ekos.request_subset_list(request)
     ekos.write_test_response('request_subset_list', response)
     
-    
+    w_id = '335af11c-a7d4-4edf-bc21-d90ffb762c70'
     w = ekos.get_workspace(user_id=user_id_1, alias='mw1')
     
     wb_mapping = ekos.mapping_objects['water_body']

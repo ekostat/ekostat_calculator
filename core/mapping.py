@@ -261,7 +261,7 @@ class WaterBody(AttributeDict):
             result = self.water_bodies.loc[self.water_bodies[self.column_name[area]['internal']].isin(value), self.column_name[area_level]['internal']]
             if len(result):
                 return sorted(set(result.values))
-            return False
+            return []
         else:
             return sorted(set(self.water_bodies[self.column_name[area_level]['internal']]))
 
