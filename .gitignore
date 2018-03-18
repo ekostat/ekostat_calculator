@@ -10,3 +10,4 @@ workspaces/*
 !workspaces/uuid_mapping_default.txt
 log/*
 *.log
+*.log

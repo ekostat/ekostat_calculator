@@ -951,6 +951,20 @@ class DataHandler(object):
                            file_name='all_data.txt')
             
     #==========================================================================
+    def load_all_datatxt(self, sep='\t', encoding='cp1252'):
+        """
+        loads existing all_data.txt file from export directory
+        Created:        20180318    by Lena Viktorsson 
+        Last modified:  
+        """
+        
+        if self.all_data is None:
+            self.all_data = core.Load().load_txt(self.export_directory + '/all_data.txt', sep=sep, encoding=encoding, fill_nan=u'')
+            return True
+        else:
+            return False
+        
+    #==========================================================================
     def load_data(self, directory):
         try:
             column_file_path = directory + '/column_data.txt'

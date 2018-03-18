@@ -1282,7 +1282,6 @@ class WorkSpace(object):
             except KeyError as e:
                 #TODO: lägga till felmeddelande i log?
                 print(e)
-                return False
                     
         return available_indicators
 
@@ -1358,6 +1357,8 @@ class WorkSpace(object):
     #==========================================================================
     def load_all_data(self, only_all_data=False): 
         """ 
+        Created:        2017        by Johannes Johansson (?)
+        Last modified:  20180318    by Lena Viktorsson
         Loads all data from the input_data/raw_data-directory belonging to the workspace. 
         """
         # TODO: Make this part dynamic 
@@ -1381,46 +1382,54 @@ class WorkSpace(object):
 #            if row['data_type'] == 'phyche':
 #                self.data_handler.physical_chemical.load_source(file_path=raw_data_file_path + row.filename,
 
-        if not self.dtype_settings.has_info:
-            self._logger.debug('No info found')
-            return False
-        data_loaded = False
-        for file_path, data_type in self.dtype_settings.get_active_paths_with_data_type(): 
-            
-            if data_type == 'phyche':
-                self.data_handler.physical_chemical.load_source(file_path=file_path, raw_data_copy=True)
-                data_loaded = True
-                self.data_handler.physical_chemical.save_data_as_txt(directory=output_directory, prefix=u'Column_format') 
-                
-            elif data_type == 'phyche_model':
-                self.data_handler.physical_chemical_model.load_source(file_path=file_path, raw_data_copy=True)
-                data_loaded = True
-                self.data_handler.physical_chemical_model.save_data_as_txt(directory=output_directory, prefix=u'Column_format')
-                
-#            elif row['data_type']== 'zooben':
-#                self.data_handler.zoobenthos.load_source(file_path=raw_data_file_path + row.filename,
-
-            elif data_type== 'zooben':
-                self.data_handler.zoobenthos.load_source(file_path=file_path,
-                                                         raw_data_copy=True)
-                data_loaded = True
-                self.data_handler.zoobenthos.save_data_as_txt(directory=output_directory, prefix=u'Column_format')
-            elif data_type == 'pp':
-                self.data_handler.phytoplankton.load_source(file_path=file_path,
-                                                         raw_data_copy=True)
-                data_loaded = True
-                self.data_handler.phytoplankton.save_data_as_txt(directory=output_directory, prefix=u'Column_format')
-            elif data_type == 'hose':
-                self.data_handler.chlorophyll.load_source(file_path=file_path,
-                                                         raw_data_copy=True)
-                data_loaded = True
-                self.data_handler.chlorophyll.save_data_as_txt(directory=output_directory, prefix=u'Column_format')   
+        if os.path.isfile(self.paths['directory_path_input_data'] + '/exports/all_data.txt'):
+            data_loaded = self.data_handler.load_all_datatxt()
+            if data_loaded:
+                self._logger.debug('data has been loaded from existing all_data.txt file.')
             else:
-                self._logger.debug('could not read {} from raw_data directory. Check data type'.format(os.path.basename(file_path)))
-
-        
-        self.data_handler.merge_all_data(save_to_txt=True)
-        
+                self._logger.debug('all_data.txt already loaded, delete it if you want to re-load it.')
+        else:
+                                                                 
+            if not self.dtype_settings.has_info:
+                self._logger.debug('No info found')
+                return False
+            data_loaded = False
+            for file_path, data_type in self.dtype_settings.get_active_paths_with_data_type(): 
+                
+                if data_type == 'phyche':
+                    self.data_handler.physical_chemical.load_source(file_path=file_path, raw_data_copy=True)
+                    data_loaded = True
+                    self.data_handler.physical_chemical.save_data_as_txt(directory=output_directory, prefix=u'Column_format') 
+                    
+                elif data_type == 'phyche_model':
+                    self.data_handler.physical_chemical_model.load_source(file_path=file_path, raw_data_copy=True)
+                    data_loaded = True
+                    self.data_handler.physical_chemical_model.save_data_as_txt(directory=output_directory, prefix=u'Column_format')
+                    
+    #            elif row['data_type']== 'zooben':
+    #                self.data_handler.zoobenthos.load_source(file_path=raw_data_file_path + row.filename,
+    
+                elif data_type== 'zooben':
+                    self.data_handler.zoobenthos.load_source(file_path=file_path,
+                                                             raw_data_copy=True)
+                    data_loaded = True
+                    self.data_handler.zoobenthos.save_data_as_txt(directory=output_directory, prefix=u'Column_format')
+                elif data_type == 'pp':
+                    self.data_handler.phytoplankton.load_source(file_path=file_path,
+                                                             raw_data_copy=True)
+                    data_loaded = True
+                    self.data_handler.phytoplankton.save_data_as_txt(directory=output_directory, prefix=u'Column_format')
+                elif data_type == 'hose':
+                    self.data_handler.chlorophyll.load_source(file_path=file_path,
+                                                             raw_data_copy=True)
+                    data_loaded = True
+                    self.data_handler.chlorophyll.save_data_as_txt(directory=output_directory, prefix=u'Column_format')   
+                else:
+                    self._logger.debug('could not read {} from raw_data directory. Check data type'.format(os.path.basename(file_path)))
+    
+            
+            self.data_handler.merge_all_data(save_to_txt=True)
+            
         return data_loaded
 #        # read settings to match filename and datatype, return pd df
 #        dtype_settings = core.Load().load_txt(file_path=raw_data_file_path + 'dtype_settings.txt', sep='\t')
