@@ -1,0 +1,81 @@
+{
+    "alias": false,
+    "uuid": false,
+    "status": false,
+    "active": null,
+    "time": {},
+    "areas": [
+        {
+            "label": "",
+            "value": "",
+            "type": "",
+            "status": "",
+            "active": false,
+            "children": []
+        },
+        {
+            "label": "",
+            "value": "",
+            "type": "",
+            "status": "",
+            "active": false,
+            "children": []
+        },
+        {
+            "label": "",
+            "value": "",
+            "type": "",
+            "status": "",
+            "active": false,
+            "children": []
+        },
+        {
+            "label": "",
+            "value": "",
+            "type": "",
+            "status": "",
+            "active": false,
+            "children": []
+        },
+        {
+            "label": "",
+            "value": "",
+            "type": "",
+            "status": "",
+            "active": false,
+            "children": []
+        },
+        {
+            "label": "",
+            "value": "",
+            "type": "",
+            "status": "",
+            "active": false,
+            "children": []
+        }
+    ],
+    "supporting_elements": [
+        {
+            "label": "",
+            "children": []
+        },
+        {
+            "label": "",
+            "children": []
+        }
+    ],
+    "quality_elements": [
+        {
+            "label": "",
+            "children": []
+        },
+        {
+            "label": "",
+            "children": []
+        },
+        {
+            "label": "",
+            "children": []
+        }
+    ]
+}

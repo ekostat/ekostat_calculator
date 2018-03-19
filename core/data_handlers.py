@@ -832,7 +832,8 @@ class DataHandler(object):
                                                 parameter_mapping=self.parameter_mapping)
         
         
-        self.all_data = None
+#        self.all_data = None
+        self.all_data = pd.DataFrame() # MW
 
     #==========================================================================
     def _load_field_mapping(self, file_path=u''):
@@ -958,7 +959,7 @@ class DataHandler(object):
         Last modified:  
         """
         
-        if self.all_data is None:
+        if not len(self.all_data):
             self.all_data = core.Load().load_txt(self.export_directory + '/all_data.txt', sep=sep, encoding=encoding, fill_nan=u'')
             return True
         else:

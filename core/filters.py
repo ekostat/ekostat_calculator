@@ -305,7 +305,8 @@ class DataFilter(object):
 
         if append_items:
             filter_list = filter_list + self.get_include_list_filter(filter_name)
-        filter_list = sorted(set([item.strip() for item in filter_list]))
+        print('filter_list'.upper(), filter_list)
+        filter_list = sorted(set([item.strip() for item in map(str, filter_list)]))
         self.include_list_filter[filter_name] = filter_list
         
         if save_files: 

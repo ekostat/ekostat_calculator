@@ -471,10 +471,9 @@ class EventHandler(object):
                         'status': None,
                         'active': None,
                         'time': {}, 
-                        'areas': [], 
-#                        'periods': [], # Should be removed
-#                        'water_bodies': [], 
-#                        'water_districts': [], 
+                        'periods': [], # Should be removed
+                        'water_bodies': [], 
+                        'water_districts': [], 
                         'supporting_elements': [], 
                         'quality_elements': []}
         
@@ -491,6 +490,13 @@ class EventHandler(object):
             subset_dict['status'] = workspace_object.uuid_mapping.get_status(unique_id=subset_unique_id) 
             subset_dict['active'] = workspace_object.uuid_mapping.is_active(unique_id=subset_unique_id)
         
+        subset_dict = {'time': {}, 
+                        'periods': [], # Should be removed
+                        'water_bodies': [], 
+                        'water_districts': [], 
+                        'supporting_elements': [], 
+                        'quality_elements': []}
+        
         if request == None: 
             request = {}
             
@@ -501,25 +507,25 @@ class EventHandler(object):
                                                    request=request.get('time', {}))
         
         # Deprecated list for periods
-#        subset_dict['periods'] = self.list_periods(workspace_unique_id=workspace_unique_id, 
-#                                                   subset_unique_id=subset_unique_id, 
-#                                                   request=request.get('periods', {}))
+        subset_dict['periods'] = self.list_periods(workspace_unique_id=workspace_unique_id, 
+                                                   subset_unique_id=subset_unique_id, 
+                                                   request=request.get('periods', {}))
         
         
         # Areas (contains water_district, type_area and water_body in a tree structure) 
         subset_dict['areas'] = self.list_areas(workspace_unique_id=workspace_unique_id, 
                                                         subset_unique_id=subset_unique_id, 
-                                                        request=request.get('areas', []))
+                                                        request=request.get('areas', {}))
         
         # Quality elements 
         subset_dict['quality_elements'] = self.list_quality_elements(workspace_unique_id=workspace_unique_id, 
                                                                      subset_unique_id=subset_unique_id, 
-                                                                     request=request.get('quality_elements', []))
+                                                                     request=request.get('quality_elements', {}))
         
         # Quality elements 
         subset_dict['supporting_elements'] = self.list_supporting_elements(workspace_unique_id=workspace_unique_id, 
                                                                            subset_unique_id=subset_unique_id, 
-                                                                           request=request.get('supporting_elements', []))
+                                                                           request=request.get('supporting_elements', {}))
 
 
         
@@ -638,7 +644,7 @@ class EventHandler(object):
         workspace_object = self._get_workspace_object(unique_id=workspace_unique_id) 
         subset_object = workspace_object.get_subset_object(subset_unique_id) 
         water_body_mapping = self.mapping_objects['water_body']
-        print('subset_unique_id'.upper(), subset_unique_id)
+        
         if not subset_object:
             self._logger.warning('Could not find subset object {}. Subset is probably not loaded.'.format(subset_unique_id))
             return {"label": "",
@@ -899,9 +905,7 @@ class EventHandler(object):
         subset_list = []
 #        subset_uuid_list = [] 
 #        sub_request_list = []
-        self.temp_request = request
         request_for_subset_uuid = self._get_mapping_for_name_in_dict('uuid', request)
-        self.temp_request_for_subset_uuid = request_for_subset_uuid
 #                subset_uuid_list.append(sub['uuid'])
 #                sub_request_list.append(sub)
 #        else: 
@@ -1025,17 +1029,10 @@ class EventHandler(object):
                   }
                ]
         """
-        # Try to load subset if not loaded 
-#        subset_object = workspace_object.get_subset_object(subset_unique_id) 
-#        if not subset_object:
-#            self.load_su
         
-#        print('request'.upper(), request.keys())
-#        if 'water_district' not in request
         area_list = [] 
-        self.temp_request = request
-        request_for_water_district = self._get_mapping_for_name_in_dict('value', request)
         
+        request_for_water_district = self._get_mapping_for_name_in_dict('water_district', request)
 
         for water_district in self.mapping_objects['water_body'].get_list('water_district'):
             sub_request = request_for_water_district.get(water_district, None)
@@ -1243,21 +1240,112 @@ class EventHandler(object):
            
     
     #==========================================================================
-    def request_subset_add(self, request):
+    def request_subset_create(self, request):
         """
         Created     20180222    by Magnus Wenzer
-        Updated     20180319    by Magnus Wenzer
+        Updated     20180222    by Magnus Wenzer
         
         "request" must contain: 
-            "user_id": "user_1", 
-            "workspace_uuid": "335af11c-a7d4-4edf-bc21-d90ffb762c70", 
-            "subset_uuid": "default_subset",
-            "alias": "mw1"
+            user_id 
+            workspace_uuid
+            subset_uuid
+            alias (for new subset)
         
-        Returns a dict_subset            
-        """ 
-        
-        user_id = str(request['user_id'])
+        Returns a dict like:
+            {
+            	"alias": "My Subset 1",
+            	"uuid": "...",
+            	"active": true,
+            	"periods": [
+            		{
+            			"label": "2006-2012",
+            			"status": "selectable",
+            			"selected": true,
+            			"value": "2006-2012"
+            		},
+            		{
+            			"label": "2012-2017",
+            			"status": "selectable",
+            			"selected": false,
+            			"value": "2012-2017"
+            		}
+            	],
+            	"water_bodies": [
+            		{
+            			"label": "WB 1",
+            			"status": "selectable",
+            			"selected": true,
+            			"value": "WB 1"
+            		},
+            		{
+            			"label": "WB 2",
+            			"status": "selectable",
+            			"selected": true,
+            			"value": "WB 2"
+            		},
+            		{
+            			"label": "WB 3",
+            			"status": "selectable",
+            			"selected": false,
+            			"value": "WB 3"
+            		},
+            		{
+            			"label": "WB 4",
+            			"status": "selectable",
+            			"selected": true,
+            			"value": "WB 4"
+            		}
+            	],
+            	"water_districts": [
+            		{
+            			"label": "Bottenhavet",
+            			"status": "selectable",
+            			"selected": true,
+            			"value": "Bottenhavet"
+            		},
+            		{
+            			"label": "Skagerakk",
+            			"status": "selectable",
+            			"selected": false,
+            			"value": "Skagerakk"
+            		}
+            	],
+            	"supporting_elements": [
+            		{
+            			"label": "Secchi",
+            			"children": [
+            				{
+            					"label": "Secchi - default",
+            					"status": "selectable",
+            					"selected": false,
+            					"value": "Secchi - default"
+            				}
+            			]
+            		}
+            	],
+            	"quality_elements": [
+            		{
+            			"label": "Phytoplankton",
+            			"children": [
+            				{
+            					"label": "Chlorophyll - default",
+            					"status": "selectable",
+            					"selected": true,
+            					"value": "Chlorophyll - default"
+            				},
+            				{
+            					"label": "Biovolume - default",
+            					"status": "selectable",
+            					"selected": true,
+            					"value": "Biovolume - default"
+            				}
+            			]
+            		}
+            	]
+            }
+
+        """
+        user_id = request['user_id']
         workspace_uuid = request['workspace_uuid']
         subset_uuid = request['subset_uuid']
         new_alias = request['alias']
@@ -1297,7 +1385,7 @@ class EventHandler(object):
 #        print('###', user_id)
 #        print('###', alias)
 #        print('###', source_uuid)
-        uuid_mapping = self._get_uuid_mapping_object(user_id)
+        uuid_mapping = self._get_uuid_mapping_object(workspace_uuid)
         workspace_alias = uuid_mapping.get_alias(workspace_uuid) 
         response = self.delete_subset(workspace_alias=workspace_alias, subset_unique_id=subset_uuid)
         
@@ -1307,22 +1395,16 @@ class EventHandler(object):
     def request_subset_edit(self, request):
         """
         Created     20180222    by Magnus Wenzer
-        Updated     20180319    by Magnus Wenzer
+        Updated     20180222    by Magnus Wenzer
         
         "request" and "response" is the output from a request_subset_list
         """
-        # TODO: How to get informatiuon about user_id and workspace_uuid
-        user_id = str(request['user_id'])
-        workspace_uuid = request['workspace']['uuid'] 
-        request_subset_list = request['subsets']
-        if not self.get_workspace(user_id=user_id, unique_id=workspace_uuid):
-            return {}
-        response = self.list_subsets(user_id=user_id, workspace_unique_id=workspace_uuid, request=request_subset_list)
-        request['subsets'] = response
-#        request_list = None
-#        if 'subsets' in request.keys():
-#            request_list = request['subsets']
-#        response = self.list_subsets(workspace_unique_id=workspace_uuid, user_id=user_id, request=request_list)
+        user_id = request['user_id']
+        workspace_uuid = request['workspace']['uuid']
+        request_list = None
+        if 'subsets' in request.keys():
+            request_list = request['subsets']
+        response = self.list_subsets(workspace_unique_id=workspace_uuid, user_id=user_id, request=request_list)
         
         return response
             
@@ -1438,7 +1520,7 @@ class EventHandler(object):
             	]
             }
         """
-        user_id = str(request['user_id'])
+        user_id = request['user_id']
         workspace_uuid = request['workspace_uuid'] 
         
         # Initiate structure 
@@ -1474,9 +1556,7 @@ class EventHandler(object):
             	"status": "editable"
             }
         """
-        
-        request['user_id'] = str(request['user_id'])
-        user_id = str(request['user_id'])
+        user_id = request['user_id']
         alias = request['alias'] 
         source_uuid = request['source'] 
 #        print('###', user_id)
@@ -1534,16 +1614,15 @@ class EventHandler(object):
             	"uuid": "..."
             }
         """
-        user_id = str(request['user_id']) 
         alias = request['alias'] 
         unique_id = request['uuid'] 
         
-        uuid_mapping = self._get_uuid_mapping_object(user_id)
+        uuid_mapping = self._get_uuid_mapping_object(unique_id)
         uuid_mapping.set_alias(unique_id, alias)
         alias = uuid_mapping.get_alias(unique_id, status=['editable', 'readable']) 
         
         response = {'alias': alias, 
-                    'uuid': unique_id}
+                   'uuid': unique_id}
         
         return response
     
@@ -1568,51 +1647,14 @@ class EventHandler(object):
             }
         """
         
-        user_id = str(request['user_id']) 
+        user_id = request['user_id'] 
         
         response = {'workspaces': []}
         response['workspaces'] = self.list_workspaces(user_id=user_id)
             
         return response
     
-    #==========================================================================
-    def request_workspace_load_default_data(self, request):
-        """
-        Created     20180319    by Magnus Wenzer
-        Updated     20180319    by Magnus Wenzer
-        
-        "request" must contain: 
-            {
-              "user_id": "user_1", 
-              "workspace_uuid": "335af11c-a7d4-4edf-bc21-d90ffb762c70"
-            }
-        
-        Returns status like: 
-            {
-            "all_ok": True/False, 
-            "message": ""
-            }
-        """
-        
-        user_id = str(request['user_id']) 
-        workspace_uuid = request['workspace_uuid'] 
-        response = {"all_ok": False, 
-                    "message": ""}
-        
-        uuid_mapping_object = self._get_uuid_mapping_object(user_id)
-        
-        if workspace_uuid not in uuid_mapping_object.get_uuid_list_for_user(user_id):
-            response['all_ok'] = False 
-            response['message'] = "CWorkspace does not belong to user"
-            return response
-        
-        workspace_object = self._get_workspace_object(unique_id=workspace_uuid) 
-        all_ok = workspace_object.import_default_data(force=True)
-        response['all_ok'] = all_ok
-        if not all_ok:
-            response['message'] = "Could not load default data"
-        workspace_object.load_all_data()
-        return response
+    
     
 #    #==========================================================================
 #    def request_subset_info(self, request):
@@ -1684,51 +1726,21 @@ if __name__ == '__main__':
     
     ekos.load_test_requests()
     
-    if 0:
-        # Request workspace list 
-        request = ekos.test_requests['request_workspace_list']
-        response = ekos.request_workspace_list(request) 
-        ekos.write_test_response('request_workspace_list', response)
-        
-        # Request subset list 
-        request = ekos.test_requests['request_subset_list']
-        response_subset_list = ekos.request_subset_list(request)
-        ekos.write_test_response('request_subset_list', response_subset_list)
-        
-        # Load default data
-        request = ekos.test_requests['request_workspace_load_default_data']
-        ekos.request_workspace_load_default_data(request)
-        
-        # Add new subset 
-        request = ekos.test_requests['request_subset_add']
-        response_subset_add = ekos.request_subset_add(request)
-        ekos.write_test_response('request_subset_add', response_subset_add)
-        
-        # Edit subset 
-        request = ekos.test_requests['request_subset_edit']
-        response_subset_edit = ekos.request_subset_edit(request)
-        ekos.write_test_response('request_subset_edit', response_subset_edit)
+    # Request workspace list 
+    request = ekos.test_requests['request_workspace_list']
+    response = workspace_list_user_1 = ekos.request_workspace_list(request) 
+    ekos.write_test_response('request_workspace_list', response)
     
     
-    
-    
+    # Request subset list 
+    request = ekos.test_requests['request_subset_list']
+    response = ekos.request_subset_list(request)
+    ekos.write_test_response('request_subset_list', response)
     
     w_id = '335af11c-a7d4-4edf-bc21-d90ffb762c70'
-    s_id = '1bdd7eb5-2f2a-44f6-bd7e-c26bf09ce047'
+    w = ekos.get_workspace(user_id=user_id_1, alias='mw1')
     
-    ekos.apply_data_filter(user_id=user_id_1,  
-                           workspace_uuid=w_id,
-                           subset_uuid=s_id,
-                           step='step_1')
-    
-    
-#    w = ekos.get_workspace(user_id=user_id_1, alias='mw1')
-#    
-#    wb_mapping = ekos.mapping_objects['water_body']
-    
-    
-    
-    
+    wb_mapping = ekos.mapping_objects['water_body']
     
 ##    ekos.load_all_workspaces_for_user()
 #    

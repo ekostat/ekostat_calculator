@@ -1,0 +1,6 @@
+{
+  "user_id": "user_1", 
+  "workspace_uuid": "335af11c-a7d4-4edf-bc21-d90ffb762c70", 
+  "subset_uuid": "default_subset",
+  "alias": "test_subset_1"
+}
