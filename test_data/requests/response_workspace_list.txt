@@ -6,8 +6,13 @@
             "status": "editable"
         },
         {
-            "alias": "mw2",
+            "alias": "mw3_renamed",
             "uuid": "bc60fd0e-37aa-4f5f-8625-741c2011bb9f",
+            "status": "editable"
+        },
+        {
+            "alias": "mw2",
+            "uuid": "6d49f82f-f2d7-43b5-8087-b4468d31aa80",
             "status": "editable"
         },
         {

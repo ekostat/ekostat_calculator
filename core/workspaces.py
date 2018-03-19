@@ -1007,8 +1007,11 @@ class WorkSpace(object):
         return all_ok
         
     #==========================================================================
-    def apply_indicator_data_filter(self, subset=None, indicator=None, water_body=None, step=2):
+    def apply_indicator_data_filter(self, subset='', indicator='', water_body='', step='step_2'):
         """
+        Created     ????????    by Magnus Wenzer
+        Updated     20180319    by Magnus Wenzer
+        
         Applies indicator data filter to the index handler. Step. 
         
         Input:                

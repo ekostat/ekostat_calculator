@@ -528,7 +528,10 @@ class SettingsFile(object):
             value = self.df.loc[(self.df['TYPE_AREA_NUMBER']==num) & (self.df['TYPE_AREA_SUFFIX']==suf), variable]
         else:
             value = self.df.loc[self.df['TYPE_AREA_NUMBER']==num, variable]
-        
+        print(type_area)
+        print(num)
+        print(suf)
+        print(value)
         assert len(value) == 1, 'More than one setting for given filter_dict\n{}'.format(value)
         
         value = value.values[0]    
@@ -642,6 +645,7 @@ class SettingsFile(object):
         """
         Get boolean tuple to use for filtering
         """
+        print('water_body', water_body)
         type_area = self.mapping_water_body.get_type_area_for_water_body(water_body, include_suffix=True)
         
         combined_boolean = ()

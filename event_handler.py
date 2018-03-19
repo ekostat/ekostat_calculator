@@ -125,7 +125,6 @@ class EventHandler(object):
     #==========================================================================
     def _get_uuid_mapping_object(self, user_id): 
         if not user_id: 
-            error
             return False
         file_path = '{}/uuid_mapping_{}.txt'.format(self.workspace_directory, user_id)
         if not os.path.exists(file_path):
@@ -149,6 +148,24 @@ class EventHandler(object):
         w = self._get_workspace_object(user_id, None, workspace_uuid)
         w.apply_data_filter(subset=subset_uuid,step=step)
         
+    #==========================================================================
+    def apply_indicator_data_filter(self, 
+                                    user_id='',  
+                                    workspace_uuid='',
+                                    subset_uuid='', 
+                                    indicator='', 
+                                    water_body='', 
+                                    step='step_2'): 
+        """
+        Created     20180319    by Magnus Wenzer
+        Updated     20180319    by Magnus Wenzer
+        """
+        w = self._get_workspace_object(user_id=user_id, unique_id=workspace_uuid)
+        all_ok = w.apply_indicator_data_filter(subset=subset_uuid, 
+                                               indicator=indicator, 
+                                               water_body=water_body, 
+                                               step=step)
+        return all_ok
         
     #==========================================================================
     def change_workspace_alias(self, user_id, current_alias, new_alias): 
@@ -275,20 +292,21 @@ class EventHandler(object):
         
     
     #==========================================================================
-    def delete_workspace(self, user_id=None, alias=None, unique_id=None, permanently=False):
+    def delete_workspace(self, user_id=None, unique_id=None, permanently=False): 
         """
         Created     20180219    by Magnus Wenzer
         Updated     20180223    by Lena Viktorsson
         
         Deletes the given workspace. 
         """ 
-        if not self._change_ok(alias):
-            return False  
+
         
         uuid_mapping = self._get_uuid_mapping_object(user_id)
-        
-        if alias:
-            unique_id = uuid_mapping.get_uuid(alias, user_id, status=self.all_status)
+#        print('USER_ID', user_id)
+        if unique_id not in uuid_mapping.get_uuid_list_for_user(user_id):
+            return False
+
+        alias = uuid_mapping.get_alias(unique_id)
         
 #        if unique_id not in self.workspaces.keys(): 
 #            self._logger.warning('Workspace "{}" with alias "{}" is not loaded!'.format(unique_id, alias))
@@ -764,6 +782,10 @@ class EventHandler(object):
         
         return self.workspaces.get(unique_id, None)
     
+    #==========================================================================
+    def get_workspaces_for_user(self, user_id=None, status=[]):
+        uuid_mapping = self._get_uuid_mapping_object(user_id) 
+        return uuid_mapping.get_uuid_list_for_user(user_id, status=status)
     
     #==========================================================================
     def import_default_data(self, user_id, workspace_alias=None, force=False):
@@ -1236,10 +1258,10 @@ class EventHandler(object):
         user_id = 'test_user'
         status = ['editable', 'readable', 'deleted']
         uuid_mapping = self._get_uuid_mapping_object(user_id)
-        alias_id_list = uuid_mapping.get_alias_list_for_user(user_id, status=status)
-        for alias in alias_id_list:
-            print('DELETING:', alias)
-            self.delete_workspace(user_id=user_id, alias=alias, permanently=True)
+        uuid_list = uuid_mapping.get_uuid_list_for_user(user_id, status=status)
+        for unique_id in uuid_list:
+            print('DELETING:', unique_id)
+            self.delete_workspace(user_id=user_id, unique_id=unique_id, permanently=True)
            
     
     #==========================================================================
@@ -1495,25 +1517,34 @@ class EventHandler(object):
         Updated     20180221    by Magnus Wenzer
         
         "request" must contain: 
+            user_id
             uuid 
         
-        Returns a dict like:
+        Returns status like: 
             {
-            	"alias": "My Workspace",
-            	"uuid": "..."
+            "all_ok": True/False, 
+            "message": ""
             }
         """
+        response = {"all_ok": True, 
+                    "message": ""}
+        
+        user_id = request['user_id']
         unique_id = request['uuid']
 #        print('###', user_id)
 #        print('###', alias)
 #        print('###', source_uuid)
         
         uuid_mapping = self._get_uuid_mapping_object(user_id)
-        alias = uuid_mapping.get_alias(unique_id)
-        self.delete_workspace(unique_id=unique_id)
-        
-        response = {'alias': alias, 
-                   'uuid': unique_id}
+        if unique_id not in uuid_mapping.get_uuid_list_for_user(user_id):
+            response['all_ok'] = False
+            response['message'] = 'Workspace does not belon to user'
+            return response
+            
+        all_ok = self.delete_workspace(user_id=user_id, unique_id=unique_id, permanently=False)
+        if not all_ok:
+            response['all_ok'] = False
+            response['message'] = 'Could not delete workspace'
         
         return response
     

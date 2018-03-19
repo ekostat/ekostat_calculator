@@ -90,10 +90,16 @@ class AttributeDict(dict):
         
     #==========================================================================
     def get(self, key):
+        """
+        Updated     20180319    by Magnus Wenzer
+        """ 
         try:
             return getattr(self, key.lower())
         except: 
-            return getattr(self, key)
+            try:
+                return getattr(self, key)
+            except:
+                return getattr(self, 'SE' + key)
     
     #==========================================================================
     def _get_array_from_df(self, df=None, key_a=u'', key_b=u'', match=None):
