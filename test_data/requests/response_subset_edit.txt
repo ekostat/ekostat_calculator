@@ -7765,7 +7765,7 @@
                 "children": [
                     {
                         "label": "secchi",
-                        "status": "not selectable",
+                        "status": "selectable",
                         "selected": false,
                         "value": "secchi"
                     }
@@ -7776,7 +7776,7 @@
                 "children": [
                     {
                         "label": "Oxygen",
-                        "status": "not selectable",
+                        "status": "selectable",
                         "selected": false,
                         "value": "o2"
                     }
@@ -7789,7 +7789,7 @@
                 "children": [
                     {
                         "label": "BQI",
-                        "status": "not selectable",
+                        "status": "selectable",
                         "selected": false,
                         "value": "bqi"
                     }
@@ -7811,7 +7811,7 @@
                 "children": [
                     {
                         "label": "Biovolume",
-                        "status": "not selectable",
+                        "status": "selectable",
                         "selected": false,
                         "value": "biov"
                     },

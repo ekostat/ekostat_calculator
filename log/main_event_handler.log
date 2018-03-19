@@ -306,3 +306,36 @@
 2018-03-19 13:58:18,140	event_handler.py	213	copy_workspace	DEBUG	Could not add workspace with alias "test2". Workspace already exists!
 2018-03-19 13:58:20,201	event_handler.py	1226	load_workspace	DEBUG	Trying to load workspace "335af11c-a7d4-4edf-bc21-d90ffb762c70" with alias "mw1"
 2018-03-19 13:58:39,302	event_handler.py	763	get_workspace	DEBUG	Getting workspace "335af11c-a7d4-4edf-bc21-d90ffb762c70" with alias "None"
+2018-03-19 16:21:23,166	event_handler.py	317	delete_workspace	WARNING	Removing workspace "07f672c6-8637-4bbf-b110-a5115edc2617" with alias "test1".
+2018-03-19 16:42:18,524	logger.py	85	add_log	DEBUG	
+2018-03-19 16:42:18,534	logger.py	86	add_log	DEBUG	========================================================================================================================
+2018-03-19 16:42:18,534	logger.py	87	add_log	DEBUG	### Log added for log_id "event_handler" at locaton: ..\log\main_event_handler.log
+2018-03-19 16:42:18,534	logger.py	88	add_log	DEBUG	------------------------------------------------------------------------------------------------------------------------
+2018-03-19 16:42:18,534	event_handler.py	64	__init__	DEBUG	Start EventHandler: event_handler
+2018-03-19 16:42:18,535	event_handler.py	65	__init__	DEBUG	
+2018-03-19 16:42:18,535	event_handler.py	66	__init__	INFO	TEST info logger
+2018-03-19 16:42:18,535	event_handler.py	67	__init__	WARNING	TEST warning logger
+2018-03-19 16:42:18,535	event_handler.py	68	__init__	ERROR	TEST error logger
+2018-03-19 16:42:18,538	event_handler.py	69	__init__	DEBUG	TEST debug logger
+2018-03-19 16:42:19,218	event_handler.py	230	copy_workspace	DEBUG	Could not add workspace with alias "mw1". Workspace already exists!
+2018-03-19 16:42:19,229	event_handler.py	241	copy_workspace	DEBUG	Trying to copy workspace "default_workspace" with alias "default_workspace". Copy has alias "mw2"
+2018-03-19 16:42:19,352	event_handler.py	230	copy_workspace	DEBUG	Could not add workspace with alias "test1". Workspace already exists!
+2018-03-19 16:42:19,353	event_handler.py	230	copy_workspace	DEBUG	Could not add workspace with alias "test2". Workspace already exists!
+2018-03-19 16:42:22,624	event_handler.py	1248	load_workspace	DEBUG	Trying to load workspace "335af11c-a7d4-4edf-bc21-d90ffb762c70" with alias "mw1"
+2018-03-19 16:42:35,989	event_handler.py	335	delete_workspace	WARNING	Removing workspace "07f672c6-8637-4bbf-b110-a5115edc2617" with alias "test1".
+2018-03-19 16:42:36,146	event_handler.py	202	copy_subset	DEBUG	Trying to copy subset "default_subset". Copy has alias "test_subset_1"
+2018-03-19 16:42:36,179	event_handler.py	397	dict_time	WARNING	Could not find subset object False. Subset is probably not loaded.
+2018-03-19 16:42:36,181	event_handler.py	661	dict_water_district	WARNING	Could not find subset object False. Subset is probably not loaded.
+2018-03-19 16:42:36,187	event_handler.py	661	dict_water_district	WARNING	Could not find subset object False. Subset is probably not loaded.
+2018-03-19 16:42:36,188	event_handler.py	661	dict_water_district	WARNING	Could not find subset object False. Subset is probably not loaded.
+2018-03-19 16:42:36,192	event_handler.py	661	dict_water_district	WARNING	Could not find subset object False. Subset is probably not loaded.
+2018-03-19 16:42:36,195	event_handler.py	661	dict_water_district	WARNING	Could not find subset object False. Subset is probably not loaded.
+2018-03-19 16:42:36,196	event_handler.py	661	dict_water_district	WARNING	Could not find subset object False. Subset is probably not loaded.
+2018-03-19 16:42:36,198	event_handler.py	459	dict_quality_element	WARNING	Could not find subset object False. Subset is probably not loaded.
+2018-03-19 16:42:36,201	event_handler.py	459	dict_quality_element	WARNING	Could not find subset object False. Subset is probably not loaded.
+2018-03-19 16:42:36,203	event_handler.py	459	dict_quality_element	WARNING	Could not find subset object False. Subset is probably not loaded.
+2018-03-19 16:42:36,206	event_handler.py	459	dict_quality_element	WARNING	Could not find subset object False. Subset is probably not loaded.
+2018-03-19 16:42:36,208	event_handler.py	459	dict_quality_element	WARNING	Could not find subset object False. Subset is probably not loaded.
+2018-03-19 16:42:36,395	event_handler.py	781	get_workspace	DEBUG	Getting workspace "335af11c-a7d4-4edf-bc21-d90ffb762c70" with alias "None"
+2018-03-19 16:42:46,274	event_handler.py	781	get_workspace	DEBUG	Getting workspace "335af11c-a7d4-4edf-bc21-d90ffb762c70" with alias "None"
+2018-03-19 16:43:10,297	event_handler.py	781	get_workspace	DEBUG	Getting workspace "335af11c-a7d4-4edf-bc21-d90ffb762c70" with alias "None"
