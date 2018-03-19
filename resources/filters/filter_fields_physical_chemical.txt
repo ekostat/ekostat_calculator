@@ -13,7 +13,7 @@ SEA_BASIN			NTRZ
 WATER_DISTRICT			AMON					
 WATER_TYPE_AREA			CPHL					
 WLTYP			SECCHI					
-DEPH								
-PARAM								
+DEPH			NTOT					
+PARAM			PTOT					
 VALUE								
 QFLAG								

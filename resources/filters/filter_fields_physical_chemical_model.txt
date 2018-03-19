@@ -6,3 +6,5 @@ DEPH		DEPH	PHOS
 			AMON					
 			CPHL					
 			SECCHI					
+			NTOT					
+			PTOT					
