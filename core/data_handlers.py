@@ -732,6 +732,10 @@ class DataHandlerPhytoplankton(DataFrameHandler):
         
     #==========================================================================
     def _get_total_biovolume(self, samp_key=''):
+        """
+        Created:    2017        by Johannes Johansson
+        Modified:   20180320    by Lena Viktorsson (changes df.astype(np.float) to pd.to_numeric(df))
+        """
         # keys could be set in filter_parameters instead..
 #        print(self.df.get(samp_key).unique)
         for sample in self.df.get(samp_key).unique():
@@ -739,7 +743,8 @@ class DataHandlerPhytoplankton(DataFrameHandler):
             boolean = utils.set_filter(df=self.df, 
                                        filter_dict={samp_key:sample})
             
-            tot_value = self.df.loc[boolean,self.filter_parameters.value_key].astype(np.float).sum(skipna=True)
+            #tot_value = self.df.loc[boolean,self.filter_parameters.value_key].astype(np.float).sum(skipna=True)
+            tot_value = pd.to_numeric(self.df.loc[boolean,self.filter_parameters.value_key]).sum(skipna=True)            
             
             self.df.loc[boolean, self.filter_parameters.add_parameters] = str(tot_value)
 
