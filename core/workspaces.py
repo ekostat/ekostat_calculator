@@ -950,6 +950,8 @@ class WorkSpace(object):
         for file_name in file_name_list: 
             src = '/'.join([source_directory, file_name])
             tar = '/'.join([self.paths['directory_path_raw_data'], file_name])
+            if os.path.exists(tar):
+                os.remove(tar)
             shutil.copyfile(src, tar)
         self._logger.debug('Default data has been copied to workspace raw data folder.')
             
@@ -1085,7 +1087,7 @@ class WorkSpace(object):
         target_uuid = self.uuid_mapping.add_new_uuid_for_alias(target_alias, self.user_id)
         print('target_uuid', target_uuid)
         if not target_uuid:
-            self._logger.debug('Could not add subset with alias "{}". Workspace already exists!'.format(target_alias)) 
+            self._logger.debug('Could not add subset with alias "{}". Subset already exists!'.format(target_alias)) 
             return False
 
         # Copy all directories and files in subset 
@@ -1308,7 +1310,7 @@ class WorkSpace(object):
 #        return sorted(self.available_indicators)
     
     #==========================================================================
-    def get_indicator_settings_data_filter_object(self, subset=None, step=2, indicator=None): 
+    def get_indicator_settings_data_filter_object(self, subset=None, step='step_2', indicator=None): 
         step_object = self.get_step_object(subset=subset, step=step)
         return step_object.get_indicator_data_filter_settings(indicator)
     
@@ -1387,6 +1389,8 @@ class WorkSpace(object):
 
         if os.path.isfile(self.paths['directory_path_input_data'] + '/exports/all_data.txt'):
             data_loaded = self.data_handler.load_all_datatxt()
+            print(data_loaded)
+            sdf
             if data_loaded:
                 self._logger.debug('data has been loaded from existing all_data.txt file.')
             else:

@@ -951,19 +951,30 @@ class DataHandler(object):
             self.save_data(df=self.all_data, 
                            file_name='all_data.txt')
             
+        # Load data again. This way we can treet new and old 
+        #"self.all_data" the same way 
+        self.load_all_datatxt()
+            
     #==========================================================================
-    def load_all_datatxt(self, sep='\t', encoding='cp1252'):
+    def load_all_datatxt(self, sep='\t', encoding='cp1252', force=True):
         """
         loads existing all_data.txt file from export directory
         Created:        20180318    by Lena Viktorsson 
-        Last modified:  
+        Last modified:  20180320    by Magnus Wenzer
         """
-        
-        if not len(self.all_data):
-            self.all_data = core.Load().load_txt(self.export_directory + '/all_data.txt', sep=sep, encoding=encoding, fill_nan=u'')
-            return True
-        else:
+
+        if len(self.all_data) and not force: 
             return False
+        else:
+            self.all_data = core.Load().load_txt(self.export_directory + '/all_data.txt', sep=sep, encoding=encoding, fill_nan=u'')
+            self.all_data['MONTH'] = self.all_data['MONTH'].astype(int) 
+            self.all_data['DEPH'] = self.all_data['DEPH'].apply(lambda x: float(x) if x else np.nan) 
+            for col in self.all_data.columns:
+                if col.startswith('Q_'): 
+                    par = col[2:]
+                    self.all_data[par] = self.all_data[par].apply(lambda x: float(x) if x else np.nan) 
+            return True
+
         
     #==========================================================================
     def load_data(self, directory):

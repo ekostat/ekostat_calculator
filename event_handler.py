@@ -1220,10 +1220,10 @@ class EventHandler(object):
             json.dump(response, fid, indent=4)
         
     #==========================================================================
-    def load_workspace(self, user_id, alias=None, unique_id=None): 
+    def load_workspace(self, user_id=None, alias=None, unique_id=None): 
         """
         Created     20180219    by Magnus Wenzer
-        Updated     20180219    by Magnus Wenzer
+        Updated     20180320    by Magnus Wenzer
         
         Loads the given workspace. Subsets in workspace are also loaded. 
         """
@@ -1251,10 +1251,12 @@ class EventHandler(object):
                                                     parent_directory=self.workspace_directory,
                                                     resource_directory=self.resource_directory, 
                                                     user_id=user_id)
-        return True
-    
+        return True            
+        
+        
     #==========================================================================
     def remove_test_user_workspaces(self):
+        self._logger.debug('Start: removing test user workspaces')
         user_id = 'test_user'
         status = ['editable', 'readable', 'deleted']
         uuid_mapping = self._get_uuid_mapping_object(user_id)
@@ -1278,7 +1280,7 @@ class EventHandler(object):
         
         Returns a dict_subset            
         """ 
-        
+        self._logger.debug('Start: request_subset_add')
         user_id = str(request['user_id'])
         workspace_uuid = request['workspace_uuid']
         subset_uuid = request['subset_uuid']
@@ -1288,10 +1290,12 @@ class EventHandler(object):
                                        workspace_uuid=workspace_uuid, 
                                        subset_source_uuid=subset_uuid, 
                                        subset_target_alias=new_alias)
+        self.temp_return_dict = return_dict
         if return_dict:
             subset_uuid = return_dict['uuid']
         else:
             uuid_mapping = self._get_uuid_mapping_object(user_id)
+            print(new_alias, user_id)
             subset_uuid = uuid_mapping.get_uuid(alias=new_alias, user_id=user_id)
         response = self.dict_subset(workspace_unique_id=workspace_uuid, 
                                    subset_unique_id=subset_uuid)
@@ -1314,6 +1318,7 @@ class EventHandler(object):
             	"uuid": "..."
             }
         """
+        self._logger.debug('Start: request_subset_delete')
         workspace_uuid = request['workspace_uuid']
         subset_uuid = request['subset_uuid']
 #        print('###', user_id)
@@ -1334,6 +1339,7 @@ class EventHandler(object):
         "request" and "response" is the output from a request_subset_list
         """
         # TODO: How to get informatiuon about user_id and workspace_uuid
+        self._logger.debug('Start: request_subset_edit')
         user_id = str(request['user_id'])
         workspace_uuid = request['workspace']['uuid'] 
         request_subset_list = request['subsets']
@@ -1460,6 +1466,8 @@ class EventHandler(object):
             	]
             }
         """
+        self._logger.debug('Start: request_subset_list')
+
         user_id = str(request['user_id'])
         workspace_uuid = request['workspace_uuid'] 
         
@@ -1496,7 +1504,7 @@ class EventHandler(object):
             	"status": "editable"
             }
         """
-        
+        self._logger.debug('Start: request_workspace_add')
         request['user_id'] = str(request['user_id'])
         user_id = str(request['user_id'])
         alias = request['alias'] 
@@ -1526,6 +1534,7 @@ class EventHandler(object):
             "message": ""
             }
         """
+        self._logger.debug('Start: request_workspace_delete')
         response = {"all_ok": True, 
                     "message": ""}
         
@@ -1565,6 +1574,7 @@ class EventHandler(object):
             	"uuid": "..."
             }
         """
+        self._logger.debug('Start: request_workspace_edit')
         user_id = str(request['user_id']) 
         alias = request['alias'] 
         unique_id = request['uuid'] 
@@ -1598,7 +1608,7 @@ class EventHandler(object):
             	]
             }
         """
-        
+        self._logger.debug('Start: request_workspace_list')
         user_id = str(request['user_id']) 
         
         response = {'workspaces': []}
@@ -1624,7 +1634,7 @@ class EventHandler(object):
             "message": ""
             }
         """
-        
+        self._logger.debug('Start: request_workspace_load_default_data')
         user_id = str(request['user_id']) 
         workspace_uuid = request['workspace_uuid'] 
         response = {"all_ok": False, 
@@ -1676,6 +1686,7 @@ class EventHandler(object):
         
         Sets the data filter as described. 
         """
+        self._logger.debug('Start: set_data_filter')
         assert all([workspace_alias, step, subset, filter_type, filter_name, data])
         workspace_object = self._get_workspace_object_from_alias(workspace_alias) 
         if not workspace_object:

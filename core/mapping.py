@@ -9,6 +9,7 @@ import numpy as np
 import core
 import os, sys
 import uuid
+import re
 
 #if current_path not in sys.path: 
 #    sys.path.append(os.path.dirname(os.path.realpath(__file__)))
@@ -179,7 +180,7 @@ class WaterBody(AttributeDict):
     def __init__(self, **kwargs):
         """
         Created     ????????    by Johannes Johansson
-        Updated     20180315    by Magnus Wenzer
+        Updated     20180320    by Magnus Wenzer
         """
         super().__init__()
         self.column_name = {}
@@ -197,17 +198,40 @@ class WaterBody(AttributeDict):
         #TODO Map against .lower() letters 
         if kwargs:
             self.load_water_body_match(**kwargs)
+       
+    #==========================================================================
+    def _add_type_area_no_and_suffix(self):  
+        def get_numer(string): 
+            match = re.findall(pattern='\d+', string=string)
+            if match:
+                return match[0] 
+            else:
+                return '' 
             
+        def get_suffix(string): 
+            match = re.findall(pattern='\D+', string=string)
+            if match:
+                return match[0] 
+            else:
+                return ''
+            
+        self.water_bodies['TYPE_AREA_NO'] = self.water_bodies['TYPE_AREA_CODE'].apply(get_numer)
+        self.water_bodies['TYPE_AREA_SUFFIX'] = self.water_bodies['TYPE_AREA_CODE'].apply(get_suffix)
+        
+        
     #==========================================================================
     def load_water_body_match(self, file_path=u'', sep='\t', encoding='cp1252'):
         """
         Created     ????????    by Johannes Johansson
-        Updated     20180315    by Magnus Wenzer
+        Updated     20180320    by Magnus Wenzer
         """
         
         self.water_bodies = core.Load().load_txt(file_path, sep=sep, 
                                                  encoding=encoding, 
                                                  fill_nan=u'')
+        
+        self._add_type_area_no_and_suffix()
+        
         
         key_list = list(self.water_bodies.keys())
         key_list.remove(self.column_name['water_body']['internal'])

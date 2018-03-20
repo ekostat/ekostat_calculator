@@ -532,13 +532,20 @@ class SettingsFile(object):
         print(num)
         print(suf)
         print(value)
+        
         assert len(value) == 1, 'More than one setting for given filter_dict\n{}'.format(value)
         
         value = value.values[0]    
+        print(value)
+        print(variable)
+        
         if variable in self.list_columns: 
             value = self._get_list_from_string(value, variable)
+            print('=', value, type(value[0]))
         elif variable in self.interval_columns: 
             value = self._get_interval_from_string(value, variable)
+            print('=', value, type(value[0]))
+#            esf
         else:
             value = self._convert(value, variable.upper())
         return value
@@ -647,17 +654,19 @@ class SettingsFile(object):
         """
         print('water_body', water_body)
         type_area = self.mapping_water_body.get_type_area_for_water_body(water_body, include_suffix=True)
-        
+        self.temp_type_area = type_area
         combined_boolean = ()
         for variable in self.filter_columns: 
             if variable in self.interval_columns:
                 boolean = self._get_boolean_from_interval(df=df,
                                                           type_area=type_area,
                                                           variable=variable)
+                self.temp_boolean_interval = boolean
             elif variable in self.list_columns:
                 boolean = self._get_boolean_from_list(df=df,
                                                       type_area=type_area,
                                                       variable=variable)
+                self.temp_boolean_list = boolean
             else:
                 print('No boolean for "{}"'.format(variable))
                 continue
@@ -676,6 +685,10 @@ class SettingsFile(object):
     
     #==========================================================================
     def _get_boolean_from_interval(self, df=None, type_area=None, variable=None): 
+        """
+        Updated     20180320    by Magnus Wenzer
+        """
+        
         from_value, to_value = self.get_value(type_area=type_area, 
                                               variable=variable)
         
@@ -686,7 +699,13 @@ class SettingsFile(object):
 #        print('from_value', from_value, type(from_value))
 
         # TODO: Remove astype(float) when this is changed in data handler
-        return (df[parameter].astype(float) >= from_value) & (df[parameter].apply(float) <= to_value)
+#        print('='*50)
+#        print('parameter', parameter)
+#        print(type(df[parameter].values[0]), df[parameter]) 
+        return (df[parameter] >= from_value) & (df[parameter] <= to_value)
+#        return (df[parameter].astype(float) >= from_value) & (df[parameter].apply(float) <= to_value)
+#        return (df[parameter].apply(lambda x: float(x) if x else np.nan) >= from_value) & \
+#                (df[parameter].apply(lambda x: float(x) if x else np.nan) <= to_value) # No depth for Chl. Can't float. 
 
     #==========================================================================
     def _get_boolean_from_list(self, df=None, type_area=None, variable=None): 
