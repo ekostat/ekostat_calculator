@@ -785,9 +785,9 @@ class EventHandler(object):
     def get_unique_id_for_alias(self, user_id, workspace_alias=None, subset_alias=None):
         uuid_mapping = self._get_uuid_mapping_object(user_id)
         if workspace_alias and subset_alias: 
-            workspace_object = self._get_workspace_object(alias=workspace_alias, user_id=user_id)
             workspace_unique_id = uuid_mapping.get_uuid(workspace_alias, user_id)
             workspace_object = self.workspaces.get(workspace_unique_id, None) 
+            workspace_object = self._get_workspace_object(unique_id=workspace_unique_id, user_id=user_id)
             if not workspace_object:
                 return False 
             return workspace_object.get_unique_id_for_alias(subset_alias)
@@ -1241,8 +1241,8 @@ class EventHandler(object):
         
     
     #==========================================================================
-    def load_data(self, user_id, workspace_alias): 
-        workspace_object = self._get_workspace_object(user_id=user_id, alias=workspace_alias) 
+    def load_data(self, user_id, unique_id): 
+        workspace_object = self._get_workspace_object(user_id=user_id, unique_id=unique_id) 
         if not workspace_object:
             return False 
         
