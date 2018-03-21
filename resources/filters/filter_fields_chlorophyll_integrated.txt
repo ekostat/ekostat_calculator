@@ -7,8 +7,8 @@ SHARKID_MD5
 STATN								
 LATIT_DD								
 LONGI_DD								
-SEA_AREA_CODE								
-SEA_AREA_NAME								
+VISS_EU_CD								
+WATER_BODY_NAME								
 SEA_BASIN								
 WATER_DISTRICT								
 WATER_TYPE_AREA								
