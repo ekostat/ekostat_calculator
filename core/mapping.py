@@ -635,7 +635,7 @@ class RawDataFiles(object):
 #==========================================================================
 class UUIDmapping():
     """
-    Holds the mapping file fro uuid. 
+    Holds the mapping file for uuid. 
     """
     def __init__(self, file_path=None): 
         self.file_path = file_path
@@ -645,9 +645,13 @@ class UUIDmapping():
         
     #==========================================================================
     def _load_file(self): 
+        """
+        Created                 by Magnus Wenzer
+        Updated     20180321    by Magnus Wenzer
+        """
 #        print('FILE_PATH:', self.file_path)
-        self.df = pd.read_csv(self.file_path, sep='\t')
-        
+        self.df = pd.read_csv(self.file_path, sep='\t', encoding='cp1252')
+        self.df.fillna('', inplace=True)
         
     #==========================================================================
     def _save_file(self): 
@@ -667,7 +671,7 @@ class UUIDmapping():
         print('¤', alias)
         print('¤', user_id)
         status = self.all_status
-        if self.get_uuid(alias, user_id, status=status): 
+        if not alias or self.get_uuid(alias, user_id, status=status): 
             return False 
         
         unique_id = str(uuid.uuid4())

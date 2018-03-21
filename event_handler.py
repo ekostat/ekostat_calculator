@@ -112,12 +112,11 @@ class EventHandler(object):
         return return_mapping
         
     #==========================================================================
-    def _get_workspace_object(self, user_id=None, alias=None, unique_id=None): 
-        if user_id and alias:
-            uuid_mapping = self._get_uuid_mapping_object(user_id)
-            unique_id = uuid_mapping.get_uuid(alias, user_id) 
-        if not unique_id:
-            return False
+    def _get_workspace_object(self, user_id=None, unique_id=None): 
+        """
+        Updated     20180321    by Magnus wenzer
+        user_id not used. Not necessary to check?
+        """
         if unique_id not in self.workspaces.keys():
             return False
         return self.workspaces.get(unique_id, None)
@@ -145,7 +144,7 @@ class EventHandler(object):
         """
         Updated     20180223    by Lena Viktorsson
         """
-        w = self._get_workspace_object(user_id, None, workspace_uuid)
+        w = self._get_workspace_object(user_id=user_id, unique_id=workspace_uuid)
         w.apply_data_filter(subset=subset_uuid,step=step)
         
     #==========================================================================
@@ -401,7 +400,7 @@ class EventHandler(object):
         if request:
             data_filter_object.set_filter(filter_type='include_list', 
                                           filter_name='MYEAR', 
-                                          data=request['year_range'])
+                                          data=request['year_interval'])
 #            data_filter_object.set_filter(filter_type='include_list', 
 #                                          filter_name='MONTH', 
 #                                          data=request['month_list'])
@@ -410,35 +409,86 @@ class EventHandler(object):
             year_list = sorted(map(int, data_filter_object.get_include_list_filter('MYEAR')))
 #            month_list = sorted(map(int, data_filter_object.get_include_list_filter('MONTH')))
             
-            return {"year_range": [year_list[0], year_list[-1]]}#, "month_list": month_list}
-        
+            return {"year_interval": [year_list[0], year_list[-1]]}#, "month_list": month_list}
         
     #==========================================================================
-    def dict_period(self, workspace_unique_id=None, subset_unique_id=None, request=None): 
+    def dict_indicator_settings(self, 
+                              workspace_unique_id=None, 
+                              subset_unique_id=None, 
+                              indicator=None, 
+                              water_body=None, 
+                              request=None): 
         """
-        Created     20180221    by Magnus Wenzer
-        Updated     20180222    by Magnus Wenzer
+        Created     20180321   by Magnus Wenzer
+        Updated     20180321   by Magnus Wenzer
         
-        NOT USED YET! 
-        
-        Information is taken from data filter in step 1. 
-        This should be more dynamic in the future. For example not set ranges but min and max year. 
-        """ 
-            
+        Takes information from settings filter in step 2. 
+        """
         workspace_object = self._get_workspace_object(unique_id=workspace_unique_id) 
         subset_object = workspace_object.get_subset_object(subset_unique_id) 
         if not subset_object:
             self._logger.warning('Could not find subset object {}. Subset is probably not loaded.'.format(subset_unique_id))
             return {}
         
-        data_filter_object = subset_object.get_data_filter_object('step_1')
+        settings_data_filter_object = self.get_settings_filter_object(workspace_unique_id=workspace_unique_id, 
+                                                                           subset_unique_id=subset_unique_id,
+                                                                           indicator=indicator, 
+                                                                           filter_type='data')
         
-        year_list = data_filter_object.get_include_list_filter('MYEAR')
+        settings_tolerance_filter_object = self.get_settings_filter_object(workspace_unique_id=workspace_unique_id, 
+                                                                           subset_unique_id=subset_unique_id,
+                                                                           indicator=indicator,
+                                                                           filter_type='tolerance')
+        
+        type_area = self.mapping_objects['water_body'].get_list('type_area', water_body=water_body)
+        if not type_area:
+            return {}
+        type_area = type_area[0]
+        
+        if request:
+            pass
+            
+        else:
+            return_dict = {}
+            
+            # Depth
+            return_dict['depth_interval'] = settings_data_filter_object.get_filter(type_area=type_area, variable='DEPH_INTERVAL')
+            
+            # Month
+            month_list = settings_data_filter_object.get_filter(type_area=type_area, variable='MONTH_LIST')
+            return_dict['month_interval'] = [month_list[0], month_list[-1]]
+        
+            # Min number of years 
+            return_dict['min_no_years'] = settings_tolerance_filter_object.get_filter(type_area=type_area, variable='MIN_NR_YEARS')
 
-        return {"label": "2006-2012",
-				  "status": "selectable",
-				  "selected": True,
-				  "value": "2006-2012"}
+        return return_dict
+        
+#    #==========================================================================
+#    def dict_period(self, workspace_unique_id=None, subset_unique_id=None, request=None): 
+#        """
+#        Created     20180221    by Magnus Wenzer
+#        Updated     20180222    by Magnus Wenzer
+#        
+#        NOT USED YET! 
+#        
+#        Information is taken from data filter in step 1. 
+#        This should be more dynamic in the future. For example not set ranges but min and max year. 
+#        """ 
+#            
+#        workspace_object = self._get_workspace_object(unique_id=workspace_unique_id) 
+#        subset_object = workspace_object.get_subset_object(subset_unique_id) 
+#        if not subset_object:
+#            self._logger.warning('Could not find subset object {}. Subset is probably not loaded.'.format(subset_unique_id))
+#            return {}
+#        
+#        data_filter_object = subset_object.get_data_filter_object('step_1')
+#        
+#        year_list = data_filter_object.get_include_list_filter('MYEAR')
+#
+#        return {"label": "2006-2012",
+#				  "status": "selectable",
+#				  "selected": True,
+#				  "value": "2006-2012"}
         
         
     #==========================================================================
@@ -1669,34 +1719,63 @@ class EventHandler(object):
 #        return workspace_object.json_subset_info()
     
     
+#    #==========================================================================
+#    def set_data_filter(self, 
+#                        user_id, 
+#                        workspace_alias=None, 
+#                        step='', 
+#                        subset='', 
+#                        filter_type='', 
+#                        filter_name='', 
+#                        data=None, 
+#                        append_items=False): 
+#        """
+#        Created     20180220    by Magnus Wenzer
+#        Updated     20180221    by Magnus Wenzer
+#        
+#        Sets the data filter as described. 
+#        """
+#        self._logger.debug('Start: set_data_filter')
+#        assert all([workspace_alias, step, subset, filter_type, filter_name, data])
+#        workspace_object = self._get_workspace_object_from_alias(workspace_alias) 
+#        if not workspace_object:
+#            return False 
+#        
+#        return workspace_object.set_data_filter(step=step, 
+#                                                subset=subset, 
+#                                                filter_type=filter_type, 
+#                                                filter_name=filter_name, 
+#                                                data=data, 
+#                                                append_items=append_items)
+    
     #==========================================================================
-    def set_data_filter(self, 
-                        user_id, 
-                        workspace_alias=None, 
-                        step='', 
-                        subset='', 
-                        filter_type='', 
-                        filter_name='', 
-                        data=None, 
-                        append_items=False): 
+    def get_settings_filter_object(self, 
+                                        workspace_unique_id='', 
+                                        subset_unique_id='',
+                                        indicator='', 
+                                        step='step_2', 
+                                        filter_type=''): 
         """
-        Created     20180220    by Magnus Wenzer
-        Updated     20180221    by Magnus Wenzer
-        
-        Sets the data filter as described. 
+        Created     20180321    by Magnus Wenzer
+        Updated     20180321    by Magnus Wenzer
         """
-        self._logger.debug('Start: set_data_filter')
-        assert all([workspace_alias, step, subset, filter_type, filter_name, data])
-        workspace_object = self._get_workspace_object_from_alias(workspace_alias) 
-        if not workspace_object:
-            return False 
+        if not filter_type:
+            return False
+        workspace_object = self._get_workspace_object(unique_id=workspace_unique_id) 
+        subset_object = workspace_object.get_subset_object(subset_unique_id) 
+        if not subset_object:
+            self._logger.warning('Could not find subset object {}. Subset is probably not loaded.'.format(subset_unique_id))
+            return {}
         
-        return workspace_object.set_data_filter(step=step, 
-                                                subset=subset, 
-                                                filter_type=filter_type, 
-                                                filter_name=filter_name, 
-                                                data=data, 
-                                                append_items=append_items)
+        step_object = subset_object.get_step_object(step)
+        
+        if filter_type == 'data':
+            return step_object.get_indicator_data_filter_settings(indicator)
+        elif filter_type == 'tolerance':
+            return step_object.get_indicator_tolerance_settings(indicator)
+    
+    
+        
         
         
 def print_json(data): 

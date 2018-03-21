@@ -655,7 +655,13 @@ class SettingsFile(object):
         print('water_body', water_body)
         type_area = self.mapping_water_body.get_type_area_for_water_body(water_body, include_suffix=True)
         self.temp_type_area = type_area
-        combined_boolean = ()
+        
+        # Filter for water_body 
+        combined_boolean = df['SEA_AREA_CODE'] == water_body
+        print('==========combined_boolean===========')
+        print(np.where(combined_boolean))
+        print('=====================================')
+#        combined_boolean = ()
         for variable in self.filter_columns: 
             if variable in self.interval_columns:
                 boolean = self._get_boolean_from_interval(df=df,
@@ -727,6 +733,20 @@ class SettingsBase(object):
         """
         self.settings.set_values(value_dict, self.allowed_variables) 
         self.settings.save_file()
+        
+    #==========================================================================
+    def get_value(self, type_area=None, variable=None): 
+        """
+        Created     20180321    by Magnus Wenzer
+        Updated     20180321    by Magnus Wenzer
+        """
+  
+        return self.settings.get_value(variable=variable, type_area=type_area) 
+    
+    #==========================================================================
+    def get_filter(self, type_area=None, variable=None): 
+        
+        return self.get_value(type_area=type_area, variable=variable)
     
 ###############################################################################
 class SettingsRef(SettingsBase):
@@ -762,7 +782,7 @@ class SettingsDataFilter(SettingsBase):
 #        get_type_area_for_water_body(wb, include_suffix=False)
         return self.settings.get_filter_boolean_for_df(df=df, 
                                                        water_body=water_body)
-        
+
 
 ###############################################################################
 class SettingsTolerance(SettingsBase):
