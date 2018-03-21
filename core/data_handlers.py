@@ -988,6 +988,8 @@ class DataHandler(object):
                     except ValueError as e:
                         self.all_data[par] = self.all_data[par].apply(convert)
                         #TODO: send info to user
+                if col == 'VISS_EU_CD':
+                    self.all_data[col] = self.all_data[col].apply(lambda x: 'SE' + x if 'SE' not in x else x)
             return True
 
         
