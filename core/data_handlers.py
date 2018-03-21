@@ -968,6 +968,11 @@ class DataHandler(object):
         Created:        20180318    by Lena Viktorsson 
         Last modified:  20180320    by Magnus Wenzer
         """
+        def convert(x):
+            try:
+                return float(x)
+            except:
+                return np.nan
 
         if len(self.all_data) and not force: 
             return False
@@ -978,7 +983,11 @@ class DataHandler(object):
             for col in self.all_data.columns:
                 if col.startswith('Q_'): 
                     par = col[2:]
-                    self.all_data[par] = self.all_data[par].apply(lambda x: float(x) if x else np.nan) 
+                    try:
+                        self.all_data[par] = self.all_data[par].apply(lambda x: float(x) if x else np.nan) 
+                    except ValueError as e:
+                        self.all_data[par] = self.all_data[par].apply(convert)
+                        #TODO: send info to user
             return True
 
         

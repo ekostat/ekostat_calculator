@@ -1424,7 +1424,7 @@ class WorkSpace(object):
                                                              raw_data_copy=True)
                     data_loaded = True
                     self.data_handler.phytoplankton.save_data_as_txt(directory=output_directory, prefix=u'Column_format')
-                elif data_type == 'hose':
+                elif data_type == 'chlorophyll':
                     self.data_handler.chlorophyll.load_source(file_path=file_path,
                                                              raw_data_copy=True)
                     data_loaded = True
