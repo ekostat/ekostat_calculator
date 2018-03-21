@@ -416,7 +416,7 @@ class EventHandler(object):
                               workspace_unique_id=None, 
                               subset_unique_id=None, 
                               indicator=None, 
-                              water_body=None, 
+                              type_area=None, 
                               request=None): 
         """
         Created     20180321   by Magnus Wenzer
@@ -440,26 +440,46 @@ class EventHandler(object):
                                                                            indicator=indicator,
                                                                            filter_type='tolerance')
         
-        type_area = self.mapping_objects['water_body'].get_list('type_area', water_body=water_body)
+#        type_area = self.mapping_objects['water_body'].get_list('type_area', water_body=water_body)
         if not type_area:
             return {}
         type_area = type_area[0]
         
         if request:
-            pass
+            # Settings data filter
+            depth_interval = request['depth_interval'] 
+            month_interval = request['month_interval']
+            month_list = [] 
+            month = month_interval[0]
+            while month != month_interval[-1]:
+                month_list.append(month)
+                month += 1
+                if month == 13:
+                    month = 1
+            month_list.append(month_interval[-1])  
+            value_dict = {'DEPH_INTERVAL': depth_interval, 
+                          'MONTH_LIST': month_list} 
+            settings_data_filter_object.set_values(value_dict)
+            
+            
+            min_no_years = ['min_no_years']
+            value_dict = {'MIN_NR_YEARS': min_no_years} 
+            settings_tolerance_filter_object.set_values(value_dict)
+            return request
+            
             
         else:
             return_dict = {}
             
             # Depth
-            return_dict['depth_interval'] = settings_data_filter_object.get_filter(type_area=type_area, variable='DEPH_INTERVAL')
+            return_dict['depth_interval'] = settings_data_filter_object.get_value(type_area=type_area, variable='DEPH_INTERVAL')
             
             # Month
-            month_list = settings_data_filter_object.get_filter(type_area=type_area, variable='MONTH_LIST')
+            month_list = settings_data_filter_object.get_value(type_area=type_area, variable='MONTH_LIST')
             return_dict['month_interval'] = [month_list[0], month_list[-1]]
         
             # Min number of years 
-            return_dict['min_no_years'] = settings_tolerance_filter_object.get_filter(type_area=type_area, variable='MIN_NR_YEARS')
+            return_dict['min_no_years'] = settings_tolerance_filter_object.get_value(type_area=type_area, variable='MIN_NR_YEARS')
 
         return return_dict
         
@@ -860,7 +880,7 @@ class EventHandler(object):
         Created     20180222    by Magnus Wenzer
         Updated     20180222    by Magnus Wenzer
         
-        request is a list och dicts. 
+        request is a list of dicts. 
         """ 
         workspace_object = self._get_workspace_object(unique_id=workspace_unique_id) 
 #        subset_object = workspace_object.get_subset_object(subset_unique_id)
@@ -894,6 +914,15 @@ class EventHandler(object):
             return_list.append(indicator_dict)
         
         return return_list
+        
+    #==========================================================================
+    def list_indicator_settings(self, workspace_unique_id=None, subset_unique_id=None, quality_element=None, request=None): 
+        """
+        Created     20180321    by Magnus Wenzer
+        Updated     20180321    by Magnus Wenzer
+        
+        request is a list of dicts. 
+        """ 
         
     #==========================================================================
     def list_periods(self, workspace_unique_id=None, subset_unique_id=None, request=None): 

@@ -658,9 +658,9 @@ class SettingsFile(object):
         
         # Filter for water_body 
         combined_boolean = df['SEA_AREA_CODE'] == water_body
-        print('==========combined_boolean===========')
-        print(np.where(combined_boolean))
-        print('=====================================')
+#        print('==========combined_boolean===========')
+#        print(np.where(combined_boolean))
+#        print('=====================================')
 #        combined_boolean = ()
         for variable in self.filter_columns: 
             if variable in self.interval_columns:
@@ -743,10 +743,6 @@ class SettingsBase(object):
   
         return self.settings.get_value(variable=variable, type_area=type_area) 
     
-    #==========================================================================
-    def get_filter(self, type_area=None, variable=None): 
-        
-        return self.get_value(type_area=type_area, variable=variable)
     
 ###############################################################################
 class SettingsRef(SettingsBase):
