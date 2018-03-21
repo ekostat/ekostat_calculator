@@ -1389,8 +1389,6 @@ class WorkSpace(object):
 
         if os.path.isfile(self.paths['directory_path_input_data'] + '/exports/all_data.txt'):
             data_loaded = self.data_handler.load_all_datatxt()
-            print(data_loaded)
-            sdf
             if data_loaded:
                 self._logger.debug('data has been loaded from existing all_data.txt file.')
             else:

@@ -28,6 +28,7 @@ from .mapping import WaterBody
 from .mapping import RawDataFiles
 from .mapping import QualityElement
 from .mapping import UUIDmapping
+from .mapping import Hypsograph
 
 from .parameters import ParameterSALT_CTD
 from .parameters import ParameterNTRA 

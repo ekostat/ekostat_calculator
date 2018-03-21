@@ -953,7 +953,6 @@ class EventHandler(object):
                                            request=sub_request)
             
             
-            
             # Add subset dict to subset list
             subset_list.append(subset_dict)
                
@@ -971,7 +970,7 @@ class EventHandler(object):
 #        workspace_object = self._get_workspace_object(unique_id=workspace_unique_id) 
 #        subset_object = workspace_object.get_subset_object(subset_unique_id)
         
-        quality_element_list = ['secchi depth', 'oxygen balance']
+        quality_element_list = ['secchi depth', 'nutrients', 'oxygen balance']
         print('request', request)
         return_list = []
         for quality_element in quality_element_list: 

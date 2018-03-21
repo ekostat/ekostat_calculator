@@ -123,9 +123,89 @@ class AttributeDict(dict):
     
     #==========================================================================
 
+"""
+#==============================================================================
+#==============================================================================
+""" 
+class Hypsograph():
+    """
+    Created     20180320    by Magnus Wenzer
+    
+    """ 
+    def __init__(self, file_path): 
+        self.file_path = file_path 
+        
+        self.wb_par = 'EUCD'
+        self.depth_par = 'Djup'
+        self.area_par = 'Sum_Area(km2)'
+        self.volume_par = 'Volym'
+        
+        self.acc_volume_par = 'acc_volume'
+        self.frac_volume_par = 'frac_volume'
+        self.frac_area_par = 'frac_area'        
+        
+        self._load_data()
+        self._add_columns()
+       
+    #==========================================================================
+    def _load_data(self):
+        dtype = {self.depth_par: int, 
+                 self.area_par: float, 
+                 self.volume_par: float}
+        self.df = pd.read_csv(self.file_path, sep='\t', encoding='cp1252', dtype=dtype)
 
+        self.water_body_list = sorted(set(self.df[self.wb_par])) 
+        self.wb_df = {}
+        for wb in self.water_body_list:
+            self.wb_df[wb] = self.df.loc[self.df[self.wb_par]==wb, :].copy()
+            
+    
+    #==========================================================================
+    def _add_columns(self): 
+            
+        for wb in self.water_body_list:
+            # Accumulated volume
+            self.wb_df[wb][self.acc_volume_par] = self.wb_df[wb].loc[::-1, self.volume_par].cumsum()[::-1]
+   
+            # Volume fraction 
+            self.wb_df[wb][self.frac_volume_par] = self.wb_df[wb][self.acc_volume_par]/self.wb_df[wb][self.acc_volume_par].values[0]
+            
+            # Area fraction 
+            self.wb_df[wb][self.frac_area_par] = self.wb_df[wb][self.area_par]/self.wb_df[wb][self.area_par].values[0]
+            
 
-
+    #==========================================================================
+    def get_total_area_of_water_body(self, water_body): 
+        result = self.wb_df[water_body].loc[self.wb_df[water_body][self.depth_par]==0, self.area_par]
+        if len(result):
+            return result.values[0] 
+        else:
+            return False
+        
+    #==========================================================================
+    def get_volume_below_depth(self, water_body=None, depth=None): 
+        result = self.wb_df[water_body].loc[self.wb_df[water_body][self.depth_par]==depth, self.volume_par]
+        if len(result):
+            return result.values[0] 
+        else:
+            return False 
+        
+    #==========================================================================
+    def get_volume_fraction_below_depth(self, water_body=None, depth=None): 
+        result = self.wb_df[water_body].loc[self.wb_df[water_body][self.depth_par]==depth, self.frac_volume_par]
+        if len(result):
+            return result.values[0] 
+        else:
+            return False 
+        
+    #==========================================================================
+    def get_area_fraction_at_depth(self, water_body=None, depth=None): 
+        result = self.wb_df[water_body].loc[self.wb_df[water_body][self.depth_par]==depth, self.frac_area_par]
+        if len(result):
+            return result.values[0] 
+        else:
+            return False 
+        
 """
 #==============================================================================
 #==============================================================================
@@ -720,66 +800,72 @@ class UUIDmapping():
     
 """#========================================================================"""
 if __name__ == '__main__':
-    current_path = os.path.dirname(os.path.realpath(__file__))[:-4]
-    sys.path.append(current_path)
-    print('='*50)
-    print('Running module "mapping.py"')
-    print('-'*50)
-    print('')
-    #--------------------------------------------------------------------------
-    #--------------------------------------------------------------------------
-    source_dir = u'D:\\Utveckling\\GitHub\\ekostat_calculator\\'
-
-    first_filter_directory = source_dir + 'resources/mappings/mapping_parameter_dynamic_extended.txt'
-    fields_filter_directory = source_dir + '/resources/filters/filter_fields_zoobenthos.txt'
-    water_body_match_directory = source_dir + 'resources/mappings/water_body_match.txt' 
-    #--------------------------------------------------------------------------
-    #--------------------------------------------------------------------------
-    # Mapping
-    print('\n# Mapping')
-    p_map = ParameterMapping()
-    p_map.load_mapping_settings(file_path=first_filter_directory)
-    print(p_map.map_parameter_list(['myear', u'ammonium nh4-n']))
-    print(p_map.get_parameter_mapping(['myear', u'ammonium nh4-n']))
-    #--------------------------------------------------------------------------
-    #--------------------------------------------------------------------------
-    f_filter = AttributeDict()
-    data = core.Load().load_txt(fields_filter_directory, fill_nan=u'')
-    f_filter._add_arrays_to_entries(**data)
-#    print('compulsory_fields',f_filter.compulsory_fields)
-#    print('parameter_key',f_filter.parameter_key)
-#    print('sort_by_fields',f_filter.sort_by_fields)
-    #--------------------------------------------------------------------------
-    #--------------------------------------------------------------------------
-    # Water Body Match
-    print('\n# Water Body Match')
-#    wb_match = WaterBody()
-#    wb_match.load_water_body_match(file_path=water_body_match_directory)
-##    print(wb_match.dict.get('S. Seskaröfjärden sek namn').get('TYP'))
-#    print(wb_match.get_type_area_for_water_body('Vändelsöarkipelagen', include_suffix=True))
-#    print('='*50)
-#    print(wb_match.get_basin_number_for_water_body('Vändelsöarkipelagen'))
-#    print('='*50)
-#    print(wb_match.get_eu_cd_for_water_body('Vändelsöarkipelagen'))
-#    print('='*50)
-#    print(wb_match.get_hid_for_water_body('Vändelsöarkipelagen'))
-#    print('='*50)
-#    print(wb_match.get_url_viss_for_water_body('Vändelsöarkipelagen'))
-#    print('='*50)
-#    print(wb_match.get_center_position_for_water_body('Vändelsöarkipelagen'))
-#    print('='*50)
-#    print(wb_match.get_water_bodies_in_type_area('1n'))
-#    print('='*50)
-#    print(wb_match.get_water_bodies_in_type_area('1s'))
-#    print('='*50)
-#    print(wb_match.get_water_bodies_in_type_area('1'))
-    #--------------------------------------------------------------------------
-    #--------------------------------------------------------------------------
-    print('-'*50)
-    print('done')
-    print('-'*50)
-#    for k in p_map.keys():
-#        if k.startswith('sili'):
-#            print(k, len(k), p_map.get(k))
+    if 0:
+        current_path = os.path.dirname(os.path.realpath(__file__))[:-4]
+        sys.path.append(current_path)
+        print('='*50)
+        print('Running module "mapping.py"')
+        print('-'*50)
+        print('')
+        #--------------------------------------------------------------------------
+        #--------------------------------------------------------------------------
+        source_dir = u'D:\\Utveckling\\GitHub\\ekostat_calculator\\'
+    
+        first_filter_directory = source_dir + 'resources/mappings/mapping_parameter_dynamic_extended.txt'
+        fields_filter_directory = source_dir + '/resources/filters/filter_fields_zoobenthos.txt'
+        water_body_match_directory = source_dir + 'resources/mappings/water_body_match.txt' 
+        #--------------------------------------------------------------------------
+        #--------------------------------------------------------------------------
+        # Mapping
+        print('\n# Mapping')
+        p_map = ParameterMapping()
+        p_map.load_mapping_settings(file_path=first_filter_directory)
+        print(p_map.map_parameter_list(['myear', u'ammonium nh4-n']))
+        print(p_map.get_parameter_mapping(['myear', u'ammonium nh4-n']))
+        #--------------------------------------------------------------------------
+        #--------------------------------------------------------------------------
+        f_filter = AttributeDict()
+        data = core.Load().load_txt(fields_filter_directory, fill_nan=u'')
+        f_filter._add_arrays_to_entries(**data)
+    #    print('compulsory_fields',f_filter.compulsory_fields)
+    #    print('parameter_key',f_filter.parameter_key)
+    #    print('sort_by_fields',f_filter.sort_by_fields)
+        #--------------------------------------------------------------------------
+        #--------------------------------------------------------------------------
+        # Water Body Match
+        print('\n# Water Body Match')
+    #    wb_match = WaterBody()
+    #    wb_match.load_water_body_match(file_path=water_body_match_directory)
+    ##    print(wb_match.dict.get('S. Seskaröfjärden sek namn').get('TYP'))
+    #    print(wb_match.get_type_area_for_water_body('Vändelsöarkipelagen', include_suffix=True))
+    #    print('='*50)
+    #    print(wb_match.get_basin_number_for_water_body('Vändelsöarkipelagen'))
+    #    print('='*50)
+    #    print(wb_match.get_eu_cd_for_water_body('Vändelsöarkipelagen'))
+    #    print('='*50)
+    #    print(wb_match.get_hid_for_water_body('Vändelsöarkipelagen'))
+    #    print('='*50)
+    #    print(wb_match.get_url_viss_for_water_body('Vändelsöarkipelagen'))
+    #    print('='*50)
+    #    print(wb_match.get_center_position_for_water_body('Vändelsöarkipelagen'))
+    #    print('='*50)
+    #    print(wb_match.get_water_bodies_in_type_area('1n'))
+    #    print('='*50)
+    #    print(wb_match.get_water_bodies_in_type_area('1s'))
+    #    print('='*50)
+    #    print(wb_match.get_water_bodies_in_type_area('1'))
+        #--------------------------------------------------------------------------
+        #--------------------------------------------------------------------------
+        print('-'*50)
+        print('done')
+        print('-'*50)
+    #    for k in p_map.keys():
+    #        if k.startswith('sili'):
+    #            print(k, len(k), p_map.get(k))
     
 
+    if 1:
+        file_path = 'D:/Utveckling/git/ekostat_calculator/resources/mappings/hypsografs_2017.txt'
+        h = Hypsograph(file_path)
+        wb = 'NO591045-111030' 
+        h.get_total_area_of_water_body(wb)

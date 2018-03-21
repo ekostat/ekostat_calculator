@@ -953,6 +953,7 @@ class DataHandler(object):
             
         # Load data again. This way we can treet new and old 
         #"self.all_data" the same way 
+        self.all_data = pd.DataFrame()
         self.load_all_datatxt()
             
     #==========================================================================
