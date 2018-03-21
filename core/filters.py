@@ -657,7 +657,7 @@ class SettingsFile(object):
         self.temp_type_area = type_area
         
         # Filter for water_body 
-        combined_boolean = df['SEA_AREA_CODE'] == water_body
+        combined_boolean = df['VISS_EU_CD'] == water_body
 #        print('==========combined_boolean===========')
 #        print(np.where(combined_boolean))
 #        print('=====================================')
@@ -954,7 +954,7 @@ class WaterBodyStationFilter(object):
             self.mapping_objects = mapping_objects
             self.mapping_water_body = mapping_objects['water_body']
             
-        self.water_body_parameter = 'SEA_AREA_NAME'
+        self.water_body_parameter = 'WATER_BODY_NAME'
         
     #==========================================================================
     def clear_filter(self): 
