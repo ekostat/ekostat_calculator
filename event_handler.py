@@ -338,27 +338,36 @@ class EventHandler(object):
      
     
     #==========================================================================
-    def dict_indicator(self, workspace_unique_id=None, subset_unique_id=None, indicator=None, available_indicators=None, request=None): 
+    def dict_indicator(self, 
+                       workspace_unique_id=None, 
+                       subset_unique_id=None, 
+                       indicator=None, 
+                       available_indicators=None, 
+                       request=None, 
+                       include_indicator_settings=False): 
         """
         Created     20180222    by Magnus Wenzer
-        Updated     20180222    by Magnus Wenzer
+        Updated     20180321    by Magnus Wenzer
         
         dict like: 
             {
 							"label": "Biovolume - default",
 							"status": "selectable",
 							"selected": true,
-							"value": "Biovolume - default"
+							"value": "Biovolume - default", 
+                        "settings": {}
 						}
         """
+        return_dict = {"label": "",
+					   "status": "",
+					   "selected": False,
+					   "value": "", 
+                    "settings": {}}
         workspace_object = self._get_workspace_object(unique_id=workspace_unique_id) 
         subset_object = workspace_object.get_subset_object(subset_unique_id) 
         if not subset_object:
             self._logger.warning('Could not find subset object {}. Subset is probably not loaded.'.format(subset_unique_id))
-            return {"label": "",
-					   "status": "",
-					   "selected": False,
-					   "value": ""}
+            return return_dict
         
         if subset_unique_id == 'default_subset': 
             available_indicators = []
@@ -377,11 +386,20 @@ class EventHandler(object):
             status = "not selectable"
             selected = False
             
-        return_dict = {"label": self.mapping_objects['display_mapping'].get_mapping(indicator, 'internal_name', 'display_en'),
-							"status": status,
-							"selected": selected,
-							"value": indicator}
         
+        return_dict["label"] = self.mapping_objects['display_mapping'].get_mapping(indicator, 'internal_name', 'display_en')
+        return_dict["status"] = status
+        return_dict["selected"] = selected
+        return_dict["value"] = indicator
+    
+        if include_indicator_settings: 
+            request_list = []
+            if request and 'settings' in request:
+                request_list = request['settings']
+            return_dict["settings"] = self.list_indicator_settings(workspace_unique_id=workspace_unique_id, 
+                                                                    subset_unique_id=subset_unique_id, 
+                                                                    indicator=indicator, 
+                                                                    request=request_list)
         return return_dict
     
     #==========================================================================
@@ -512,10 +530,15 @@ class EventHandler(object):
         
         
     #==========================================================================
-    def dict_quality_element(self, workspace_unique_id=None, subset_unique_id=None, quality_element=None, request=None): 
+    def dict_quality_element(self, 
+                             workspace_unique_id=None, 
+                             subset_unique_id=None, 
+                             quality_element=None, 
+                             request=None, 
+                             include_indicator_settings=False): 
         """
         Created     20180222    by Magnus Wenzer
-        Updated     20180222    by Magnus Wenzer
+        Updated     20180321    by Magnus Wenzer
         
         dict like: 
             {
@@ -540,13 +563,14 @@ class EventHandler(object):
                        "children": self.list_indicators(workspace_unique_id=workspace_unique_id, 
                                                         subset_unique_id=subset_unique_id, 
                                                         quality_element=quality_element, 
-                                                        request=request_dict)} 
+                                                        request=request_dict, 
+                                                        include_indicator_settings=include_indicator_settings)} 
         
         return return_dict
         
         
     #==========================================================================
-    def dict_subset(self, workspace_unique_id=None, subset_unique_id=None, request=None):  
+    def dict_subset(self, workspace_unique_id=None, subset_unique_id=None, request=None, include_indicator_settings=False):  
         """
         Created     20180222    by Magnus Wenzer
         Updated     20180317    by Magnus Wenzer
@@ -602,12 +626,14 @@ class EventHandler(object):
         # Quality elements 
         subset_dict['quality_elements'] = self.list_quality_elements(workspace_unique_id=workspace_unique_id, 
                                                                      subset_unique_id=subset_unique_id, 
-                                                                     request=request.get('quality_elements', []))
+                                                                     request=request.get('quality_elements', []), 
+                                                                     include_indicator_settings=include_indicator_settings)
         
         # Quality elements 
         subset_dict['supporting_elements'] = self.list_supporting_elements(workspace_unique_id=workspace_unique_id, 
                                                                            subset_unique_id=subset_unique_id, 
-                                                                           request=request.get('supporting_elements', []))
+                                                                           request=request.get('supporting_elements', []), 
+                                                                           include_indicator_settings=include_indicator_settings)
 
 
         
@@ -875,10 +901,15 @@ class EventHandler(object):
         
     
     #==========================================================================
-    def list_indicators(self, workspace_unique_id=None, subset_unique_id=None, quality_element=None, request=None): 
+    def list_indicators(self, 
+                        workspace_unique_id=None, 
+                        subset_unique_id=None, 
+                        quality_element=None, 
+                        request=None, 
+                        include_indicator_settings=False): 
         """
         Created     20180222    by Magnus Wenzer
-        Updated     20180222    by Magnus Wenzer
+        Updated     20180321    by Magnus Wenzer
         
         request is a list of dicts. 
         """ 
@@ -897,7 +928,7 @@ class EventHandler(object):
         
         return_list = []
         for indicator in indicator_list:
-            request_dict = None
+            request_dict = {}
             if request:
                 # Need to check which element in request list belong to the indicator 
                 for ind in request:
@@ -909,20 +940,46 @@ class EventHandler(object):
                                                  subset_unique_id=subset_unique_id, 
                                                  indicator=indicator, 
                                                  available_indicators=available_indicators, 
-                                                 request=request_dict)
+                                                 request=request_dict, 
+                                                 include_indicator_settings=include_indicator_settings)
         
             return_list.append(indicator_dict)
         
         return return_list
         
     #==========================================================================
-    def list_indicator_settings(self, workspace_unique_id=None, subset_unique_id=None, quality_element=None, request=None): 
+    def list_indicator_settings(self, 
+                                workspace_unique_id=None, 
+                                subset_unique_id=None, 
+                                indicator=None, 
+                                request=None): 
         """
         Created     20180321    by Magnus Wenzer
         Updated     20180321    by Magnus Wenzer
         
         request is a list of dicts. 
         """ 
+#        workspace_object = self._get_workspace_object(unique_id=workspace_unique_id) 
+        
+        type_area_list = self.mapping_objects['water_body'].get_list('type_area')
+        return_list = []
+        for type_area in type_area_list:
+            request_dict = {}
+            if request:
+                # Need to check which element in request list belong to the indicator 
+                for ty in request:
+                    if ty['value'] == type_area:
+                        request_dict = ty
+                        break
+                    
+            indicator_settings_dict = self.dict_indicator_settings(workspace_unique_id=workspace_unique_id, 
+                                                                  subset_unique_id=subset_unique_id, 
+                                                                  indicator=indicator, 
+                                                                  type_area=type_area, 
+                                                                  request=request_dict)
+            return_list.append(indicator_settings_dict)
+    
+        return return_list
         
     #==========================================================================
     def list_periods(self, workspace_unique_id=None, subset_unique_id=None, request=None): 
@@ -961,10 +1018,14 @@ class EventHandler(object):
         
     
     #==========================================================================
-    def list_quality_elements(self, workspace_unique_id=None, subset_unique_id=None, request=None): 
+    def list_quality_elements(self, 
+                              workspace_unique_id=None, 
+                              subset_unique_id=None, 
+                              request=None, 
+                              include_indicator_settings=False): 
         """
         Created     20180222    by Magnus Wenzer
-        Updated     20180223    by Lena Viktorsson
+        Updated     20180321    by Magnus Wenzer
         
         """ 
         print('list_quality_elements', request)
@@ -981,7 +1042,8 @@ class EventHandler(object):
             quality_element_dict = self.dict_quality_element(workspace_unique_id=workspace_unique_id, 
                                                              subset_unique_id=subset_unique_id, 
                                                              quality_element=quality_element, 
-                                                             request=request)
+                                                             request=request, 
+                                                             include_indicator_settings=include_indicator_settings)
         
             return_list.append(quality_element_dict)
         
@@ -1039,10 +1101,14 @@ class EventHandler(object):
     
     
     #==========================================================================
-    def list_supporting_elements(self, workspace_unique_id=None, subset_unique_id=None, request=None): 
+    def list_supporting_elements(self, 
+                                 workspace_unique_id=None, 
+                                 subset_unique_id=None, 
+                                 request=None, 
+                                 include_indicator_settings=False): 
         """
         Created     20180222    by Magnus Wenzer
-        Updated     20180223    by Lena Viktorsson
+        Updated     20180321    by Magnus Wenzer
         
         """ 
         print('list_supporting_elements', request)
@@ -1065,7 +1131,8 @@ class EventHandler(object):
             quality_element_dict = self.dict_quality_element(workspace_unique_id=workspace_unique_id, 
                                                              subset_unique_id=subset_unique_id, 
                                                              quality_element=quality_element, 
-                                                             request=request)
+                                                             request=request, 
+                                                             include_indicator_settings=include_indicator_settings)
         
             return_list.append(quality_element_dict)
         
@@ -1412,11 +1479,9 @@ class EventHandler(object):
     def request_subset_edit(self, request):
         """
         Created     20180222    by Magnus Wenzer
-        Updated     20180319    by Magnus Wenzer
+        Updated     20180321    by Magnus Wenzer
         
-        "request" and "response" is the output from a request_subset_list
         """
-        # TODO: How to get informatiuon about user_id and workspace_uuid
         self._logger.debug('Start: request_subset_edit')
         user_id = str(request['user_id'])
         workspace_uuid = request['workspace']['uuid'] 
@@ -1432,6 +1497,28 @@ class EventHandler(object):
         
         return response
             
+    #==========================================================================
+    def request_subset_info(self, request):
+        """
+        Created     20180321    by Magnus Wenzer
+        Updated     20180321    by Magnus Wenzer
+        
+        Handles a single subset. 
+        """
+        
+        self._logger.debug('Start: request_subset_edit')
+        user_id = str(request['user_id'])
+        workspace_uuid = request['workspace']['uuid'] 
+        request_subset_list = request['subsets']
+        if not self.get_workspace(user_id=user_id, unique_id=workspace_uuid):
+            return {}
+        response = self.list_subsets(user_id=user_id, workspace_unique_id=workspace_uuid, request=request_subset_list)
+        request['subsets'] = response
+
+        
+        return response
+    
+    
     #==========================================================================
     def request_subset_list(self, request):
         """
@@ -1779,11 +1866,11 @@ class EventHandler(object):
     
     #==========================================================================
     def get_settings_filter_object(self, 
-                                        workspace_unique_id='', 
-                                        subset_unique_id='',
-                                        indicator='', 
-                                        step='step_2', 
-                                        filter_type=''): 
+                                    workspace_unique_id='', 
+                                    subset_unique_id='',
+                                    indicator='', 
+                                    step='step_2', 
+                                    filter_type=''): 
         """
         Created     20180321    by Magnus Wenzer
         Updated     20180321    by Magnus Wenzer
