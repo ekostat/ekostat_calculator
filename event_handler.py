@@ -1749,7 +1749,8 @@ class EventHandler(object):
         Returns a dict like:
             {
             	"alias": "New Name",
-            	"uuid": "..."
+            	"uuid": "...", 
+              "status": "..."
             }
         """
         self._logger.debug('Start: request_workspace_edit')
@@ -1759,7 +1760,6 @@ class EventHandler(object):
         
         uuid_mapping = self._get_uuid_mapping_object(user_id)
         uuid_mapping.set_alias(unique_id, alias)
-        alias = uuid_mapping.get_alias(unique_id, status=['editable', 'readable']) 
         
         if request.get('status', False):
             uuid_mapping.set_status(unique_id, request['status'])

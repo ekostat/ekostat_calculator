@@ -529,32 +529,32 @@ class SettingsFile(object):
         print(suf)
         print(self.df.columns)
         if suf:
-            value = self.df.loc[(self.df['TYPE_AREA_NUMBER']==num) & (self.df['TYPE_AREA_SUFFIX']==suf), variable]
+            value_series = self.df.loc[(self.df['TYPE_AREA_NUMBER']==num) & (self.df['TYPE_AREA_SUFFIX']==suf), variable]
         else:
-            value = self.df.loc[self.df['TYPE_AREA_NUMBER']==num, variable]
+            value_series = self.df.loc[self.df['TYPE_AREA_NUMBER']==num, variable]
         
-        print(value)
+        print(value_series)
          
-        assert len(value) == 1, 'More than one setting for given filter_dict\n{}'.format(value)
+#        assert len(value) == 1, 'More than one setting for given filter_dict\n{}'.format(value)
         
         # If len(value) > 1 we need to return data from two rows 
-#        return_value = []
-#        for value in value: 
-#                
-        value = value.values[0]    
-        print(value)
-        print(variable)
-        
-        if variable in self.list_columns: 
-            value = self._get_list_from_string(value, variable)
-            print('=', value, type(value[0]))
-        elif variable in self.interval_columns: 
-            value = self._get_interval_from_string(value, variable)
-            print('=', value, type(value[0]))
-#            esf
-        else:
-            value = self._convert(value, variable.upper())
-        return value
+        return_value = []
+        for value in value_series.values:  
+            value = value.values[0]    
+            print(value)
+            print(variable)
+            
+            if variable in self.list_columns: 
+                value = self._get_list_from_string(value, variable)
+                print('=', value, type(value[0]))
+            elif variable in self.interval_columns: 
+                value = self._get_interval_from_string(value, variable)
+                print('=', value, type(value[0]))
+    #            esf
+            else:
+                value = self._convert(value, variable.upper())
+            return_value.append(value)
+        return return_value
     
     #==========================================================================
     def set_value(self, type_area=None, variable=None, value=None): 
@@ -696,14 +696,21 @@ class SettingsFile(object):
         return combined_boolean
     
     #==========================================================================
-    def _get_boolean_from_interval(self, df=None, type_area=None, variable=None): 
+    def _get_boolean_from_interval(self, df=None, type_area=None, variable=None, level=None): 
         """
-        Updated     20180320    by Magnus Wenzer
+        Updated     20180322    by Magnus Wenzer
         """
         
         from_value, to_value = self.get_value(type_area=type_area, 
                                               variable=variable)
         
+        # Must check if there are several results. For example BQI has two depth intervalls.  
+#        if len(result) == 1:
+#            from_value, to_value = result[0]
+#        else:
+#            if not level:
+#                return 
+            
         parameter = variable.split('_')[0]
 #        print(df[parameter])
 #        print(type(df[parameter][0]))
