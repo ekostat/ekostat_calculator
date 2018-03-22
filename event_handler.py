@@ -50,7 +50,7 @@ class EventHandler(object):
         self.log_id = 'event_handler'
         
         self.include_status = ['editable', 'readable']
-        self.all_status = ['editable', 'readable', 'deleted']
+        self.all_status = ['editable', 'readable', 'deleted', 'inactive']
          
         # Add logger
         core.add_log(log_id=self.log_id, 

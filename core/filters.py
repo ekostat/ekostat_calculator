@@ -508,7 +508,7 @@ class SettingsFile(object):
         # TODO: How made this with utils.set_filter. Dont think we need this? /MW
         
         
-#        value = self.df.loc[boolean_list, variable.upper()].values  
+        value = self.df.loc[boolean_list, variable.upper()].values  
         
         assert len(value) == 1, 'More than one setting for given filter_dict\n{}'.format(value)
         
@@ -522,7 +522,7 @@ class SettingsFile(object):
         return value
     
     #==========================================================================
-    def get_value(self, variable=None, type_area=None): 
+    def get_value(self, variable=None, type_area=None, level=0): 
         num, suf = get_type_area_parts(type_area)
         print(type_area)
         print(num)
@@ -534,11 +534,13 @@ class SettingsFile(object):
             value = self.df.loc[self.df['TYPE_AREA_NUMBER']==num, variable]
         
         print(value)
-        
-        if len(value) > 1:
-            # Depth needs to be checked
+         
         assert len(value) == 1, 'More than one setting for given filter_dict\n{}'.format(value)
         
+        # If len(value) > 1 we need to return data from two rows 
+#        return_value = []
+#        for value in value: 
+#                
         value = value.values[0]    
         print(value)
         print(variable)
