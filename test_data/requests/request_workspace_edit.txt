@@ -1,5 +1,5 @@
 {
   "user_id": "user_1",
   "alias": "mw3_renamed", 
-  "uuid": "bc60fd0e-37aa-4f5f-8625-741c2011bb9f"
+  "uuid": "2e12443d-2537-450f-ba4f-d5a13a0db247"
 }

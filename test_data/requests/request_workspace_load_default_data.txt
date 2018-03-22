@@ -1,4 +1,4 @@
 {
   "user_id": "user_1", 
-  "workspace_uuid": "335af11c-a7d4-4edf-bc21-d90ffb762c70"
+  "workspace_uuid": "1a77220d-e76a-4224-a98c-8c0c234150d9"
 }

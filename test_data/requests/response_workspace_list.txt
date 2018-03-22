@@ -2,17 +2,17 @@
     "workspaces": [
         {
             "alias": "mw1",
-            "uuid": "335af11c-a7d4-4edf-bc21-d90ffb762c70",
+            "uuid": "1a77220d-e76a-4224-a98c-8c0c234150d9",
             "status": "editable"
         },
         {
             "alias": "mw3_renamed",
-            "uuid": "bc60fd0e-37aa-4f5f-8625-741c2011bb9f",
+            "uuid": "2e12443d-2537-450f-ba4f-d5a13a0db247",
             "status": "editable"
         },
         {
             "alias": "mw2",
-            "uuid": "6d49f82f-f2d7-43b5-8087-b4468d31aa80",
+            "uuid": "f1fb96b8-8b08-4075-b53d-89471c15a429",
             "status": "editable"
         },
         {

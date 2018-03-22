@@ -1,15 +1,15 @@
 {   "user_id": "user_1",
     "workspace": {
         "alias": "mw1",
-        "uuid": "335af11c-a7d4-4edf-bc21-d90ffb762c70",
+        "uuid": "1a77220d-e76a-4224-a98c-8c0c234150d9",
         "status": "editable"
     },
     "subsets": [
         {
             "user_id": "user_1", 
-            "workspace_uuid": "335af11c-a7d4-4edf-bc21-d90ffb762c70",
+            "workspace_uuid": "1a77220d-e76a-4224-a98c-8c0c234150d9",
             "alias": "test_subset_1",
-            "uuid": "1bdd7eb5-2f2a-44f6-bd7e-c26bf09ce047",
+            "uuid": "fa499f4c-ad1e-4978-b38a-510b672d5a7e",
             "status": "editable",
             "active": true,
             "time": {

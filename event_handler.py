@@ -448,6 +448,11 @@ class EventHandler(object):
             self._logger.warning('Could not find subset object {}. Subset is probably not loaded.'.format(subset_unique_id))
             return {}
         
+        print('='*50)
+        print(workspace_unique_id)
+        print(subset_unique_id)
+        print(indicator)
+        print('='*50)
         settings_data_filter_object = self.get_settings_filter_object(workspace_unique_id=workspace_unique_id, 
                                                                            subset_unique_id=subset_unique_id,
                                                                            indicator=indicator, 
@@ -570,7 +575,7 @@ class EventHandler(object):
         
         
     #==========================================================================
-    def dict_subset(self, workspace_unique_id=None, subset_unique_id=None, request=None, include_indicator_settings=False):  
+    def dict_subset(self, workspace_unique_id=None, subset_unique_id=None, request={}, include_indicator_settings=False):  
         """
         Created     20180222    by Magnus Wenzer
         Updated     20180317    by Magnus Wenzer
@@ -590,8 +595,11 @@ class EventHandler(object):
                         'supporting_elements': [], 
                         'quality_elements': []}
         
+        if not subset_unique_id and request.get('uuid', False):
+            subset_unique_id = request['uuid']
+            
         # Check request 
-        if request:
+        if request.get('active', False):
             if request['active']:
                 workspace_object.uuid_mapping.set_active(subset_unique_id)
             else:
@@ -650,6 +658,7 @@ class EventHandler(object):
         Internally its only possible to filter water bodies.  
         """
         workspace_object = self._get_workspace_object(unique_id=workspace_unique_id) 
+#        print(subset_unique_id)
         subset_object = workspace_object.get_subset_object(subset_unique_id) 
         if not subset_object:
             self._logger.warning('Could not find subset object {}. Subset is probably not loaded.'.format(subset_unique_id))
@@ -750,6 +759,7 @@ class EventHandler(object):
         "selectable" needs to be checked against water district and type. 
         """
         workspace_object = self._get_workspace_object(unique_id=workspace_unique_id) 
+        print('subset_unique_id', subset_unique_id)
         subset_object = workspace_object.get_subset_object(subset_unique_id) 
         water_body_mapping = self.mapping_objects['water_body']
         print('subset_unique_id'.upper(), subset_unique_id)
@@ -1501,19 +1511,22 @@ class EventHandler(object):
     def request_subset_info(self, request):
         """
         Created     20180321    by Magnus Wenzer
-        Updated     20180321    by Magnus Wenzer
+        Updated     20180322    by Magnus Wenzer
         
         Handles a single subset. 
         """
         
-        self._logger.debug('Start: request_subset_edit')
+        self._logger.debug('Start: request_subset_info')
         user_id = str(request['user_id'])
-        workspace_uuid = request['workspace']['uuid'] 
-        request_subset_list = request['subsets']
+        workspace_uuid = request['workspace_uuid'] 
+        request_subset_dict = request['subset']
         if not self.get_workspace(user_id=user_id, unique_id=workspace_uuid):
             return {}
-        response = self.list_subsets(user_id=user_id, workspace_unique_id=workspace_uuid, request=request_subset_list)
-        request['subsets'] = response
+        response = self.dict_subset(workspace_unique_id=workspace_uuid, 
+                                    
+                                    request=request_subset_dict, 
+                                    include_indicator_settings=True)
+        request['subset'] = response
 
         
         return response
@@ -1712,7 +1725,7 @@ class EventHandler(object):
         uuid_mapping = self._get_uuid_mapping_object(user_id)
         if unique_id not in uuid_mapping.get_uuid_list_for_user(user_id):
             response['all_ok'] = False
-            response['message'] = 'Workspace does not belon to user'
+            response['message'] = 'Workspace does not belong to user'
             return response
             
         all_ok = self.delete_workspace(user_id=user_id, unique_id=unique_id, permanently=False)
@@ -1748,8 +1761,14 @@ class EventHandler(object):
         uuid_mapping.set_alias(unique_id, alias)
         alias = uuid_mapping.get_alias(unique_id, status=['editable', 'readable']) 
         
-        response = {'alias': alias, 
-                    'uuid': unique_id}
+        if request.get('status', False):
+            uuid_mapping.set_status(unique_id, request['status'])
+            
+        status = uuid_mapping.get_status(unique_id=unique_id)
+        
+        response = {"alias": alias, 
+                    "uuid": unique_id, 
+                    "status": status}
         
         return response
     
@@ -1785,7 +1804,7 @@ class EventHandler(object):
     def request_workspace_load_default_data(self, request):
         """
         Created     20180319    by Magnus Wenzer
-        Updated     20180319    by Magnus Wenzer
+        Updated     20180322    by Magnus Wenzer
         
         "request" must contain: 
             {
@@ -1806,10 +1825,12 @@ class EventHandler(object):
                     "message": ""}
         
         uuid_mapping_object = self._get_uuid_mapping_object(user_id)
-        
+        print('user_id', user_id)
+        print(workspace_uuid)
+        print(uuid_mapping_object.get_uuid_list_for_user(user_id))
         if workspace_uuid not in uuid_mapping_object.get_uuid_list_for_user(user_id):
             response['all_ok'] = False 
-            response['message'] = "CWorkspace does not belong to user"
+            response['message'] = "Workspace does not belong to user"
             return response
         
         workspace_object = self._get_workspace_object(unique_id=workspace_uuid) 
