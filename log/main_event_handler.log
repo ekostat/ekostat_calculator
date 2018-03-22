@@ -814,3 +814,47 @@
 2018-03-21 13:34:14,519	event_handler.py	1391	request_subset_edit	DEBUG	Start: request_subset_edit
 2018-03-21 13:34:14,524	event_handler.py	831	get_workspace	DEBUG	Getting workspace "335af11c-a7d4-4edf-bc21-d90ffb762c70" with alias "None"
 2018-03-21 13:34:19,848	event_handler.py	831	get_workspace	DEBUG	Getting workspace "335af11c-a7d4-4edf-bc21-d90ffb762c70" with alias "None"
+2018-03-21 16:12:10,037	logger.py	85	add_log	DEBUG	
+2018-03-21 16:12:10,038	logger.py	86	add_log	DEBUG	========================================================================================================================
+2018-03-21 16:12:10,041	logger.py	87	add_log	DEBUG	### Log added for log_id "event_handler" at locaton: ..\log\main_event_handler.log
+2018-03-21 16:12:10,043	logger.py	88	add_log	DEBUG	------------------------------------------------------------------------------------------------------------------------
+2018-03-21 16:12:10,052	event_handler.py	64	__init__	DEBUG	Start EventHandler: event_handler
+2018-03-21 16:12:10,054	event_handler.py	65	__init__	DEBUG	
+2018-03-21 16:12:10,057	event_handler.py	66	__init__	INFO	TEST info logger
+2018-03-21 16:12:10,059	event_handler.py	67	__init__	WARNING	TEST warning logger
+2018-03-21 16:12:10,061	event_handler.py	68	__init__	ERROR	TEST error logger
+2018-03-21 16:12:10,064	event_handler.py	69	__init__	DEBUG	TEST debug logger
+2018-03-21 16:12:27,304	event_handler.py	1326	load_workspace	DEBUG	Trying to load workspace "9eea0d00-c024-410f-912a-980eed55acae" with alias "lena_newdata"
+2018-03-21 16:12:46,264	event_handler.py	851	get_workspace	DEBUG	Getting workspace "9eea0d00-c024-410f-912a-980eed55acae" with alias "lena_newdata"
+2018-03-21 16:17:58,212	event_handler.py	64	__init__	DEBUG	Start EventHandler: event_handler
+2018-03-21 16:17:58,217	event_handler.py	65	__init__	DEBUG	
+2018-03-21 16:17:58,229	event_handler.py	66	__init__	INFO	TEST info logger
+2018-03-21 16:17:58,238	event_handler.py	67	__init__	WARNING	TEST warning logger
+2018-03-21 16:17:58,241	event_handler.py	68	__init__	ERROR	TEST error logger
+2018-03-21 16:17:58,243	event_handler.py	69	__init__	DEBUG	TEST debug logger
+2018-03-21 16:18:07,828	event_handler.py	1326	load_workspace	DEBUG	Trying to load workspace "9eea0d00-c024-410f-912a-980eed55acae" with alias "lena_newdata"
+2018-03-21 16:18:27,884	event_handler.py	851	get_workspace	DEBUG	Getting workspace "9eea0d00-c024-410f-912a-980eed55acae" with alias "lena_newdata"
+2018-03-21 16:20:05,711	event_handler.py	64	__init__	DEBUG	Start EventHandler: event_handler
+2018-03-21 16:20:05,731	event_handler.py	65	__init__	DEBUG	
+2018-03-21 16:20:05,731	event_handler.py	66	__init__	INFO	TEST info logger
+2018-03-21 16:20:05,731	event_handler.py	67	__init__	WARNING	TEST warning logger
+2018-03-21 16:20:05,731	event_handler.py	68	__init__	ERROR	TEST error logger
+2018-03-21 16:20:05,732	event_handler.py	69	__init__	DEBUG	TEST debug logger
+2018-03-21 16:20:15,273	event_handler.py	1326	load_workspace	DEBUG	Trying to load workspace "9eea0d00-c024-410f-912a-980eed55acae" with alias "lena_newdata"
+2018-03-21 16:20:29,337	event_handler.py	851	get_workspace	DEBUG	Getting workspace "9eea0d00-c024-410f-912a-980eed55acae" with alias "lena_newdata"
+2018-03-21 16:22:13,576	event_handler.py	64	__init__	DEBUG	Start EventHandler: event_handler
+2018-03-21 16:22:13,582	event_handler.py	65	__init__	DEBUG	
+2018-03-21 16:22:13,585	event_handler.py	66	__init__	INFO	TEST info logger
+2018-03-21 16:22:13,593	event_handler.py	67	__init__	WARNING	TEST warning logger
+2018-03-21 16:22:13,597	event_handler.py	68	__init__	ERROR	TEST error logger
+2018-03-21 16:22:13,600	event_handler.py	69	__init__	DEBUG	TEST debug logger
+2018-03-21 16:22:31,963	event_handler.py	1326	load_workspace	DEBUG	Trying to load workspace "9eea0d00-c024-410f-912a-980eed55acae" with alias "lena_newdata"
+2018-03-21 16:22:52,618	event_handler.py	851	get_workspace	DEBUG	Getting workspace "9eea0d00-c024-410f-912a-980eed55acae" with alias "lena_newdata"
+2018-03-21 16:26:05,601	event_handler.py	64	__init__	DEBUG	Start EventHandler: event_handler
+2018-03-21 16:26:05,601	event_handler.py	65	__init__	DEBUG	
+2018-03-21 16:26:05,601	event_handler.py	66	__init__	INFO	TEST info logger
+2018-03-21 16:26:05,611	event_handler.py	67	__init__	WARNING	TEST warning logger
+2018-03-21 16:26:05,612	event_handler.py	68	__init__	ERROR	TEST error logger
+2018-03-21 16:26:05,612	event_handler.py	69	__init__	DEBUG	TEST debug logger
+2018-03-21 16:26:12,394	event_handler.py	1326	load_workspace	DEBUG	Trying to load workspace "9eea0d00-c024-410f-912a-980eed55acae" with alias "lena_newdata"
+2018-03-21 16:26:34,216	event_handler.py	851	get_workspace	DEBUG	Getting workspace "9eea0d00-c024-410f-912a-980eed55acae" with alias "lena_newdata"

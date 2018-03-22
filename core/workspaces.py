@@ -251,7 +251,13 @@ class WorkStep(object):
         self.data_filter = core.DataFilter(self.paths['directory_paths']['data_filters'], 
                                            mapping_objects=self.mapping_objects) 
         
-
+    #==========================================================================
+    def load_indicator_objects(self):
+        """
+        when step 3 is initiated indicator objects should be instansiated for all wb and indicators selected in step 2 as default
+        """
+        pass
+    
     #==========================================================================
     def load_indicator_settings_filters(self): 
         """
@@ -576,25 +582,7 @@ class Subset(object):
             return False 
             
         self.steps[step].load_data()
-        
-    #==========================================================================
-    def load_indicators(self, index_handler = None, indicator_list = None):  
-        """
-        Created:        20180215     by Lena
-        Last modified:  20180216     by Lena
-        create dict containing indicator objects according to data availability or choice?
-        """
-        self.indicator_objects = dict.fromkeys(indicator_list)
-        for indicator in self.indicator_objects.keys():
-            # get settings for the indicator
-            data_filter_settings = self.get_step_2_object().get_indicator_data_filter_settings(indicator)
-            tolerance_settings = self.get_step_2_object().get_indicator_tolerance_settings(indicator)
-            ref_settings = self.get_step_2_object().get_indicator_ref_settings(indicator) 
-            # add indicator objects to dictionary
-            self.indicator_objects[indicator] = core.IndicatorBase(index_handler, data_filter_settings, tolerance_settings, ref_settings)
-            # TODO: Indicator objects should be different classes from the Base-class depending on indicator. 
-            #       The Indicator classname should be given in the config file together with the indicator names and parameters
-             
+                 
     #==========================================================================
     def deprecated_get_step_1_object(self): 
         return self.get_step_object('step_1')
@@ -1489,7 +1477,34 @@ class WorkSpace(object):
 #        self.data_handler.merge_all_data(save_to_txt=True)
         
     
-    
+#==========================================================================
+    def load_indicators(self, subset_unique_id = None, indicator_list = None):  
+        """
+        Created:        20180215     by Lena
+        Last modified:  20180216     by Lena
+        create dict containing indicator objects according to data availability or choice?
+        This should be moved to WorkStep class, and should be run accesed only for step 3.
+        """
+        step_object = self.get_step_object(step = 2, subset = subset_unique_id)
+        self.indicator_objects = dict.fromkeys(indicator_list)
+        for indicator in self.indicator_objects.keys():
+            # get settings for the indicator
+            data_filter_settings = step_object.get_indicator_data_filter_settings(indicator)
+            tolerance_settings = step_object.get_indicator_tolerance_settings(indicator)
+            ref_settings = step_object.get_indicator_ref_settings(indicator)
+            index_handler = self.index_handler
+            assert all(data_filter_settings, 
+                       tolerance_settings,
+                       ref_settings,
+                       index_handler.booleans['step_0'][subset_unique_id]['step_1']['step_2']), 'Something missing in data_filter_settings, tolerance_settings, ref_settings, index_handler'
+            # add indicator objects to dictionary
+            self.indicator_objects[indicator] = core.IndicatorBase(index_handler, 
+                                  data_filter_settings, 
+                                  tolerance_settings, 
+                                  ref_settings)
+            # TODO: Indicator objects should be different classes from the Base-class depending on indicator. 
+            #       The Indicator classname should be given in the config file together with the indicator names and parameters
+        
     #==========================================================================
     def set_data_filter(self, step='', subset='', filter_type='', filter_name='', data=None, save_filter=True, append_items=False): 
         """
