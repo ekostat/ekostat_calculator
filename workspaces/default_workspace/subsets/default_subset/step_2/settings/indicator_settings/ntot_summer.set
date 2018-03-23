@@ -1,4 +1,4 @@
-Type_Area_number	Type_Area_suffix	filter_DEPH_INTERVAL_int	tolerance_MIN_NR_YEARS	tolerance_MIN_NR_VALUES	tolerance_TIME_DELTA_TOLERANCE	tolerance_POS_RADIUS_TOLERANCE	tolerance_DEPH_TOLERANCE	filter_MONTH_LIST_int	ref_EKV Ref	ref_EKV H/G	ref_EKV G/M	ref_EKV M/O	ref_EKV O/D	ref_EK H/G	ref_EK G/M	ref_EK M/O	ref_EK O/D	ref_Salinity max
+Type_Area_number	Type_Area_suffix	filter_DEPH_INTERVAL_int	tolerance_MIN_NR_YEARS_int	tolerance_MIN_NR_VALUES_int	tolerance_TIME_DELTA_TOLERANCE	tolerance_POS_RADIUS_TOLERANCE	tolerance_DEPH_TOLERANCE_int	filter_MONTH_LIST_int	ref_EKV Ref	ref_EKV H/G	ref_EKV G/M	ref_EKV M/O	ref_EKV O/D	ref_EK H/G	ref_EK G/M	ref_EK M/O	ref_EK O/D	ref_Salinity max
 1	n	0-10	3	3	3	0.1	5	6;7;8	-0.963*s+36	-1.088*s+40.68	-1.213*s+45.36	-1.5889*s+59.4	-2.215*s+82.8	0.88	0.79	0.6	0.43	27
 1	s	0-10	3	3	3	0.1	5	6;7;8	-0.9*s+30	-1.035*s+34.5	-1.17*s+39	-1.575*s+52.5	-2.25*s+75	0.87	0.77	0.57	0.4	20
 2		0-10	3	3	3	0.1	5	6;7;8	-0.963*s+36	-1.088*s+40.68	-1.213*s+45.36	-1.5889*s+59.4	-2.215*s+82.8	0.88	0.79	0.6	0.43	27

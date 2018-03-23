@@ -400,6 +400,8 @@ class EventHandler(object):
                                                                     subset_unique_id=subset_unique_id, 
                                                                     indicator=indicator, 
                                                                     request=request_list)
+#            if indicator == 'din_winter':
+#                dgfs
         return return_dict
     
     #==========================================================================
@@ -438,72 +440,102 @@ class EventHandler(object):
                               request=None): 
         """
         Created     20180321   by Magnus Wenzer
-        Updated     20180321   by Magnus Wenzer
+        Updated     20180323   by Magnus Wenzer
         
         Takes information from settings filter in step 2. 
         """
+        
+        
         workspace_object = self._get_workspace_object(unique_id=workspace_unique_id) 
         subset_object = workspace_object.get_subset_object(subset_unique_id) 
         if not subset_object:
             self._logger.warning('Could not find subset object {}. Subset is probably not loaded.'.format(subset_unique_id))
             return {}
         
-        print('='*50)
-        print(workspace_unique_id)
-        print(subset_unique_id)
-        print(indicator)
-        print('='*50)
+#        if indicator == 'din_winter':
+#            print('='*50)
+#            print(workspace_unique_id)
+#            print(subset_unique_id)
+#            print(indicator)
+#            print(type_area)
+#            print('='*50)
+#            df
         settings_data_filter_object = self.get_settings_filter_object(workspace_unique_id=workspace_unique_id, 
                                                                            subset_unique_id=subset_unique_id,
                                                                            indicator=indicator, 
                                                                            filter_type='data')
+        if not settings_data_filter_object:
+            self._logger.debug('Could not load data filter object for indicator "{}"'.format(indicator))
+            return {}
+        
         
         settings_tolerance_filter_object = self.get_settings_filter_object(workspace_unique_id=workspace_unique_id, 
                                                                            subset_unique_id=subset_unique_id,
                                                                            indicator=indicator,
                                                                            filter_type='tolerance')
+         
         
 #        type_area = self.mapping_objects['water_body'].get_list('type_area', water_body=water_body)
         if not type_area:
             return {}
-        type_area = type_area[0]
+#        type_area = type_area[0]
         
         if request:
-            # Settings data filter
-            depth_interval = request['depth_interval'] 
-            month_interval = request['month_interval']
-            month_list = [] 
-            month = month_interval[0]
-            while month != month_interval[-1]:
-                month_list.append(month)
-                month += 1
-                if month == 13:
-                    month = 1
-            month_list.append(month_interval[-1])  
-            value_dict = {'DEPH_INTERVAL': depth_interval, 
-                          'MONTH_LIST': month_list} 
-            settings_data_filter_object.set_values(value_dict)
-            
-            
-            min_no_years = ['min_no_years']
-            value_dict = {'MIN_NR_YEARS': min_no_years} 
+            value_dict = {type_area: {}} 
+            depth_interval_list = []
+            month_list_list = []
+            min_no_years_list = []
+            for k in range(len(request['depth_interval'])):
+                # Add data filter
+                depth_interval = request['depth_interval'][k]
+                month_interval = request['month_interval'][k]
+                month_list = [] 
+                month = month_interval[0]
+                while month != month_interval[-1]:
+                    month_list.append(month)
+                    month += 1
+                    if month == 13:
+                        month = 1
+                month_list.append(month_interval[-1])  
+                
+                # Add tolerance filter
+                min_no_years = request['min_no_years'][k]
+
+                depth_interval_list.append(depth_interval)
+                month_list_list.append(month_list)
+                min_no_years_list.append(min_no_years)
+                
+            value_dict[type_area]['DEPH_INTERVAL'] = depth_interval_list 
+            value_dict[type_area]['MONTH_LIST'] = month_list_list
+            value_dict[type_area]['MIN_NR_YEARS'] = min_no_years_list 
+                      
+            settings_data_filter_object.set_values(value_dict) 
             settings_tolerance_filter_object.set_values(value_dict)
             return request
             
             
         else:
             return_dict = {}
+            return_dict['value'] = type_area
+            return_dict['indicator'] = indicator
             
             # Depth
             return_dict['depth_interval'] = settings_data_filter_object.get_value(type_area=type_area, variable='DEPH_INTERVAL')
             
             # Month
-            month_list = settings_data_filter_object.get_value(type_area=type_area, variable='MONTH_LIST')
-            return_dict['month_interval'] = [month_list[0], month_list[-1]]
+            month_list = settings_data_filter_object.get_value(type_area=type_area, variable='MONTH_LIST') 
+            # Give interval instead of list. Each item in the list chould be converted 
+            month_interval = []
+            for month in month_list:
+                month_interval.append([month[0], month[-1]])
+            return_dict['month_interval'] = month_interval
         
             # Min number of years 
             return_dict['min_no_years'] = settings_tolerance_filter_object.get_value(type_area=type_area, variable='MIN_NR_YEARS')
-
+            
+#        if indicator == 'bqi':
+#            self.return_dict = return_dict
+#            qq
         return return_dict
         
 #    #==========================================================================
@@ -969,16 +1001,33 @@ class EventHandler(object):
         
         request is a list of dicts. 
         """ 
-#        workspace_object = self._get_workspace_object(unique_id=workspace_unique_id) 
-        
-        type_area_list = self.mapping_objects['water_body'].get_list('type_area')
+        workspace_object = self._get_workspace_object(unique_id=workspace_unique_id) 
+#        if indicator == 'din_winter':
+#            print('¤'*50)
+#            print(indicator) 
+#            print(request)
+#            print('¤'*50)
+##            df
+#        print('¤'*50)
+#        print(indicator) 
+#        print(request)
+#        print('¤'*50)
+        indicator_settings_object = workspace_object.get_indicator_settings_data_filter_object(subset=subset_unique_id, 
+                                                                                               step='step_2', 
+                                                                                               indicator=indicator)
+        if not indicator_settings_object:
+            # No settings for indicator 
+            return []
+            
+        type_area_list = set(indicator_settings_object.get_type_area_list())
         return_list = []
         for type_area in type_area_list:
             request_dict = {}
             if request:
                 # Need to check which element in request list belong to the indicator 
                 for ty in request:
-                    if ty['value'] == type_area:
+                    print(ty)
+                    if ty and ty['value'] == type_area: # ty can be empty dict if no settiengs for indicator
                         request_dict = ty
                         break
                     
@@ -988,7 +1037,11 @@ class EventHandler(object):
                                                                   type_area=type_area, 
                                                                   request=request_dict)
             return_list.append(indicator_settings_dict)
-    
+        
+#        if indicator == 'bqi':
+#            self.type_area_list = type_area_list
+#            self.return_list = return_list
+#            qq
         return return_list
         
     #==========================================================================
@@ -1345,7 +1398,34 @@ class EventHandler(object):
         for unique_id in workspace_list: 
             self.load_workspace(unique_id=unique_id)
         
-    
+    #==========================================================================
+    def assure_data_is_loaded(self, user_id=None, workspace_uuid=None): 
+        """
+        Created     20180323    by Magnus Wenzer
+        Updated     20180323    by Magnus Wenzer
+        
+        Assures that data is loaded in the given workspace. 
+        Data is loaded if workspace.index_handler.data_handler.all_data is empty
+        """
+        self.assure_workspace_is_loaded(user_id=user_id, workspace_uuid=workspace_uuid)
+        workspace_object = self._get_workspace_object(user_id=user_id, unique_id=workspace_uuid)
+#        self.ih = workspace_object.index_handler
+        if not len(workspace_object.index_handler.data_handler_object.all_data):
+            workspace_object.load_all_data()
+        
+    #==========================================================================
+    def assure_workspace_is_loaded(self, user_id=None, workspace_uuid=None): 
+        """
+        Created     20180323    by Magnus Wenzer
+        Updated     20180323    by Magnus Wenzer
+        
+        Assures that workspace is loaded. 
+        Loads workspace if not loaded. 
+        """
+        if workspace_uuid not in self.workspaces:
+            self.load_workspace(user_id=user_id, unique_id=workspace_uuid)
+        
+        
     #==========================================================================
     def load_data(self, user_id, unique_id): 
         workspace_object = self._get_workspace_object(user_id=user_id, unique_id=unique_id) 
@@ -1474,6 +1554,7 @@ class EventHandler(object):
             }
         """
         self._logger.debug('Start: request_subset_delete')
+        user_id = request['user_id']
         workspace_uuid = request['workspace_uuid']
         subset_uuid = request['subset_uuid']
 #        print('###', user_id)
@@ -1489,7 +1570,7 @@ class EventHandler(object):
     def request_subset_edit(self, request):
         """
         Created     20180222    by Magnus Wenzer
-        Updated     20180321    by Magnus Wenzer
+        Updated     20180323    by Magnus Wenzer
         
         """
         self._logger.debug('Start: request_subset_edit')
@@ -1504,8 +1585,8 @@ class EventHandler(object):
 #        if 'subsets' in request.keys():
 #            request_list = request['subsets']
 #        response = self.list_subsets(workspace_unique_id=workspace_uuid, user_id=user_id, request=request_list)
-        
-        return response
+        return request
+#        return response
             
     #==========================================================================
     def request_subset_info(self, request):
@@ -1521,7 +1602,8 @@ class EventHandler(object):
         workspace_uuid = request['workspace_uuid'] 
         request_subset_dict = request['subset']
         if not self.get_workspace(user_id=user_id, unique_id=workspace_uuid):
-            return {}
+            return {} 
+        self.assure_data_is_loaded(user_id=user_id, workspace_uuid=workspace_uuid)
         response = self.dict_subset(workspace_unique_id=workspace_uuid, 
                                     
                                     request=request_subset_dict, 
@@ -1529,7 +1611,7 @@ class EventHandler(object):
         request['subset'] = response
 
         
-        return response
+        return request
     
     
     #==========================================================================
@@ -1652,6 +1734,9 @@ class EventHandler(object):
         # Initiate structure 
         response = {'workspace': {}, 
                    'subsets': []}
+        print('workspace_uuid', workspace_uuid)
+        
+        self.assure_data_is_loaded(user_id=user_id, workspace_uuid=workspace_uuid)
         
         # Add workspace info
         response['workspace'] = self.dict_workspace(unique_id=workspace_uuid, user_id=user_id)

@@ -132,6 +132,7 @@ class DataFilter(object):
     def get_filter_boolean_for_df(self, df=None, **kwargs): 
         """
         Get boolean tuple to use for filtering. 
+        kwargs here so that all methods named get_filter_boolean_for_df can be treeted the same way. 
         """
         combined_boolean = ()
         
@@ -464,8 +465,17 @@ class SettingsFile(object):
             self.columns.append(variable)
             
         # Set new column names 
-        self.df.columns = self.columns        
-        self.type_area_list = list(self.df['TYPE_AREA_NUMBER'])
+        self.df.columns = self.columns 
+        suffix_list = []
+        for val in self.df['TYPE_AREA_SUFFIX'].astype(str):
+            if val == 'nan':
+                suffix_list.append('')
+            else:
+                suffix_list.append(val)
+        self.df['TYPE_AREA_SUFFIX'] = suffix_list
+        # Oklart med dtype här. Battre inlasning kravs! MW
+#        self.type_area_list = list(self.df['TYPE_AREA_NUMBER'])
+        
         
         
     #==========================================================================
@@ -522,34 +532,44 @@ class SettingsFile(object):
         return value
     
     #==========================================================================
+    def get_type_area_list(self): 
+        """
+        Created     20180323    by Magnus Wenzer
+        Updated     20180323    by Magnus Wenzer
+        """
+        return self.df['TYPE_AREA_NUMBER'] + self.df['TYPE_AREA_SUFFIX'].astype(str)
+    
+    
+    #==========================================================================
     def get_value(self, variable=None, type_area=None, level=0): 
-        num, suf = get_type_area_parts(type_area)
         print(type_area)
-        print(num)
-        print(suf)
-        print(self.df.columns)
+        print(self.df.columns)        
+        num, suf = get_type_area_parts(type_area)
+
         if suf:
             value_series = self.df.loc[(self.df['TYPE_AREA_NUMBER']==num) & (self.df['TYPE_AREA_SUFFIX']==suf), variable]
         else:
             value_series = self.df.loc[self.df['TYPE_AREA_NUMBER']==num, variable]
         
-        print(value_series)
-         
+#        print('----')
+#        print(value_series, type(value_series))
+#        print(value_series.values, type(value_series.values))
+        
 #        assert len(value) == 1, 'More than one setting for given filter_dict\n{}'.format(value)
         
         # If len(value) > 1 we need to return data from two rows 
         return_value = []
         for value in value_series.values:  
-            value = value.values[0]    
-            print(value)
-            print(variable)
+#            print(value)   
+#            print(value)
+#            print(variable)
             
             if variable in self.list_columns: 
                 value = self._get_list_from_string(value, variable)
-                print('=', value, type(value[0]))
+#                print('=', value, type(value[0]))
             elif variable in self.interval_columns: 
                 value = self._get_interval_from_string(value, variable)
-                print('=', value, type(value[0]))
+#                print('=', value, type(value[0]))
     #            esf
             else:
                 value = self._convert(value, variable.upper())
@@ -558,29 +578,36 @@ class SettingsFile(object):
     
     #==========================================================================
     def set_value(self, type_area=None, variable=None, value=None): 
+        """
+        Updated     20180323   by Magnus Wenzer
+        """
         if not all([type_area, variable, value]):
             return False
-        if variable in self.list_columns: 
-            print('List column')
-            value = self._get_string_from_list(value, variable)
-        elif variable in self.interval_columns: 
-            print('Interval column')
-            value = self._get_string_from_interval(value, variable) 
-        elif variable in self.tolerance_columns: 
-            print('Tolerance column')
-            value = str(value)
         
-        if value == False: 
-            print('Value could not be changed!')
-            return False
-        else:
-            print('Value to set for type_area "{}" and variable "{}": {}'.format(type_area, variable, value))
+        new_value = []
+        for val in value:
+            if variable in self.list_columns: 
+                print('List column')
+                val = self._get_string_from_list(val, variable)
+            elif variable in self.interval_columns: 
+                print('Interval column')
+                val = self._get_string_from_interval(val, variable) 
+            elif variable in self.tolerance_columns: 
+                print('Tolerance column')
+                val = str(val)
             
+            if val == False: 
+                print('Value could not be changed!')
+                return False
+            new_value.append(val)
+        else:
+            print('Value to set for type_area "{}" and variable "{}": {}'.format(type_area, variable, new_value))
+#            print('type_area', type_area)
             num, suf = get_type_area_parts(type_area)
             if suf:
-                self.df.loc[(self.df['TYPE_AREA_NUMBER']==num) & (self.df['TYPE_AREA_SUFFIX']==suf), variable] = value 
+                self.df.loc[(self.df['TYPE_AREA_NUMBER']==num) & (self.df['TYPE_AREA_SUFFIX']==suf), variable] = new_value 
             else:
-                self.df.loc[self.df['TYPE_AREA_NUMBER']==num, variable] = value
+                self.df.loc[self.df['TYPE_AREA_NUMBER']==num, variable] = new_value
             return True
         
     #==========================================================================
@@ -590,6 +617,8 @@ class SettingsFile(object):
         Values to be set are given in dict like: 
             value_dict[type_area][variable] = value 
         """
+#        print('#'*40)
+#        print(value_dict)
         all_ok = True
         for type_area in value_dict.keys():
             for variable in value_dict[type_area].keys(): 
@@ -654,14 +683,18 @@ class SettingsFile(object):
         return True
     
     #==========================================================================
-    def get_filter_boolean_for_df(self, df=None, water_body=None): 
+    def get_filter_boolean_for_df(self, df=None, water_body=None, type_area=None, level=None): 
         """
+        Updated     20180322    by Magnus Wenzer
+        
         Get boolean tuple to use for filtering
         """
-        print('water_body', water_body)
-        type_area = self.mapping_water_body.get_type_area_for_water_body(water_body, include_suffix=True)
+        if water_body:
+            type_area = self.mapping_water_body.get_type_area_for_water_body(water_body, include_suffix=True)
         self.temp_type_area = type_area
-        
+        print('===')
+        print('water_body', water_body)
+        print('type_area', type_area)
         # Filter for water_body 
         combined_boolean = df['VISS_EU_CD'] == water_body
 #        print('==========combined_boolean===========')
@@ -672,12 +705,14 @@ class SettingsFile(object):
             if variable in self.interval_columns:
                 boolean = self._get_boolean_from_interval(df=df,
                                                           type_area=type_area,
-                                                          variable=variable)
+                                                          variable=variable, 
+                                                          level=level)
                 self.temp_boolean_interval = boolean
             elif variable in self.list_columns:
                 boolean = self._get_boolean_from_list(df=df,
                                                       type_area=type_area,
-                                                      variable=variable)
+                                                      variable=variable, 
+                                                      level=level)
                 self.temp_boolean_list = boolean
             else:
                 print('No boolean for "{}"'.format(variable))
@@ -701,15 +736,21 @@ class SettingsFile(object):
         Updated     20180322    by Magnus Wenzer
         """
         
-        from_value, to_value = self.get_value(type_area=type_area, 
-                                              variable=variable)
+        result = self.get_value(type_area=type_area, 
+                                variable=variable, 
+                                level=level)
         
         # Must check if there are several results. For example BQI has two depth intervalls.  
-#        if len(result) == 1:
-#            from_value, to_value = result[0]
-#        else:
-#            if not level:
-#                return 
+        print('RESULT', result)
+        if not len(result):
+            return False
+        elif len(result) == 1:
+            from_value, to_value = result[0]
+        else:
+            if level == None:
+                return 
+            from_value, to_value = result[level]
+            
             
         parameter = variable.split('_')[0]
 #        print(df[parameter])
@@ -727,12 +768,29 @@ class SettingsFile(object):
 #                (df[parameter].apply(lambda x: float(x) if x else np.nan) <= to_value) # No depth for Chl. Can't float. 
 
     #==========================================================================
-    def _get_boolean_from_list(self, df=None, type_area=None, variable=None): 
-        value_list = self.get_value(type_area=type_area, 
+    def _get_boolean_from_list(self, df=None, type_area=None, variable=None, level=None): 
+        """
+        Updated     20180322    by Magnus Wenzer
+        """
+        result = self.get_value(type_area=type_area, 
                                     variable=variable)
+        
+        # Must check if there are several results. For example BQI has two depth intervalls.  
+        if not len(result):
+            return False
+        elif len(result) == 1:
+            value_list = result[0]
+        else:
+            if level == None:
+                return 
+            value_list = result[level]
+        
         parameter = variable.split('_')[0] 
 
         return df[parameter].isin(value_list)
+    
+        
+        
 
 ###############################################################################
 class SettingsBase(object): 
@@ -756,6 +814,13 @@ class SettingsBase(object):
   
         return self.settings.get_value(variable=variable, type_area=type_area) 
     
+    #==========================================================================
+    def get_type_area_list(self): 
+        """
+        Created     20180323    by Magnus Wenzer
+        Updated     20180323    by Magnus Wenzer
+        """
+        return self.settings.get_type_area_list()
     
 ###############################################################################
 class SettingsRef(SettingsBase):
@@ -783,14 +848,17 @@ class SettingsDataFilter(SettingsBase):
         self.allowed_variables = self.settings.filter_columns
         
     #==========================================================================
-    def get_filter_boolean_for_df(self, df=None, water_body=None): 
+    def get_filter_boolean_for_df(self, df=None, water_body=None, type_area=None, level=None, **kwargs): 
         """
         Get boolean pd.Series to use for filtering. 
         Name of this has to be the same as the one in class DataFilter. 
         """
+        print('WWW', water_body)
 #        get_type_area_for_water_body(wb, include_suffix=False)
         return self.settings.get_filter_boolean_for_df(df=df, 
-                                                       water_body=water_body)
+                                                       water_body=water_body, 
+                                                       type_area=type_area, 
+                                                       level=level)
 
 
 ###############################################################################
@@ -1062,12 +1130,13 @@ def get_type_area_parts(type_area):
     """
     Returns a tuple like (type_area_number, type_area_suffix)
     """
+#    print(type_area)
     type_area = str(type_area)
     if type_area[-1].isalpha():
         suf = type_area[-1] 
     else:
         suf = ''
-    
+    print('type_area_type_area', type_area)
     return re.findall('\d+', type_area)[0], suf
         
 ###############################################################################
