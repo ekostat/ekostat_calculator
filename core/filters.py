@@ -505,8 +505,8 @@ class SettingsFile(object):
         variable: settings variable to get value for 
         """ 
         
-        print(filter_dict)
-        print(variable)
+#        print(filter_dict)
+#        print(variable)
         if 'TYPE_AREA_NUMBER' in list(filter_dict.keys()): 
             if filter_dict['TYPE_AREA_NUMBER'][0] not in self.type_area_list:
                 return False
@@ -542,8 +542,8 @@ class SettingsFile(object):
     
     #==========================================================================
     def get_value(self, variable=None, type_area=None, level=0): 
-        print(type_area)
-        print(self.df.columns)        
+#        print(type_area)
+#        print(self.df.columns)        
         num, suf = get_type_area_parts(type_area)
 
         if suf:

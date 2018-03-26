@@ -186,21 +186,21 @@ class EventHandler(object):
             uuid_mapping = self._get_uuid_mapping_object(user_id)
             workspace_uuid = uuid_mapping.get_uuid(workspace_alias, user_id)
         if not workspace_uuid:
-            print('workspace_unique_id')
+#            print('workspace_unique_id')
             return False
         workspace_object = self.workspaces.get(workspace_uuid)
         if not workspace_object:
-            print('workspace_object')
+#            print('workspace_object')
             return False
 #        print('!!!!!!!!!!!!', subset_source_alias) 
 #        print('!!!!!!!!!!!!', subset_target_alias)
         if subset_source_uuid:
-            print('subset_source_uuid'.upper(), subset_source_uuid)
+#            print('subset_source_uuid'.upper(), subset_source_uuid)
             subset_source_alias = workspace_object.uuid_mapping.get_alias(subset_source_uuid) 
-            print('subset_source_alias'.upper(), subset_source_alias)
+#            print('subset_source_alias'.upper(), subset_source_alias)
         self._logger.debug('Trying to copy subset "{}". Copy has alias "{}"'.format(subset_source_alias, subset_target_alias))
         return_dict = workspace_object.copy_subset(subset_source_alias, subset_target_alias)
-        print('return_dict'.upper(), return_dict)
+#        print('return_dict'.upper(), return_dict)
         return return_dict
         
     #==========================================================================
@@ -233,8 +233,8 @@ class EventHandler(object):
         source_workspace_path = '/'.join([self.workspace_directory, source_uuid])
         target_workspace_path = '/'.join([self.workspace_directory, target_uuid])
         
-        print('source_workspace_path:', source_workspace_path)
-        print('target_workspace_path:', target_workspace_path)
+#        print('source_workspace_path:', source_workspace_path)
+#        print('target_workspace_path:', target_workspace_path)
         
         
         self._logger.debug('Trying to copy workspace "{}" with alias "{}". Copy has alias "{}"'.format(source_uuid, source_alias, target_alias))
@@ -615,20 +615,26 @@ class EventHandler(object):
         """
         workspace_object = self._get_workspace_object(unique_id=workspace_unique_id)
         
-        subset_dict = {'alias': None,
-                        'uuid': None,
-                        'status': None,
-                        'active': None,
-                        'time': {}, 
-                        'areas': [], 
-#                        'periods': [], # Should be removed
-#                        'water_bodies': [], 
-#                        'water_districts': [], 
-                        'supporting_elements': [], 
-                        'quality_elements': []}
+        subset_dict = {}
+#        subset_dict = {'alias': None,
+#                        'uuid': None,
+#                        'status': None,
+#                        'active': None,
+#                        'time': {}, 
+#                        'areas': [], 
+##                        'periods': [], # Should be removed
+##                        'water_bodies': [], 
+##                        'water_districts': [], 
+#                        'supporting_elements': [], 
+#                        'quality_elements': []}
         
         if not subset_unique_id and request.get('uuid', False):
             subset_unique_id = request['uuid']
+            
+        subset_dict['alias'] = workspace_object.uuid_mapping.get_alias(subset_unique_id, status=self.all_status) 
+        subset_dict['uuid'] = subset_unique_id
+        subset_dict['status'] = workspace_object.uuid_mapping.get_status(unique_id=subset_unique_id) 
+        subset_dict['active'] = workspace_object.uuid_mapping.is_active(unique_id=subset_unique_id)
             
         # Check request 
         if request.get('active', False):
@@ -636,12 +642,6 @@ class EventHandler(object):
                 workspace_object.uuid_mapping.set_active(subset_unique_id)
             else:
                 workspace_object.uuid_mapping.set_inactive(subset_unique_id)
-
-        else:
-            subset_dict['alias'] = workspace_object.uuid_mapping.get_alias(subset_unique_id, status=self.all_status) 
-            subset_dict['uuid'] = subset_unique_id
-            subset_dict['status'] = workspace_object.uuid_mapping.get_status(unique_id=subset_unique_id) 
-            subset_dict['active'] = workspace_object.uuid_mapping.is_active(unique_id=subset_unique_id)
         
         if request == None: 
             request = {}
@@ -791,10 +791,10 @@ class EventHandler(object):
         "selectable" needs to be checked against water district and type. 
         """
         workspace_object = self._get_workspace_object(unique_id=workspace_unique_id) 
-        print('subset_unique_id', subset_unique_id)
+#        print('subset_unique_id', subset_unique_id)
         subset_object = workspace_object.get_subset_object(subset_unique_id) 
         water_body_mapping = self.mapping_objects['water_body']
-        print('subset_unique_id'.upper(), subset_unique_id)
+#        print('subset_unique_id'.upper(), subset_unique_id)
         if not subset_object:
             self._logger.warning('Could not find subset object {}. Subset is probably not loaded.'.format(subset_unique_id))
             return {"label": "",
@@ -1026,7 +1026,7 @@ class EventHandler(object):
             if request:
                 # Need to check which element in request list belong to the indicator 
                 for ty in request:
-                    print(ty)
+#                    print(ty)
                     if ty and ty['value'] == type_area: # ty can be empty dict if no settiengs for indicator
                         request_dict = ty
                         break
@@ -1060,13 +1060,13 @@ class EventHandler(object):
             for per in request:
                 
                 if per["selected"]:
-                    print('per', per)
+#                    print('per', per)
                     from_year, to_year = map(int, per["value"].split('-'))
                     year_list = map(str, list(range(from_year, to_year+1)))
-                    print('subset_object.alias', subset_object.alias)
+#                    print('subset_object.alias', subset_object.alias)
                     subset_object.set_data_filter(step='step_1', filter_type='include_list', filter_name='MYEAR', data=year_list)
                     break
-            print('request'.upper(), request)
+#            print('request'.upper(), request)
             return request
 
         return [{"label": "2007-2012",
@@ -1091,7 +1091,7 @@ class EventHandler(object):
         Updated     20180321    by Magnus Wenzer
         
         """ 
-        print('list_quality_elements', request)
+#        print('list_quality_elements', request)
 #        workspace_object = self._get_workspace_object(unique_id=workspace_unique_id) 
 #        subset_object = workspace_object.get_subset_object(subset_unique_id)
         
@@ -1141,7 +1141,7 @@ class EventHandler(object):
 #        print(self.workspaces)
 #        print('=====================')
         for subset_uuid in self.get_subset_list(workspace_unique_id=workspace_unique_id, user_id=user_id):
-            print('=====SUBSET_UUID', '"{}"'.format(subset_uuid))
+#            print('=====SUBSET_UUID', '"{}"'.format(subset_uuid))
             sub_request = request_for_subset_uuid.get(subset_uuid, {})
             
             # Check uuid for subset in request (if given) 
@@ -1174,12 +1174,12 @@ class EventHandler(object):
         Updated     20180321    by Magnus Wenzer
         
         """ 
-        print('list_supporting_elements', request)
+#        print('list_supporting_elements', request)
 #        workspace_object = self._get_workspace_object(unique_id=workspace_unique_id) 
 #        subset_object = workspace_object.get_subset_object(subset_unique_id)
         
         quality_element_list = ['secchi depth', 'nutrients', 'oxygen balance']
-        print('request', request)
+#        print('request', request)
         return_list = []
         for quality_element in quality_element_list: 
             
@@ -1472,9 +1472,9 @@ class EventHandler(object):
         elif unique_id:
             alias = uuid_mapping.get_alias(unique_id=unique_id, user_id=user_id)
         
-        print('¤¤¤ alias', alias)
-        print('¤¤¤ unique_id', unique_id) 
-        print('¤¤¤ user_id', user_id)
+#        print('¤¤¤ alias', alias)
+#        print('¤¤¤ unique_id', unique_id) 
+#        print('¤¤¤ user_id', user_id)
 
         if not all([alias, unique_id]):
             self._logger.warning('Could not load workspace "{}" with alias "{}"'.format(unique_id, alias))
@@ -1497,7 +1497,7 @@ class EventHandler(object):
         uuid_mapping = self._get_uuid_mapping_object(user_id)
         uuid_list = uuid_mapping.get_uuid_list_for_user(user_id, status=status)
         for unique_id in uuid_list:
-            print('DELETING:', unique_id)
+#            print('DELETING:', unique_id)
             self.delete_workspace(user_id=user_id, unique_id=unique_id, permanently=True)
            
     
@@ -1530,7 +1530,7 @@ class EventHandler(object):
             subset_uuid = return_dict['uuid']
         else:
             uuid_mapping = self._get_uuid_mapping_object(user_id)
-            print(new_alias, user_id)
+#            print(new_alias, user_id)
             subset_uuid = uuid_mapping.get_uuid(alias=new_alias, user_id=user_id)
         response = self.dict_subset(workspace_unique_id=workspace_uuid, 
                                    subset_unique_id=subset_uuid)
@@ -1734,7 +1734,7 @@ class EventHandler(object):
         # Initiate structure 
         response = {'workspace': {}, 
                    'subsets': []}
-        print('workspace_uuid', workspace_uuid)
+#        print('workspace_uuid', workspace_uuid)
         
         self.assure_data_is_loaded(user_id=user_id, workspace_uuid=workspace_uuid)
         
@@ -1910,9 +1910,9 @@ class EventHandler(object):
                     "message": ""}
         
         uuid_mapping_object = self._get_uuid_mapping_object(user_id)
-        print('user_id', user_id)
-        print(workspace_uuid)
-        print(uuid_mapping_object.get_uuid_list_for_user(user_id))
+#        print('user_id', user_id)
+#        print(workspace_uuid)
+#        print(uuid_mapping_object.get_uuid_list_for_user(user_id))
         if workspace_uuid not in uuid_mapping_object.get_uuid_list_for_user(user_id):
             response['all_ok'] = False 
             response['message'] = "Workspace does not belong to user"
