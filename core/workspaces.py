@@ -128,6 +128,7 @@ class WorkStep(object):
         
         self.allowed_data_filter_steps = ['step_0', 'step_1']
         self.allowed_indicator_settings_steps = ['step_2'] 
+        self.allowe_indicator_calculation_steps = ['step_3']
         
         
     #==========================================================================
@@ -174,7 +175,41 @@ class WorkStep(object):
         
         self.load_all_files()    
             
-        
+    #==========================================================================
+    def calculate_indicator_status(self, subset_unique_id = None, indicator_list = None):  
+        """
+        when step 3 is initiated indicator objects should be instansiated for all wb and indicators selected in step 2 as default
+        where do we save info on selected indicators? in step_2/datafilters folder?
+        We can calculate all indicators available but then the indikator selection is useless with regards to saving time for the user.
+        """ 
+        """
+        Created:        20180215     by Lena
+        Last modified:  20180326     by Lena
+        create dict containing indicator objects according to data availability or choice?
+        This should be moved to WorkStep class, and should be run accesed only for step 3.
+        """
+        if indicator_list == None:
+            indicator_list = self.parent_workspace_object
+            
+        self.indicator_objects = dict.fromkeys(indicator_list)
+        for indicator in self.indicator_objects.keys():
+            # get settings for the indicator
+            data_filter_settings = self.get_indicator_data_filter_settings(indicator)
+            tolerance_settings = self.get_indicator_tolerance_settings(indicator)
+            ref_settings = self.get_indicator_ref_settings(indicator)
+            index_handler = self.parent_workspace_object.index_handler
+            assert all(data_filter_settings, 
+                       tolerance_settings,
+                       ref_settings,
+                       index_handler.booleans['step_0'][subset_unique_id]['step_1']['step_2']), 'Something missing in data_filter_settings, tolerance_settings, ref_settings, index_handler'
+            # add indicator objects to dictionary
+            self.indicator_objects[indicator] = core.IndicatorBase(index_handler, 
+                                                                      data_filter_settings, 
+                                                                      tolerance_settings, 
+                                                                      ref_settings)
+            # TODO: Indicator objects should be different classes from the Base-class depending on indicator. 
+            #       The Indicator classname should be given in the config file together with the indicator names and parameters
+           
     #==========================================================================
     def get_all_file_paths_in_workstep(self): 
         """
@@ -250,13 +285,6 @@ class WorkStep(object):
         """
         self.data_filter = core.DataFilter(self.paths['directory_paths']['data_filters'], 
                                            mapping_objects=self.mapping_objects) 
-        
-    #==========================================================================
-    def load_indicator_objects(self):
-        """
-        when step 3 is initiated indicator objects should be instansiated for all wb and indicators selected in step 2 as default
-        """
-        pass
     
     #==========================================================================
     def load_indicator_settings_filters(self): 
@@ -995,7 +1023,7 @@ class WorkSpace(object):
         return all_ok
         
     #==========================================================================
-    def apply_indicator_data_filter(self, subset='', indicator='', water_body='', step='step_2'):
+    def apply_indicator_data_filter(self, subset='', indicator='', type_area='', step='step_2'):
         """
         Created     ????????    by Magnus Wenzer
         Updated     20180319    by Magnus Wenzer
@@ -1017,7 +1045,7 @@ class WorkSpace(object):
         """
         
         if subset not in self.get_subset_list(): 
-            self._logger.debug('Provides subset "{}" not in subset list'.format(subset))
+            self._logger.debug('Provided subset "{}" not in subset list'.format(subset))
             return False
         else:
             step = get_step_name(step)
@@ -1025,8 +1053,8 @@ class WorkSpace(object):
             # Indicator_settings are linked to step 2 by default
             step_object = subset_object.get_step_object(step) 
             filter_object = step_object.get_indicator_data_filter_settings(indicator) 
-            
-        all_ok = self.index_handler.add_filter(filter_object=filter_object, step=step, subset=subset, indicator=indicator, water_body=water_body)
+            all_ok = self.index_handler.add_filter(filter_object=filter_object, step=step, subset=subset, indicator=indicator, type_area = type_area)
+        
         return all_ok
         
     #==========================================================================
@@ -1238,7 +1266,7 @@ class WorkSpace(object):
         return data_filter.get_filter_info()
     
     #==========================================================================
-    def get_filtered_data(self, step=None, subset=None, water_body=None, indicator=None): 
+    def get_filtered_data(self, step=None, subset=None, type_area=None, indicator=None): 
         """
         Returns filtered data using the given filter level. 
         """
@@ -1246,7 +1274,7 @@ class WorkSpace(object):
         if step == None:
             return False
         self._logger.debug('STEP: {}'.format(step))
-        return self.index_handler.get_filtered_data(subset=subset, step=step, water_body=water_body, indicator=indicator)
+        return self.index_handler.get_filtered_data(subset=subset, step=step, type_area=type_area, indicator=indicator)
     
     #==========================================================================
     def get_available_indicators(self, subset=None, step=None):
@@ -1276,25 +1304,17 @@ class WorkSpace(object):
                     
         return available_indicators
 
-
-#    #==========================================================================
-#    def get_available_indicators(self):
-#        
-#        self.available_indicators = []
-#        for indicator, parameters in self.cfg['indicators'].items():
-#            for param in parameters:
-#                if len(param.split('/')) > 1:
-#                    for param2 in param.split('/'):
-#                        if param2 == 'SALT':
-#                            continue
-#                        if param2 in self.get_filtered_data(level=0).columns and self.get_filtered_data(level=0)[param2].dropna().count() > 0:
-#                            self.available_indicators.append(indicator) 
-#                else:
-#                    if param in self.get_filtered_data(level=0).columns and self.get_filtered_data(level=0)[param].dropna().count() > 0:
-#                        self.available_indicators.append(indicator) 
-#            
-#        return sorted(self.available_indicators)
-    
+    #==========================================================================
+    def get_indicator(self, subset = None, indicator = None):  
+        """
+        Created:        20180326     by Lena
+        Last modified:  20180326     by Lena
+        create dict containing indicator objects according to data availability or choice?
+        This should be moved to WorkStep class, and should be run accesed only for step 3.
+        """
+        step_object = self.get_step_object(step = 3, subset = subset)
+        return step_object.indicator_objects.get(indicator, False)
+        
     #==========================================================================
     def get_indicator_settings_data_filter_object(self, subset=None, step='step_2', indicator=None): 
         step_object = self.get_step_object(subset=subset, step=step)
@@ -1475,33 +1495,6 @@ class WorkSpace(object):
 #        self.data_handler.merge_all_data(save_to_txt=True)
         
     
-#==========================================================================
-    def load_indicators(self, subset_unique_id = None, indicator_list = None):  
-        """
-        Created:        20180215     by Lena
-        Last modified:  20180216     by Lena
-        create dict containing indicator objects according to data availability or choice?
-        This should be moved to WorkStep class, and should be run accesed only for step 3.
-        """
-        step_object = self.get_step_object(step = 2, subset = subset_unique_id)
-        self.indicator_objects = dict.fromkeys(indicator_list)
-        for indicator in self.indicator_objects.keys():
-            # get settings for the indicator
-            data_filter_settings = step_object.get_indicator_data_filter_settings(indicator)
-            tolerance_settings = step_object.get_indicator_tolerance_settings(indicator)
-            ref_settings = step_object.get_indicator_ref_settings(indicator)
-            index_handler = self.index_handler
-            assert all(data_filter_settings, 
-                       tolerance_settings,
-                       ref_settings,
-                       index_handler.booleans['step_0'][subset_unique_id]['step_1']['step_2']), 'Something missing in data_filter_settings, tolerance_settings, ref_settings, index_handler'
-            # add indicator objects to dictionary
-            self.indicator_objects[indicator] = core.IndicatorBase(index_handler, 
-                                  data_filter_settings, 
-                                  tolerance_settings, 
-                                  ref_settings)
-            # TODO: Indicator objects should be different classes from the Base-class depending on indicator. 
-            #       The Indicator classname should be given in the config file together with the indicator names and parameters
         
     #==========================================================================
     def set_data_filter(self, step='', subset='', filter_type='', filter_name='', data=None, save_filter=True, append_items=False): 

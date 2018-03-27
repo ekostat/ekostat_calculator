@@ -61,7 +61,7 @@ class IndexHandler(object):
         
         
     #==========================================================================
-    def _add_boolean_to_dict(self, *args, filter_object=None, df=None, wb=None, level=None): #  **kwargs ?
+    def old_add_boolean_to_dict(self, *args, filter_object=None, df=None, wb=None, level=None): #  **kwargs ?
         """
         Updated     20180322    by Magnus Wenzer
         
@@ -101,35 +101,38 @@ class IndexHandler(object):
                 bool_dict = bool_dict[key]
 
     #==========================================================================
-    def new_add_boolean_to_dict(self, *args, filter_object=None, df=None, type_area=None, level=None): #  **kwargs ?
+    def _add_boolean_to_dict(self, step_0 = None, subset = None, step_1 = None, step_2 = None, 
+                             type_area = None, indicator = None, level = None, 
+                             filter_object=None, df=None): #  **kwargs ?
         """
-        Updated     20180322    by Magnus Wenzer
+        Updated     20180326    by Lena Viktorsson
         
-        *args: step_0, subset, step_1, step_2, type_area, indicator
+        boolean_dict_keys in order: step_0, subset, step_1, step_2, type_area, indicator, level
         Uses bool_dict as a dynamic reference to a specific part of self.booleans
         
-        #TODO Should we be able to apply different booleas from one filter-object ? 
+        #TODO Should we be able to apply different booleans from one filter-object ? 
         """
-
         bool_dict = self.booleans
         
-        use_keys = {'keys':[key for key in reversed(args) if key],
+        boolean_dict_keys = [step_0, subset, step_1, step_2, type_area, indicator, level]
+        
+        use_keys = {'keys':[key for key in reversed(boolean_dict_keys) if key],
                     'keys_in_booleans':list(self._get_keys_from_dict(self.booleans))}
         
-        for key in args:
+        for key in boolean_dict_keys:
             if not key in use_keys.get('keys_in_booleans'):
                 raise UserWarning(key,'should be included in IndexHandler, perhaps we are jumping to far ahead?')
                 
             if key in use_keys.get('keys')[0]:
                 
                 if bool_dict.get('boolean') is not None:
-                    # Merge boolean from parent with new boolean from filter_object
-                    bool_dict[key]['boolean'] = bool_dict.get('boolean') & filter_object.get_filter_boolean_for_df(df, type_area=type_area, level=level)
+                    # Merge boolean from parent with new boolean from filter_object, filter_object is either DataFilter och SettingsDataFilter
+                    bool_dict[key]['boolean'] = bool_dict.get('boolean') & filter_object.get_filter_boolean_for_df(df, type_area = type_area, level = level)
                     
                 else:
                     # No boolean from parent, use new boolean from filter_object
-                    # This one should only be possible fro 'step_0' due to else-sats below..
-                    bool_dict[key]['boolean'] = filter_object.get_filter_boolean_for_df(df, type_area=type_area, level=level)
+                    # This one should only be possible from 'step_0' due to else-sats below..
+                    bool_dict[key]['boolean'] = filter_object.get_filter_boolean_for_df(df, type_area = type_area, level = level)
                 break
             
             else:
@@ -143,7 +146,7 @@ class IndexHandler(object):
     #==========================================================================
     def _get_boolean(self, *args):
         """
-        *args: step_0, subset, step_1, step_2, water_body, indicator
+        *args: step_0, subset, step_1, step_2, type_area, indicator
         - Loop through *args, save a reference for the specific dictionary 
           within self.booleans
         - Return boolean for the specific argument input
@@ -193,10 +196,10 @@ class IndexHandler(object):
                    'subset_A':{'boolean':None,
                                'step_1':{'boolean':bool,
                                          'step_2':{'boolean':bool,
-                                                   'water_body_X':{'boolean':bool,
+                                                   'type_area_X':{'boolean':bool,
                                                                    'indicator_X':{'boolean':bool}
                                                                    }
-                                                   'water_body_Y':{'boolean':bool,
+                                                   'type_area_Y':{'boolean':bool,
                                                                    'indicator_X':{'boolean':bool}
                                                                    }
                                                    }
@@ -205,7 +208,7 @@ class IndexHandler(object):
                    'subset_B':{'boolean':bool,
                                'step_1':{'boolean':bool,
                                          'step_2':{'boolean':bool,
-                                                   'water_body_X':{'boolean':bool,
+                                                   'type_area_X':{'boolean':bool,
                                                                    'indicator_X':{'boolean':bool}
                                                                    }
                                                    }
@@ -228,7 +231,7 @@ class IndexHandler(object):
     #==========================================================================
     def _set_dict(self, *args):
         """
-        *args: step_0, subset, step_1, step_2, water_body, indicator
+        *args: step_0, subset, step_1, step_2, type_area, indicator
         - Set reference of master booleans dictionary, bool_dict.  
           bool_dict will change dynamically depending on key..
         - Sets up a dictionary including key 'boolean' containing None
@@ -245,7 +248,7 @@ class IndexHandler(object):
 
 
     #==========================================================================
-    def add_filter(self, filter_object=None, subset=None, step=None, water_body=None, indicator=None): 
+    def old_add_filter(self, filter_object=None, subset=None, step=None, water_body=None, indicator=None): 
         """
         - Get reference of master DataFrame, df
         - Set up step sequence: step_0, step_1, step_2
@@ -270,40 +273,32 @@ class IndexHandler(object):
                                   wb=water_body)
         
     #==========================================================================
-    def new_add_filter(self, filter_object=None, subset=None, step=None, water_body=None, indicator=None, level=None): 
+    def add_filter(self, filter_object=None, subset=None, step=None, type_area=None, indicator=None, level=None): 
         """
         Updated     20180322    by Magnus Wenzer
         
         - Get reference of master DataFrame, df
         - Set up step sequence: step_0, step_1, step_2
         - Set up a dictionary including key 'boolean' containing None
-        - Add boolean to the given subset, step, type_area (mapped from water_body) or indicator
+        - Add boolean to the given subset, step, type_area (given as input), indicator and level
         
-        If water_body is given: subset and step must also be given
+        If type_area is given: subset and step must also be given
+        If indicator is give: type_area must also be given
         """
+        print('add filter for step: {}, type area: {}, indicator: {}, level: {}'.format(step, type_area, indicator, level))
         df = self.data_handler_object.get_all_column_data_df()
-        print('step', step)
+
         step_0, step_1, step_2 = self._get_steps(step=step)
         
-#        print(step_0, subset, step_1, step_2, water_body, indicator)
-        type_area = None
-#        if water_body.startswith('SE'):
-#            water_body = water_body[2:]
-        print(water_body)
-        if water_body:
-            result = self.water_body_mapping.get_list('type_area', water_body=water_body)
-            print('result', result)
-            type_area = result[0]
-        print('type_area'.upper(), type_area)
+#        print(step_0, subset, step_1, step_2, type_area, indicator)
+
         self._set_dict(step_0, subset, step_1, step_2, type_area, indicator)
         
 #        print(self.booleans)
         
-        self._add_boolean_to_dict(step_0, subset, step_1, step_2, type_area, indicator,
+        self._add_boolean_to_dict(step_0, subset, step_1, step_2, type_area, indicator, level,
                                   filter_object=filter_object, 
-                                  df=df,
-                                  type_area=type_area, 
-                                  level=level)
+                                  df=df)
 
         
     #==========================================================================
@@ -319,15 +314,12 @@ class IndexHandler(object):
 
 
     #==========================================================================
-    def get_filtered_data(self, subset=None, step=None, water_body=None, indicator=None): 
+    def get_filtered_data(self, subset=None, step=None, type_area=None, indicator=None): 
         """
-        Updated     20180322    by Magnus Wenzer
+        Updated     20180326    by Magnus Wenzer
         Returns filtered data for the given boolean specification
+        Takes input arguments: subset, step, type_area and indicator
         """
-        print('water_body', water_body)
-        type_area = None
-        if water_body:
-            type_area = self.water_body_mapping.get_list('type_area', water_body=water_body)[0]
         
         step_0, step_1, step_2 = self._get_steps(step=step)
         

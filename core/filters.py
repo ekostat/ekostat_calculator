@@ -541,9 +541,9 @@ class SettingsFile(object):
     
     
     #==========================================================================
-    def get_value(self, variable=None, type_area=None, level=0): 
-#        print(type_area)
-#        print(self.df.columns)        
+    def get_value(self, variable=None, type_area=None): 
+        print(type_area)
+        print(self.df.columns)        
         num, suf = get_type_area_parts(type_area)
 
         if suf:
@@ -683,51 +683,48 @@ class SettingsFile(object):
         return True
     
     #==========================================================================
-    def get_filter_boolean_for_df(self, df=None, water_body=None, type_area=None, level=None): 
+    def get_filter_boolean_for_df(self, df=None, water_body = None, type_area=None, level=None): 
         """
-        Updated     20180322    by Magnus Wenzer
+        Updated     20180326    by Lena Viktorsson
         
         Get boolean tuple to use for filtering
         """
+        #TODO: add filter on type_area, as for now it only adds a key to boolean_dict for each type_area but the boolean under that key is the same as on step 2
+        combined_boolean = ()
         if water_body:
             type_area = self.mapping_water_body.get_type_area_for_water_body(water_body, include_suffix=True)
             combined_boolean = df['VISS_EU_CD'] == water_body
         else:
             combined_boolean = ()
             
-        self.temp_type_area = type_area
-        print('===')
-        print('water_body', water_body)
-        print('type_area', type_area)
-        # Filter for water_body 
-        
-#        print('==========combined_boolean===========')
-#        print(np.where(combined_boolean))
-#        print('=====================================')
-#        combined_boolean = ()
-        for variable in self.filter_columns: 
-            if variable in self.interval_columns:
-                boolean = self._get_boolean_from_interval(df=df,
+       
+        if type_area == None:
+            # you can not create a settingsfilter without specifying type_area
+            combined_boolean = ()
+        else:
+            for variable in self.filter_columns: 
+                if variable in self.interval_columns:
+                    boolean = self._get_boolean_from_interval(df=df,
+                                                              type_area=type_area,
+                                                              variable=variable, 
+                                                              level=level)
+                    self.temp_boolean_interval = boolean
+                elif variable in self.list_columns:
+                    boolean = self._get_boolean_from_list(df=df,
                                                           type_area=type_area,
                                                           variable=variable, 
                                                           level=level)
-                self.temp_boolean_interval = boolean
-            elif variable in self.list_columns:
-                boolean = self._get_boolean_from_list(df=df,
-                                                      type_area=type_area,
-                                                      variable=variable, 
-                                                      level=level)
-                self.temp_boolean_list = boolean
-            else:
-                print('No boolean for "{}"'.format(variable))
-                continue
-            
-            if not type(boolean) == pd.Series:
-                continue            
-            if type(combined_boolean) == pd.Series:
-                combined_boolean = combined_boolean & boolean
-            else:
-                combined_boolean = boolean 
+                    self.temp_boolean_list = boolean
+                else:
+                    print('No boolean for "{}"'.format(variable))
+                    continue
+                
+                if not type(boolean) == pd.Series:
+                    continue            
+                if type(combined_boolean) == pd.Series:
+                    combined_boolean = combined_boolean & boolean
+                else:
+                    combined_boolean = boolean 
                 
         if len(combined_boolean) == 0: 
             combined_boolean = pd.Series(np.ones(len(df), dtype=bool)) 
@@ -741,8 +738,7 @@ class SettingsFile(object):
         """
         
         result = self.get_value(type_area=type_area, 
-                                variable=variable, 
-                                level=level)
+                                variable=variable)
         
         # Must check if there are several results. For example BQI has two depth intervalls.  
         print('RESULT', result)
@@ -752,7 +748,7 @@ class SettingsFile(object):
             from_value, to_value = result[0]
         else:
             if level == None:
-                return 
+                return None
             from_value, to_value = result[level]
             
             
@@ -786,7 +782,7 @@ class SettingsFile(object):
             value_list = result[0]
         else:
             if level == None:
-                return 
+                return None
             value_list = result[level]
         
         parameter = variable.split('_')[0] 
@@ -838,6 +834,18 @@ class SettingsRef(SettingsBase):
         self.settings.connected_to_ref_settings_object = True
         self.allowed_variables = self.settings.ref_columns
         
+    #==========================================================================    
+    def get_ref_value(self, type_area):
+        """
+        Created     20180326    by Lena Viktorsson
+        Updated     20180326    by Lena Viktorsson
+        """
+        try: 
+            self.settings.df[self.settings.ref_columns]['EKV Ref']
+            self.get_value(variable = 'EKV Ref', type_area = type_area)
+        except KeyError:
+            pass
+            
         
 ###############################################################################
 class SettingsDataFilter(SettingsBase):
@@ -857,7 +865,7 @@ class SettingsDataFilter(SettingsBase):
         Get boolean pd.Series to use for filtering. 
         Name of this has to be the same as the one in class DataFilter. 
         """
-        print('WWW', water_body)
+        print('Water body', water_body)
 #        get_type_area_for_water_body(wb, include_suffix=False)
         return self.settings.get_filter_boolean_for_df(df=df, 
                                                        water_body=water_body, 
@@ -878,144 +886,6 @@ class SettingsTolerance(SettingsBase):
         self.allowed_variables = self.settings.tolerance_columns
 
   
-###############################################################################
-class FilterBase(dict):
-    """
-    Base class to hold common methodes for filters. 
-    """
-    def __init__(self): 
-        super().__init__() 
-    
-    #==========================================================================
-    def _pop_all_self(self):
-        for i in range(len(self))[::-1]:
-            self.pop(i)
-            
-    #==========================================================================
-    def set_filter(self, filter_variable, value): 
-        
-        filter_variable = filter_variable.upper().replace(' ', '_')       
-        self[filter_variable].set_filter(value)
-
-    #==========================================================================
-    def load_filter_file(self, file_path):
-        """
-        Filter items are saved in self (dict). 
-        """ 
-        self._pop_all_self()
-        self.filter_list = []
-        self.file_path = file_path 
-        
-        with codecs.open(self.file_path, 'r', encoding='cp1252') as fid: 
-            for k, line in enumerate(fid):
-                line = line.lstrip('\n\r ')
-                if line.startswith('#'):
-                    continue 
-                split_line = [item.strip() for item in line.split('\t')]
-                if k==0:
-                    # Header
-                    header = split_line
-                else:
-                    line_dict = dict(zip(header, split_line))
-                    self[line_dict['variable']] = SingleFilter(line_dict, self.parameter)
-
-        # Save attributes
-        for item in self.keys():
-            setattr(self, item, self[item])
-            
-        self.header = sorted(header)
-        
-        if self.filter_type == 'data':
-            self.year_list = [y for y in range(self['YEAR_INTERVAL'].value[0], 
-                                                   self['YEAR_INTERVAL'].value[1]+1)]
-                    
-    #==========================================================================
-    def save_filter_file(self, file_path):
-        self.file_path = file_path
-        
-        with codecs.open(self.file_path, 'w') as fid:
-            fid.write('\t'.join(self.header))
-            fid.write('\n')
-            for item in sorted(self.keys()): 
-                self[item].write_to_fid(fid)
-                fid.write('\n')
-                
-    #==========================================================================
-    def show_filter(self):
-        for key, item in self.items():
-            print(key, item.value)
-        
-###############################################################################
-class old_DataFilter(FilterBase):
-    """
-    Class to hold data filter settings.  
-    Typically this information is read from a file. 
-    Maybe this filter should be different for different 
-    """
-    def __init__(self, source, parameter='', file_path=None): 
-        """
-        parameter is to specify the parameter that the filter is passed to. 
-        """
-        super().__init__() 
-        self.filter_type = 'data'
-        self.source = source
-        self.parameter = parameter
-        self._initate_filter_items()
-        if file_path:
-            self.load_filter_file(file_path)
-
-    #==========================================================================
-    def _initate_filter_items(self):
-        # LENA: flytta MONTH_LIST och DEPTH_INTERVAL till tolerance filter
-        # LENA: lägg till 'WATER_DISTRICTS' och 'WATER_BODIES', ändra till 'TYPE_AREAS'
-        self.filter_list = ['DEPTH_INTERVAL', 
-                            'TYPE_AREA', 
-                            'MONTH_LIST', 
-                            'YEAR_INTERVAL']
-            
-    #==========================================================================
-    def get_column_data_boolean(self, df): 
-        """
-        Get boolean tuple to use for filtering
-        """
-        # LENA: Ska inte detta ligga i FilterBase, om inte varför? 
-        # Behövs i tolerance filter också om vi flyttar month_list och depth_interval dit
-        combined_boolean = ()
-        for item in self.keys():
-            boolean = self[item].get_boolean(df)
-            if not type(boolean) == pd.Series:
-                continue            
-            if type(combined_boolean) == pd.Series:
-#                print(len(combined_boolean), len(boolean))
-                combined_boolean = combined_boolean & boolean
-            else:
-                combined_boolean = boolean
-        return combined_boolean
-        
-        
-###############################################################################
-class ToleranceFilter(FilterBase):
-    """
-    Class to hold tolerance filter settings.  
-    Typically this information is read from a file. 
-    """
-    def __init__(self, source, parameter='', file_path=None): 
-        """
-        parameter is to specify the parameter that the filter is passed to. 
-        """
-        super().__init__() 
-        self.filter_type = 'tolerance'
-        self.source = source
-        self.parameter = parameter
-        self._initate_filter_items()
-        if file_path:
-            self.load_filter_file(file_path)
-
-    #==========================================================================
-    def _initate_filter_items(self):
-        # LENA: lägg till MONTH_LIST och DEPTH_INTERVAL till tolerance filter
-        self.filter_items = ['MIN_NR_VALUES', 'TIME_DELTA']  
-        # Time delta in hours
        
 ###############################################################################
 class WaterBodyStationFilter(object): 

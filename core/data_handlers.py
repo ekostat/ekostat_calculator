@@ -8,7 +8,8 @@ Created on Tue Oct 31 08:10:06 2017
 import os
 import sys
 current_path = os.path.dirname(os.path.realpath(__file__))[:-4]
-sys.path.append(current_path)
+if current_path not in sys.path:
+    sys.path.append(current_path)
 
 import pandas as pd
 import numpy as np
