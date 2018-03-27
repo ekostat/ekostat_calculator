@@ -45,18 +45,21 @@ class IndicatorBase(object):
     """
     Class to calculate status for a specific indicator. 
     """ 
-    def __init__(self, subset, index_handler, data_filter_settings, tolerance_settings, ref_settings, indicator, indicator_settings):
+    def __init__(self, subset, parent_workspace_object, data_filter_settings, tolerance_settings, ref_settings, indicator, indicator_settings):
         self.name = indicator
         self.parameter_list = []
         self.class_result = None
         self.subset = subset
         self.step = 3
-        self.index_handler = index_handler
+        self.parent_workspace_object = parent_workspace_object
+        self.mappings = self.parent_workspace_object.mappings
+        self.index_handler = self.parent_workspace_object.index_handler
         self.tolerance_settings = tolerance_settings
         self.ref_settings = ref_settings
         self.meta_columns = ['SDATE', 'MONTH', 'VISS_EU_CD', 'WATER_TYPE_AREA', 'DEPH']
         self.parameter_columns = indicator_settings['parameters']
         self.column_list = self.meta_columns + self.parameter_columns
+        self.indicator_water_body_df = {}
 
     def get_filtered_data(self, subset=None, step=None, type_area=None, indicator=None):
         """
@@ -66,10 +69,10 @@ class IndicatorBase(object):
 
         return self.index_handler.get_filtered_data(subset, step, type_area, indicator)
 
-    def get_indicator_df(self, water_body = None, type_area = None, level = None):
+    def get_indicator_water_body_df(self, water_body = None, level = None):
         """
         Created:        20180215     by Lena
-        Last modified:  20180215     by Lena
+        Last modified:  20180327     by Lena
         df should contain:
             - all needed columns from get_filtered_data
             - referencevalues
@@ -79,12 +82,15 @@ class IndicatorBase(object):
         self.tolerance_settings
         self.indicator_ref_settings
         """
+        type_area = WaterBody.get_type_area_for_water_body(water_body, include_suffix=True)
         df = self.get_filtered_data(subset = self.subset, step = self.step, type_area = type_area, indicator = self.name, level = level)
         df = df[self.column_list]
-        if water_body:
+        try:
             df =  df[df['VISS_EU_CD'] == water_body]
-          
-        return df
+        except NameError:
+            raise NameError('Must give water_body to get indicator_df')
+        
+        self.indicator_water_body_df[water_body] = df
             
     def get_ref_value(self, type_area = None, salinity = None):
         """

@@ -178,7 +178,7 @@ class WorkStep(object):
     #==========================================================================
     def calculate_indicator_status(self, subset_unique_id = None, indicator_list = None):  
         """
-        when step 3 is initiated indicator objects should be instansiated for all wb and indicators selected in step 2 as default
+        when step 3 is initiated indicator objects should be instansiated for all and indicators selected in step 2 as default
         where do we save info on selected indicators? in step_2/datafilters folder?
         We can calculate all indicators available but then the indikator selection is useless with regards to saving time for the user.
         """ 
@@ -189,7 +189,9 @@ class WorkStep(object):
         This should be moved to WorkStep class, and should be run accesed only for step 3.
         """
         if indicator_list == None:
-            indicator_list = self.parent_workspace_object
+            indicator_list = self.parent_workspace_object.available_indicators
+            if indicator_list == None:
+                indicator_list = self.parent_workspace_object.get_available_indicators(subset=subset_unique_id, step=2)
             
         self.indicator_objects = dict.fromkeys(indicator_list)
         for indicator in self.indicator_objects.keys():
@@ -209,6 +211,7 @@ class WorkStep(object):
                                                                       ref_settings)
             # TODO: Indicator objects should be different classes from the Base-class depending on indicator. 
             #       The Indicator classname should be given in the config file together with the indicator names and parameters
+            #       Or keep one Indicator class for all and give calculation_method as input?
            
     #==========================================================================
     def get_all_file_paths_in_workstep(self): 
@@ -460,6 +463,7 @@ class Subset(object):
     def _initiate_attributes(self): 
         self.nr_steps = 5
         self.steps = {}
+        self.available_indicators = []
             
     #==========================================================================
     def _set_logger(self, log_id):
@@ -1301,7 +1305,8 @@ class WorkSpace(object):
             except KeyError as e:
                 #TODO: lägga till felmeddelande i log?
                 print(e)
-                    
+        
+        self.available_indicators = available_indicators            
         return available_indicators
 
     #==========================================================================
