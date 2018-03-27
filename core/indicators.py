@@ -45,25 +45,28 @@ class IndicatorBase(object):
     """
     Class to calculate status for a specific indicator. 
     """ 
-    def __init__(self, index_handler, data_filter_settings, tolerance_settings, ref_settings):
-        self.name = ''
+    def __init__(self, subset, index_handler, data_filter_settings, tolerance_settings, ref_settings, indicator, indicator_settings):
+        self.name = indicator
         self.parameter_list = []
         self.class_result = None
-        self.subset = None
-        self.step = None
+        self.subset = subset
+        self.step = 3
         self.index_handler = index_handler
         self.tolerance_settings = tolerance_settings
         self.ref_settings = ref_settings
+        self.meta_columns = ['SDATE', 'MONTH', 'VISS_EU_CD', 'WATER_TYPE_AREA', 'DEPH']
+        self.parameter_columns = indicator_settings['parameters']
+        self.column_list = self.meta_columns + self.parameter_columns
 
-    def get_filtered_data(self, subset=None, step=None, water_body=None, indicator=None):
+    def get_filtered_data(self, subset=None, step=None, type_area=None, indicator=None):
         """
         Filter for water_body and indicator means filters from indicator_settings are applied.
         But the filters are only applied if they first are added to the index_handler so need to check if water_body and indicator have filters added
         """
 
-        return self.index_handler.get_filtered_data(subset, step, water_body, indicator)
+        return self.index_handler.get_filtered_data(subset, step, type_area, indicator)
 
-    def get_indicator_df(self):
+    def get_indicator_df(self, water_body = None, type_area = None, level = None):
         """
         Created:        20180215     by Lena
         Last modified:  20180215     by Lena
@@ -76,111 +79,139 @@ class IndicatorBase(object):
         self.tolerance_settings
         self.indicator_ref_settings
         """
-        pass
-    
-    #==========================================================================
-    def get_ref_value_for_par_with_salt_ref(self, par=None, salt_par='SALT_CTD', indicator_name=None, tolerance_filter=None):
-        """
-        tolerance_filters is a dict with tolerance filters for the specific (sub) parameter. 
-        """
-        """
-        Vid statusklassificering
-        ska värden från ytvattnet användas (0-10 meter eller den övre vattenmassan
-        om språngskiktet är grundare än 10 meter).
-        
-        Om mätningar vid ett tillfälle är utförda vid diskreta djup, exempelvis 0, 5 och 10
-        meter ska EK-värde beräknas för varje mätning och ett medel–EK skapas för de tre
-        djupen.
-        """
-#        class_result = ClassificationResult()
-#        class_result.add_info('parameter', par)
-#        class_result.add_info('salt_parameter', salt_par)
-#        class_result.add_info('type_area', self.data_filter_object.TYPE_AREA.value)
-        
-        """
-        För kvalitetsfaktorn Näringsämnen: 
-        1) Beräkna EK för varje enskilt prov utifrån referensvärden i tabellerna 6.2-6.7.
-        Det aktuella referensvärdet erhålls utifrån den salthalt som är observerad vid
-        varje enskilt prov. Om mätningar är utförda vid diskreta djup, beräkna EKvärde
-        för varje mätning och sedan ett medel-EK för varje specifikt mättillfälle.
-        """
-        
-        ref_object = getattr(core.RefValues(), indicator_name.lower())[self.data_filter_object.TYPE_AREA.value]
-#        self.ref_object = ref_object
-        par_object = getattr(self, par.lower())
-        salt_object = getattr(self, salt_par.lower())
-        self.par_object = par_object
-        self.salt_object = salt_object
-        
-        par_df = par_object.data.column_data.copy(deep=True)
-        salt_df = salt_object.data.column_data
-        
-        par_df['salt_value_ori'] = np.nan 
-        par_df['salt_value'] = np.nan 
-        par_df['salt_index'] = np.nan 
-        par_df['ref_value'] = np.nan 
-        #par_df['ek_value_calc'] = np.nan 
-        par_df['par_value'] = np.nan 
-        for i in par_df.index:
-#            self.i = i
-            df_row = par_df.loc[i, :]
-            par_value = df_row[par]
-            if np.isnan(par_value):
-                ref_value = np.nan
-            else:
-                try:
-                    salt_df.loc[1, salt_par]
-                    first_salt = 1 
-                except KeyError:
-                    # TODO: Why was default set to 1?
-                    first_salt = salt_df.index[0]
-                if i in salt_df.index and not np.isnan(salt_df.loc[first_salt, salt_par]): 
-                    salt_value_ori = salt_df.loc[first_salt, salt_par]  # ska inte det vara: salt_df.loc[i, salt_par]?
-                    salt_index = i
-                else:
-                    # TODO: If not allowed to continue
-                    matching_salt_data = salt_object.get_closest_matching_data(df_row=df_row, 
-                                                                             tolerance_filter=tolerance_filter)
-                    if matching_salt_data.empty:
-                        salt_value_ori = np.nan
-                        salt_index = np.nan
-                        self.missing = df_row
-                    else:
-                        self.matching_salt_data = matching_salt_data
-                        salt_value_ori = matching_salt_data[salt_par]
-                        salt_index = matching_salt_data.name
-                        
-                # Check salt for maximum value
-                salt_value = ref_object.get_max_salinity(salt_value_ori)
-                
-                # Get ref value
-                ref_value = ref_object.get_ref_value(salt_value)
-                
-                # Get EK-value
-                
-                # TODO: This differs between indicators, some are ref/obs other obs/ref
-                # So this should not be in IndicatorBase, output from this def should be salt_val, ref_val och par_val
-#                ek_value_calc = ref_value/par_value
-                
-#                self.salt_value = salt_value
-#                self.ek_value_calc = ek_value_calc
-#                self.ref_value = ref_value
-#                self.par_value = par_value
-#            print('ref_value', ref_value, '=', value)
-#            self.df_row = df_row
-#            self.salt_value = salt_value
-            par_df.set_value(i, 'salt_value_ori', salt_value_ori) 
-            par_df.set_value(i, 'salt_value', salt_value) 
-            par_df.set_value(i, 'salt_index', salt_index)
-            par_df.set_value(i, 'ref_value', ref_value)
-            par_df.set_value(i, 'par_value', par_value)
+        df = self.get_filtered_data(subset = self.subset, step = self.step, type_area = type_area, indicator = self.name, level = level)
+        df = df[self.column_list]
+        if water_body:
+            df =  df[df['VISS_EU_CD'] == water_body]
+          
+        return df
             
-            # Check ek_value_calc
-#            ek_value = ek_value_calc
-#            if ek_value > 1:
-#                ek_value = 1
-#            par_df.set_value(i, 'ek_value', ek_value)
-        return par_df        
+    def get_ref_value(self, type_area = None, salinity = None):
+        """
+        Get referencevalue either from equation or directly from settings
+        To get reference value from equation you need to supply both type_area and salinity
+        
+        """
+        
+        if 'ref_eq' in self.ref_settings.ref_columns and salinity:
+            assert all(type_area, salinity), 'type area and salinity must be given to calculate salinity dependent reference value'
+            s = salinity
+            return eval(self.ref_settings.get_ref_value(type_area), s)
+        else:
+            return self.ref_settings.get_ref_value(type_area)
+            
+    def get_closest_matching_salinity(self):
+        """
+        get closest matching salinity value when salinity is missing. 
+        use tolerance info from settings file
+        """
+        print('method is not written yet')
+        raise Exception
+
+        
+#    #==========================================================================
+#    def get_ref_value_for_par_with_salt_ref(self, par=None, salt_par='SALT_CTD', indicator_name=None, tolerance_filter=None):
+#        """
+#        tolerance_filters is a dict with tolerance filters for the specific (sub) parameter. 
+#        """
+#        """
+#        Vid statusklassificering
+#        ska värden från ytvattnet användas (0-10 meter eller den övre vattenmassan
+#        om språngskiktet är grundare än 10 meter).
+#        
+#        Om mätningar vid ett tillfälle är utförda vid diskreta djup, exempelvis 0, 5 och 10
+#        meter ska EK-värde beräknas för varje mätning och ett medel–EK skapas för de tre
+#        djupen.
+#        """
+##        class_result = ClassificationResult()
+##        class_result.add_info('parameter', par)
+##        class_result.add_info('salt_parameter', salt_par)
+##        class_result.add_info('type_area', self.data_filter_object.TYPE_AREA.value)
+#        
+#        """
+#        För kvalitetsfaktorn Näringsämnen: 
+#        1) Beräkna EK för varje enskilt prov utifrån referensvärden i tabellerna 6.2-6.7.
+#        Det aktuella referensvärdet erhålls utifrån den salthalt som är observerad vid
+#        varje enskilt prov. Om mätningar är utförda vid diskreta djup, beräkna EKvärde
+#        för varje mätning och sedan ett medel-EK för varje specifikt mättillfälle.
+#        """
+#        
+#        ref_object = getattr(core.RefValues(), indicator_name.lower())[self.data_filter_object.TYPE_AREA.value]
+##        self.ref_object = ref_object
+#        par_object = getattr(self, par.lower())
+#        salt_object = getattr(self, salt_par.lower())
+#        self.par_object = par_object
+#        self.salt_object = salt_object
+#        
+#        par_df = par_object.data.column_data.copy(deep=True)
+#        salt_df = salt_object.data.column_data
+#        
+#        par_df['salt_value_ori'] = np.nan 
+#        par_df['salt_value'] = np.nan 
+#        par_df['salt_index'] = np.nan 
+#        par_df['ref_value'] = np.nan 
+#        #par_df['ek_value_calc'] = np.nan 
+#        par_df['par_value'] = np.nan 
+#        for i in par_df.index:
+##            self.i = i
+#            df_row = par_df.loc[i, :]
+#            par_value = df_row[par]
+#            if np.isnan(par_value):
+#                ref_value = np.nan
+#            else:
+#                try:
+#                    salt_df.loc[1, salt_par]
+#                    first_salt = 1 
+#                except KeyError:
+#                    # TODO: Why was default set to 1?
+#                    first_salt = salt_df.index[0]
+#                if i in salt_df.index and not np.isnan(salt_df.loc[first_salt, salt_par]): 
+#                    salt_value_ori = salt_df.loc[first_salt, salt_par]  # ska inte det vara: salt_df.loc[i, salt_par]?
+#                    salt_index = i
+#                else:
+#                    # TODO: If not allowed to continue
+#                    matching_salt_data = salt_object.get_closest_matching_data(df_row=df_row, 
+#                                                                             tolerance_filter=tolerance_filter)
+#                    if matching_salt_data.empty:
+#                        salt_value_ori = np.nan
+#                        salt_index = np.nan
+#                        self.missing = df_row
+#                    else:
+#                        self.matching_salt_data = matching_salt_data
+#                        salt_value_ori = matching_salt_data[salt_par]
+#                        salt_index = matching_salt_data.name
+#                        
+#                # Check salt for maximum value
+#                salt_value = ref_object.get_max_salinity(salt_value_ori)
+#                
+#                # Get ref value
+#                ref_value = ref_object.get_ref_value(salt_value)
+#                
+#                # Get EK-value
+#                
+#                # TODO: This differs between indicators, some are ref/obs other obs/ref
+#                # So this should not be in IndicatorBase, output from this def should be salt_val, ref_val och par_val
+##                ek_value_calc = ref_value/par_value
+#                
+##                self.salt_value = salt_value
+##                self.ek_value_calc = ek_value_calc
+##                self.ref_value = ref_value
+##                self.par_value = par_value
+##            print('ref_value', ref_value, '=', value)
+##            self.df_row = df_row
+##            self.salt_value = salt_value
+#            par_df.set_value(i, 'salt_value_ori', salt_value_ori) 
+#            par_df.set_value(i, 'salt_value', salt_value) 
+#            par_df.set_value(i, 'salt_index', salt_index)
+#            par_df.set_value(i, 'ref_value', ref_value)
+#            par_df.set_value(i, 'par_value', par_value)
+#            
+#            # Check ek_value_calc
+##            ek_value = ek_value_calc
+##            if ek_value > 1:
+##                ek_value = 1
+##            par_df.set_value(i, 'ek_value', ek_value)
+#        return par_df        
 ###############################################################################
 class IndicatorNutrients(IndicatorBase): 
     """
