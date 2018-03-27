@@ -691,12 +691,16 @@ class SettingsFile(object):
         """
         if water_body:
             type_area = self.mapping_water_body.get_type_area_for_water_body(water_body, include_suffix=True)
+            combined_boolean = df['VISS_EU_CD'] == water_body
+        else:
+            combined_boolean = ()
+            
         self.temp_type_area = type_area
         print('===')
         print('water_body', water_body)
         print('type_area', type_area)
         # Filter for water_body 
-        combined_boolean = df['VISS_EU_CD'] == water_body
+        
 #        print('==========combined_boolean===========')
 #        print(np.where(combined_boolean))
 #        print('=====================================')

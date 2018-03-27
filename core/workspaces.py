@@ -705,6 +705,7 @@ class WorkSpace(object):
                  parent_directory=None, 
                  resource_directory=None,
                  nr_subsets_allowed=4, 
+                 mapping_objects=None, 
                  user_id=None): 
         
         assert all([alias, unique_id, parent_directory, user_id])
@@ -716,6 +717,7 @@ class WorkSpace(object):
         self.alias = alias 
         self.unique_id = unique_id
         self.user_id = user_id
+        self.mapping_objects = mapping_objects
         
         self.all_status = ['editable', 'readable', 'deleted']
 
@@ -799,10 +801,6 @@ class WorkSpace(object):
         
         # Subset
         self.subset_dict = {} 
-        
-        # Mapping objects 
-        self.mapping_objects = {}
-        self.mapping_objects['water_body'] = core.WaterBody(file_path=self.paths['mapping_directory'] + '/water_body_match.txt')
         
         self.dtype_settings = core.RawDataFiles(self.paths['directory_path_raw_data'])
         

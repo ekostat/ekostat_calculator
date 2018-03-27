@@ -6,7 +6,12 @@
         "uuid": "fa499f4c-ad1e-4978-b38a-510b672d5a7e",
         "status": "editable",
         "active": true,
-        "time": null,
+        "time": {
+            "year_interval": [
+                2013,
+                2015
+            ]
+        },
         "areas": [
             {
                 "label": "SE1",
@@ -18,7 +23,7 @@
                     {
                         "label": "20 - Norra Kvarkens inre kustvatten",
                         "value": "20",
-                        "type": "value",
+                        "type": "type_area",
                         "status": "selectable",
                         "active": false,
                         "children": [
@@ -147,7 +152,7 @@
                     {
                         "label": "21 - Norra Kvarkens yttre kustvatten",
                         "value": "21",
-                        "type": "value",
+                        "type": "type_area",
                         "status": "selectable",
                         "active": false,
                         "children": [
@@ -172,7 +177,7 @@
                     {
                         "label": "22 - Bottenviken, inre kustvatten",
                         "value": "22",
-                        "type": "value",
+                        "type": "type_area",
                         "status": "selectable",
                         "active": false,
                         "children": [
@@ -877,7 +882,7 @@
                     {
                         "label": "23 - Bottenviken, yttre kustvatten",
                         "value": "23",
-                        "type": "value",
+                        "type": "type_area",
                         "status": "selectable",
                         "active": false,
                         "children": [
@@ -967,7 +972,7 @@
                     {
                         "label": "22 - Bottenviken, inre kustvatten",
                         "value": "22",
-                        "type": "value",
+                        "type": "type_area",
                         "status": "selectable",
                         "active": false,
                         "children": [
@@ -1672,7 +1677,7 @@
                     {
                         "label": "23 - Bottenviken, yttre kustvatten",
                         "value": "23",
-                        "type": "value",
+                        "type": "type_area",
                         "status": "selectable",
                         "active": false,
                         "children": [
@@ -1762,7 +1767,7 @@
                     {
                         "label": "16 - S\u00f6dra Bottenhavet, inre kustvatten",
                         "value": "16",
-                        "type": "value",
+                        "type": "type_area",
                         "status": "selectable",
                         "active": false,
                         "children": [
@@ -2131,7 +2136,7 @@
                     {
                         "label": "17 - S\u00f6dra Bottenhavet, yttre kustvatten",
                         "value": "17",
-                        "type": "value",
+                        "type": "type_area",
                         "status": "selectable",
                         "active": false,
                         "children": [
@@ -2204,7 +2209,7 @@
                     {
                         "label": "18 - Norra Bottenhavet, H\u00f6ga kusten, inre kustvatten",
                         "value": "18",
-                        "type": "value",
+                        "type": "type_area",
                         "status": "selectable",
                         "active": false,
                         "children": [
@@ -2621,7 +2626,7 @@
                     {
                         "label": "19 - Norra Bottenhavet, H\u00f6ga kusten, yttre kustvatten",
                         "value": "19",
-                        "type": "value",
+                        "type": "type_area",
                         "status": "selectable",
                         "active": false,
                         "children": [
@@ -2679,7 +2684,7 @@
                     {
                         "label": "12n - \u00d6sterg\u00f6tlands samt Stockholms sk\u00e4rg\u00e5rd, mellankustvatten, norra",
                         "value": "12n",
-                        "type": "value",
+                        "type": "type_area",
                         "status": "selectable",
                         "active": false,
                         "children": [
@@ -3536,7 +3541,7 @@
                     {
                         "label": "14 - \u00d6sterg\u00f6tlands yttre kustvatten",
                         "value": "14",
-                        "type": "value",
+                        "type": "type_area",
                         "status": "selectable",
                         "active": false,
                         "children": [
@@ -3617,7 +3622,7 @@
                     {
                         "label": "15 - Stockholms sk\u00e4rg\u00e5rd, yttre kustvatten",
                         "value": "15",
-                        "type": "value",
+                        "type": "type_area",
                         "status": "selectable",
                         "active": false,
                         "children": [
@@ -3802,7 +3807,7 @@
                     {
                         "label": "16 - S\u00f6dra Bottenhavet, inre kustvatten",
                         "value": "16",
-                        "type": "value",
+                        "type": "type_area",
                         "status": "selectable",
                         "active": false,
                         "children": [
@@ -4171,7 +4176,7 @@
                     {
                         "label": "17 - S\u00f6dra Bottenhavet, yttre kustvatten",
                         "value": "17",
-                        "type": "value",
+                        "type": "type_area",
                         "status": "selectable",
                         "active": false,
                         "children": [
@@ -4244,7 +4249,7 @@
                     {
                         "label": "24 - Stockholms inre sk\u00e4rg\u00e5rd och Hallsfj\u00e4rden",
                         "value": "24",
-                        "type": "value",
+                        "type": "type_area",
                         "status": "selectable",
                         "active": false,
                         "children": [
@@ -4414,7 +4419,7 @@
                     {
                         "label": "10 - \u00d6stra \u00d6lands, syd\u00f6stra Gotlands kustvatten samt Gotska sand\u00f6n",
                         "value": "10",
-                        "type": "value",
+                        "type": "type_area",
                         "status": "selectable",
                         "active": false,
                         "children": [
@@ -4591,7 +4596,7 @@
                     {
                         "label": "11 - Gotlands v\u00e4stra och norra kustvatten",
                         "value": "11",
-                        "type": "value",
+                        "type": "type_area",
                         "status": "selectable",
                         "active": false,
                         "children": [
@@ -4648,7 +4653,7 @@
                     {
                         "label": "12n - \u00d6sterg\u00f6tlands samt Stockholms sk\u00e4rg\u00e5rd, mellankustvatten, norra",
                         "value": "12n",
-                        "type": "value",
+                        "type": "type_area",
                         "status": "selectable",
                         "active": false,
                         "children": [
@@ -5505,7 +5510,7 @@
                     {
                         "label": "12s - \u00d6sterg\u00f6tlands samt Stockholms sk\u00e4rg\u00e5rd, mellankustvatten, s\u00f6dra",
                         "value": "12s",
-                        "type": "value",
+                        "type": "type_area",
                         "status": "selectable",
                         "active": false,
                         "children": [
@@ -5962,7 +5967,7 @@
                     {
                         "label": "13 - \u00d6sterg\u00f6tlands inre sk\u00e4rg\u00e5rd",
                         "value": "13",
-                        "type": "value",
+                        "type": "type_area",
                         "status": "selectable",
                         "active": false,
                         "children": [
@@ -6035,7 +6040,7 @@
                     {
                         "label": "14 - \u00d6sterg\u00f6tlands yttre kustvatten",
                         "value": "14",
-                        "type": "value",
+                        "type": "type_area",
                         "status": "selectable",
                         "active": false,
                         "children": [
@@ -6116,7 +6121,7 @@
                     {
                         "label": "5 - S\u00f6dra Halland och norra \u00d6resunds kustvatten",
                         "value": "5",
-                        "type": "value",
+                        "type": "type_area",
                         "status": "selectable",
                         "active": false,
                         "children": [
@@ -6173,7 +6178,7 @@
                     {
                         "label": "6 - \u00d6resunds kustvatten",
                         "value": "6",
-                        "type": "value",
+                        "type": "type_area",
                         "status": "selectable",
                         "active": false,
                         "children": [
@@ -6230,7 +6235,7 @@
                     {
                         "label": "7 - Sk\u00e5nes kustvatten",
                         "value": "7",
-                        "type": "value",
+                        "type": "type_area",
                         "status": "selectable",
                         "active": false,
                         "children": [
@@ -6335,7 +6340,7 @@
                     {
                         "label": "8 - Blekinge sk\u00e4rg\u00e5rd och Kalmarsund, inre kustvatten",
                         "value": "8",
-                        "type": "value",
+                        "type": "type_area",
                         "status": "selectable",
                         "active": false,
                         "children": [
@@ -6704,7 +6709,7 @@
                     {
                         "label": "9 - Blekinge sk\u00e4rg\u00e5rd och Kalmarsund, yttre kustvatten",
                         "value": "9",
-                        "type": "value",
+                        "type": "type_area",
                         "status": "selectable",
                         "active": false,
                         "children": [
@@ -6802,7 +6807,7 @@
                     {
                         "label": "1n - V\u00e4stkustens inre kustvatten, norra",
                         "value": "1n",
-                        "type": "value",
+                        "type": "type_area",
                         "status": "selectable",
                         "active": false,
                         "children": [
@@ -7147,7 +7152,7 @@
                     {
                         "label": "1s - V\u00e4stkustens inre kustvatten, s\u00f6dra",
                         "value": "1s",
-                        "type": "value",
+                        "type": "type_area",
                         "status": "selectable",
                         "active": false,
                         "children": [
@@ -7348,7 +7353,7 @@
                     {
                         "label": "2 - V\u00e4stkustens fjordar",
                         "value": "2",
-                        "type": "value",
+                        "type": "type_area",
                         "status": "selectable",
                         "active": false,
                         "children": [
@@ -7525,7 +7530,7 @@
                     {
                         "label": "25 - G\u00f6ta \u00c4lvs- och Nordre \u00c4lvs estuarie",
                         "value": "25",
-                        "type": "value",
+                        "type": "type_area",
                         "status": "selectable",
                         "active": false,
                         "children": [
@@ -7558,7 +7563,7 @@
                     {
                         "label": "3 - V\u00e4stkustens yttre kustvatten, Skagerrak",
                         "value": "3",
-                        "type": "value",
+                        "type": "type_area",
                         "status": "selectable",
                         "active": false,
                         "children": [
@@ -7655,7 +7660,7 @@
                     {
                         "label": "4 - V\u00e4stkustens yttre kustvatten, Kattegatt",
                         "value": "4",
-                        "type": "value",
+                        "type": "type_area",
                         "status": "selectable",
                         "active": false,
                         "children": [
@@ -7704,7 +7709,7 @@
                     {
                         "label": "5 - S\u00f6dra Halland och norra \u00d6resunds kustvatten",
                         "value": "5",
-                        "type": "value",
+                        "type": "type_area",
                         "status": "selectable",
                         "active": false,
                         "children": [

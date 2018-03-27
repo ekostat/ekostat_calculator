@@ -153,7 +153,7 @@ class EventHandler(object):
                                     workspace_uuid='',
                                     subset_uuid='', 
                                     indicator='', 
-                                    water_body='', 
+                                    type_area='', 
                                     step='step_2'): 
         """
         Created     20180319    by Magnus Wenzer
@@ -162,7 +162,7 @@ class EventHandler(object):
         w = self._get_workspace_object(user_id=user_id, unique_id=workspace_uuid)
         all_ok = w.apply_indicator_data_filter(subset=subset_uuid, 
                                                indicator=indicator, 
-                                               water_body=water_body, 
+                                               type_area=type_area, 
                                                step=step)
         return all_ok
         
@@ -1308,7 +1308,7 @@ class EventHandler(object):
                 return_list.append(type_area_dict)
     
             return return_list
-    
+        
     
     #==========================================================================
     def list_water_bodies(self, workspace_unique_id=None, subset_unique_id=None, type_area=None, request=None): 
@@ -1485,6 +1485,7 @@ class EventHandler(object):
                                                     unique_id=unique_id, 
                                                     parent_directory=self.workspace_directory,
                                                     resource_directory=self.resource_directory, 
+                                                    mapping_objects=self.mapping_objects, 
                                                     user_id=user_id)
         return True            
         
@@ -1605,7 +1606,6 @@ class EventHandler(object):
             return {} 
         self.assure_data_is_loaded(user_id=user_id, workspace_uuid=workspace_uuid)
         response = self.dict_subset(workspace_unique_id=workspace_uuid, 
-                                    
                                     request=request_subset_dict, 
                                     include_indicator_settings=True)
         request['subset'] = response
