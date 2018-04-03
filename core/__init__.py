@@ -3,7 +3,6 @@
 from .data_handlers import DataHandler
 
 from .filters import DataFilter
-from .filters import ToleranceFilter
 from .filters import SettingsFile
 from .filters import SettingsRef
 from .filters import SettingsDataFilter
@@ -12,6 +11,7 @@ from .filters import WaterBodyStationFilter
 
 from .index_handler import IndexHandler
 
+from .indicators import IndicatorBase
 from .indicators import IndicatorDIN
 from .indicators import IndicatorTOTN
 

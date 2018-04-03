@@ -1037,14 +1037,15 @@ if __name__ == '__main__':
     print('-'*50)
     print('')
     
-    raw_data_file_path = 'D:/Utveckling/g_EKOSTAT_tool/test_data/raw_data/data_BAS_2000-2009.txt'
-    first_filter_directory = 'D:/Utveckling/g_EKOSTAT_tool/test_data/filtered_data' 
+#    
+#    raw_data_file_path = 'D:/Utveckling/g_EKOSTAT_tool/test_data/raw_data/data_BAS_2000-2009.txt'
+#    first_filter_directory = 'D:/Utveckling/g_EKOSTAT_tool/test_data/filtered_data' 
     
     
     # Handler
-    raw_data = core.DataHandler('raw')
-    raw_data.add_txt_file(raw_data_file_path, data_type='column')
-    
+#    raw_data = core.DataHandler('raw')
+#    raw_data.add_txt_file(raw_data_file_path, data_type='column')
+#    
     print('-'*50)
     print('done')
     print('-'*50)

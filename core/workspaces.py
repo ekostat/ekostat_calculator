@@ -178,13 +178,13 @@ class WorkStep(object):
     #==========================================================================
     def calculate_indicator_status(self, subset_unique_id = None, indicator_list = None):  
         """
-        when step 3 is initiated indicator objects should be instansiated for all and indicators selected in step 2 as default
+        when step 3 is initiated indicator objects should be instansiated for all  indicators selected in step 2 as default
         where do we save info on selected indicators? in step_2/datafilters folder?
-        We can calculate all indicators available but then the indikator selection is useless with regards to saving time for the user.
+        We can calculate all indicators available but then the indicator selection is useless with regards to saving time for the user.
         """ 
         """
         Created:        20180215     by Lena
-        Last modified:  20180326     by Lena
+        Last modified:  20180403     by Lena
         create dict containing indicator objects according to data availability or choice?
         This should be moved to WorkStep class, and should be run accesed only for step 3.
         """
@@ -195,20 +195,11 @@ class WorkStep(object):
             
         self.indicator_objects = dict.fromkeys(indicator_list)
         for indicator in self.indicator_objects.keys():
-            # get settings for the indicator
-            data_filter_settings = self.get_indicator_data_filter_settings(indicator)
-            tolerance_settings = self.get_indicator_tolerance_settings(indicator)
-            ref_settings = self.get_indicator_ref_settings(indicator)
-            index_handler = self.parent_workspace_object.index_handler
-            assert all(data_filter_settings, 
-                       tolerance_settings,
-                       ref_settings,
-                       index_handler.booleans['step_0'][subset_unique_id]['step_1']['step_2']), 'Something missing in data_filter_settings, tolerance_settings, ref_settings, index_handler'
             # add indicator objects to dictionary
-            self.indicator_objects[indicator] = core.IndicatorBase(index_handler, 
-                                                                      data_filter_settings, 
-                                                                      tolerance_settings, 
-                                                                      ref_settings)
+            self.indicator_objects[indicator] = core.IndicatorBase(subset = subset_unique_id, 
+                                                                      parent_workspace_object = self.parent_workspace_object,
+                                                                      indicator = indicator)
+            
             # TODO: Indicator objects should be different classes from the Base-class depending on indicator. 
             #       The Indicator classname should be given in the config file together with the indicator names and parameters
             #       Or keep one Indicator class for all and give calculation_method as input?

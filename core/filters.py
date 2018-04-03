@@ -471,7 +471,7 @@ class SettingsFile(object):
             if 'EQR' in variable:
                 self.EQR_columns.append(variable)
                 
-            if 'REFVALUE' in variable:
+            if 'REF_VALUE' in variable:
                 self.refvalue_column.append(variable)
                 #check length
                 if len(self.refvalue_column) != 1:
@@ -857,21 +857,43 @@ class SettingsRef(SettingsBase):
         self.settings = settings_file_object 
         self.settings.connected_to_ref_settings_object = True
         self.allowed_variables = self.settings.ref_columns
-        
+    
+     
     #==========================================================================    
     def get_ref_value(self, type_area = None, salinity = None):
         """
         Created     20180326    by Lena Viktorsson
         Updated     20180328    by Lena Viktorsson
         """
-        ref_value = self.get_value(variable = self.refvalue_column[0], type_area = type_area)
-        if ref_value is float:
+        ref_value = self.get_value(variable = self.settings.refvalue_column[0], type_area = type_area)[0]
+        
+        if type(ref_value) is float:
             ref_value = ref_value
-        elif ref_value is str and salinity is str:
-            s = salinity
-            ref_value = eval(ref_value, s) 
+        elif type(ref_value) is str:
+            try: 
+                s = salinity
+                ref_value = eval(ref_value) 
+            except TypeError as e:
+                raise TypeError('{}\nSalinity TypeError, salinity must be int, float or nan but is {}'.format(e, s))
+                #TODO: add closes matching salinity somewhere hera
         else:
             raise TypeError('Unknown Type of reference value, must be either equation as string or float. Given reference value {} is {}. Or salinity missing, given salinity value is {}'.format(ref_value, type(ref_value), salinity))
+        
+        return ref_value
+    #==========================================================================    
+    def get_ref_value_type(self, type_area = None):
+        """
+        Created     20180403    by Lena Viktorsson
+        Updated     
+        """
+        ref_value = self.get_value(variable = self.settings.refvalue_column[0], type_area = type_area)[0]
+       
+        if type(ref_value) is float:
+            return 'float'
+        elif type(ref_value) is str:
+            return 'str'
+        else:
+            raise TypeError('unknown referencevalue type {}: {}'.format(type(ref_value),ref_value))
         
 ###############################################################################
 class SettingsDataFilter(SettingsBase):
