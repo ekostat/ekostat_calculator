@@ -51,16 +51,21 @@ class IndicatorBase(object):
         self.class_result = None
         self.subset = subset
         self.step = 3
+        # from workspace
         self.parent_workspace_object = parent_workspace_object
         self.mappings = self.parent_workspace_object.mappings
+        # from SettingsFile
         self.index_handler = self.parent_workspace_object.index_handler
         self.tolerance_settings = tolerance_settings
         self.ref_settings = ref_settings
+        # To be read from config-file
         self.meta_columns = ['SDATE', 'MONTH', 'VISS_EU_CD', 'WATER_TYPE_AREA', 'DEPH']
         self.parameter_columns = indicator_settings['parameters']
         self.column_list = self.meta_columns + self.parameter_columns
-        self.indicator_water_body_df = {}
-
+        # attributes that will be calculated
+        self.water_body_indicator_df = {}
+        
+    #==========================================================================
     def get_filtered_data(self, subset=None, step=None, type_area=None, indicator=None):
         """
         Filter for water_body and indicator means filters from indicator_settings are applied.
@@ -68,11 +73,11 @@ class IndicatorBase(object):
         """
 
         return self.index_handler.get_filtered_data(subset, step, type_area, indicator)
-
-    def get_indicator_water_body_df(self, water_body = None, level = None):
+    #==========================================================================
+    def get_water_body_indicator_df(self, water_body = None, level = None):
         """
         Created:        20180215     by Lena
-        Last modified:  20180327     by Lena
+        Last modified:  20180328     by Lena
         df should contain:
             - all needed columns from get_filtered_data
             - referencevalues
@@ -82,30 +87,58 @@ class IndicatorBase(object):
         self.tolerance_settings
         self.indicator_ref_settings
         """
-        type_area = WaterBody.get_type_area_for_water_body(water_body, include_suffix=True)
+        type_area = self.mappings.WaterBody.get_type_area_for_water_body(water_body, include_suffix=True)
         df = self.get_filtered_data(subset = self.subset, step = self.step, type_area = type_area, indicator = self.name, level = level)
         df = df[self.column_list]
         try:
             df =  df[df['VISS_EU_CD'] == water_body]
         except NameError:
             raise NameError('Must give water_body to get indicator_df')
-        
-        self.indicator_water_body_df[water_body] = df
             
-    def get_ref_value(self, type_area = None, salinity = None):
+        df = self.add_reference_value_to_df(df, type_area)
+        self.water_body_indicator_df[water_body] = df
+    
+    #==========================================================================
+    def add_reference_value_to_df(self, df, type_area):    
         """
+        Created:        20180228     by Lena
+        Last modified:  
+        add reference value to dataframe
+        """
+        
+        if self.get_ref_value_type(type_area) is str:
+            df['REFERENCE_VALUE'] = np.nan
+            for ix in df.index:
+                salinity = df['SALT_CTD'][ix]
+                df['REFERENCE_VALUE'][ix] = self.get_ref_value(type_area, salinity)
+        else:
+            df['REFERENCE_VALUE'] = self.get_ref_value(type_area)
+                                    
+        return df
+    
+    #==========================================================================        
+    def get_ref_value_type(self, type_area = None, get_type = True):
+        """
+        Created:        20180228     by Lena
+        Last modified:  
         Get referencevalue either from equation or directly from settings
         To get reference value from equation you need to supply both type_area and salinity
         
         """
+        return self.ref_settings.get_ref_value(type_area, get_type)
+    
+    #==========================================================================        
+    def get_ref_value(self, type_area = None, salinity = None):
+        """
+        Created:        20180228     by Lena
+        Last modified:  
+        Get referencevalue either from equation or directly from settings
+        To get reference value from equation you need to supply both type_area and salinity
         
-        if 'ref_eq' in self.ref_settings.ref_columns and salinity:
-            assert all(type_area, salinity), 'type area and salinity must be given to calculate salinity dependent reference value'
-            s = salinity
-            return eval(self.ref_settings.get_ref_value(type_area), s)
-        else:
-            return self.ref_settings.get_ref_value(type_area)
-            
+        """
+        return self.ref_settings.get_ref_value(type_area, salinity)
+    
+    #==========================================================================  
     def get_closest_matching_salinity(self):
         """
         get closest matching salinity value when salinity is missing. 

@@ -401,6 +401,8 @@ class SettingsFile(object):
         
         self.interval_columns = []
         self.list_columns = [] 
+        self.EQR_columns = []
+        self.refvalue_column = []
         
         self.filter_columns = [] 
         self.ref_columns = [] 
@@ -411,12 +413,16 @@ class SettingsFile(object):
         self.connected_to_tolerance_settings_object = False
         
         self._prefix_list = ['FILTER', 'REF', 'TOLERANCE'] 
-        self._suffix_list = ['INT', 'EKV']
+        self._suffix_list = ['INT', 'EQ', 'FLOAT']
         
         self._load_file()    
     
     #==========================================================================
     def _load_file(self):
+        """
+        Created:        xxxxxxxx     by Magnus
+        Last modified:  20180328     by Lena
+        """
         self.df = pd.read_csv(self.file_path, sep='\t', dtype='str', encoding='cp1252') 
         
         # Save columns
@@ -461,6 +467,15 @@ class SettingsFile(object):
                 
             if 'LIST' in variable:
                 self.list_columns.append(variable)
+                
+            if 'EQR' in variable:
+                self.EQR_columns.append(variable)
+                
+            if 'REFVALUE' in variable:
+                self.refvalue_column.append(variable)
+                #check length
+                if len(self.refvalue_column) != 1:
+                    raise ValueError('Trying to add more than one column for reference value from settings file')
             
             self.columns.append(variable)
             
@@ -542,6 +557,10 @@ class SettingsFile(object):
     
     #==========================================================================
     def get_value(self, variable=None, type_area=None): 
+        """
+        Created:        xxxxxxxx     by Magnus
+        Last modified:  20180328     by Lena
+        """
         print(type_area)
         print(self.df.columns)        
         num, suf = get_type_area_parts(type_area)
@@ -571,6 +590,11 @@ class SettingsFile(object):
                 value = self._get_interval_from_string(value, variable)
 #                print('=', value, type(value[0]))
     #            esf
+            elif variable in self.refvalue_column:
+                if variable.isnumeric():
+                    value = float(value)
+                else:
+                    value = value
             else:
                 value = self._convert(value, variable.upper())
             return_value.append(value)
@@ -835,17 +859,19 @@ class SettingsRef(SettingsBase):
         self.allowed_variables = self.settings.ref_columns
         
     #==========================================================================    
-    def get_ref_value(self, type_area):
+    def get_ref_value(self, type_area = None, salinity = None):
         """
         Created     20180326    by Lena Viktorsson
-        Updated     20180326    by Lena Viktorsson
+        Updated     20180328    by Lena Viktorsson
         """
-        try: 
-            self.settings.df[self.settings.ref_columns]['EKV Ref']
-            self.get_value(variable = 'EKV Ref', type_area = type_area)
-        except KeyError:
-            pass
-            
+        ref_value = self.get_value(variable = self.refvalue_column[0], type_area = type_area)
+        if ref_value is float:
+            ref_value = ref_value
+        elif ref_value is str and salinity is str:
+            s = salinity
+            ref_value = eval(ref_value, s) 
+        else:
+            raise TypeError('Unknown Type of reference value, must be either equation as string or float. Given reference value {} is {}. Or salinity missing, given salinity value is {}'.format(ref_value, type(ref_value), salinity))
         
 ###############################################################################
 class SettingsDataFilter(SettingsBase):
