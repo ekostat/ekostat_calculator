@@ -176,35 +176,6 @@ class WorkStep(object):
         self.load_all_files()    
             
     #==========================================================================
-    def calculate_indicator_status(self, subset_unique_id = None, indicator_list = None):  
-        """
-        when step 3 is initiated indicator objects should be instansiated for all  indicators selected in step 2 as default
-        where do we save info on selected indicators? in step_2/datafilters folder?
-        We can calculate all indicators available but then the indicator selection is useless with regards to saving time for the user.
-        """ 
-        """
-        Created:        20180215     by Lena
-        Last modified:  20180403     by Lena
-        create dict containing indicator objects according to data availability or choice?
-        This should be moved to WorkStep class, and should be run accesed only for step 3.
-        """
-        if indicator_list == None:
-            indicator_list = self.parent_workspace_object.available_indicators
-            if indicator_list == None:
-                indicator_list = self.parent_workspace_object.get_available_indicators(subset=subset_unique_id, step=2)
-            
-        self.indicator_objects = dict.fromkeys(indicator_list)
-        for indicator in self.indicator_objects.keys():
-            # add indicator objects to dictionary
-            self.indicator_objects[indicator] = core.IndicatorBase(subset = subset_unique_id, 
-                                                                      parent_workspace_object = self.parent_workspace_object,
-                                                                      indicator = indicator)
-            
-            # TODO: Indicator objects should be different classes from the Base-class depending on indicator. 
-            #       The Indicator classname should be given in the config file together with the indicator names and parameters
-            #       Or keep one Indicator class for all and give calculation_method as input?
-           
-    #==========================================================================
     def get_all_file_paths_in_workstep(self): 
         """
         Returns a sorted list of all file paths in the workstep tree. 
@@ -264,7 +235,47 @@ class WorkStep(object):
     #==========================================================================
     def get_indicator_settings_name_list(self):
         return sorted(self.indicator_settings.keys())
-    
+   
+    #==========================================================================
+    def indicator_setup(self, subset_unique_id = None, indicator_list = None):  
+        """
+        when step 3 is initiated indicator objects should be instansiated for all  indicators selected in step 2 as default
+        where do we save info on selected indicators? in step_2/datafilters folder?
+        We can calculate all indicators available but then the indicator selection is useless with regards to saving time for the user.
+        """ 
+        """
+        Created:        20180215     by Lena
+        Last modified:  20180403     by Lena
+        create dict containing indicator objects according to data availability or choice?
+        This should be moved to WorkStep class, and should be run accesed only for step 3.
+        """
+        if indicator_list == None:
+            indicator_list = self.parent_workspace_object.available_indicators
+            if indicator_list == None:
+                indicator_list = self.parent_workspace_object.get_available_indicators(subset=subset_unique_id, step=2)
+            
+        self.indicator_objects = dict.fromkeys(indicator_list)
+        for indicator in self.indicator_objects.keys():
+            class_name = self.parent_workspace_object.mapping_objects['quality_element'].indicator_config.loc[indicator]['indicator_class']
+            print(class_name)
+            try:
+                class_ = getattr(core, class_name)
+            except AttributeError as e:
+                raise AttributeError('{}\nClass does not exist'.foramt(e))
+            print(class_)
+            #instance = class_()
+            # add indicator objects to dictionary
+            self.indicator_objects[indicator] = class_(subset = subset_unique_id, 
+                                                                      parent_workspace_object = self.parent_workspace_object,
+                                                                      indicator = indicator)
+#            self.indicator_objects[indicator] = core.IndicatorBase(subset = subset_unique_id, 
+#                                                                      parent_workspace_object = self.parent_workspace_object,
+#                                                                      indicator = indicator)
+            
+            # TODO: Indicator objects should be different classes from the Base-class depending on indicator. 
+            #       The Indicator classname should be given in the config file together with the indicator names and parameters
+            #       Or keep one Indicator class for all and give calculation_method as input?
+           
     #==========================================================================
     def load_all_files(self): 
         self._create_file_paths()
@@ -762,7 +773,7 @@ class WorkSpace(object):
             self._set_loggers_to_steps()
         
         
-        self._load_config_files() 
+        #self.deprecated_load_config_files() 
         
     #==========================================================================
     def _add_subset(self, unique_id=None): 
@@ -829,7 +840,7 @@ class WorkSpace(object):
         
     
     #==========================================================================
-    def _load_config_files(self):       
+    def deprecated_load_config_files(self):       
         self.cf_df = pd.read_csv(self.paths['resource_directory'] + '/Quality_Elements.cfg', sep='\t', dtype='str', encoding='cp1252')
         assert all(['quality element' in self.cf_df.keys(), 'indicator' in self.cf_df.keys(), 'parameters' in self.cf_df.keys()]), 'configuration file must contain quality element, indicator and parameters information'
         self.cfg = {}
@@ -1275,7 +1286,7 @@ class WorkSpace(object):
     def get_available_indicators(self, subset=None, step=None):
         """
         Created:        201801   by Lena
-        Last modified:  20180316 by Lena
+        Last modified:  20180406 by Lena
         """
         #TODO: nu kollar den bara om det finns fler än 0 rader med givna parameters för indikatorn, kanske öka den gräns?
         try:
@@ -1286,8 +1297,10 @@ class WorkSpace(object):
             return False
         
         available_indicators = []
-        for indicator, parameters in self.cfg['indicators'].items():
-            parameter_list = [item.strip() for item in parameters[0].split(', ')]
+        #for indicator, parameters in self.cfg['indicators'].items():
+        for indicator, row in self.mapping_objects['quality_element'].indicator_config.iterrows():
+            parameter_list = [item.strip() for item in row['parameters'].split(', ')]
+            #parameter_list = [item.strip() for item in parameters[0].split(', ')]
             print('subset', subset)
             try:
                 #TODO: speed of pd.to_numeric?

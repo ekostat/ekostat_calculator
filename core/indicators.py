@@ -46,6 +46,9 @@ class IndicatorBase(object):
     Class to calculate status for a specific indicator. 
     """ 
     def __init__(self, subset, parent_workspace_object, indicator):
+        """
+        setup indicator class attributes based on subset, parent workspace object and indicator name
+        """
         self.name = indicator
         self.parameter_list = []
         self.class_result = None
@@ -60,11 +63,11 @@ class IndicatorBase(object):
         self.ref_settings = self.parent_workspace_object.get_step_object(step = 2, subset = subset).get_indicator_ref_settings(self.name)
         # To be read from config-file
         self.meta_columns = ['SDATE', 'MONTH', 'VISS_EU_CD', 'WATER_TYPE_AREA', 'DEPH']
-        self.parameter_list = [item.strip() for item in self.parent_workspace_object.cfg['indicators'].loc[self.name][0].split(', ')]
+        self.parameter_list =  [item.strip() for item in self.mapping_objects['quality_element'].indicator_config.loc[self.name]['parameters'].split(', ')] #[item.strip() for item in self.parent_workspace_object.cfg['indicators'].loc[self.name][0].split(', ')]
         self.column_list = self.meta_columns + self.parameter_list
         # attributes that will be calculated
         self.water_body_indicator_df = {}
-        
+         
             
     #==========================================================================
     def get_filtered_data(self, subset=None, step=None, type_area=None, indicator=None):
@@ -252,6 +255,16 @@ class IndicatorBase(object):
 ##                ek_value = 1
 ##            par_df.set_value(i, 'ek_value', ek_value)
 #        return par_df        
+
+###############################################################################
+class IndicatorBQI(IndicatorBase): 
+    """
+    Class with methods incommon for BQI indicator. 
+    """
+    
+    def __init__(self):
+        super().__init__()  
+        
 ###############################################################################
 class IndicatorNutrients(IndicatorBase): 
     """
@@ -362,63 +375,34 @@ class IndicatorNutrients(IndicatorBase):
         Görs i quality_factors, def calculate_quality_factor()
         """
         
+
 ###############################################################################
-class IndicatorDIN(IndicatorNutrients): 
+class IndicatorOxygen(IndicatorBase): 
     """
-    Class to calculate indicator DIN. 
+    Class with methods incommon for BQI indicator. 
     """
     
     def __init__(self):
-        super().__init__()
-        self.name = 'DIN'
-        
-        # Parameter list contains all parameters that is used by the indicator class
-        self.parameter_list = ['NTRA', 'NTRI', 'AMON', 'DIN', 'SALT_CTD']
-       
-    #==========================================================================
-    def _set_refvalues(self):
-        pass
+        super().__init__()  
 
-    #==========================================================================
-    def filter_data(self, data_filter_object=None, parameter=None):
-        """
-        If filtering on indicator-level the filter has to be saved for this indicator specifically.
-        """
-        pass
-        
-    #==========================================================================
-    def get_status(self):
-
-        return self.class_result
-    
 ###############################################################################
-class IndicatorTOTN(IndicatorNutrients): 
+class IndicatorPhytoplankton(IndicatorBase): 
     """
-    Class to calculate indicator TOTN. 
+    Class with methods incommon for BQI indicator. 
     """
     
     def __init__(self):
-        super().__init__() 
-        self.name = 'TOTN'
+        super().__init__()  
+  
+###############################################################################
+class IndicatorSecchi(IndicatorBase): 
+    """
+    Class with methods incommon for BQI indicator. 
+    """
+    
+    def __init__(self):
+        super().__init__()  
         
-        # Parameter list contains all parameters that is used by the indicator class
-        self.parameter_list = ['SALT_CTD', 'NTOT']
-        
-    #==========================================================================
-    def _set_refvalues(self):
-        pass
-
-    #==========================================================================
-    def filter_data(self, data_filter_object=None, parameter=None):
-        """
-        If filtering on indicator-level the filter has to be saved for this indicator specifically.
-        """
-        pass
-        
-    #==========================================================================
-    def get_status(self):
-
-        return self.class_result
             
 ###############################################################################
 if __name__ == '__main__':
@@ -444,17 +428,6 @@ if __name__ == '__main__':
     raw_data.add_txt_file(raw_data_file_path, data_type='column') 
     
     filtered_data = raw_data.filter_data(first_filter)
-    
-    
-    ind_TOTN = IndicatorTOTN()
-    ind_TOTN.set_data_handler(filtered_data)
-    ind_TOTN.filter_data(winter_filter_1)
-    
-    core.RefValues()
-    core.RefValues().add_ref_parameter_from_file('TOTN_winter', 'D:/Utveckling/g_EKOSTAT_tool/test_data/totn_vinter.txt')
-    
-    
-    nclass = ind_TOTN.get_status(tolerance_filter)
     
     print('-'*50)
     print('done')

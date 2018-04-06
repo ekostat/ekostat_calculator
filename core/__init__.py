@@ -12,8 +12,11 @@ from .filters import WaterBodyStationFilter
 from .index_handler import IndexHandler
 
 from .indicators import IndicatorBase
-from .indicators import IndicatorDIN
-from .indicators import IndicatorTOTN
+from .indicators import IndicatorBQI
+from .indicators import IndicatorNutrients
+from .indicators import IndicatorOxygen
+from .indicators import IndicatorPhytoplankton
+from .indicators import IndicatorSecchi
 
 from .lists import StationList 
 from .lists import ParameterList

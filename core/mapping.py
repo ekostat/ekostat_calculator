@@ -502,6 +502,7 @@ class QualityElement(object):
         self.cfg = {}
         self.cfg['quality elements'] = self.cf_df.groupby('quality element')['indicator'].unique()
         self.cfg['indicators'] = self.cf_df.groupby('indicator')['parameters'].unique() 
+        self.indicator_config = self.cf_df.set_index('indicator')
     
     
     #==========================================================================
