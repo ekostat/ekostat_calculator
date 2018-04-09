@@ -14,6 +14,7 @@ if current_path not in sys.path:
 import pandas as pd
 import numpy as np
 import time
+import pickle
 
 import utils
 import core
@@ -965,9 +966,9 @@ class DataHandler(object):
     #==========================================================================
     def load_all_datatxt(self, sep='\t', encoding='cp1252', force=True):
         """
-        loads existing all_data.txt file from export directory
+        loads existing all_data file from export directory (from pickle if existing, otherwise from txt)
         Created:        20180318    by Lena Viktorsson 
-        Last modified:  20180320    by Magnus Wenzer
+        Last modified:  20180409    by Lena Viktorsson
         """
         def convert(x):
             try:
@@ -978,20 +979,26 @@ class DataHandler(object):
         if len(self.all_data) and not force: 
             return False
         else:
-            self.all_data = core.Load().load_txt(self.export_directory + '/all_data.txt', sep=sep, encoding=encoding, fill_nan=u'')
-            self.all_data['MONTH'] = self.all_data['MONTH'].astype(int) 
-            self.all_data['DEPH'] = self.all_data['DEPH'].apply(lambda x: float(x) if x else np.nan) 
-            for col in self.all_data.columns:
-                if col.startswith('Q_'): 
-                    par = col[2:]
-                    try:
-                        self.all_data[par] = self.all_data[par].apply(lambda x: float(x) if x else np.nan) 
-                    except ValueError as e:
-                        self.all_data[par] = self.all_data[par].apply(convert)
-                        #TODO: send info to user
-                if col == 'VISS_EU_CD':
-                    self.all_data[col] = self.all_data[col].apply(lambda x: 'SE' + x if 'SE' not in x else x)
-            return True
+            try:
+                self.all_data = pickle.load(open(self.export_directory + "/all_data.pickle", "rb"))
+                filetype = 'pickle'
+            except (OSError, IOError) as e:
+                self.all_data = core.Load().load_txt(self.export_directory + '/all_data.txt', sep=sep, encoding=encoding, fill_nan=u'')
+                self.all_data['MONTH'] = self.all_data['MONTH'].astype(int) 
+                self.all_data['DEPH'] = self.all_data['DEPH'].apply(lambda x: float(x) if x else np.nan) 
+                for col in self.all_data.columns:
+                    if col.startswith('Q_'): 
+                        par = col[2:]
+                        try:
+                            self.all_data[par] = self.all_data[par].apply(lambda x: float(x) if x else np.nan) 
+                        except ValueError as e:
+                            self.all_data[par] = self.all_data[par].apply(convert)
+                            #TODO: send info to user
+                    if col == 'VISS_EU_CD':
+                        self.all_data[col] = self.all_data[col].apply(lambda x: 'SE' + x if 'SE' not in x else x)
+                pickle.dump(self.all_data, open(self.export_directory + "/all_data.pickle", "wb"))
+                filetype = 'txt'
+            return True, filetype
 
         
     #==========================================================================

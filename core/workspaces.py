@@ -1378,36 +1378,23 @@ class WorkSpace(object):
     def load_all_data(self, only_all_data=False): 
         """ 
         Created:        2017        by Johannes Johansson (?)
-        Last modified:  20180318    by Lena Viktorsson
+        Last modified:  20180409    by Lena Viktorsson
         Loads all data from the input_data/raw_data-directory belonging to the workspace. 
         """
-        # TODO: Make this part dynamic 
         output_directory = self.paths['directory_path_input_data'] + '/exports/' 
         """
         # The input_data directory is given to DataHandler during initation. 
         # If no directory is given use the default directory! 
         # This has to be done in physical_chemical, zoobenthos etc. 
         """
-#        # read settings to match filename and datatype, return pd df
-#        dtype_settings = core.Load().load_txt(file_path=raw_data_file_path + 'dtype_settings.txt', sep='\t')
-#        # TODO:  User should maybe choose which files to load?
-#        #loop filenames in dtype_settings to read with correct datahandler
-#        for index, row in dtype_settings.iterrows():
-#            
-#            if row.filename.startswith('#'):
-#                self._logger.debug('\nSkipping', row.filename+'\n')
-#                continue
-#            
-#            self._logger.debug(row.keys())
-#            if row['data_type'] == 'phyche':
-#                self.data_handler.physical_chemical.load_source(file_path=raw_data_file_path + row.filename,
+#        # TODO:  User should maybe choose which files to load in dtype_settings?
 
         if os.path.isfile(self.paths['directory_path_input_data'] + '/exports/all_data.txt'):
-            data_loaded = self.data_handler.load_all_datatxt()
+            data_loaded, filetype = self.data_handler.load_all_datatxt()
             if data_loaded:
-                self._logger.debug('data has been loaded from existing all_data.txt file.')
+                self._logger.debug('data has been loaded from existing all_data.{} file.'.format(filetype))
             else:
-                self._logger.debug('all_data.txt already loaded, delete it if you want to re-load it.')
+                self._logger.debug('all_data.txt already loaded, delete it if you want to re-create it.')
         else:
                                                                  
             if not self.dtype_settings.has_info:
@@ -1425,9 +1412,6 @@ class WorkSpace(object):
                     self.data_handler.physical_chemical_model.load_source(file_path=file_path, raw_data_copy=True)
                     data_loaded = True
                     self.data_handler.physical_chemical_model.save_data_as_txt(directory=output_directory, prefix=u'Column_format')
-                    
-    #            elif row['data_type']== 'zooben':
-    #                self.data_handler.zoobenthos.load_source(file_path=raw_data_file_path + row.filename,
     
                 elif data_type== 'zooben':
                     self.data_handler.zoobenthos.load_source(file_path=file_path,
@@ -1451,59 +1435,6 @@ class WorkSpace(object):
             self.data_handler.merge_all_data(save_to_txt=True)
             
         return data_loaded
-#        # read settings to match filename and datatype, return pd df
-#        dtype_settings = core.Load().load_txt(file_path=raw_data_file_path + 'dtype_settings.txt', sep='\t')
-#        # TODO:  User should maybe choose which files to load?
-#        #loop filenames in dtype_settings to read with correct datahandler 
-#        
-#        for index, row in dtype_settings.iterrows(): 
-#            if row.filename.startswith('#'):
-#                self._logger.debug('\nSkipping', row.filename+'\n')
-#                continue
-#            
-#            self._logger.debug(row.keys())
-#            if row['data_type'] == 'phyche':
-#                self.data_handler.physical_chemical.load_source(file_path=raw_data_file_path + row.filename,
-#                                                                raw_data_copy=True)
-#                self.data_handler.physical_chemical.save_data_as_txt(directory=output_directory, prefix=u'Column_format')
-#            elif row['data_type']== 'zooben':
-#                self.data_handler.zoobenthos.load_source(file_path=raw_data_file_path + row.filename,
-#                                                         raw_data_copy=True)
-#                self.data_handler.zoobenthos.save_data_as_txt(directory=output_directory, prefix=u'Column_format')
-#            elif row['data_type'] == 'pp':
-#                self.data_handler.phytoplankton.load_source(file_path=raw_data_file_path + row.filename,
-#                                                         raw_data_copy=True)
-#                self.data_handler.phytoplankton.save_data_as_txt(directory=output_directory, prefix=u'Column_format')
-#            elif row['data_type'] == 'hose':
-#                self.data_handler.chlorophyll.load_source(file_path=raw_data_file_path + row.filename,
-#                                                         raw_data_copy=True)
-#                self.data_handler.chlorophyll.save_data_as_txt(directory=output_directory, prefix=u'Column_format')   
-#            else:
-#                self._logger.debug('could not read {} from raw_data directory. Check data type'.format(row.filename))
-#
-#        
-#        self.data_handler.merge_all_data(save_to_txt=True)
-        
-        # Row data
-        # TODO: retrieve from workspace. User should maybe choose which files to load?
-#        fid_zooben = u'zoobenthos_2016_row_format_2.txt'
-#        fid_phyche = u'BOS_HAL_2015-2016_row_format_2.txt'
-#        fid_phyche_col = u'BOS_BAS_2016-2017_column_format.txt' 
-#        
-#        self.data_handler.physical_chemical.load_source(file_path=raw_data_file_path + fid_phyche,
-#                                                        raw_data_copy=True)
-#        self.data_handler.physical_chemical.load_source(file_path=raw_data_file_path + fid_phyche_col,
-#                                                        raw_data_copy=True)
-#        self.data_handler.physical_chemical.save_data_as_txt(directory=output_directory, prefix=u'Column_format')
-#        
-#        
-#        self.data_handler.zoobenthos.load_source(file_path=raw_data_file_path + fid_zooben,
-#                                                 raw_data_copy=True)
-#        self.data_handler.zoobenthos.save_data_as_txt(directory=output_directory, prefix=u'Column_format')
-#        
-#        self.data_handler.merge_all_data(save_to_txt=True)
-        
-    
         
     #==========================================================================
     def set_data_filter(self, step='', subset='', filter_type='', filter_name='', data=None, save_filter=True, append_items=False): 
