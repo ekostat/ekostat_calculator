@@ -200,3 +200,101 @@
 2018-04-09 16:38:23,323	event_handler.py	69	__init__	DEBUG	TEST debug logger
 2018-04-09 16:38:25,338	event_handler.py	1483	load_workspace	DEBUG	Trying to load workspace "147f5d47-773c-43f0-b337-57208718d0cf" with alias "lena_indicator"
 2018-04-09 16:38:30,506	event_handler.py	919	get_workspace	DEBUG	Getting workspace "147f5d47-773c-43f0-b337-57208718d0cf" with alias "lena_indicator"
+2018-04-10 15:06:06,054	logger.py	85	add_log	DEBUG	
+2018-04-10 15:06:06,054	logger.py	86	add_log	DEBUG	========================================================================================================================
+2018-04-10 15:06:06,064	logger.py	87	add_log	DEBUG	### Log added for log_id "event_handler" at locaton: ..\log\main_event_handler.log
+2018-04-10 15:06:06,064	logger.py	88	add_log	DEBUG	------------------------------------------------------------------------------------------------------------------------
+2018-04-10 15:06:06,064	event_handler.py	64	__init__	DEBUG	Start EventHandler: event_handler
+2018-04-10 15:06:06,065	event_handler.py	65	__init__	DEBUG	
+2018-04-10 15:06:06,065	event_handler.py	66	__init__	INFO	TEST info logger
+2018-04-10 15:06:06,065	event_handler.py	67	__init__	WARNING	TEST warning logger
+2018-04-10 15:06:06,067	event_handler.py	68	__init__	ERROR	TEST error logger
+2018-04-10 15:06:06,069	event_handler.py	69	__init__	DEBUG	TEST debug logger
+2018-04-10 15:06:08,261	event_handler.py	1483	load_workspace	DEBUG	Trying to load workspace "147f5d47-773c-43f0-b337-57208718d0cf" with alias "lena_indicator"
+2018-04-10 15:06:13,674	event_handler.py	919	get_workspace	DEBUG	Getting workspace "147f5d47-773c-43f0-b337-57208718d0cf" with alias "lena_indicator"
+2018-04-10 16:16:27,423	event_handler.py	1483	load_workspace	DEBUG	Trying to load workspace "147f5d47-773c-43f0-b337-57208718d0cf" with alias "lena_indicator"
+2018-04-10 16:16:33,136	event_handler.py	64	__init__	DEBUG	Start EventHandler: event_handler
+2018-04-10 16:16:33,139	event_handler.py	65	__init__	DEBUG	
+2018-04-10 16:16:33,148	event_handler.py	66	__init__	INFO	TEST info logger
+2018-04-10 16:16:33,155	event_handler.py	67	__init__	WARNING	TEST warning logger
+2018-04-10 16:16:33,165	event_handler.py	68	__init__	ERROR	TEST error logger
+2018-04-10 16:16:33,171	event_handler.py	69	__init__	DEBUG	TEST debug logger
+2018-04-10 16:16:35,492	event_handler.py	1483	load_workspace	DEBUG	Trying to load workspace "147f5d47-773c-43f0-b337-57208718d0cf" with alias "lena_indicator"
+2018-04-10 16:16:49,745	event_handler.py	919	get_workspace	DEBUG	Getting workspace "147f5d47-773c-43f0-b337-57208718d0cf" with alias "lena_indicator"
+2018-04-10 16:17:05,674	event_handler.py	919	get_workspace	DEBUG	Getting workspace "147f5d47-773c-43f0-b337-57208718d0cf" with alias "lena_indicator"
+2018-04-10 16:25:15,318	event_handler.py	64	__init__	DEBUG	Start EventHandler: event_handler
+2018-04-10 16:25:15,323	event_handler.py	65	__init__	DEBUG	
+2018-04-10 16:25:15,326	event_handler.py	66	__init__	INFO	TEST info logger
+2018-04-10 16:25:15,329	event_handler.py	67	__init__	WARNING	TEST warning logger
+2018-04-10 16:25:15,332	event_handler.py	68	__init__	ERROR	TEST error logger
+2018-04-10 16:25:15,337	event_handler.py	69	__init__	DEBUG	TEST debug logger
+2018-04-10 16:25:17,164	event_handler.py	1483	load_workspace	DEBUG	Trying to load workspace "147f5d47-773c-43f0-b337-57208718d0cf" with alias "lena_indicator"
+2018-04-10 16:25:25,967	event_handler.py	919	get_workspace	DEBUG	Getting workspace "147f5d47-773c-43f0-b337-57208718d0cf" with alias "lena_indicator"
+2018-04-10 16:28:11,974	event_handler.py	64	__init__	DEBUG	Start EventHandler: event_handler
+2018-04-10 16:28:11,977	event_handler.py	65	__init__	DEBUG	
+2018-04-10 16:28:11,980	event_handler.py	66	__init__	INFO	TEST info logger
+2018-04-10 16:28:11,983	event_handler.py	67	__init__	WARNING	TEST warning logger
+2018-04-10 16:28:11,989	event_handler.py	68	__init__	ERROR	TEST error logger
+2018-04-10 16:28:11,991	event_handler.py	69	__init__	DEBUG	TEST debug logger
+2018-04-10 16:28:15,092	event_handler.py	1483	load_workspace	DEBUG	Trying to load workspace "147f5d47-773c-43f0-b337-57208718d0cf" with alias "lena_indicator"
+2018-04-10 16:28:19,682	event_handler.py	919	get_workspace	DEBUG	Getting workspace "147f5d47-773c-43f0-b337-57208718d0cf" with alias "lena_indicator"
+2018-04-11 16:25:48,571	logger.py	85	add_log	DEBUG	
+2018-04-11 16:25:48,571	logger.py	86	add_log	DEBUG	========================================================================================================================
+2018-04-11 16:25:48,571	logger.py	87	add_log	DEBUG	### Log added for log_id "event_handler" at locaton: ..\log\main_event_handler.log
+2018-04-11 16:25:48,571	logger.py	88	add_log	DEBUG	------------------------------------------------------------------------------------------------------------------------
+2018-04-11 16:25:48,571	event_handler.py	64	__init__	DEBUG	Start EventHandler: event_handler
+2018-04-11 16:25:48,572	event_handler.py	65	__init__	DEBUG	
+2018-04-11 16:25:48,572	event_handler.py	66	__init__	INFO	TEST info logger
+2018-04-11 16:25:48,572	event_handler.py	67	__init__	WARNING	TEST warning logger
+2018-04-11 16:25:48,572	event_handler.py	68	__init__	ERROR	TEST error logger
+2018-04-11 16:25:48,572	event_handler.py	69	__init__	DEBUG	TEST debug logger
+2018-04-11 16:25:53,820	event_handler.py	1483	load_workspace	DEBUG	Trying to load workspace "147f5d47-773c-43f0-b337-57208718d0cf" with alias "lena_indicator"
+2018-04-11 16:26:05,458	event_handler.py	919	get_workspace	DEBUG	Getting workspace "147f5d47-773c-43f0-b337-57208718d0cf" with alias "lena_indicator"
+2018-04-11 16:32:03,921	event_handler.py	64	__init__	DEBUG	Start EventHandler: event_handler
+2018-04-11 16:32:03,921	event_handler.py	65	__init__	DEBUG	
+2018-04-11 16:32:03,921	event_handler.py	66	__init__	INFO	TEST info logger
+2018-04-11 16:32:03,921	event_handler.py	67	__init__	WARNING	TEST warning logger
+2018-04-11 16:32:03,921	event_handler.py	68	__init__	ERROR	TEST error logger
+2018-04-11 16:32:03,921	event_handler.py	69	__init__	DEBUG	TEST debug logger
+2018-04-11 16:32:06,588	event_handler.py	1483	load_workspace	DEBUG	Trying to load workspace "147f5d47-773c-43f0-b337-57208718d0cf" with alias "lena_indicator"
+2018-04-11 16:32:10,428	event_handler.py	938	import_default_data	DEBUG	Trying to load default data in workspace "147f5d47-773c-43f0-b337-57208718d0cf" with alias "lena_indicator"
+2018-04-11 16:32:19,040	event_handler.py	919	get_workspace	DEBUG	Getting workspace "147f5d47-773c-43f0-b337-57208718d0cf" with alias "lena_indicator"
+2018-04-11 16:54:27,381	event_handler.py	919	get_workspace	DEBUG	Getting workspace "147f5d47-773c-43f0-b337-57208718d0cf" with alias "lena_indicator"
+2018-04-11 16:54:38,385	event_handler.py	64	__init__	DEBUG	Start EventHandler: event_handler
+2018-04-11 16:54:38,389	event_handler.py	65	__init__	DEBUG	
+2018-04-11 16:54:38,392	event_handler.py	66	__init__	INFO	TEST info logger
+2018-04-11 16:54:38,395	event_handler.py	67	__init__	WARNING	TEST warning logger
+2018-04-11 16:54:38,398	event_handler.py	68	__init__	ERROR	TEST error logger
+2018-04-11 16:54:38,401	event_handler.py	69	__init__	DEBUG	TEST debug logger
+2018-04-11 16:54:40,783	event_handler.py	1483	load_workspace	DEBUG	Trying to load workspace "147f5d47-773c-43f0-b337-57208718d0cf" with alias "lena_indicator"
+2018-04-11 16:54:47,217	event_handler.py	919	get_workspace	DEBUG	Getting workspace "147f5d47-773c-43f0-b337-57208718d0cf" with alias "lena_indicator"
+2018-04-11 16:55:13,833	event_handler.py	919	get_workspace	DEBUG	Getting workspace "147f5d47-773c-43f0-b337-57208718d0cf" with alias "lena_indicator"
+2018-04-11 16:55:25,001	event_handler.py	64	__init__	DEBUG	Start EventHandler: event_handler
+2018-04-11 16:55:25,001	event_handler.py	65	__init__	DEBUG	
+2018-04-11 16:55:25,001	event_handler.py	66	__init__	INFO	TEST info logger
+2018-04-11 16:55:25,002	event_handler.py	67	__init__	WARNING	TEST warning logger
+2018-04-11 16:55:25,002	event_handler.py	68	__init__	ERROR	TEST error logger
+2018-04-11 16:55:25,002	event_handler.py	69	__init__	DEBUG	TEST debug logger
+2018-04-11 16:55:28,188	event_handler.py	1483	load_workspace	DEBUG	Trying to load workspace "147f5d47-773c-43f0-b337-57208718d0cf" with alias "lena_indicator"
+2018-04-11 16:55:35,949	event_handler.py	919	get_workspace	DEBUG	Getting workspace "147f5d47-773c-43f0-b337-57208718d0cf" with alias "lena_indicator"
+2018-04-11 16:56:16,816	logger.py	85	add_log	DEBUG	
+2018-04-11 16:56:16,816	logger.py	86	add_log	DEBUG	========================================================================================================================
+2018-04-11 16:56:16,816	logger.py	87	add_log	DEBUG	### Log added for log_id "event_handler" at locaton: ..\log\main_event_handler.log
+2018-04-11 16:56:16,816	logger.py	88	add_log	DEBUG	------------------------------------------------------------------------------------------------------------------------
+2018-04-11 16:56:16,816	event_handler.py	64	__init__	DEBUG	Start EventHandler: event_handler
+2018-04-11 16:56:16,817	event_handler.py	65	__init__	DEBUG	
+2018-04-11 16:56:16,817	event_handler.py	66	__init__	INFO	TEST info logger
+2018-04-11 16:56:16,817	event_handler.py	67	__init__	WARNING	TEST warning logger
+2018-04-11 16:56:16,817	event_handler.py	68	__init__	ERROR	TEST error logger
+2018-04-11 16:56:16,821	event_handler.py	69	__init__	DEBUG	TEST debug logger
+2018-04-11 16:56:19,666	event_handler.py	1483	load_workspace	DEBUG	Trying to load workspace "147f5d47-773c-43f0-b337-57208718d0cf" with alias "lena_indicator"
+2018-04-11 16:56:28,366	event_handler.py	919	get_workspace	DEBUG	Getting workspace "147f5d47-773c-43f0-b337-57208718d0cf" with alias "lena_indicator"
+2018-04-11 16:57:15,281	event_handler.py	919	get_workspace	DEBUG	Getting workspace "147f5d47-773c-43f0-b337-57208718d0cf" with alias "lena_indicator"
+2018-04-11 16:59:18,321	event_handler.py	64	__init__	DEBUG	Start EventHandler: event_handler
+2018-04-11 16:59:18,321	event_handler.py	65	__init__	DEBUG	
+2018-04-11 16:59:18,321	event_handler.py	66	__init__	INFO	TEST info logger
+2018-04-11 16:59:18,321	event_handler.py	67	__init__	WARNING	TEST warning logger
+2018-04-11 16:59:18,321	event_handler.py	68	__init__	ERROR	TEST error logger
+2018-04-11 16:59:18,322	event_handler.py	69	__init__	DEBUG	TEST debug logger
+2018-04-11 16:59:24,745	event_handler.py	1483	load_workspace	DEBUG	Trying to load workspace "147f5d47-773c-43f0-b337-57208718d0cf" with alias "lena_indicator"
+2018-04-11 16:59:29,961	event_handler.py	919	get_workspace	DEBUG	Getting workspace "147f5d47-773c-43f0-b337-57208718d0cf" with alias "lena_indicator"

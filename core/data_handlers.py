@@ -951,8 +951,10 @@ class DataHandler(object):
                     self.all_data = self.all_data.append(self.__getattribute__(dtype).column_data[source], 
                                                          ignore_index=True)
         
-        # MW: Add mont column 
+        # MW: Add month column 
         self.all_data['MONTH'] = self.all_data['SDATE'].apply(lambda x: int(x[5:7]))
+        # LV: Add year column 
+        self.all_data['YEAR'] = self.all_data['SDATE'].apply(lambda x: int(x[0:4]))
         
         if save_to_txt:
             self.save_data(df=self.all_data, 
@@ -964,11 +966,11 @@ class DataHandler(object):
         self.load_all_datatxt()
             
     #==========================================================================
-    def load_all_datatxt(self, sep='\t', encoding='cp1252', force=True):
+    def load_all_datatxt(self, sep='\t', encoding='cp1252'):
         """
         loads existing all_data file from export directory (from pickle if existing, otherwise from txt)
         Created:        20180318    by Lena Viktorsson 
-        Last modified:  20180409    by Lena Viktorsson
+        Last modified:  20180410    by Lena Viktorsson
         """
         def convert(x):
             try:
@@ -976,15 +978,17 @@ class DataHandler(object):
             except:
                 return np.nan
 
-        if len(self.all_data) and not force: 
-            return False
+        if len(self.all_data): 
+            return False, False
         else:
             try:
                 self.all_data = pickle.load(open(self.export_directory + "/all_data.pickle", "rb"))
                 filetype = 'pickle'
             except (OSError, IOError) as e:
+                #TODO: better way to say which columns should be converted to float and int
                 self.all_data = core.Load().load_txt(self.export_directory + '/all_data.txt', sep=sep, encoding=encoding, fill_nan=u'')
                 self.all_data['MONTH'] = self.all_data['MONTH'].astype(int) 
+                self.all_data['YEAR'] = self.all_data['YEAR'].astype(int)
                 self.all_data['DEPH'] = self.all_data['DEPH'].apply(lambda x: float(x) if x else np.nan) 
                 for col in self.all_data.columns:
                     if col.startswith('Q_'): 
@@ -994,6 +998,12 @@ class DataHandler(object):
                         except ValueError as e:
                             self.all_data[par] = self.all_data[par].apply(convert)
                             #TODO: send info to user
+                    if col == 'DIN': 
+                        par = col
+                        try:
+                            self.all_data[par] = self.all_data[par].apply(lambda x: float(x) if x else np.nan) 
+                        except ValueError as e:
+                            self.all_data[par] = self.all_data[par].apply(convert)
                     if col == 'VISS_EU_CD':
                         self.all_data[col] = self.all_data[col].apply(lambda x: 'SE' + x if 'SE' not in x else x)
                 pickle.dump(self.all_data, open(self.export_directory + "/all_data.pickle", "wb"))

@@ -18,12 +18,13 @@ class ClassificationResult(dict):
         
         self['parameter'] = None 
         self['salt_parameter'] = None
-        self['type_area'] = None
+        self['water_body'] = None
         self['all_data'] = None
         self['mean_by_occasion'] = None
+        self['number_of_occasions'] = None
         self['mean_by_year'] = None 
-        self['nr_years'] = None
-        self['mean_total'] = None
+        self['number_of_years'] = None
+        self['mean_by_period'] = None
         self['all_ok'] = False
         self['num_class'] = None
         
@@ -50,7 +51,6 @@ class IndicatorBase(object):
         setup indicator class attributes based on subset, parent workspace object and indicator name
         """
         self.name = indicator
-        self.parameter_list = []
         self.class_result = None
         self.subset = subset
         self.step = 'step_3'
@@ -58,17 +58,25 @@ class IndicatorBase(object):
         self.parent_workspace_object = parent_workspace_object
         self.mapping_objects = self.parent_workspace_object.mapping_objects
         self.index_handler = self.parent_workspace_object.index_handler
+        self.step_object = self.parent_workspace_object.get_step_object(step = 3, subset = self.subset)
         # from SettingsFile
         self.tolerance_settings = self.parent_workspace_object.get_step_object(step = 2, subset = subset).get_indicator_tolerance_settings(self.name)
         self.ref_settings = self.parent_workspace_object.get_step_object(step = 2, subset = subset).get_indicator_ref_settings(self.name)
         # To be read from config-file
-        self.meta_columns = ['SDATE', 'MONTH', 'VISS_EU_CD', 'WATER_TYPE_AREA', 'DEPH']
+        self.meta_columns = ['SDATE', 'YEAR', 'MONTH', 'VISS_EU_CD', 'WATER_TYPE_AREA', 'DEPH']
         self.parameter_list =  [item.strip() for item in self.mapping_objects['quality_element'].indicator_config.loc[self.name]['parameters'].split(', ')] #[item.strip() for item in self.parent_workspace_object.cfg['indicators'].loc[self.name][0].split(', ')]
         self.column_list = self.meta_columns + self.parameter_list
         # attributes that will be calculated
         self.water_body_indicator_df = {}
+        self.classification_results = {}
          
-            
+    #==========================================================================
+    def _set_directories(self):
+        #set paths
+        self.paths = {}
+        self.paths['output'] = self.step_object.paths['directory_paths']['output'] 
+        self.paths['results'] = self.step_objectf.paths['directory_paths']['results']
+                  
     #==========================================================================
     def get_filtered_data(self, subset=None, step=None, type_area=None, indicator=None):
         """
@@ -77,6 +85,47 @@ class IndicatorBase(object):
         """
 
         return self.index_handler.get_filtered_data(subset, step, type_area, indicator)
+   
+    #==========================================================================
+    def get_num_class(self, ek):
+        """
+        Calculates indicator class (Nklass) according to eq 2.1 in HVMFS 2013:19.
+        Returns a tuple with four values, low, ek_low, ek_heigh and the resulting Nklass.
+        This is specific for the nutrient and phytoplankton indicators.
+        There needs to be:
+            - one def to get nutrient num_class for nutrient indicators (this one as is)
+            - one def to get indicator class and value with the indicator specific EQR and the EQR transformed to the common scale
+            (for nutrients that is num_class on scale 0-4.99 for most others some values on a 0-1 scale)
+        """
+        if self.name == 'BQI' or self.name.lower() == 'secchi' or self.name.lower() == 'oxygen':
+            return False
+        else:
+            if ek > self['EK H/G']: 
+                n_low = 4 
+                ek_high = 1
+                ek_low = self['EK H/G']
+                
+            elif ek > self['EK G/M']:
+                n_low = 3 
+                ek_high = self['EK H/G']
+                ek_low = self['EK G/M']
+    
+            elif ek > self['EK M/O']:
+                n_low = 2 
+                ek_high = self['EK G/M']
+                ek_low = self['EK M/O']
+                
+            elif ek > self['EK O/D']:
+                n_low = 1 
+                ek_high = self['EK M/O']
+                ek_low = self['EK O/D']
+                
+            else:
+                n_low = 0 
+                ek_high = self['EK O/D']
+                ek_low = 0
+            
+            return n_low, ek_low, ek_high, n_low + (ek - ek_low)/(ek_high-ek_low)
     
     #==========================================================================
     def get_water_body_indicator_df(self, water_body = None, level = None):
@@ -109,13 +158,15 @@ class IndicatorBase(object):
         Created:        20180328     by Lena
         Last modified:  
         add reference value to dataframe
+        Nutrient reference values: Det aktuella referensvärdet erhålls utifrån den salthalt som är observerad vidvarje enskilt prov.
+        Chl, Biov, Secchi in type 8, 12, 13, 24: Det aktuella referensvärdet erhålls utifrån den salthalt som är observerad vidvarje enskilt prov.
         """
         
         if self.get_ref_value_type(type_area) == 'str':
             df['REFERENCE_VALUE'] = np.nan
             for ix in df.index:
                 salinity = df['SALT_CTD'][ix]
-                df['REFERENCE_VALUE'][ix] = self.get_ref_value(type_area, salinity)
+                df['REFERENCE_VALUE'].loc[ix] = self.get_ref_value(type_area, salinity)
         else:
             df['REFERENCE_VALUE'] = self.get_ref_value(type_area)
                                     
@@ -262,112 +313,112 @@ class IndicatorBQI(IndicatorBase):
     Class with methods incommon for BQI indicator. 
     """
     
-    def __init__(self):
-        super().__init__()  
+    def __init__(self, subset, parent_workspace_object, indicator):
+        super().__init__(subset, parent_workspace_object, indicator)  
         
 ###############################################################################
 class IndicatorNutrients(IndicatorBase): 
     """
-    Class with methods incommon for all nutrient indicators (TOTN, DIN, TOTP and DIP). 
+    Class with methods common for all nutrient indicators (TOTN, DIN, TOTP and DIP). 
     """
     
-    def __init__(self):
-        super().__init__()  
-    
-    def calculate_ek_value(self, tolerance_filter, indicator_name, par, salt_par = 'SALT_CTD'):
+    def __init__(self, subset, parent_workspace_object, indicator):
+        super().__init__(subset, parent_workspace_object, indicator)  
+        self.indicator_parameter = self.parameter_list[0]
+        self.salt_parameter = self.parameter_list[1]
+        
+    def calculate_ek_value(self, tolerance_filter, water_body, par, salt_par = 'SALT_CTD'):
         """
-        Calculates indicator ER values, for nutrients this is means reference value divided by observed value.
+        Calculates indicator Ecological Ratio (ER) values, for nutrients this means reference value divided by observed value.
         Transforms ER values to numeric class values (num_class)
         tolerance_filters is a dict with tolerance filters for the 
         """
         """
-        Vid statusklassificering
-        ska värden från ytvattnet användas (0-10 meter eller den övre vattenmassan
-        om språngskiktet är grundare än 10 meter).
+        Vid statusklassificering ska värden från ytvattnet användas (0-10 meter eller den övre vattenmassan om språngskiktet är grundare än 10 meter).
         
-        Om mätningar vid ett tillfälle är utförda vid diskreta djup, exempelvis 0, 5 och 10
-        meter ska EK-värde beräknas för varje mätning och ett medel–EK skapas för de tre
-        djupen.
+        Om mätningar vid ett tillfälle är utförda vid diskreta djup, 
+        exempelvis 0, 5 och 10 meter ska EK-värde beräknas för varje mätning och ett medel–EK skapas för de tre djupen.
         """
+        # Set up result class 
+        self.classification_results[water_body] = ClassificationResult()
+        self.classification_results[water_body].add_info('parameter', self.indicator_parameter)
+        self.classification_results[water_body].add_info('salt_parameter', self.salt_parameter)
+    
         """
         Calculate EK-value
         """
-        ref_object = getattr(core.RefValues(), indicator_name.lower())[self.data_filter_object.TYPE_AREA.value]
+        def get_EK(x):
+            y = x.self.indicator_parameter/x.REFERENCE_VALUE
+            if y > 1:
+                return 1
+            else:
+                return y
+        # get datato be used for status calculation
+        df = self.water_body_indicator_df[water_body]
         
-        class_result = ClassificationResult()
-        class_result.add_info('parameter', par)
-        class_result.add_info('salt_parameter', salt_par)
-        class_result.add_info('type_area', self.data_filter_object.TYPE_AREA.value)
-        
-        """
-        För kvalitetsfaktorn Näringsämnen: 
+        """ 
         1) Beräkna EK för varje enskilt prov utifrån referensvärden i tabellerna 6.2-6.7.
-        Det aktuella referensvärdet erhålls utifrån den salthalt som är observerad vid
-        varje enskilt prov. Om mätningar är utförda vid diskreta djup, beräkna EK-värde
+        Om mätningar är utförda vid diskreta djup, beräkna EK-värde
         för varje mätning och sedan ett medel-EK för varje specifikt mättillfälle.
         """
-        print('\t\t\tget_ref_value_for_par_with_salt_ref for indicator {}...'.format(indicator_name))
-        par_df = self.get_ref_value_for_par_with_salt_ref(par = par, 
-                                                 salt_par = salt_par, 
-                                                 indicator_name = indicator_name, tolerance_filter = tolerance_filter)
-        par_df['ek_value_calc'] = np.nan
-        print('\t\t\tCalculate {} Ek value...'.format(indicator_name))
-        for i in par_df.index:
-            df_row = par_df.loc[i, :]
-            par_value = df_row[par]
-            ref_value = df_row['ref_value']
-            if np.isnan(par_value):
-                ek_value_calc = np.nan
-            else:
-                # Get ER-value (EK på svenska)
-                ek_value_calc = ref_value/par_value
-                par_df['ek_value_calc'] = ek_value_calc
-                      
-            # Check ek_value_calc
-            ek_value = ek_value_calc
-            if ek_value > 1:
-                ek_value = 1
-            par_df.set_value(i, 'ek_value', ek_value)
-                      
-        par_df['salt_index'] = par_df['salt_index'].apply(lambda x: '' if np.isnan(x) else int(x))
         
-        # calculate mean, max, min and count for EK values per measurement occasion. .reset_index keeps all df column headers
-        by_occasion = par_df.groupby(['profile_key', 'MYEAR'],).ek_value.agg(['count', 'min', 'max', 'mean']).reset_index()
-#        by_occasion.to_csv('d:/Ny mapp/pandas/by_occation.txt', sep='\t')
-        by_occasion.rename(columns={'mean':'mean_ek_value'}, inplace=True) # Cant use "mean" below
+        df['ek_value_calc'] = df.apply(get_EK, axis = 1)#par_df['REFERENCE_VALUE']/par_df[self.indicator_parameter]
+        #par_df['ek_value_calc'] = par_df['ek_value_calc'].apply(set_value_above_one)
+        
+        # calculate mean, max, min and count for EK values per measurement occasion. Here measurements on one day count as one occasion
+        # .reset_index keeps all df column headers
+        # TODO: what about different stations in one waterbody?
+        by_date = df.groupby(['SDATE', 'YEAR'],).ek_value.agg(['count', 'min', 'max', 'mean']).reset_index()
+        # by_occasion.to_csv(self.paths['results'] +'/' + self.name + water_body +'by_occation.txt', sep='\t')
+        by_date.rename(columns={'mean':'mean_ek_value', 'count': 'number_of_values'}, inplace=True) # Cant use "mean" below
         
         # Remove occations with not enough samples
-        by_occasion = by_occasion.loc[by_occasion['count'] >= tolerance_filter.MIN_NR_VALUES.value, :]
-        
+        # Or use count as a flag for what to display for the user?
+        by_date['all_ok'] = True
+        ix = by_date.loc[by_date['number_of_values'] < 1, 'all_ok'].index
+        by_date.set_value(ix, 'all_ok', False)
+            
         """
         2) Medelvärdet av EK för varje parameter beräknas för varje år.
         """
-        by_year = by_occasion.groupby('MYEAR').mean_ek_value.agg(['count', 'min', 'max', 'mean'])
-#        by_year.to_csv('d:/Ny mapp/pandas/by_year.txt', sep='\t')
-        print('\t\t\t{} Ek value Calculated'.format(indicator_name))
-        class_result.add_info('all_data', par_df)
-        class_result.add_info('mean_by_occasion', by_occasion)
-        class_result.add_info('mean_by_year', by_year)
-        class_result.add_info('nr_years', len(by_year))
-
+        by_year = by_date.groupby('YEAR').mean_ek_value.agg(['count', 'min', 'max', 'mean'])
+        by_year.rename(columns={'mean':'mean_ek_value', 'count': 'number_of_dates'}, inplace=True)
+        # by_year.to_csv(self.paths['results'] +'/' + self.name + water_body + 'by_year.txt', sep='\t')
+        by_year['all_ok'] = True
+        ix = by_year.loc[by_year['number_of_dates'] < 1, 'all_ok'].index
+        by_year.set_value(ix, 'all_ok', False)
         
         """
-        3) Medelvärdet av EK för varje parameter och vattenförekomst beräknas för minst
-        en treårsperiod.
+        3) Medelvärdet av EK för varje parameter och vattenförekomst (beräknas för minst
+        en treårsperiod)
         """
-        if len(by_year) >= tolerance_filter.MIN_NR_YEARS.value:
-            class_result.add_info('mean_total', np.mean(by_year['mean']))
-            class_result.add_info('all_ok', True)
-        else:
-            return class_result
+        by_period = by_year[['mean_ek_value']].describe()
+        by_period.loc['count', 'mean_ek_value']
         
+        
+#        if by_year['count'] >= tolerance_filter.MIN_NR_YEARS.value and all_ok:
+#            all_ok =  True
+#        else:
+#            all_ok =  False
+            
+        print('\t\t\t{} Ek value Calculated'.format(self.name))    
+         
         """
         4) Statusklassificeringen för respektive parameter görs genom att medelvärdet av
         EK jämförs med de angivna EK-klassgränserna i tabellerna 6.2-6.7. 
         """
-        class_result.add_info('num_class', ref_object.get_num_class(class_result['mean_total']))
+        num_class = self.get_num_class(self.classification_results[water_body]['mean_by_period'])
         
-        self.class_result = class_result  
+        # Add waterbody status to result class
+        self.classification_results[water_body].add_info('water_body', water_body)
+        self.classification_results[water_body].add_info('all_data', df)
+        self.classification_results[water_body].add_info('mean_by_occasion', by_date)
+        self.classification_results[water_body].add_info('number_of_occasions', by_date['number_of_values'])
+        self.classification_results[water_body].add_info('mean_by_year', by_year)
+        self.classification_results[water_body].add_info('number_of_years', by_year['count'])
+        self.classification_results[water_body].add_info('mean_by_period', by_period)
+        self.classification_results[water_body].add_info('all_ok', all_ok)
+        self.classification_results[water_body].add_info('num_class', num_class)
                 
         """
         5) EK vägs samman för ingående parametrar (tot-N, tot-P, DIN och DIP) enligt
@@ -382,26 +433,26 @@ class IndicatorOxygen(IndicatorBase):
     Class with methods incommon for BQI indicator. 
     """
     
-    def __init__(self):
-        super().__init__()  
-
+    def __init__(self, subset, parent_workspace_object, indicator):
+        super().__init__(subset, parent_workspace_object, indicator)  
+    
 ###############################################################################
 class IndicatorPhytoplankton(IndicatorBase): 
     """
     Class with methods incommon for BQI indicator. 
     """
     
-    def __init__(self):
-        super().__init__()  
-  
+    def __init__(self, subset, parent_workspace_object, indicator):
+        super().__init__(subset, parent_workspace_object, indicator)  
+    
 ###############################################################################
 class IndicatorSecchi(IndicatorBase): 
     """
     Class with methods incommon for BQI indicator. 
     """
     
-    def __init__(self):
-        super().__init__()  
+    def __init__(self, subset, parent_workspace_object, indicator):
+        super().__init__(subset, parent_workspace_object, indicator)  
         
             
 ###############################################################################

@@ -58,43 +58,7 @@ class RefTypeArea(dict):
         """
         return eval(self.ekv_ref)
     
-    #==========================================================================
-    def get_num_class(self, ek_calc):
-        """
-        Calculates indicator class (Nklass) according to eq 2.1 in HVMFS 2013:19.
-        Returns a tuple with four values, low, ek_low, ek_heigh and the resulting Nklass.
-        This is specific for the nutrient indicators.
-        There needs to be:
-            - one def to get nutrient num_class for nutrient indicators (this one as is)
-            - one def to get indicator class and value with the indicator specific EQR and the EQR transformed to the common scale
-            (for nutrients that is num_class on scale 0-4.99 for most others some values on a 0-1 scale)
-        """
-        if ek_calc > self['EK H/G']: 
-            n_low = 4 
-            ek_high = 1
-            ek_low = self['EK H/G']
-            
-        elif ek_calc > self['EK G/M']:
-            n_low = 3 
-            ek_high = self['EK H/G']
-            ek_low = self['EK G/M']
-
-        elif ek_calc > self['EK M/O']:
-            n_low = 2 
-            ek_high = self['EK G/M']
-            ek_low = self['EK M/O']
-            
-        elif ek_calc > self['EK O/D']:
-            n_low = 1 
-            ek_high = self['EK M/O']
-            ek_low = self['EK O/D']
-            
-        else:
-            n_low = 0 
-            ek_high = self['EK O/D']
-            ek_low = 0
-        
-        return n_low, ek_low, ek_high, n_low + (ek_calc - ek_low)/(ek_high-ek_low)
+    
 
 ###############################################################################     
 class ParameterRefTypeAreas(dict):

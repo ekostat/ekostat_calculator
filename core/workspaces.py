@@ -1180,6 +1180,25 @@ class WorkSpace(object):
         
         self._logger.debug('')
         
+    #==========================================================================
+    def delete_alldata_export(self):
+        """
+        Created     20180411    by Lena Viktorsson
+        Updated     
+        
+        Permanently deletes all_data.txt and all_data.pickle. 
+        """
+        try:
+            os.remove(self.paths['directory_path_input_data'] + '/exports/all_data.txt')
+            self._logger.debug('all_data.txt deleted')
+        except OSError:
+            pass
+        try:
+            os.remove(self.paths['directory_path_input_data'] + '/exports/all_data.pickle')
+            self._logger.debug('all_data.pickle deleted')
+        except OSError:
+            pass
+        
         
     #==========================================================================
     def delete_subset(self, alias=None, unique_id=None, permanently=False): 
@@ -1187,7 +1206,7 @@ class WorkSpace(object):
         Created     20180219    by Magnus Wenzer
         Updated     20180219    by Magnus Wenzer
         
-        Permanatly deletes the given subset. 
+        Permanently deletes the given subset. 
         """
         if alias:
             unique_id = self.uuid_mapping.get_uuid(alias=alias, user_id=self.user_id)
@@ -1375,7 +1394,7 @@ class WorkSpace(object):
         self.quality_factor_NP = core.QualityFactorNP()
         
     #==========================================================================
-    def load_all_data(self, only_all_data=False): 
+    def load_all_data(self, force=False): 
         """ 
         Created:        2017        by Johannes Johansson (?)
         Last modified:  20180409    by Lena Viktorsson

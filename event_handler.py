@@ -1427,12 +1427,12 @@ class EventHandler(object):
         
         
     #==========================================================================
-    def load_data(self, user_id, unique_id): 
+    def load_data(self, user_id, unique_id, force = False): 
         workspace_object = self._get_workspace_object(user_id=user_id, unique_id=unique_id) 
         if not workspace_object:
             return False 
         
-        workspace_object.load_all_data()
+        workspace_object.load_all_data(force = force)
         
     #==========================================================================
     def load_test_requests(self): 
