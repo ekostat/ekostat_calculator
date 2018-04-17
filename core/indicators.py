@@ -87,7 +87,7 @@ class IndicatorBase(object):
         return self.index_handler.get_filtered_data(subset, step, type_area, indicator)
    
     #==========================================================================
-    def get_num_class(self, ek):
+    def get_num_class(self, ek, type_area):
         """
         Calculates indicator class (Nklass) according to eq 2.1 in HVMFS 2013:19.
         Returns a tuple with four values, low, ek_low, ek_heigh and the resulting Nklass.
@@ -100,29 +100,29 @@ class IndicatorBase(object):
         if self.name == 'BQI' or self.name.lower() == 'secchi' or self.name.lower() == 'oxygen':
             return False
         else:
-            if ek > self['EK H/G']: 
+            if ek > self.ref_settings.get_value(variable = 'HG_EQR_LIMIT', type_area = type_area): 
                 n_low = 4 
                 ek_high = 1
-                ek_low = self['EK H/G']
+                ek_low = self.ref_settings.get_value(variable = 'HG_EQR_LIMIT', type_area = type_area)
                 
-            elif ek > self['EK G/M']:
+            elif ek > self.ref_settings.get_value(variable = 'GM_EQR_LIMIT', type_area = type_area):
                 n_low = 3 
-                ek_high = self['EK H/G']
-                ek_low = self['EK G/M']
+                ek_high = self.ref_settings.get_value(variable = 'HG_EQR_LIMIT', type_area = type_area)
+                ek_low = self.ref_settings.get_value(variable = 'GM_EQR_LIMIT', type_area = type_area)
     
-            elif ek > self['EK M/O']:
+            elif ek > self.ref_settings.get_value(variable = 'MP_EQR_LIMIT', type_area = type_area):
                 n_low = 2 
-                ek_high = self['EK G/M']
-                ek_low = self['EK M/O']
+                ek_high = self.ref_settings.get_value(variable = 'GM_EQR_LIMIT', type_area = type_area)
+                ek_low = self.ref_settings.get_value(variable = 'MP_EQR_LIMIT', type_area = type_area)
                 
-            elif ek > self['EK O/D']:
+            elif ek > self.ref_settings.get_value(variable = 'PB_EQR_LIMIT', type_area = type_area):
                 n_low = 1 
-                ek_high = self['EK M/O']
-                ek_low = self['EK O/D']
+                ek_high = self.ref_settings.get_value(variable = 'MP_EQR_LIMIT', type_area = type_area)
+                ek_low = self.ref_settings.get_value(variable = 'PB_EQR_LIMIT', type_area = type_area)
                 
             else:
                 n_low = 0 
-                ek_high = self['EK O/D']
+                ek_high = self.ref_settings.get_value(variable = 'PB_EQR_LIMIT', type_area = type_area)
                 ek_low = 0
             
             return n_low, ek_low, ek_high, n_low + (ek - ek_low)/(ek_high-ek_low)
@@ -327,7 +327,7 @@ class IndicatorNutrients(IndicatorBase):
         self.indicator_parameter = self.parameter_list[0]
         self.salt_parameter = self.parameter_list[1]
         
-    def calculate_ek_value(self, tolerance_filter, water_body, par, salt_par = 'SALT_CTD'):
+    def calculate_ek_value(self, water_body):
         """
         Calculates indicator Ecological Ratio (ER) values, for nutrients this means reference value divided by observed value.
         Transforms ER values to numeric class values (num_class)
@@ -347,14 +347,16 @@ class IndicatorNutrients(IndicatorBase):
         """
         Calculate EK-value
         """
-        def get_EK(x):
-            y = x.self.indicator_parameter/x.REFERENCE_VALUE
-            if y > 1:
+        def set_value_above_one(x):
+            #y = x.indicator_parameter/x.REFERENCE_VALUE
+            if x > 1:
                 return 1
             else:
-                return y
-        # get datato be used for status calculation
+                return x
+        
+        # get data to be used for status calculation
         df = self.water_body_indicator_df[water_body]
+        type_area = self.mapping_objects['water_body'].get_type_area_for_water_body(water_body, include_suffix=True)
         
         """ 
         1) Beräkna EK för varje enskilt prov utifrån referensvärden i tabellerna 6.2-6.7.
@@ -362,7 +364,10 @@ class IndicatorNutrients(IndicatorBase):
         för varje mätning och sedan ett medel-EK för varje specifikt mättillfälle.
         """
         
-        df['ek_value_calc'] = df.apply(get_EK, axis = 1)#par_df['REFERENCE_VALUE']/par_df[self.indicator_parameter]
+        df['ek_value'] = df[self.indicator_parameter]/df.REFERENCE_VALUE
+        df['ek_value'] = df['ek_value'].apply(set_value_above_one)
+        
+        #par_df['REFERENCE_VALUE']/par_df[self.indicator_parameter]
         #par_df['ek_value_calc'] = par_df['ek_value_calc'].apply(set_value_above_one)
         
         # calculate mean, max, min and count for EK values per measurement occasion. Here measurements on one day count as one occasion
@@ -374,9 +379,6 @@ class IndicatorNutrients(IndicatorBase):
         
         # Remove occations with not enough samples
         # Or use count as a flag for what to display for the user?
-        by_date['all_ok'] = True
-        ix = by_date.loc[by_date['number_of_values'] < 1, 'all_ok'].index
-        by_date.set_value(ix, 'all_ok', False)
             
         """
         2) Medelvärdet av EK för varje parameter beräknas för varje år.
@@ -384,30 +386,31 @@ class IndicatorNutrients(IndicatorBase):
         by_year = by_date.groupby('YEAR').mean_ek_value.agg(['count', 'min', 'max', 'mean'])
         by_year.rename(columns={'mean':'mean_ek_value', 'count': 'number_of_dates'}, inplace=True)
         # by_year.to_csv(self.paths['results'] +'/' + self.name + water_body + 'by_year.txt', sep='\t')
-        by_year['all_ok'] = True
-        ix = by_year.loc[by_year['number_of_dates'] < 1, 'all_ok'].index
-        by_year.set_value(ix, 'all_ok', False)
+        #by_year['all_ok'] = True
+        #ix = by_year.loc[by_year['number_of_dates'] < self.tolerance_settings.get_min_nr_values(type_area), 'all_ok'].index
+        #by_year.set_value(ix, 'all_ok', False)
         
         """
         3) Medelvärdet av EK för varje parameter och vattenförekomst (beräknas för minst
         en treårsperiod)
         """
         by_period = by_year[['mean_ek_value']].describe()
-        by_period.loc['count', 'mean_ek_value']
-        
-        
-#        if by_year['count'] >= tolerance_filter.MIN_NR_YEARS.value and all_ok:
-#            all_ok =  True
-#        else:
-#            all_ok =  False
-            
+        by_period = by_period.transpose()
+        limit = self.tolerance_settings.get_value(variable = 'MIN_NR_YEARS', type_area = type_area)
+        #limit = self.tolerance_settings.get_min_nr_years(type_area = type_area)
+        if by_period['count'].get_value('mean_ek_value') >= limit:
+            by_period['all_ok'] = False
+        else:
+            by_period['all_ok']  = True
+                     
+        all_ok = by_period['all_ok']    
         print('\t\t\t{} Ek value Calculated'.format(self.name))    
          
         """
         4) Statusklassificeringen för respektive parameter görs genom att medelvärdet av
         EK jämförs med de angivna EK-klassgränserna i tabellerna 6.2-6.7. 
         """
-        num_class = self.get_num_class(self.classification_results[water_body]['mean_by_period'])
+        num_class = self.get_num_class(by_period['mean_ek_value'], type_area = type_area)
         
         # Add waterbody status to result class
         self.classification_results[water_body].add_info('water_body', water_body)

@@ -401,6 +401,7 @@ class SettingsFile(object):
         
         self.interval_columns = []
         self.list_columns = [] 
+        
         self.EQR_columns = []
         self.refvalue_column = []
         
@@ -932,8 +933,22 @@ class SettingsTolerance(SettingsBase):
         self.settings = settings_file_object 
         self.settings.connected_to_tolerance_settings_object = True
         self.allowed_variables = self.settings.tolerance_columns
-
-  
+        
+    def get_min_nr_years(self, type_area):
+        
+        get_variable = 'MIN_NR_YEARS'
+        if get_variable in self.allowed_variables:
+            return self.get_value(variable = get_variable, type_area = type_area)
+        else:
+            raise NameError('MIN_NR_YEARS not in tolerance settings')
+    
+    def get_min_nr_values(self, type_area):
+        
+        get_variable = 'MIN_NR_VALUES'
+        if get_variable in self.allowed_variables:
+            return self.get_value(variable = get_variable, type_area = type_area)
+        else:
+            raise NameError('MIN_NR_VALUES not in tolerance settings')
        
 ###############################################################################
 class WaterBodyStationFilter(object): 
