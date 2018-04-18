@@ -508,14 +508,14 @@ class IndicatorPhytoplankton(IndicatorBase):
         """
         2) Medelvärdet av EK för parametern beräknas för varje år och station.
         """
-        by_year_pos = df.groupby(['YEAR', 'POSITION']).mean_ek_value.agg(['count', 'min', 'max', 'mean'])
+        by_year_pos = df.groupby(['YEAR', 'POSITION']).ek_value.agg(['count', 'min', 'max', 'mean']).reset_index()
         by_year_pos.rename(columns={'mean':'mean_ek_value', 'count': 'number_of_dates'}, inplace=True)
         
         """
         3) Medelvärdet av EK för parametern beräknas för varje år.
         """
         by_year = by_year_pos.groupby('YEAR').mean_ek_value.agg(['count', 'min', 'max', 'mean'])
-        by_year.rename(columns={'mean':'mean_ek_value', 'count': 'number_of_dates'}, inplace=True)
+        by_year.rename(columns={'mean':'mean_ek_value', 'count': 'number_of_positions'}, inplace=True)
   
         """
         4) Medelvärdet av EK för varje parameter och vattenförekomst (beräknas för minst

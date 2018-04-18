@@ -1,15 +1,15 @@
 Indicator	Type_Area_number	Type_Area_suffix	filter_DEPH_INTERVAL_int	tolerance_MIN_NR_YEARS_int	tolerance_MIN_NR_VALUES_int	filter_MONTH_LIST_int	ref_HG_value_limit_float	ref_GM_value_limit_float	ref_MP_value_limit_float	ref_PB_value_limit_float	ref_max BQIm	ref_HG_EQR_limit_float	ref_GM_EQR_llimit_float	ref_MP_EQR_llimit_float	ref_PB_EQR_limit_float	Param	QualityElement						
-BQI	1		20-maj	3	5	"5;6"	13.9	10.3	6.9	3.4	15.7	0.89	0.66	0.44	0.22	BQI	Bottom fauna						
+BQI	1		5-20	3	5	"5;6"	13.9	10.3	6.9	3.4	15.7	0.89	0.66	0.44	0.22	BQI	Bottom fauna						
 BQI	1		20-500	3	5	"5;6"	15.7	12	8	4	17.6	0.89	0.68	0.45	0.23	BQI	Bottom fauna						
-BQI	2		20-maj	3	5	"5;6"	13.9	10.3	6.9	3.4	15.7	0.89	0.66	0.44	0.22	BQI	Bottom fauna						
+BQI	2		5-20	3	5	"5;6"	13.9	10.3	6.9	3.4	15.7	0.89	0.66	0.44	0.22	BQI	Bottom fauna						
 BQI	2		20-500	3	5	"5;6"	15.7	12	8	4	17.6	0.89	0.68	0.45	0.23	BQI	Bottom fauna						
-BQI	3		20-maj	3	5	"5;6"	13.9	10.3	6.9	3.4	15.7	0.89	0.66	0.44	0.22	BQI	Bottom fauna						
+BQI	3		5-20	3	5	"5;6"	13.9	10.3	6.9	3.4	15.7	0.89	0.66	0.44	0.22	BQI	Bottom fauna						
 BQI	3		20-500	3	5	"5;6"	15.7	12	8	4	17.6	0.89	0.68	0.45	0.23	BQI	Bottom fauna						
-BQI	4		20-maj	3	5	"5;6"	13.9	10.3	6.9	3.4	15.7	0.89	0.66	0.44	0.22	BQI	Bottom fauna						
+BQI	4		5-20	3	5	"5;6"	13.9	10.3	6.9	3.4	15.7	0.89	0.66	0.44	0.22	BQI	Bottom fauna						
 BQI	4		20-500	3	5	"5;6"	15.7	12	8	4	17.6	0.89	0.68	0.45	0.23	BQI	Bottom fauna						
-BQI	5		20-maj	3	5	"5;6"	13.9	10.3	6.9	3.4	15.7	0.89	0.66	0.44	0.22	BQI	Bottom fauna						
+BQI	5		5-20	3	5	"5;6"	13.9	10.3	6.9	3.4	15.7	0.89	0.66	0.44	0.22	BQI	Bottom fauna						
 BQI	5		20-500	3	5	"5;6"	15.7	12	8	4	17.6	0.89	0.68	0.45	0.23	BQI	Bottom fauna						
-BQI	6		20-maj	3	5	"5;6"	13.9	10.3	6.9	3.4	15.7	0.89	0.66	0.44	0.22	BQI	Bottom fauna						
+BQI	6		5-20	3	5	"5;6"	13.9	10.3	6.9	3.4	15.7	0.89	0.66	0.44	0.22	BQI	Bottom fauna						
 BQI	6		20-500	3	5	"5;6"	15.7	12	8	4	17.6	0.89	0.68	0.45	0.23	BQI	Bottom fauna						
 BQI	7		5-60	3	5	"5;6"	10.7	4	2.7	1.8	14	0.76	0.29	0.19	0.1	BQI	Bottom fauna						
 BQI	8		5-60	3	5	"5;6"	10.5	3.5	2.3	1.6	14	0.75	0.25	0.17	0.08	BQI	Bottom fauna						
@@ -29,5 +29,5 @@ BQI	21		5-500	3	5	"5;6"	10	4	2.7	1.8	13	0.77	0.31	0.21	0.1	BQI	Bottom fauna
 BQI	22		5-500	3	5	"5;6"	7.5	2	1.3	0.9	13	0.58	0.15	0.1	0.05	BQI	Bottom fauna						
 BQI	23		5-500	3	5	"5;6"	6.3	1.5	1	0.7	11	0.57	0.14	0.09	0.05	BQI	Bottom fauna						
 BQI	24		5-60	3	5	"5;6"	7.7	3	2	1.3	14	0.77	0.3	0.2	0.1	BQI	Bottom fauna						
-BQI	25		20-maj	3	5	"5;6"	13.9	10.3	6.9	3.4	15.7	0.89	0.66	0.44	0.22	BQI	Bottom fauna						
+BQI	25		5-20	3	5	"5;6"	13.9	10.3	6.9	3.4	15.7	0.89	0.66	0.44	0.22	BQI	Bottom fauna						
 BQI	25		20-500	3	5	"5;6"	15.7	12	8	4	17.6	0.89	0.68	0.45	0.23	BQI	Bottom fauna						
