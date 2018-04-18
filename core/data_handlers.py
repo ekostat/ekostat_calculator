@@ -987,9 +987,11 @@ class DataHandler(object):
             except (OSError, IOError) as e:
                 #TODO: better way to say which columns should be converted to float and int
                 self.all_data = core.Load().load_txt(self.export_directory + '/all_data.txt', sep=sep, encoding=encoding, fill_nan=u'')
+                
                 self.all_data['MONTH'] = self.all_data['MONTH'].astype(int) 
                 self.all_data['YEAR'] = self.all_data['YEAR'].astype(int)
                 self.all_data['DEPH'] = self.all_data['DEPH'].apply(lambda x: float(x) if x else np.nan) 
+                self.all_data['POSITION'] = self.all_data.apply(lambda x: '{0:.2f}'.format(convert(x.LATIT_DD)) + '_' + '{0:.2f}'.format(convert(x.LONGI_DD)), axis = 1)
                 for col in self.all_data.columns:
                     if col.startswith('Q_'): 
                         par = col[2:]

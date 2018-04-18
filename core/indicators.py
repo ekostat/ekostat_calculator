@@ -58,7 +58,7 @@ class IndicatorBase(object):
         self.tolerance_settings = self.parent_workspace_object.get_step_object(step = 2, subset = subset).get_indicator_tolerance_settings(self.name)
         self.ref_settings = self.parent_workspace_object.get_step_object(step = 2, subset = subset).get_indicator_ref_settings(self.name)
         # To be read from config-file
-        self.meta_columns = ['SDATE', 'YEAR', 'MONTH', 'VISS_EU_CD', 'WATER_TYPE_AREA', 'DEPH']
+        self.meta_columns = ['SDATE', 'YEAR', 'MONTH', 'POSITION', 'VISS_EU_CD', 'WATER_TYPE_AREA', 'DEPH']
         self.parameter_list =  [item.strip() for item in self.mapping_objects['quality_element'].indicator_config.loc[self.name]['parameters'].split(', ')] #[item.strip() for item in self.parent_workspace_object.cfg['indicators'].loc[self.name][0].split(', ')]
         self.column_list = self.meta_columns + self.parameter_list
         # attributes that will be calculated
@@ -177,7 +177,7 @@ class IndicatorBase(object):
             df =  df[df['VISS_EU_CD'] == water_body]
         except NameError:
             raise NameError('Must give water_body to get indicator_df')
-            
+        
         df = self._add_reference_value_to_df(df, type_area)
         self.water_body_indicator_df[water_body] = df
     
@@ -478,8 +478,6 @@ class IndicatorPhytoplankton(IndicatorBase):
         self.classification_results[water_body].add_info('parameter', self.indicator_parameter)
         self.classification_results[water_body].add_info('salt_parameter', self.salt_parameter)
         self.classification_results[water_body].add_info('water_body', water_body)
-        
-        pass
     
         """
         Calculate EK-value
@@ -510,11 +508,11 @@ class IndicatorPhytoplankton(IndicatorBase):
         """
         2) Medelvärdet av EK för parametern beräknas för varje år och station.
         """
-        by_year_pos = df.groupby(['YEAR', 'POS']).mean_ek_value.agg(['count', 'min', 'max', 'mean'])
+        by_year_pos = df.groupby(['YEAR', 'POSITION']).mean_ek_value.agg(['count', 'min', 'max', 'mean'])
         by_year_pos.rename(columns={'mean':'mean_ek_value', 'count': 'number_of_dates'}, inplace=True)
         
         """
-        3) Medelvärdet av EK för parametern beräknas för varje år och station.
+        3) Medelvärdet av EK för parametern beräknas för varje år.
         """
         by_year = by_year_pos.groupby('YEAR').mean_ek_value.agg(['count', 'min', 'max', 'mean'])
         by_year.rename(columns={'mean':'mean_ek_value', 'count': 'number_of_dates'}, inplace=True)
