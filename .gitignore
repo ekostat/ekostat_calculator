@@ -11,3 +11,4 @@ workspaces/*
 log/*
 *.log
 *.log
+*.log
