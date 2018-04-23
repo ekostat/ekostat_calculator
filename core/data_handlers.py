@@ -1002,12 +1002,8 @@ class DataHandler(object):
             print('No data available after "merge_all_data"!')
             return False
         
-        # MW: Add month column 
-        self.all_data['MONTH'] = self.all_data['SDATE'].apply(lambda x: int(x[5:7]))
-        # LV: Add year column 
-        self.all_data['YEAR'] = self.all_data['SDATE'].apply(lambda x: int(x[0:4]))
         
-        
+        pickle.dump(self.all_data, open(self.export_directory + "/all_data_raw.pickle", "wb"))
         if save_to_txt:
             save_data_file(df=self.all_data, 
                            directory=self.export_directory, 
@@ -1077,13 +1073,24 @@ class DataHandler(object):
                 self.all_data = pickle.load(open(self.export_directory + "/all_data.pickle", "rb"))
                 filetype = 'pickle'
             except (OSError, IOError) as e:
-                #TODO: better way to say which columns should be converted to float and int
-                self.all_data = load_data_file(self.export_directory + '/all_data.txt')
+                
+                try: 
+                    self.all_data = pickle.load(open(self.export_directory + "/all_data_raw.pickle", "rb"))
+                except (OSError, IOError) as e:
+                    raise(OSError, IOError, 'Raw data pickle file does not exist! This is created during in "merge_all_data".')
+#                    self.all_data = load_data_file(self.export_directory + '/all_data.txt')
 #                self.all_data = core.Load().load_txt(self.export_directory + '/all_data.txt', sep=sep, encoding=encoding, fill_nan=u'')
-                self.all_data['MONTH'] = self.all_data['MONTH'].astype(int) 
-                self.all_data['YEAR'] = self.all_data['YEAR'].astype(int)
+                #TODO: better way to say which columns should be converted to float and int?
+                self.all_data['MONTH'] = self.all_data['SDATE'].apply(lambda x: int(x[5:7])) 
+                self.all_data['YEAR'] = self.all_data['SDATE'].apply(lambda x: int(x[0:4]))
+                self.all_data['MYEAR'] = self.all_data['MYEAR'].astype(int)
+#                self.all_data['YEAR'] = self.all_data['SDATE'].apply(lambda x: int(x[0:4])).astype(int)
                 self.all_data['DEPH'] = self.all_data['DEPH'].apply(lambda x: float(x) if x else np.nan) 
                 self.all_data['POSITION'] = self.all_data.apply(lambda x: '{0:.2f}'.format(float_convert(x.LATIT_DD)) + '_' + '{0:.2f}'.format(float_convert(x.LONGI_DD)), axis = 1)
+                
+                if 'MNDEP' not in self.all_data.columns: 
+                    self.all_data['MNDEP'] = np.nan
+                    self.all_data['MXDEP'] = np.nan
                 
                 # MW: Add visit_id
                 self.all_data['visit_id_str'] = self.all_data['POSITION'] + \
@@ -1323,10 +1330,6 @@ class DataHandler(object):
         self.all_data[new_par] = np.nan 
         self.all_data[new_par_depths] = np.nan
         self.all_data[new_par_values] = np.nan
-                     
-        if 'MNDEP' not in self.all_data.columns: 
-            self.all_data['MNDEP'] = np.nan
-            self.all_data['MXDEP'] = np.nan
         
         
         exclude_index_array = self.get_exclude_index_array(self.all_data) 
@@ -1659,9 +1662,8 @@ class DataHandler(object):
 #==========================================================================
 def save_data_file(df=None, directory=u'', file_name=u''):
     """
-    Last modified:  20180420    by Magnus Wenzer
-    self.column_data is a dict with 
-    data is saved as pickle file only. 
+    Last modified:  20180423    by Magnus Wenzer
+ 
     """
 #            directory = os.path.dirname(os.path.realpath(__file__))[:-4] + 'test_data\\test_exports\\'
         
@@ -1674,7 +1676,7 @@ def save_data_file(df=None, directory=u'', file_name=u''):
     
     # MW: Name index
     df['index_column']=df.index
-    df = df.reset_index(drop=True)
+#    df = df.reset_index(drop=True)
     
     # MW: Index is set when loading via funktion load_data_file
     df.to_csv(file_path, sep='\t', encoding='cp1252', index=False) 
