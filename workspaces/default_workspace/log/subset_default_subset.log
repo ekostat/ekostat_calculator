@@ -50,3 +50,167 @@
 2018-02-20 13:45:35,270	logger.py	86	add_log	DEBUG	========================================================================================================================
 2018-02-20 13:45:35,273	logger.py	87	add_log	DEBUG	### Log added for log_id "default_subset" at locaton: D:\Utveckling\git\ekostat_calculator\workspaces\default_workspace\log\subset_default_subset.log
 2018-02-20 13:45:35,275	logger.py	88	add_log	DEBUG	------------------------------------------------------------------------------------------------------------------------
+2018-04-18 14:50:03,028	logger.py	85	add_log	DEBUG	
+2018-04-18 14:50:03,030	logger.py	86	add_log	DEBUG	========================================================================================================================
+2018-04-18 14:50:03,031	logger.py	87	add_log	DEBUG	### Log added for log_id "default_subset" at locaton: ..\workspaces\default_workspace\log\subset_default_subset.log
+2018-04-18 14:50:03,035	logger.py	88	add_log	DEBUG	------------------------------------------------------------------------------------------------------------------------
+2018-04-18 16:44:32,584	logger.py	85	add_log	DEBUG	
+2018-04-18 16:44:32,585	logger.py	86	add_log	DEBUG	========================================================================================================================
+2018-04-18 16:44:32,587	logger.py	87	add_log	DEBUG	### Log added for log_id "default_subset" at locaton: ..\workspaces\default_workspace\log\subset_default_subset.log
+2018-04-18 16:44:32,589	logger.py	88	add_log	DEBUG	------------------------------------------------------------------------------------------------------------------------
+2018-04-19 07:36:33,379	logger.py	85	add_log	DEBUG	
+2018-04-19 07:36:33,381	logger.py	86	add_log	DEBUG	========================================================================================================================
+2018-04-19 07:36:33,382	logger.py	87	add_log	DEBUG	### Log added for log_id "default_subset" at locaton: ..\workspaces\default_workspace\log\subset_default_subset.log
+2018-04-19 07:36:33,384	logger.py	88	add_log	DEBUG	------------------------------------------------------------------------------------------------------------------------
+2018-04-19 08:18:04,504	logger.py	85	add_log	DEBUG	
+2018-04-19 08:18:04,505	logger.py	86	add_log	DEBUG	========================================================================================================================
+2018-04-19 08:18:04,507	logger.py	87	add_log	DEBUG	### Log added for log_id "default_subset" at locaton: ..\workspaces\default_workspace\log\subset_default_subset.log
+2018-04-19 08:18:04,514	logger.py	88	add_log	DEBUG	------------------------------------------------------------------------------------------------------------------------
+2018-04-19 11:21:41,213	logger.py	85	add_log	DEBUG	
+2018-04-19 11:21:41,215	logger.py	86	add_log	DEBUG	========================================================================================================================
+2018-04-19 11:21:41,217	logger.py	87	add_log	DEBUG	### Log added for log_id "default_subset" at locaton: ..\workspaces\default_workspace\log\subset_default_subset.log
+2018-04-19 11:21:41,220	logger.py	88	add_log	DEBUG	------------------------------------------------------------------------------------------------------------------------
+2018-04-19 13:36:42,143	logger.py	85	add_log	DEBUG	
+2018-04-19 13:36:42,145	logger.py	86	add_log	DEBUG	========================================================================================================================
+2018-04-19 13:36:42,146	logger.py	87	add_log	DEBUG	### Log added for log_id "default_subset" at locaton: ..\workspaces\default_workspace\log\subset_default_subset.log
+2018-04-19 13:36:42,149	logger.py	88	add_log	DEBUG	------------------------------------------------------------------------------------------------------------------------
+2018-04-19 13:52:19,785	logger.py	85	add_log	DEBUG	
+2018-04-19 13:52:19,787	logger.py	86	add_log	DEBUG	========================================================================================================================
+2018-04-19 13:52:19,788	logger.py	87	add_log	DEBUG	### Log added for log_id "default_subset" at locaton: ..\workspaces\default_workspace\log\subset_default_subset.log
+2018-04-19 13:52:19,791	logger.py	88	add_log	DEBUG	------------------------------------------------------------------------------------------------------------------------
+2018-04-19 14:03:43,670	logger.py	85	add_log	DEBUG	
+2018-04-19 14:03:43,672	logger.py	86	add_log	DEBUG	========================================================================================================================
+2018-04-19 14:03:43,674	logger.py	87	add_log	DEBUG	### Log added for log_id "default_subset" at locaton: ..\workspaces\default_workspace\log\subset_default_subset.log
+2018-04-19 14:03:43,676	logger.py	88	add_log	DEBUG	------------------------------------------------------------------------------------------------------------------------
+2018-04-19 14:12:20,371	logger.py	85	add_log	DEBUG	
+2018-04-19 14:12:20,373	logger.py	86	add_log	DEBUG	========================================================================================================================
+2018-04-19 14:12:20,375	logger.py	87	add_log	DEBUG	### Log added for log_id "default_subset" at locaton: ..\workspaces\default_workspace\log\subset_default_subset.log
+2018-04-19 14:12:20,377	logger.py	88	add_log	DEBUG	------------------------------------------------------------------------------------------------------------------------
+2018-04-19 14:12:30,612	logger.py	85	add_log	DEBUG	
+2018-04-19 14:12:30,614	logger.py	86	add_log	DEBUG	========================================================================================================================
+2018-04-19 14:12:30,616	logger.py	87	add_log	DEBUG	### Log added for log_id "default_subset" at locaton: ..\workspaces\default_workspace\log\subset_default_subset.log
+2018-04-19 14:12:30,618	logger.py	88	add_log	DEBUG	------------------------------------------------------------------------------------------------------------------------
+2018-04-19 15:42:53,494	logger.py	85	add_log	DEBUG	
+2018-04-19 15:42:53,496	logger.py	86	add_log	DEBUG	========================================================================================================================
+2018-04-19 15:42:53,498	logger.py	87	add_log	DEBUG	### Log added for log_id "default_subset" at locaton: ..\workspaces\default_workspace\log\subset_default_subset.log
+2018-04-19 15:42:53,502	logger.py	88	add_log	DEBUG	------------------------------------------------------------------------------------------------------------------------
+2018-04-19 15:48:11,717	logger.py	85	add_log	DEBUG	
+2018-04-19 15:48:11,719	logger.py	86	add_log	DEBUG	========================================================================================================================
+2018-04-19 15:48:11,721	logger.py	87	add_log	DEBUG	### Log added for log_id "default_subset" at locaton: ..\workspaces\default_workspace\log\subset_default_subset.log
+2018-04-19 15:48:11,723	logger.py	88	add_log	DEBUG	------------------------------------------------------------------------------------------------------------------------
+2018-04-20 08:11:40,836	logger.py	85	add_log	DEBUG	
+2018-04-20 08:11:40,839	logger.py	86	add_log	DEBUG	========================================================================================================================
+2018-04-20 08:11:40,841	logger.py	87	add_log	DEBUG	### Log added for log_id "default_subset" at locaton: ..\workspaces\default_workspace\log\subset_default_subset.log
+2018-04-20 08:11:40,844	logger.py	88	add_log	DEBUG	------------------------------------------------------------------------------------------------------------------------
+2018-04-20 08:21:19,095	logger.py	85	add_log	DEBUG	
+2018-04-20 08:21:19,096	logger.py	86	add_log	DEBUG	========================================================================================================================
+2018-04-20 08:21:19,098	logger.py	87	add_log	DEBUG	### Log added for log_id "default_subset" at locaton: ..\workspaces\default_workspace\log\subset_default_subset.log
+2018-04-20 08:21:19,100	logger.py	88	add_log	DEBUG	------------------------------------------------------------------------------------------------------------------------
+2018-04-20 08:29:04,653	logger.py	85	add_log	DEBUG	
+2018-04-20 08:29:04,655	logger.py	86	add_log	DEBUG	========================================================================================================================
+2018-04-20 08:29:04,656	logger.py	87	add_log	DEBUG	### Log added for log_id "default_subset" at locaton: ..\workspaces\default_workspace\log\subset_default_subset.log
+2018-04-20 08:29:04,658	logger.py	88	add_log	DEBUG	------------------------------------------------------------------------------------------------------------------------
+2018-04-20 08:50:35,678	logger.py	85	add_log	DEBUG	
+2018-04-20 08:50:35,680	logger.py	86	add_log	DEBUG	========================================================================================================================
+2018-04-20 08:50:35,681	logger.py	87	add_log	DEBUG	### Log added for log_id "default_subset" at locaton: ..\workspaces\default_workspace\log\subset_default_subset.log
+2018-04-20 08:50:35,684	logger.py	88	add_log	DEBUG	------------------------------------------------------------------------------------------------------------------------
+2018-04-20 10:46:23,807	logger.py	85	add_log	DEBUG	
+2018-04-20 10:46:23,809	logger.py	86	add_log	DEBUG	========================================================================================================================
+2018-04-20 10:46:23,812	logger.py	87	add_log	DEBUG	### Log added for log_id "default_subset" at locaton: ..\workspaces\default_workspace\log\subset_default_subset.log
+2018-04-20 10:46:23,815	logger.py	88	add_log	DEBUG	------------------------------------------------------------------------------------------------------------------------
+2018-04-20 11:26:52,870	logger.py	85	add_log	DEBUG	
+2018-04-20 11:26:52,873	logger.py	86	add_log	DEBUG	========================================================================================================================
+2018-04-20 11:26:52,876	logger.py	87	add_log	DEBUG	### Log added for log_id "default_subset" at locaton: ..\workspaces\default_workspace\log\subset_default_subset.log
+2018-04-20 11:26:52,878	logger.py	88	add_log	DEBUG	------------------------------------------------------------------------------------------------------------------------
+2018-04-20 12:28:50,399	logger.py	85	add_log	DEBUG	
+2018-04-20 12:28:50,401	logger.py	86	add_log	DEBUG	========================================================================================================================
+2018-04-20 12:28:50,403	logger.py	87	add_log	DEBUG	### Log added for log_id "default_subset" at locaton: ..\workspaces\default_workspace\log\subset_default_subset.log
+2018-04-20 12:28:50,405	logger.py	88	add_log	DEBUG	------------------------------------------------------------------------------------------------------------------------
+2018-04-20 13:15:38,916	logger.py	85	add_log	DEBUG	
+2018-04-20 13:15:38,919	logger.py	86	add_log	DEBUG	========================================================================================================================
+2018-04-20 13:15:38,921	logger.py	87	add_log	DEBUG	### Log added for log_id "default_subset" at locaton: ..\workspaces\default_workspace\log\subset_default_subset.log
+2018-04-20 13:15:38,921	logger.py	88	add_log	DEBUG	------------------------------------------------------------------------------------------------------------------------
+2018-04-20 13:22:24,290	logger.py	85	add_log	DEBUG	
+2018-04-20 13:22:24,292	logger.py	86	add_log	DEBUG	========================================================================================================================
+2018-04-20 13:22:24,295	logger.py	87	add_log	DEBUG	### Log added for log_id "default_subset" at locaton: ..\workspaces\default_workspace\log\subset_default_subset.log
+2018-04-20 13:22:24,297	logger.py	88	add_log	DEBUG	------------------------------------------------------------------------------------------------------------------------
+2018-04-20 13:37:27,405	logger.py	85	add_log	DEBUG	
+2018-04-20 13:37:27,407	logger.py	86	add_log	DEBUG	========================================================================================================================
+2018-04-20 13:37:27,410	logger.py	87	add_log	DEBUG	### Log added for log_id "default_subset" at locaton: ..\workspaces\default_workspace\log\subset_default_subset.log
+2018-04-20 13:37:27,415	logger.py	88	add_log	DEBUG	------------------------------------------------------------------------------------------------------------------------
+2018-04-20 13:42:15,057	logger.py	85	add_log	DEBUG	
+2018-04-20 13:42:15,060	logger.py	86	add_log	DEBUG	========================================================================================================================
+2018-04-20 13:42:15,062	logger.py	87	add_log	DEBUG	### Log added for log_id "default_subset" at locaton: ..\workspaces\default_workspace\log\subset_default_subset.log
+2018-04-20 13:42:15,064	logger.py	88	add_log	DEBUG	------------------------------------------------------------------------------------------------------------------------
+2018-04-20 13:51:12,632	logger.py	85	add_log	DEBUG	
+2018-04-20 13:51:12,634	logger.py	86	add_log	DEBUG	========================================================================================================================
+2018-04-20 13:51:12,635	logger.py	87	add_log	DEBUG	### Log added for log_id "default_subset" at locaton: ..\workspaces\default_workspace\log\subset_default_subset.log
+2018-04-20 13:51:12,637	logger.py	88	add_log	DEBUG	------------------------------------------------------------------------------------------------------------------------
+2018-04-20 14:09:10,736	logger.py	85	add_log	DEBUG	
+2018-04-20 14:09:10,736	logger.py	86	add_log	DEBUG	========================================================================================================================
+2018-04-20 14:09:10,736	logger.py	87	add_log	DEBUG	### Log added for log_id "default_subset" at locaton: ..\workspaces\default_workspace\log\subset_default_subset.log
+2018-04-20 14:09:10,736	logger.py	88	add_log	DEBUG	------------------------------------------------------------------------------------------------------------------------
+2018-04-20 15:03:39,329	logger.py	85	add_log	DEBUG	
+2018-04-20 15:03:39,331	logger.py	86	add_log	DEBUG	========================================================================================================================
+2018-04-20 15:03:39,337	logger.py	87	add_log	DEBUG	### Log added for log_id "default_subset" at locaton: ..\workspaces\default_workspace\log\subset_default_subset.log
+2018-04-20 15:03:39,338	logger.py	88	add_log	DEBUG	------------------------------------------------------------------------------------------------------------------------
+2018-04-22 21:43:22,183	logger.py	85	add_log	DEBUG	
+2018-04-22 21:43:22,183	logger.py	86	add_log	DEBUG	========================================================================================================================
+2018-04-22 21:43:22,183	logger.py	87	add_log	DEBUG	### Log added for log_id "default_subset" at locaton: ..\workspaces\default_workspace\log\subset_default_subset.log
+2018-04-22 21:43:22,183	logger.py	88	add_log	DEBUG	------------------------------------------------------------------------------------------------------------------------
+2018-04-22 22:06:47,792	logger.py	85	add_log	DEBUG	
+2018-04-22 22:06:47,794	logger.py	86	add_log	DEBUG	========================================================================================================================
+2018-04-22 22:06:47,796	logger.py	87	add_log	DEBUG	### Log added for log_id "default_subset" at locaton: ..\workspaces\default_workspace\log\subset_default_subset.log
+2018-04-22 22:06:47,798	logger.py	88	add_log	DEBUG	------------------------------------------------------------------------------------------------------------------------
+2018-04-22 22:55:22,519	logger.py	85	add_log	DEBUG	
+2018-04-22 22:55:22,521	logger.py	86	add_log	DEBUG	========================================================================================================================
+2018-04-22 22:55:22,523	logger.py	87	add_log	DEBUG	### Log added for log_id "default_subset" at locaton: ..\workspaces\default_workspace\log\subset_default_subset.log
+2018-04-22 22:55:22,525	logger.py	88	add_log	DEBUG	------------------------------------------------------------------------------------------------------------------------
+2018-04-22 23:00:04,046	logger.py	85	add_log	DEBUG	
+2018-04-22 23:00:04,046	logger.py	86	add_log	DEBUG	========================================================================================================================
+2018-04-22 23:00:04,046	logger.py	87	add_log	DEBUG	### Log added for log_id "default_subset" at locaton: ..\workspaces\default_workspace\log\subset_default_subset.log
+2018-04-22 23:00:04,046	logger.py	88	add_log	DEBUG	------------------------------------------------------------------------------------------------------------------------
+2018-04-22 23:06:39,745	logger.py	85	add_log	DEBUG	
+2018-04-22 23:06:39,746	logger.py	86	add_log	DEBUG	========================================================================================================================
+2018-04-22 23:06:39,748	logger.py	87	add_log	DEBUG	### Log added for log_id "default_subset" at locaton: ..\workspaces\default_workspace\log\subset_default_subset.log
+2018-04-22 23:06:39,751	logger.py	88	add_log	DEBUG	------------------------------------------------------------------------------------------------------------------------
+2018-04-22 23:11:33,839	logger.py	85	add_log	DEBUG	
+2018-04-22 23:11:33,839	logger.py	86	add_log	DEBUG	========================================================================================================================
+2018-04-22 23:11:33,839	logger.py	87	add_log	DEBUG	### Log added for log_id "default_subset" at locaton: ..\workspaces\default_workspace\log\subset_default_subset.log
+2018-04-22 23:11:33,849	logger.py	88	add_log	DEBUG	------------------------------------------------------------------------------------------------------------------------
+2018-04-23 07:37:55,994	logger.py	85	add_log	DEBUG	
+2018-04-23 07:37:55,994	logger.py	86	add_log	DEBUG	========================================================================================================================
+2018-04-23 07:37:56,004	logger.py	87	add_log	DEBUG	### Log added for log_id "default_subset" at locaton: ..\workspaces\default_workspace\log\subset_default_subset.log
+2018-04-23 07:37:56,004	logger.py	88	add_log	DEBUG	------------------------------------------------------------------------------------------------------------------------
+2018-04-23 07:39:33,886	logger.py	85	add_log	DEBUG	
+2018-04-23 07:39:33,886	logger.py	86	add_log	DEBUG	========================================================================================================================
+2018-04-23 07:39:33,896	logger.py	87	add_log	DEBUG	### Log added for log_id "default_subset" at locaton: ..\workspaces\default_workspace\log\subset_default_subset.log
+2018-04-23 07:39:33,896	logger.py	88	add_log	DEBUG	------------------------------------------------------------------------------------------------------------------------
+2018-04-23 07:40:12,386	logger.py	85	add_log	DEBUG	
+2018-04-23 07:40:12,388	logger.py	86	add_log	DEBUG	========================================================================================================================
+2018-04-23 07:40:12,388	logger.py	87	add_log	DEBUG	### Log added for log_id "default_subset" at locaton: ..\workspaces\default_workspace\log\subset_default_subset.log
+2018-04-23 07:40:12,391	logger.py	88	add_log	DEBUG	------------------------------------------------------------------------------------------------------------------------
+2018-04-23 08:01:35,592	logger.py	85	add_log	DEBUG	
+2018-04-23 08:01:35,592	logger.py	86	add_log	DEBUG	========================================================================================================================
+2018-04-23 08:01:35,602	logger.py	87	add_log	DEBUG	### Log added for log_id "default_subset" at locaton: ..\workspaces\default_workspace\log\subset_default_subset.log
+2018-04-23 08:01:35,602	logger.py	88	add_log	DEBUG	------------------------------------------------------------------------------------------------------------------------
+2018-04-23 08:03:44,319	logger.py	85	add_log	DEBUG	
+2018-04-23 08:03:44,319	logger.py	86	add_log	DEBUG	========================================================================================================================
+2018-04-23 08:03:44,319	logger.py	87	add_log	DEBUG	### Log added for log_id "default_subset" at locaton: ..\workspaces\default_workspace\log\subset_default_subset.log
+2018-04-23 08:03:44,319	logger.py	88	add_log	DEBUG	------------------------------------------------------------------------------------------------------------------------
+2018-04-23 09:54:33,208	logger.py	85	add_log	DEBUG	
+2018-04-23 09:54:33,210	logger.py	86	add_log	DEBUG	========================================================================================================================
+2018-04-23 09:54:33,214	logger.py	87	add_log	DEBUG	### Log added for log_id "default_subset" at locaton: ..\workspaces\default_workspace\log\subset_default_subset.log
+2018-04-23 09:54:33,216	logger.py	88	add_log	DEBUG	------------------------------------------------------------------------------------------------------------------------
+2018-04-23 10:12:07,870	logger.py	85	add_log	DEBUG	
+2018-04-23 10:12:07,872	logger.py	86	add_log	DEBUG	========================================================================================================================
+2018-04-23 10:12:07,873	logger.py	87	add_log	DEBUG	### Log added for log_id "default_subset" at locaton: ..\workspaces\default_workspace\log\subset_default_subset.log
+2018-04-23 10:12:07,877	logger.py	88	add_log	DEBUG	------------------------------------------------------------------------------------------------------------------------
+2018-04-23 10:29:17,397	logger.py	85	add_log	DEBUG	
+2018-04-23 10:29:17,399	logger.py	86	add_log	DEBUG	========================================================================================================================
+2018-04-23 10:29:17,401	logger.py	87	add_log	DEBUG	### Log added for log_id "default_subset" at locaton: ..\workspaces\default_workspace\log\subset_default_subset.log
+2018-04-23 10:29:17,405	logger.py	88	add_log	DEBUG	------------------------------------------------------------------------------------------------------------------------
+2018-04-23 10:33:12,933	logger.py	85	add_log	DEBUG	
+2018-04-23 10:33:12,935	logger.py	86	add_log	DEBUG	========================================================================================================================
+2018-04-23 10:33:12,937	logger.py	87	add_log	DEBUG	### Log added for log_id "default_subset" at locaton: ..\workspaces\default_workspace\log\subset_default_subset.log
+2018-04-23 10:33:12,939	logger.py	88	add_log	DEBUG	------------------------------------------------------------------------------------------------------------------------

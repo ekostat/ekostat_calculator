@@ -176,7 +176,13 @@ class EventHandler(object):
     
     
     #==========================================================================
-    def copy_subset(self, user_id, workspace_alias=None, workspace_uuid=None, subset_source_alias=None, subset_source_uuid=None, subset_target_alias=None): 
+    def copy_subset(self, 
+                    user_id, 
+                    workspace_alias=None, 
+                    workspace_uuid=None, 
+                    subset_source_alias=None, 
+                    subset_source_uuid=None, 
+                    subset_target_alias=None): 
         """
         Created     20180219    by Magnus Wenzer
         Updated     20180219    by Magnus Wenzer
@@ -246,8 +252,8 @@ class EventHandler(object):
         No data is loaded yet 
         Now we need to change uuid for subsets. 
         Do this by creating an UUID mapping object the subset and: 
-            1: rename in mapping file
-            2: rename subset folder
+            1: rename in mapping file 
+            2: rename subset folder 
         """ 
         target_subset_uuid_mapping_file = '{}/subsets/uuid_mapping.txt'.format(target_workspace_path) 
         uuid_object = core.UUIDmapping(target_subset_uuid_mapping_file)
@@ -1396,7 +1402,8 @@ class EventHandler(object):
         uuid_mapping = self._get_uuid_mapping_object(user_id)
         workspace_list = ['default_workspace'] + uuid_mapping.get_uuid_list_for_user(user_id, status=status) 
         for unique_id in workspace_list: 
-            self.load_workspace(unique_id=unique_id)
+            self.load_workspace(user_id=user_id, 
+                                unique_id=unique_id)
         
     #==========================================================================
     def assure_data_is_loaded(self, user_id=None, workspace_uuid=None): 
@@ -1427,7 +1434,7 @@ class EventHandler(object):
         
         
     #==========================================================================
-    def load_data(self, user_id, unique_id, force = False): 
+    def load_data(self, user_id, unique_id, force=False): 
         workspace_object = self._get_workspace_object(user_id=user_id, unique_id=unique_id) 
         if not workspace_object:
             return False 

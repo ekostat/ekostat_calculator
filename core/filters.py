@@ -424,7 +424,7 @@ class SettingsFile(object):
         Last modified:  20180328     by Lena
         """
         self.df = pd.read_csv(self.file_path, sep='\t', dtype='str', encoding='cp1252') 
-        
+        print(self.file_path)
         # Save columns
         self.columns_in_file = list(self.df.columns)
         self.columns = []

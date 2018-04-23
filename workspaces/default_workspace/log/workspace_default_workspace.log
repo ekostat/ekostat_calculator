@@ -42,3 +42,167 @@
 2018-02-20 13:45:35,538	logger.py	86	add_log	DEBUG	========================================================================================================================
 2018-02-20 13:45:35,541	logger.py	87	add_log	DEBUG	### Log added for log_id "default_workspace" at locaton: D:\Utveckling\git\ekostat_calculator\workspaces\default_workspace\log\workspace_default_workspace.log
 2018-02-20 13:45:35,544	logger.py	88	add_log	DEBUG	------------------------------------------------------------------------------------------------------------------------
+2018-04-18 14:50:03,290	logger.py	85	add_log	DEBUG	
+2018-04-18 14:50:03,292	logger.py	86	add_log	DEBUG	========================================================================================================================
+2018-04-18 14:50:03,293	logger.py	87	add_log	DEBUG	### Log added for log_id "default_workspace" at locaton: ..\workspaces\default_workspace\log\workspace_default_workspace.log
+2018-04-18 14:50:03,295	logger.py	88	add_log	DEBUG	------------------------------------------------------------------------------------------------------------------------
+2018-04-18 16:44:32,811	logger.py	85	add_log	DEBUG	
+2018-04-18 16:44:32,813	logger.py	86	add_log	DEBUG	========================================================================================================================
+2018-04-18 16:44:32,814	logger.py	87	add_log	DEBUG	### Log added for log_id "default_workspace" at locaton: ..\workspaces\default_workspace\log\workspace_default_workspace.log
+2018-04-18 16:44:32,816	logger.py	88	add_log	DEBUG	------------------------------------------------------------------------------------------------------------------------
+2018-04-19 07:36:33,639	logger.py	85	add_log	DEBUG	
+2018-04-19 07:36:33,641	logger.py	86	add_log	DEBUG	========================================================================================================================
+2018-04-19 07:36:33,643	logger.py	87	add_log	DEBUG	### Log added for log_id "default_workspace" at locaton: ..\workspaces\default_workspace\log\workspace_default_workspace.log
+2018-04-19 07:36:33,646	logger.py	88	add_log	DEBUG	------------------------------------------------------------------------------------------------------------------------
+2018-04-19 08:18:04,789	logger.py	85	add_log	DEBUG	
+2018-04-19 08:18:04,791	logger.py	86	add_log	DEBUG	========================================================================================================================
+2018-04-19 08:18:04,794	logger.py	87	add_log	DEBUG	### Log added for log_id "default_workspace" at locaton: ..\workspaces\default_workspace\log\workspace_default_workspace.log
+2018-04-19 08:18:04,797	logger.py	88	add_log	DEBUG	------------------------------------------------------------------------------------------------------------------------
+2018-04-19 11:21:41,455	logger.py	85	add_log	DEBUG	
+2018-04-19 11:21:41,456	logger.py	86	add_log	DEBUG	========================================================================================================================
+2018-04-19 11:21:41,458	logger.py	87	add_log	DEBUG	### Log added for log_id "default_workspace" at locaton: ..\workspaces\default_workspace\log\workspace_default_workspace.log
+2018-04-19 11:21:41,461	logger.py	88	add_log	DEBUG	------------------------------------------------------------------------------------------------------------------------
+2018-04-19 13:36:42,352	logger.py	85	add_log	DEBUG	
+2018-04-19 13:36:42,353	logger.py	86	add_log	DEBUG	========================================================================================================================
+2018-04-19 13:36:42,355	logger.py	87	add_log	DEBUG	### Log added for log_id "default_workspace" at locaton: ..\workspaces\default_workspace\log\workspace_default_workspace.log
+2018-04-19 13:36:42,357	logger.py	88	add_log	DEBUG	------------------------------------------------------------------------------------------------------------------------
+2018-04-19 13:52:20,025	logger.py	85	add_log	DEBUG	
+2018-04-19 13:52:20,027	logger.py	86	add_log	DEBUG	========================================================================================================================
+2018-04-19 13:52:20,028	logger.py	87	add_log	DEBUG	### Log added for log_id "default_workspace" at locaton: ..\workspaces\default_workspace\log\workspace_default_workspace.log
+2018-04-19 13:52:20,031	logger.py	88	add_log	DEBUG	------------------------------------------------------------------------------------------------------------------------
+2018-04-19 14:03:43,893	logger.py	85	add_log	DEBUG	
+2018-04-19 14:03:43,894	logger.py	86	add_log	DEBUG	========================================================================================================================
+2018-04-19 14:03:43,896	logger.py	87	add_log	DEBUG	### Log added for log_id "default_workspace" at locaton: ..\workspaces\default_workspace\log\workspace_default_workspace.log
+2018-04-19 14:03:43,899	logger.py	88	add_log	DEBUG	------------------------------------------------------------------------------------------------------------------------
+2018-04-19 14:12:20,577	logger.py	85	add_log	DEBUG	
+2018-04-19 14:12:20,579	logger.py	86	add_log	DEBUG	========================================================================================================================
+2018-04-19 14:12:20,582	logger.py	87	add_log	DEBUG	### Log added for log_id "default_workspace" at locaton: ..\workspaces\default_workspace\log\workspace_default_workspace.log
+2018-04-19 14:12:20,584	logger.py	88	add_log	DEBUG	------------------------------------------------------------------------------------------------------------------------
+2018-04-19 14:12:30,838	logger.py	85	add_log	DEBUG	
+2018-04-19 14:12:30,839	logger.py	86	add_log	DEBUG	========================================================================================================================
+2018-04-19 14:12:30,841	logger.py	87	add_log	DEBUG	### Log added for log_id "default_workspace" at locaton: ..\workspaces\default_workspace\log\workspace_default_workspace.log
+2018-04-19 14:12:30,842	logger.py	88	add_log	DEBUG	------------------------------------------------------------------------------------------------------------------------
+2018-04-19 15:42:53,793	logger.py	85	add_log	DEBUG	
+2018-04-19 15:42:53,795	logger.py	86	add_log	DEBUG	========================================================================================================================
+2018-04-19 15:42:53,798	logger.py	87	add_log	DEBUG	### Log added for log_id "default_workspace" at locaton: ..\workspaces\default_workspace\log\workspace_default_workspace.log
+2018-04-19 15:42:53,801	logger.py	88	add_log	DEBUG	------------------------------------------------------------------------------------------------------------------------
+2018-04-19 15:48:11,942	logger.py	85	add_log	DEBUG	
+2018-04-19 15:48:11,944	logger.py	86	add_log	DEBUG	========================================================================================================================
+2018-04-19 15:48:11,946	logger.py	87	add_log	DEBUG	### Log added for log_id "default_workspace" at locaton: ..\workspaces\default_workspace\log\workspace_default_workspace.log
+2018-04-19 15:48:11,948	logger.py	88	add_log	DEBUG	------------------------------------------------------------------------------------------------------------------------
+2018-04-20 08:11:41,195	logger.py	85	add_log	DEBUG	
+2018-04-20 08:11:41,197	logger.py	86	add_log	DEBUG	========================================================================================================================
+2018-04-20 08:11:41,201	logger.py	87	add_log	DEBUG	### Log added for log_id "default_workspace" at locaton: ..\workspaces\default_workspace\log\workspace_default_workspace.log
+2018-04-20 08:11:41,205	logger.py	88	add_log	DEBUG	------------------------------------------------------------------------------------------------------------------------
+2018-04-20 08:21:19,287	logger.py	85	add_log	DEBUG	
+2018-04-20 08:21:19,289	logger.py	86	add_log	DEBUG	========================================================================================================================
+2018-04-20 08:21:19,290	logger.py	87	add_log	DEBUG	### Log added for log_id "default_workspace" at locaton: ..\workspaces\default_workspace\log\workspace_default_workspace.log
+2018-04-20 08:21:19,292	logger.py	88	add_log	DEBUG	------------------------------------------------------------------------------------------------------------------------
+2018-04-20 08:29:04,858	logger.py	85	add_log	DEBUG	
+2018-04-20 08:29:04,860	logger.py	86	add_log	DEBUG	========================================================================================================================
+2018-04-20 08:29:04,862	logger.py	87	add_log	DEBUG	### Log added for log_id "default_workspace" at locaton: ..\workspaces\default_workspace\log\workspace_default_workspace.log
+2018-04-20 08:29:04,864	logger.py	88	add_log	DEBUG	------------------------------------------------------------------------------------------------------------------------
+2018-04-20 08:50:35,883	logger.py	85	add_log	DEBUG	
+2018-04-20 08:50:35,884	logger.py	86	add_log	DEBUG	========================================================================================================================
+2018-04-20 08:50:35,886	logger.py	87	add_log	DEBUG	### Log added for log_id "default_workspace" at locaton: ..\workspaces\default_workspace\log\workspace_default_workspace.log
+2018-04-20 08:50:35,888	logger.py	88	add_log	DEBUG	------------------------------------------------------------------------------------------------------------------------
+2018-04-20 10:46:24,067	logger.py	85	add_log	DEBUG	
+2018-04-20 10:46:24,069	logger.py	86	add_log	DEBUG	========================================================================================================================
+2018-04-20 10:46:24,072	logger.py	87	add_log	DEBUG	### Log added for log_id "default_workspace" at locaton: ..\workspaces\default_workspace\log\workspace_default_workspace.log
+2018-04-20 10:46:24,074	logger.py	88	add_log	DEBUG	------------------------------------------------------------------------------------------------------------------------
+2018-04-20 11:26:53,145	logger.py	85	add_log	DEBUG	
+2018-04-20 11:26:53,147	logger.py	86	add_log	DEBUG	========================================================================================================================
+2018-04-20 11:26:53,149	logger.py	87	add_log	DEBUG	### Log added for log_id "default_workspace" at locaton: ..\workspaces\default_workspace\log\workspace_default_workspace.log
+2018-04-20 11:26:53,151	logger.py	88	add_log	DEBUG	------------------------------------------------------------------------------------------------------------------------
+2018-04-20 12:28:50,618	logger.py	85	add_log	DEBUG	
+2018-04-20 12:28:50,619	logger.py	86	add_log	DEBUG	========================================================================================================================
+2018-04-20 12:28:50,621	logger.py	87	add_log	DEBUG	### Log added for log_id "default_workspace" at locaton: ..\workspaces\default_workspace\log\workspace_default_workspace.log
+2018-04-20 12:28:50,623	logger.py	88	add_log	DEBUG	------------------------------------------------------------------------------------------------------------------------
+2018-04-20 13:15:39,176	logger.py	85	add_log	DEBUG	
+2018-04-20 13:15:39,179	logger.py	86	add_log	DEBUG	========================================================================================================================
+2018-04-20 13:15:39,181	logger.py	87	add_log	DEBUG	### Log added for log_id "default_workspace" at locaton: ..\workspaces\default_workspace\log\workspace_default_workspace.log
+2018-04-20 13:15:39,184	logger.py	88	add_log	DEBUG	------------------------------------------------------------------------------------------------------------------------
+2018-04-20 13:22:24,525	logger.py	85	add_log	DEBUG	
+2018-04-20 13:22:24,527	logger.py	86	add_log	DEBUG	========================================================================================================================
+2018-04-20 13:22:24,530	logger.py	87	add_log	DEBUG	### Log added for log_id "default_workspace" at locaton: ..\workspaces\default_workspace\log\workspace_default_workspace.log
+2018-04-20 13:22:24,532	logger.py	88	add_log	DEBUG	------------------------------------------------------------------------------------------------------------------------
+2018-04-20 13:37:27,698	logger.py	85	add_log	DEBUG	
+2018-04-20 13:37:27,699	logger.py	86	add_log	DEBUG	========================================================================================================================
+2018-04-20 13:37:27,702	logger.py	87	add_log	DEBUG	### Log added for log_id "default_workspace" at locaton: ..\workspaces\default_workspace\log\workspace_default_workspace.log
+2018-04-20 13:37:27,705	logger.py	88	add_log	DEBUG	------------------------------------------------------------------------------------------------------------------------
+2018-04-20 13:42:15,349	logger.py	85	add_log	DEBUG	
+2018-04-20 13:42:15,351	logger.py	86	add_log	DEBUG	========================================================================================================================
+2018-04-20 13:42:15,354	logger.py	87	add_log	DEBUG	### Log added for log_id "default_workspace" at locaton: ..\workspaces\default_workspace\log\workspace_default_workspace.log
+2018-04-20 13:42:15,357	logger.py	88	add_log	DEBUG	------------------------------------------------------------------------------------------------------------------------
+2018-04-20 13:51:12,852	logger.py	85	add_log	DEBUG	
+2018-04-20 13:51:12,854	logger.py	86	add_log	DEBUG	========================================================================================================================
+2018-04-20 13:51:12,855	logger.py	87	add_log	DEBUG	### Log added for log_id "default_workspace" at locaton: ..\workspaces\default_workspace\log\workspace_default_workspace.log
+2018-04-20 13:51:12,858	logger.py	88	add_log	DEBUG	------------------------------------------------------------------------------------------------------------------------
+2018-04-20 14:09:10,956	logger.py	85	add_log	DEBUG	
+2018-04-20 14:09:10,956	logger.py	86	add_log	DEBUG	========================================================================================================================
+2018-04-20 14:09:10,956	logger.py	87	add_log	DEBUG	### Log added for log_id "default_workspace" at locaton: ..\workspaces\default_workspace\log\workspace_default_workspace.log
+2018-04-20 14:09:10,957	logger.py	88	add_log	DEBUG	------------------------------------------------------------------------------------------------------------------------
+2018-04-20 15:03:39,517	logger.py	85	add_log	DEBUG	
+2018-04-20 15:03:39,518	logger.py	86	add_log	DEBUG	========================================================================================================================
+2018-04-20 15:03:39,520	logger.py	87	add_log	DEBUG	### Log added for log_id "default_workspace" at locaton: ..\workspaces\default_workspace\log\workspace_default_workspace.log
+2018-04-20 15:03:39,531	logger.py	88	add_log	DEBUG	------------------------------------------------------------------------------------------------------------------------
+2018-04-22 21:43:22,399	logger.py	85	add_log	DEBUG	
+2018-04-22 21:43:22,399	logger.py	86	add_log	DEBUG	========================================================================================================================
+2018-04-22 21:43:22,399	logger.py	87	add_log	DEBUG	### Log added for log_id "default_workspace" at locaton: ..\workspaces\default_workspace\log\workspace_default_workspace.log
+2018-04-22 21:43:22,399	logger.py	88	add_log	DEBUG	------------------------------------------------------------------------------------------------------------------------
+2018-04-22 22:06:48,001	logger.py	85	add_log	DEBUG	
+2018-04-22 22:06:48,002	logger.py	86	add_log	DEBUG	========================================================================================================================
+2018-04-22 22:06:48,004	logger.py	87	add_log	DEBUG	### Log added for log_id "default_workspace" at locaton: ..\workspaces\default_workspace\log\workspace_default_workspace.log
+2018-04-22 22:06:48,006	logger.py	88	add_log	DEBUG	------------------------------------------------------------------------------------------------------------------------
+2018-04-22 22:55:22,804	logger.py	85	add_log	DEBUG	
+2018-04-22 22:55:22,804	logger.py	86	add_log	DEBUG	========================================================================================================================
+2018-04-22 22:55:22,804	logger.py	87	add_log	DEBUG	### Log added for log_id "default_workspace" at locaton: ..\workspaces\default_workspace\log\workspace_default_workspace.log
+2018-04-22 22:55:22,814	logger.py	88	add_log	DEBUG	------------------------------------------------------------------------------------------------------------------------
+2018-04-22 23:00:04,236	logger.py	85	add_log	DEBUG	
+2018-04-22 23:00:04,238	logger.py	86	add_log	DEBUG	========================================================================================================================
+2018-04-22 23:00:04,240	logger.py	87	add_log	DEBUG	### Log added for log_id "default_workspace" at locaton: ..\workspaces\default_workspace\log\workspace_default_workspace.log
+2018-04-22 23:00:04,245	logger.py	88	add_log	DEBUG	------------------------------------------------------------------------------------------------------------------------
+2018-04-22 23:06:39,952	logger.py	85	add_log	DEBUG	
+2018-04-22 23:06:39,954	logger.py	86	add_log	DEBUG	========================================================================================================================
+2018-04-22 23:06:39,957	logger.py	87	add_log	DEBUG	### Log added for log_id "default_workspace" at locaton: ..\workspaces\default_workspace\log\workspace_default_workspace.log
+2018-04-22 23:06:39,957	logger.py	88	add_log	DEBUG	------------------------------------------------------------------------------------------------------------------------
+2018-04-22 23:11:34,044	logger.py	85	add_log	DEBUG	
+2018-04-22 23:11:34,045	logger.py	86	add_log	DEBUG	========================================================================================================================
+2018-04-22 23:11:34,047	logger.py	87	add_log	DEBUG	### Log added for log_id "default_workspace" at locaton: ..\workspaces\default_workspace\log\workspace_default_workspace.log
+2018-04-22 23:11:34,049	logger.py	88	add_log	DEBUG	------------------------------------------------------------------------------------------------------------------------
+2018-04-23 07:37:56,309	logger.py	85	add_log	DEBUG	
+2018-04-23 07:37:56,319	logger.py	86	add_log	DEBUG	========================================================================================================================
+2018-04-23 07:37:56,319	logger.py	87	add_log	DEBUG	### Log added for log_id "default_workspace" at locaton: ..\workspaces\default_workspace\log\workspace_default_workspace.log
+2018-04-23 07:37:56,319	logger.py	88	add_log	DEBUG	------------------------------------------------------------------------------------------------------------------------
+2018-04-23 07:39:34,153	logger.py	85	add_log	DEBUG	
+2018-04-23 07:39:34,153	logger.py	86	add_log	DEBUG	========================================================================================================================
+2018-04-23 07:39:34,153	logger.py	87	add_log	DEBUG	### Log added for log_id "default_workspace" at locaton: ..\workspaces\default_workspace\log\workspace_default_workspace.log
+2018-04-23 07:39:34,153	logger.py	88	add_log	DEBUG	------------------------------------------------------------------------------------------------------------------------
+2018-04-23 07:40:12,631	logger.py	85	add_log	DEBUG	
+2018-04-23 07:40:12,631	logger.py	86	add_log	DEBUG	========================================================================================================================
+2018-04-23 07:40:12,631	logger.py	87	add_log	DEBUG	### Log added for log_id "default_workspace" at locaton: ..\workspaces\default_workspace\log\workspace_default_workspace.log
+2018-04-23 07:40:12,631	logger.py	88	add_log	DEBUG	------------------------------------------------------------------------------------------------------------------------
+2018-04-23 08:01:35,824	logger.py	85	add_log	DEBUG	
+2018-04-23 08:01:35,827	logger.py	86	add_log	DEBUG	========================================================================================================================
+2018-04-23 08:01:35,827	logger.py	87	add_log	DEBUG	### Log added for log_id "default_workspace" at locaton: ..\workspaces\default_workspace\log\workspace_default_workspace.log
+2018-04-23 08:01:35,829	logger.py	88	add_log	DEBUG	------------------------------------------------------------------------------------------------------------------------
+2018-04-23 08:03:44,549	logger.py	85	add_log	DEBUG	
+2018-04-23 08:03:44,551	logger.py	86	add_log	DEBUG	========================================================================================================================
+2018-04-23 08:03:44,554	logger.py	87	add_log	DEBUG	### Log added for log_id "default_workspace" at locaton: ..\workspaces\default_workspace\log\workspace_default_workspace.log
+2018-04-23 08:03:44,556	logger.py	88	add_log	DEBUG	------------------------------------------------------------------------------------------------------------------------
+2018-04-23 09:54:33,494	logger.py	85	add_log	DEBUG	
+2018-04-23 09:54:33,496	logger.py	86	add_log	DEBUG	========================================================================================================================
+2018-04-23 09:54:33,497	logger.py	87	add_log	DEBUG	### Log added for log_id "default_workspace" at locaton: ..\workspaces\default_workspace\log\workspace_default_workspace.log
+2018-04-23 09:54:33,501	logger.py	88	add_log	DEBUG	------------------------------------------------------------------------------------------------------------------------
+2018-04-23 10:12:08,081	logger.py	85	add_log	DEBUG	
+2018-04-23 10:12:08,083	logger.py	86	add_log	DEBUG	========================================================================================================================
+2018-04-23 10:12:08,085	logger.py	87	add_log	DEBUG	### Log added for log_id "default_workspace" at locaton: ..\workspaces\default_workspace\log\workspace_default_workspace.log
+2018-04-23 10:12:08,088	logger.py	88	add_log	DEBUG	------------------------------------------------------------------------------------------------------------------------
+2018-04-23 10:29:17,736	logger.py	85	add_log	DEBUG	
+2018-04-23 10:29:17,740	logger.py	86	add_log	DEBUG	========================================================================================================================
+2018-04-23 10:29:17,743	logger.py	87	add_log	DEBUG	### Log added for log_id "default_workspace" at locaton: ..\workspaces\default_workspace\log\workspace_default_workspace.log
+2018-04-23 10:29:17,746	logger.py	88	add_log	DEBUG	------------------------------------------------------------------------------------------------------------------------
+2018-04-23 10:33:13,148	logger.py	85	add_log	DEBUG	
+2018-04-23 10:33:13,150	logger.py	86	add_log	DEBUG	========================================================================================================================
+2018-04-23 10:33:13,152	logger.py	87	add_log	DEBUG	### Log added for log_id "default_workspace" at locaton: ..\workspaces\default_workspace\log\workspace_default_workspace.log
+2018-04-23 10:33:13,154	logger.py	88	add_log	DEBUG	------------------------------------------------------------------------------------------------------------------------

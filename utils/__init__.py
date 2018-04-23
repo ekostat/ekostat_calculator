@@ -1,5 +1,6 @@
 #
 
+from .calculations import get_integrated_mean
 
 from .decorators import singleton
 

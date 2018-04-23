@@ -150,6 +150,7 @@ class DataFrameHandler(ColumnDataHandler, RowDataHandler):
 
     #==========================================================================
     def _add_columns(self): 
+        print('in _add_columns')
         self.df['time'] = pd.Series(pd.to_datetime(self.df['SDATE'] + self.df['STIME'], format='%Y-%m-%d%H:%M'))
 
 #        df['latit_dec_deg'] = df['LATIT'].apply(utils.decmin_to_decdeg)
@@ -181,13 +182,27 @@ class DataFrameHandler(ColumnDataHandler, RowDataHandler):
     def _apply_field_filter(self):
         """
         """
-        self._select_columns_from_df() # use only default fields
+        self._select_columns_from_df() # use only default fields 
+        self._add_origin_columns(dtype=self.dtype, file_path=self.source) # MW
         self._organize_data_format()
     
     #==========================================================================
     def _calculate_data(self):
         """ Can be overwritten from child """
         pass
+    
+    #==========================================================================
+    def _add_origin_columns(self, dtype='', file_path=''):
+        """ 
+        Created     20180419    by Magnus Wenzer
+        Updated     20180419    by Magnus Wenzer 
+        
+        Adds collumns for origin_dtype and origin_file_path
+        """
+        self.df['origin_dtype'] = dtype
+        self.df['origin_file_path'] = os.path.basename(file_path)
+
+    
     #==========================================================================
     def _check_nr_of_parameters(self):
         """
@@ -437,6 +452,9 @@ class DataFrameHandler(ColumnDataHandler, RowDataHandler):
     #==========================================================================    
     def load_source(self, file_path=u'', sep='\t', encoding='cp1252', raw_data_copy=False):
         """
+        Created                 by Johannes 
+        Updated     20180419    by Magnus Wenzer
+        
         Can be rewritten in child-class, eg. DataHandlerPhytoplankton
         """
         self.source = file_path
@@ -445,6 +463,19 @@ class DataFrameHandler(ColumnDataHandler, RowDataHandler):
         self._remap_header()
         self._recognize_format()
         self._apply_field_filter()
+        
+    
+    #==========================================================================    
+    def delete_source(self, file_path):
+        """
+        Created     20180422    by Magnus Wenzer 
+        Updated     20180422    by Magnus Wenzer 
+        
+        Deletes a sourcs in the data handler. 
+        """
+        if file_path in self.column_data.keys():
+            self.column_data.pop(file_path)
+        
 
     #==========================================================================
     def read_filter_file(self, file_path=u'', get_as_dict=True):
@@ -476,7 +507,17 @@ class DataFrameHandler(ColumnDataHandler, RowDataHandler):
         if not os.path.exists(dir_name):
             os.makedirs(dir_name)
         self.df.to_csv(file_path, sep='\t', encoding='cp1252', index=False)
-
+        
+    
+    #==========================================================================
+    def save_column_data(self, file_path):
+        """
+        Created:        20180422    by Magnus Wenzer
+        Last modified:  20180422    by Magnus Wenzer
+        """
+        pickle.dump(self.column_data, open(file_path, "wb"))
+        
+        
     #==========================================================================
     def sort_dict_by_keys(self,
                           sort_order=[],
@@ -522,7 +563,8 @@ class DataFrameHandler(ColumnDataHandler, RowDataHandler):
                 sort_order.append(self.filter_parameters.use_parameters)
             if 'Q_'+self.filter_parameters.use_parameters in self.df:
                 sort_order.append('Q_'+self.filter_parameters.use_parameters)
-
+        
+        sort_order.extend(['origin_dtype', 'origin_file_path'])
         self.df = self.df[sort_order]
 #        self.df = self.df.ix[:, sort_order]
 #        self.df.reindex_axis(sort_order, axis=1) # DOES NOT WORK PROPERLY
@@ -555,13 +597,14 @@ class NETCDFDataHandler(DataFrameHandler):
 class DataHandlerPhysicalChemical(DataFrameHandler):
     """
     """
-    def __init__(self, filter_path=u'',
+    def __init__(self, 
+                 filter_path=u'',
                  export_directory='',
                  parameter_mapping=None,
                  no_qflags=False): # no_qflags for data that has no quality flags (model data..)
         
         super().__init__()
-        self.dtype = u'PhysicalChemical'
+        self.dtype = 'physical_chemical'
         self.export_directory = export_directory
         self.read_filter_file(file_path=filter_path)
         self.parameter_mapping = parameter_mapping
@@ -577,10 +620,12 @@ class DataHandlerPhysicalChemical(DataFrameHandler):
         If there are no quality flags in data self.no_qflags is initialized 
         as True
         """
+#        print('_calculate_data')
         if self.no_qflags:
             self.calculate_din()
         else:
-            self.calculate_din(ignore_qf_list=['B','S'])
+            self.calculate_din(ignore_qf_list=['B','S']) 
+
         
     #==========================================================================
     def calculate_din(self, ignore_qf_list=[]):
@@ -631,20 +676,20 @@ class DataHandlerPhysicalChemical(DataFrameHandler):
         If a parameter does not excist in the loaded dataset, an array filled 
         with NaNs is returned for that specific parameter
         """
-        if u'NTRI' in self.column_data[self.source]:
-            ntri = self.get_float_list(key=u'NTRI', ignore_qf=ignore_qf_list)
+        if 'NTRI' in self.column_data[self.source]:
+            ntri = self.get_float_list(key='NTRI', ignore_qf=ignore_qf_list)
         else:
             ntri = [np.nan]*self.column_data[self.source].shape[0]
-        if u'NTRA' in self.column_data[self.source]:
-            ntra = self.get_float_list(key=u'NTRA', ignore_qf=ignore_qf_list)
+        if 'NTRA' in self.column_data[self.source]:
+            ntra = self.get_float_list(key='NTRA', ignore_qf=ignore_qf_list)
         else:
             ntra = [np.nan]*self.column_data[self.source].shape[0]
-        if u'NTRZ' in self.column_data[self.source]:
-            ntrz = self.get_float_list(key=u'NTRZ', ignore_qf=ignore_qf_list)
+        if 'NTRZ' in self.column_data[self.source]:
+            ntrz = self.get_float_list(key='NTRZ', ignore_qf=ignore_qf_list)
         else:
             ntrz = [np.nan]*self.column_data[self.source].shape[0]
-        if u'AMON' in self.column_data[self.source]:
-            amon = self.get_float_list(key=u'AMON', ignore_qf=ignore_qf_list)
+        if 'AMON' in self.column_data[self.source]:
+            amon = self.get_float_list(key='AMON', ignore_qf=ignore_qf_list)
         else:
             amon = [np.nan]*self.column_data[self.source].shape[0]
         return ntri, ntra, ntrz, amon
@@ -663,7 +708,7 @@ class DataHandlerZoobenthos(DataFrameHandler):
                  parameter_mapping=None):
         
         super().__init__()
-        self.dtype = u'Zoobenthos'
+        self.dtype = 'zoobenthos'
         self.export_directory = export_directory
         self.read_filter_file(file_path=filter_path)
         self.parameter_mapping = parameter_mapping
@@ -685,7 +730,7 @@ class DataHandlerChlorophyll(DataFrameHandler):
                  parameter_mapping=None):
         
         super().__init__()
-        self.dtype = u'Chlorophyll' # Only Tube samples ? 
+        self.dtype = 'chlorophyll' # Only Tube samples ? 
         self.export_directory = export_directory
         self.read_filter_file(file_path=filter_path)
         self.parameter_mapping = parameter_mapping
@@ -707,7 +752,7 @@ class DataHandlerPhytoplankton(DataFrameHandler):
                  parameter_mapping=None):
         
         super().__init__()
-        self.dtype = u'Phytoplankton'
+        self.dtype = 'phytoplankton'
         self.export_directory = export_directory
         self.read_filter_file(file_path=filter_path)
         self.parameter_mapping = parameter_mapping
@@ -930,6 +975,9 @@ class DataHandler(object):
     #==========================================================================
     def merge_all_data(self, save_to_txt=False):
         """
+        Created:        
+        Last modified:  20180416    by Magnus Wenzer
+        
         - Do we need to sort all_data ?
         - Merge data from different datatypes for the same visit ?
         """
@@ -950,33 +998,77 @@ class DataHandler(object):
                     # .column_data is a dict
                     self.all_data = self.all_data.append(self.__getattribute__(dtype).column_data[source], 
                                                          ignore_index=True)
+        if not len(self.all_data):
+            print('No data available after "merge_all_data"!')
+            return False
         
         # MW: Add month column 
         self.all_data['MONTH'] = self.all_data['SDATE'].apply(lambda x: int(x[5:7]))
         # LV: Add year column 
         self.all_data['YEAR'] = self.all_data['SDATE'].apply(lambda x: int(x[0:4]))
         
+        
         if save_to_txt:
-            self.save_data(df=self.all_data, 
+            save_data_file(df=self.all_data, 
+                           directory=self.export_directory, 
                            file_name='all_data.txt')
             
         # Load data again. This way we can treet new and old 
         #"self.all_data" the same way 
         self.all_data = pd.DataFrame()
         self.load_all_datatxt()
-            
+       
+
+    #==========================================================================
+    def load_datatypetxt(self, datatype, sep='\t', encoding='cp1252'):
+        """
+        loads existing data files for the given datatype from export directory (from pickle if existing, otherwise from txt)
+        Created:        20180422    by Magnus Wenzer
+        Last modified:  20180422    by Magnus Wenzer
+        """
+        # Column data file 
+        try:
+            file_path = '{}/column_format_{}_data.pickle'.format(self.export_directory, datatype)
+            self.column_data = pickle.load(open(file_path, "rb")) 
+            return True
+        except (OSError, IOError) as e: 
+            return False
+#            try:
+#                file_path = '{}/column_format_{}_data.txt'.format(self.export_directory, datatype)
+#                self.column_data = load_data_file(file_path)
+#            except:
+#                return False
+        
+#        # Raw data file 
+#        file_path = '{}/raw_format_{}_data.txt'.format(self.export_directory, datatype)
+#        try:
+#            self.row_data = load_data_file(file_path)
+#        except (OSError, IOError) as e:
+#            return False
+#        
+#        return True
+        
     #==========================================================================
     def load_all_datatxt(self, sep='\t', encoding='cp1252'):
         """
         loads existing all_data file from export directory (from pickle if existing, otherwise from txt)
         Created:        20180318    by Lena Viktorsson 
-        Last modified:  20180410    by Lena Viktorsson
+        Last modified:  20180423    by Magnus Wenzer
         """
-        def convert(x):
+        def float_convert(x):
             try:
                 return float(x)
             except:
-                return np.nan
+#                print('float_convert')
+                return np.nan 
+            
+            
+        def str_convert(x):
+            x = str(x)
+            if x == 'nan':
+                x = ''
+            return x
+        
 
         if len(self.all_data): 
             return False, False
@@ -986,31 +1078,562 @@ class DataHandler(object):
                 filetype = 'pickle'
             except (OSError, IOError) as e:
                 #TODO: better way to say which columns should be converted to float and int
-                self.all_data = core.Load().load_txt(self.export_directory + '/all_data.txt', sep=sep, encoding=encoding, fill_nan=u'')
+                self.all_data = load_data_file(self.export_directory + '/all_data.txt')
+#                self.all_data = core.Load().load_txt(self.export_directory + '/all_data.txt', sep=sep, encoding=encoding, fill_nan=u'')
                 self.all_data['MONTH'] = self.all_data['MONTH'].astype(int) 
                 self.all_data['YEAR'] = self.all_data['YEAR'].astype(int)
                 self.all_data['DEPH'] = self.all_data['DEPH'].apply(lambda x: float(x) if x else np.nan) 
+                
+                # MW: Add visit_id
+                self.all_data['visit_id_str'] = self.all_data['LATIT_DD'] + \
+                                                self.all_data['LONGI_DD'] + \
+                                                self.all_data['SDATE'] + \
+                                                self.all_data['STIME']
+#                depth_interval=[0, 10]           
+#                #--------------------------------------------------------------
+#                par_boolean = ~self.all_data['CPHL_BTL'].isnull() 
+#        
+#                depth_boolean = (self.all_data['DEPH'] >= depth_interval[0]) & \
+#                                (self.all_data['DEPH'] <= depth_interval[1])
+#                par_boolean = par_boolean & depth_boolean
+#                
+#                visit_boolean = self.all_data['visit_id_str'] == '58.9113311.187502017-08-0111:40'
+#                
+#                print('='*50)
+#                print('BEFORE')
+#                print('='*50)
+#                print(self.all_data.loc[visit_boolean & par_boolean, ['index_column', 'DEPH', 'CPHL_BTL', 'Q_CPHL_BTL']])
+#                print('-'*50)
+#                #--------------------------------------------------------------
+                
                 for col in self.all_data.columns:
                     if col.startswith('Q_'): 
                         par = col[2:]
-                        try:
-                            self.all_data[par] = self.all_data[par].apply(lambda x: float(x) if x else np.nan) 
-                        except ValueError as e:
-                            self.all_data[par] = self.all_data[par].apply(convert)
+#                        print(par)
+                        self.all_data[par] = self.all_data[par].apply(float_convert)
+                        self.all_data[col] = self.all_data[col].apply(str_convert)
+#                        try:
+#                            self.all_data[par] = self.all_data[par].apply(lambda x: float(x) if x else np.nan) 
+#                        except ValueError as e:
+#                            self.all_data[par] = self.all_data[par].apply(convert)
                             #TODO: send info to user
-                    if col == 'DIN': 
-                        par = col
-                        try:
-                            self.all_data[par] = self.all_data[par].apply(lambda x: float(x) if x else np.nan) 
-                        except ValueError as e:
-                            self.all_data[par] = self.all_data[par].apply(convert)
-                    if col == 'VISS_EU_CD':
+                    elif col in ['DIN', 'CPHL_BTL']: 
+#                        print(col)
+                        self.all_data[col] = self.all_data[col].apply(float_convert)
+#                        try:
+#                            self.all_data[par] = self.all_data[par].apply(lambda x: float(x) if x else np.nan) 
+#                        except ValueError as e:
+#                            self.all_data[par] = self.all_data[par].apply(convert)
+                    elif col == 'VISS_EU_CD':
                         self.all_data[col] = self.all_data[col].apply(lambda x: 'SE' + x if 'SE' not in x else x)
+                        
+                
+                self.all_data['STIME'] = self.all_data['STIME'].apply(lambda x: x[:5])
+                
+#                # MW: Add visit_id
+#                self.all_data['visit_id_str'] = self.all_data['LATIT_DD'] + \
+#                                                self.all_data['LONGI_DD'] + \
+#                                                self.all_data['SDATE'] + \
+#                                                self.all_data['STIME']
+                
+                # MW: Add prioritized salinity 
+                self._add_prioritized_parameter('SALT', 'SALT_BTL', 'SALT_CTD') 
+                
+                # MW: Add prioritized temperature 
+                self._add_prioritized_parameter('TEMP', 'TEMP_BTL', 'TEMP_CTD')
+                
+                # MW: Add prioritized oxygen 
+                self._add_prioritized_parameter('DOXY', 'DOXY_BTL', 'DOXY_CTD')
+                
+#                #--------------------------------------------------------------
+#                par_boolean = ~self.all_data['CPHL_BTL'].isnull() 
+#        
+#                depth_boolean = (self.all_data['DEPH'] >= depth_interval[0]) & \
+#                                (self.all_data['DEPH'] <= depth_interval[1])
+#                par_boolean = par_boolean & depth_boolean
+#                
+#                visit_boolean = self.all_data['visit_id_str'] == '58.9113311.187502017-08-0111:40'
+#                
+#                print('='*50)
+#                print('AFTER')
+#                print('='*50)
+#                print(self.all_data.loc[visit_boolean & par_boolean, ['index_column', 'DEPH', 'CPHL_BTL', 'Q_CPHL_BTL']])
+#                print('-'*50)
+#                #--------------------------------------------------------------
+                
+                if 1:
+                    # MW: Add integrated chlorophyl from CHPL_BTL
+                    self._add_integrated_calc(use_par='CPHL_BTL', 
+                                              new_par='CPHL_INTEG_CALC', 
+                                              depth_interval=[0, 10], 
+                                              exclude_qf=[u'?',u'B',u'S'], 
+                                              min_nr_values=2)
+                
+                
                 pickle.dump(self.all_data, open(self.export_directory + "/all_data.pickle", "wb"))
+                save_data_file(df=self.all_data, 
+                               directory=self.export_directory, 
+                               file_name='all_data.txt')
                 filetype = 'txt'
             return True, filetype
-
         
+        
+    
+    #==========================================================================
+    def _add_prioritized_parameter(self, new_par, primary_par, secondary_par, exclude_qf=['B', 'S']):
+        """
+        Created:        20180413    by Magnus Wenzer
+        Last modified:  20180419    by Magnus Wenzer
+        
+        Adds the parameter <new_par_name> by combining the parameters in args. 
+        The first parameter in args that is not have a quality flag listed in exclude_qf
+        will be prioritized. 
+        Three columns are added to self.all_data: 
+        <new_par_name> 
+        Q_<new_par_name>
+        source_<new_par_name>
+        
+        """
+        t0 = time.time()
+        primary_par_qf = 'Q_' + primary_par
+        secondary_par_qf = 'Q_' + secondary_par
+        
+        if not all([True if item in self.all_data.columns else False \
+                    for item in [primary_par, primary_par_qf, secondary_par, secondary_par_qf]]): 
+            return False
+        
+        q_new_par = 'Q_'+new_par
+        source_new_par = 'source_'+new_par
+        self.all_data[new_par] = np.nan
+        self.all_data[q_new_par] = ''
+        self.all_data[source_new_par] = ''
+        
+        
+        # Find where primary is valid 
+        primary_valid = ~pd.isnull(self.all_data[primary_par]) & \
+                        ~self.all_data[primary_par_qf].isin(exclude_qf)
+        
+        # Add where primary is valid 
+        self.all_data.loc[primary_valid, new_par] = self.all_data.loc[primary_valid, primary_par]
+        self.all_data.loc[primary_valid, q_new_par] = self.all_data.loc[primary_valid, primary_par_qf]
+        self.all_data.loc[primary_valid, source_new_par] = primary_par
+                         
+        # Find where primary is not valid and secondary is
+        add_secondary_valid = ~pd.isnull(self.all_data[secondary_par]) & \
+                              ~self.all_data[secondary_par_qf].isin(exclude_qf) & \
+                               ~primary_valid
+        
+        # Add where primary is not valid and secondary is
+        self.all_data.loc[add_secondary_valid, new_par] = self.all_data.loc[add_secondary_valid, secondary_par]
+        self.all_data.loc[add_secondary_valid, q_new_par] = self.all_data.loc[add_secondary_valid, secondary_par_qf]
+        self.all_data.loc[add_secondary_valid, source_new_par] = secondary_par
+        
+        print('time for _add_prioritized_parameter {} is: {}'.format(new_par, time.time()-t0))
+        
+    
+    #===========================================================================
+    def get_exclude_index_array(self, df): 
+        """
+        Created:        20180423    by Magnus Wenzer
+        Last modified:  20180423    by Magnus Wenzer
+        """
+        exclude_list = []
+        for col in df.columns:
+            if 'Q_' in col:
+                exclude_list.append(col[2:])
+                exclude_list.append(col)
+            elif 'source' in col:
+                exclude_list.append(col) 
+                
+        exclude_index_list = [True if par in exclude_list else False for par in df.columns]
+        return np.array(exclude_index_list)
+
+
+    #===========================================================================
+    def _add_integrated_calc(self, 
+                            use_par=None, 
+                            new_par=None, 
+                            depth_interval=[0, 10], 
+                            exclude_qf=[u'?',u'B',u'S'], 
+                            min_nr_values=2):
+        
+        """
+        Created:        20180423    by Magnus Wenzer
+        Last modified:  20180423    by Magnus Wenzer
+        """
+        #----------------------------------------------------------------------
+        def calculate(df):
+            if len(df) < min_nr_values:
+                #print(len(df))
+                return False
+            # Extrac data lists
+            depth_list = list(df['DEPH'].values) 
+            value_list = list(df[use_par].values) 
+            
+            t_calc_integ = time.time()
+            mean_value = utils.get_integrated_mean(depth_list, 
+                                                   value_list, 
+                                                   depth_interval)
+            time_list_calc_integ.append(time.time() - t_calc_integ)
+            
+            t_add_row = time.time()
+            # Add info to row
+            new_row_series = df.loc[df.index[0], :].copy(deep=True)
+            new_row_series[new_par] = mean_value
+            new_row_series[new_par_depths] = ';'.join(map(str, depth_list))
+            new_row_series[new_par_values] = ';'.join(map(str, value_list))
+            new_row_series['MNDEP'] = depth_interval[0]
+            new_row_series['MXDEP'] = depth_interval[1]
+            #print('df.columns', len(df.columns))
+            #print(df.columns)
+            new_row = np.array(new_row_series)
+            new_row[exclude_index_array] = np.nan
+        
+            new_list_to_append.append(list(new_row)) 
+            time_list_add_row.append(time.time() - t_add_row)
+            
+            return True
+        #----------------------------------------------------------------------
+        
+        
+        
+        new_par_depths = new_par + '_depths'
+        new_par_values = new_par + '_values' 
+
+        new_list_to_append = [] # list of lists with the new rows to be added to all_data once all calculations are done
+        # new_df = pd.DataFrame(columns=all_data.columns)
+        
+        time_list_group_data = []
+        time_list_calc_integ = []
+        time_list_add_row = [] 
+        
+        
+        
+        t_tot = time.time()
+        t_preparations = time.time()
+        # Add result columns
+        self.all_data[new_par] = np.nan 
+        self.all_data[new_par_depths] = np.nan
+        self.all_data[new_par_values] = np.nan
+                     
+        if 'MNDEP' not in self.all_data.columns: 
+            self.all_data['MNDEP'] = np.nan
+            self.all_data['MXDEP'] = np.nan
+        
+        
+        exclude_index_array = self.get_exclude_index_array(self.all_data) 
+        # print(len(exclude_index_array))
+        # print(len(all_data.columns))
+        
+        # Narrow the data to only include lines where par is present and depth is in range
+        use_par_boolean = ~self.all_data[use_par].isnull() 
+        depth_boolean = (self.all_data['DEPH'] >= depth_interval[0]) & \
+                        (self.all_data['DEPH'] <= depth_interval[1]) 
+            
+        active_boolean = use_par_boolean & depth_boolean
+        time_preparations = time.time() - t_preparations
+        
+        
+        t_group_data = time.time()
+        grouped_data = self.all_data.loc[active_boolean, :].groupby('visit_id_str')
+        time_list_group_data.append(time.time() - t_group_data)
+        
+        t_iterator = time.time()
+        calculations = (calculate(group) for visit_id, group in grouped_data)
+        time_iterator = time.time() - t_iterator
+        
+        t_all_calculation = time.time()
+        result = list(calculations)
+        time_all_calculation = time.time() - t_all_calculation
+        
+                              
+        # Add new rows to self.all_data 
+        t_add_data = time.time()
+        add_lines_df = pd.DataFrame(new_list_to_append, columns=self.all_data.columns)
+        self.all_data = self.all_data.append(add_lines_df) 
+        self.all_data.reset_index(drop=True, inplace=True)
+        time_add_data = time.time() - t_add_data
+                                 
+        time_total = time.time() - t_tot
+        print('-'*50)
+        print('Total time:', time_total)
+        print('time_preparations'.ljust(30), time_preparations)
+        print('time_list_group_data:'.ljust(30), sum(time_list_group_data))
+        print('time_list_calc_integ:'.ljust(30), sum(time_list_calc_integ))
+        print('time_list_add_row:'.ljust(30), sum(time_list_add_row)) 
+        print('time_all_calculations:'.ljust(30), time_all_calculation)
+        print('time_iterator:'.ljust(30), time_iterator)
+        print('time_add_data:'.ljust(30), time_add_data)
+        print('Done adding integrated_calc "{}" using parameter "{}"'.format(new_par, use_par))
+        print('time for integrated_calc "{}" using parameter "{} is: {}'.format(new_par, use_par, time_total))
+        
+        
+    #===========================================================================
+    def old_add_integrated_calc(self, 
+                            par, 
+                            new_par_name, 
+                            depth_interval=[0, 10], 
+                            exclude_qf=[u'?',u'B',u'S'], 
+                            min_nr_values=2):
+        
+        """
+        Created:        20180420    by Magnus Wenzer
+        Last modified:  20180420    by Magnus Wenzer
+        """
+        
+        def calculate(current_visit_id):
+#            print(current_visit_id)
+            visit_boolean = self.all_data['visit_id_str'] == current_visit_id
+            index = par_boolean & visit_boolean 
+            
+            # Extrac data lists
+            depth_list = list(self.all_data.loc[index, 'DEPH'].values) 
+            value_list = list(self.all_data.loc[index, par].values) 
+            
+            # Continue if not enough data to calculate 
+#            if len(depth_list) < min_nr_values:
+#                return False
+
+            mean_value = utils.get_integrated_mean(depth_list, 
+                                                   value_list, 
+                                                   depth_interval)
+            
+            new_row = [] 
+            for parameter, value in zip(self.all_data.columns, self.all_data.loc[visit_boolean,:].values[0]):
+                if parameter == 'MNDEP': 
+                    new_row.append(depth_interval[0])
+                elif parameter == 'MXDEP': 
+                    new_row.append(depth_interval[1])
+                elif parameter == new_par_name: 
+                    new_row.append(mean_value)
+                elif parameter == new_par_name_depth: 
+                    new_row.append(';'.join(map(str, depth_list)))
+                elif parameter == new_par_name_values: 
+                    new_row.append(';'.join(map(str, value_list)))
+                elif parameter in exclude_list: 
+                    new_row.append(np.nan) 
+                else:
+                    new_row.append(value) 
+            
+#            print(len(self.all_data)+1)
+            self.all_data.loc[max(self.all_data)+1, :] = new_row    
+            return True
+        
+        
+        
+        
+        new_par_name_depth = new_par_name + '_depths'
+        new_par_name_values = new_par_name + '_values'
+        
+        # Add new columns to dataframe 
+        self.all_data[new_par_name] = np.nan
+        self.all_data[new_par_name_depth] = '' 
+        self.all_data[new_par_name_values] = ''
+                     
+        # Check columns to exclude in row 
+        exclude_list = [] 
+        for item in self.all_data.columns: 
+            if item.startswith('Q_'):
+                exclude_list.append(item[2:])
+                exclude_list.append(item)
+            elif item.startswith('source_'): 
+                exclude_list.append(item)
+        
+        
+        # Create boolen where par has values
+        par_boolean = ~self.all_data[par].isnull() 
+        
+        #----------------------------------------------------------------------
+        # Depth boolean to reduce nr of unique visits. 
+        # This has to be removed/changed if halocline depth should be used 
+        # instead of fixed depth interval. 
+        # OBS! also used below! 
+        depth_boolean = (self.all_data['DEPH'] >= depth_interval[0]) & \
+                        (self.all_data['DEPH'] <= depth_interval[1])
+        par_boolean = par_boolean & depth_boolean
+        #----------------------------------------------------------------------
+        
+        
+        # Get list och unique visits 
+        unique_visit_id_list = list(set(self.all_data.loc[par_boolean, 'visit_id_str']))
+        
+        temp = list(map(calculate, unique_visit_id_list))
+#        return 
+##        # Get next index in self.all_data . Increment this after adding new line to save time 
+##        next_index = max(self.all_data.index) + 1 
+##                        
+##                        
+##        #----------------------------------------------------------------------
+##        input_dict = {'current_visit_id': current_visit_id, 
+##                      }
+##        
+##        
+##        df_list = [by_year_pos.loc[by_year_pos.YEAR == year]['position_mean']]*n
+##        def bootstrap(df):
+##            return df.sample(frac = 1, replace = True).mean()
+##             
+##        BQIsim = map(bootstrap, df_list)
+#        #----------------------------------------------------------------------
+#
+#
+#        
+#        
+#        # Loop unique visits 
+#        for k, current_visit_id in enumerate(unique_visit_id_list):
+#            if not k%100:
+#                print(k, current_visit_id)
+##            # Create boolen where par has values
+##            par_boolean = ~self.all_data[par].isnull() 
+##            
+##            #----------------------------------------------------------------------
+##            # Depth boolean to reduce nr of unique visits. 
+##            # This has to be removed/changed if halocline depth should be used 
+##            # instead of fixed depth interval. 
+##            # OBS! also used below! 
+##            depth_boolean = (self.all_data['DEPH'] >= depth_interval[0]) & \
+##                            (self.all_data['DEPH'] <= depth_interval[1])
+##            par_boolean = par_boolean & depth_boolean
+##            #----------------------------------------------------------------------
+#            
+#        
+#            visit_boolean = self.all_data['visit_id_str'] == current_visit_id
+#            index = par_boolean & visit_boolean 
+#            
+#            # Extrac data lists
+#            depth_list = list(self.all_data.loc[index, 'DEPH'].values) 
+#            value_list = list(self.all_data.loc[index, par].values) 
+#            
+#            # Continue if not enough data to calculate 
+#            if len(depth_list) < min_nr_values:
+#                continue
+#            
+##            #--------------------------------------------------------------
+##            par_boolean = ~self.all_data['CPHL_BTL'].isnull() 
+##    
+##            depth_boolean = (self.all_data['DEPH'] >= depth_interval[0]) & \
+##                            (self.all_data['DEPH'] <= depth_interval[1])
+##            par_boolean = par_boolean & depth_boolean
+##            
+##            visit_boolean = self.all_data['visit_id_str'] == '58.9113311.187502017-08-0111:40'
+##            
+##            print('='*50)
+##            print('1')
+##            print('='*50)
+##            print(self.all_data.loc[visit_boolean & par_boolean, ['index_column', 'DEPH', 'CPHL_BTL', 'Q_CPHL_BTL']])
+##            print('-'*50)
+##            #--------------------------------------------------------------
+#            #--------------------------------------------------------------
+#            
+##            print('='*50)
+##            print('2')
+##            print('='*50)
+##            print(self.all_data.loc[index, ['index_column', 'DEPH', 'CPHL_BTL', 'Q_CPHL_BTL']])
+##            print('-'*50)
+##            #--------------------------------------------------------------
+##            
+##            
+##            print('-'*50)
+##            print(current_visit_id)
+##            print(par)
+##            print(np.where(visit_boolean))
+##            print(np.where(visit_boolean))
+##            print(depth_list)
+##            print(value_list)
+##            print(depth_interval)
+##            print(len(self.all_data) )
+##            print(len(par_boolean))
+#            
+#            mean_value = utils.get_integrated_mean(depth_list, 
+#                                                   value_list, 
+#                                                   depth_interval)
+#            
+#            new_row = [] 
+#            for parameter, value in zip(self.all_data.columns, self.all_data.loc[visit_boolean,:].values[0]):
+#                if parameter == 'MNDEP': 
+#                    new_row.append(depth_interval[0])
+#                elif parameter == 'MXDEP': 
+#                    new_row.append(depth_interval[1])
+#                elif parameter == new_par_name: 
+#                    new_row.append(mean_value)
+#                elif parameter == new_par_name_depth: 
+#                    new_row.append(';'.join(map(str, depth_list)))
+#                elif parameter == new_par_name_values: 
+#                    new_row.append(';'.join(map(str, value_list)))
+#                elif parameter in exclude_list: 
+#                    new_row.append(np.nan)
+#                else:
+#                    new_row.append(value)
+#            
+#            self.all_data.loc[next_index, :] = new_row 
+#                  
+#            next_index += 1
+        
+            
+        
+#        class Calculations():
+#            def __init__(self):
+#                pass
+#        
+#        based_on_par_boolean = ~self.all_data[based_on_par].isnull() 
+#        
+#        
+#        
+#        
+#        depths = self.get_float_array(u'DEPH', ignore_qf=exclude_qf)
+#        index = np.where((depths >= depth_interval[0]) & (depths <= depth_interval[-1]))[0]
+#        depths = depths[index]
+#        values = self.get_float_array(par, ignore_qf=exclude_qf)[index]
+#        
+#        
+#        # First remove empty values and nan
+#        missing_data_at_depth = []
+#        depth_list = [] 
+#        value_list = []
+#        for d, v in zip(depths, values):
+#            if not np.isnan(d) and not np.isnan(v):
+#                depth_list.append(d) 
+#                value_list.append(v)
+#            else:
+#                missing_data_at_depth.append(d)
+#        
+#        sum_list = []
+#        if len(depth_list) >= min_nr_values:  
+#            # Make sure to integrate the whole surface lager if selected
+#            if depth_list[0] != depth_interval[0]:
+#                depth_list.insert(0, depth_interval[0])
+#                value_list.insert(0, value_list[0])
+#            if depth_list[-1] != depth_interval[-1]:
+#                depth_list.append(depth_interval[-1])
+#                value_list.append(value_list[-1])
+#            
+#            for z0, z1, v0, v1 in zip(depth_list[:-1], depth_list[1:], 
+#                                      value_list[:-1], value_list[1:]):
+#                
+#                part_sum = 0.5*(v1+v0)*(z1-z0)
+#                
+#                sum_list.append(part_sum)
+#                
+#            mean_value = sum(sum_list)/(depth_list[-1]-depth_list[0])
+#        else:
+#            if missing_value != None:
+#                mean_value = missing_value
+#            else:
+#                mean_value = np.nan
+#        
+#        calculations = Calculations()
+#        calculations.exclude_qf = exclude_qf
+#        calculations.min_nr_values = min_nr_values
+#        calculations.depth_interval = depth_interval
+#        calculations.used_values = [round(v, 2) for v in value_list]
+#        calculations.used_depths = depth_list
+#        calculations.nr_values_used = len(calculations.used_values)
+#        calculations.segments = sum_list
+#        calculations.missing_data_at_depth = missing_data_at_depth
+#        calculations.value = mean_value
+#        
+#        return calculations
+    
+    
     #==========================================================================
     def load_data(self, directory):
         try:
@@ -1023,30 +1646,58 @@ class DataHandler(object):
             self.row_data = pd.read_csv(row_file_path, sep='\t', encoding='cp1252')
         except:
             pass
-
-    #==========================================================================
-    def save_data(self, df=None, directory=u'', file_name=u''):
         
-        if not directory: 
-            directory = self.export_directory
+        
+#==========================================================================
+def save_data_file(df=None, directory=u'', file_name=u''):
+    """
+    Last modified:  20180420    by Magnus Wenzer
+    self.column_data is a dict with 
+    data is saved as pickle file only. 
+    """
 #            directory = os.path.dirname(os.path.realpath(__file__))[:-4] + 'test_data\\test_exports\\'
-            
-        if not directory.endswith(('/','\\')):
-            directory = directory + '/'
         
-        file_path = directory + file_name
-        
-        print(u'Saving data to:',file_path)
-        
-        df.to_csv(file_path, sep='\t', encoding='cp1252', index=True)
-        
+    if not directory.endswith(('/','\\')):
+        directory = directory + '/'
+    
+    file_path = directory + file_name
+    
+    print(u'Saving data to:',file_path)
+    
+    # MW: Name index
+    df['index_column']=df.index
+    df = df.reset_index(drop=True)
+    
+    # MW: Index is set when loading via funktion load_data_file
+    df.to_csv(file_path, sep='\t', encoding='cp1252', index=False) 
+#        df.to_csv(file_path, sep='\t', encoding='cp1252', index=True)
+
+
+    
 #        column_file_path = directory + '/column_data.txt'
 #        self.column_data.to_csv(column_file_path, sep='\t', encoding='cp1252', index=False)
 #        
 #        row_file_path = directory + '/row_data.txt'
 #        self.row_data.to_csv(row_file_path, sep='\t', encoding='cp1252', index=False)
+
+#==========================================================================
+
+#==========================================================================
+def load_data_file(file_path=None, sep='\t', encoding='cp1252',  fill_nan=u'', ):
+    """
+    Created:        20180420    by Magnus Wenzer
+    Last modified:  20180420    by Magnus Wenzer
     
-    #==========================================================================
+    1: Loads the given file using the core.Load().load_txt method. 
+    2: Fix index 
+    3: Returns the DataFrame  
+    """
+    df = core.Load().load_txt(file_path, sep=sep, encoding=encoding, fill_nan=fill_nan) 
+    df['index_column'] = df['index_column'].astype(int)
+    df = df.set_index('index_column')
+    return df
+    
+
 
 if __name__ == '__main__':
     print('='*50)

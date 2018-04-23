@@ -742,6 +742,12 @@ class WorkSpace(object):
                  mapping_objects=None, 
                  user_id=None): 
         
+#        print('='*30)
+#        print(alias)
+#        print(unique_id)
+#        print(parent_directory)
+#        print(user_id)
+#        print('-'*30)
         assert all([alias, unique_id, parent_directory, user_id])
         assert nr_subsets_allowed
         
@@ -827,16 +833,20 @@ class WorkSpace(object):
         self.paths['directory_path_subsets'] = {}
         self.paths['directory_path_input_data'] = self.paths['workspace_directory'] + '/input_data'
         self.paths['directory_path_raw_data'] = self.paths['directory_path_input_data'] + '/raw_data'
+        self.paths['directory_path_export_data'] = self.paths['directory_path_input_data'] + '/exports'
         self.paths['directory_path_subset'] = self.paths['workspace_directory'] + '/subsets'
         self.paths['directory_path_log'] = self.paths['workspace_directory'] + '/log'
         
         # Step
         self.step_0 = None 
         
-        # Subset
+        # Subset 
         self.subset_dict = {} 
         
-        self.dtype_settings = core.RawDataFiles(self.paths['directory_path_raw_data'])
+#        self.dtype_settings = core.RawDataFiles(self.paths['directory_path_raw_data'])
+        
+        self.datatype_settings = core.DataTypeMapping(self.paths['directory_path_input_data'])
+        
         
     
     #==========================================================================
@@ -942,7 +952,8 @@ class WorkSpace(object):
         shutil.copyfile(file_path, target_file_path)
         
         # Add file to dtype_settings file
-        self.dtype_settings.add_file(file_path=file_path, data_type=data_type)
+#        self.dtype_settings.add_file(file_path=file_path, data_type=data_type)
+        self.datatype_settings.add_file(file_path=file_path, data_type=data_type)
 
     #==========================================================================
     def import_default_data(self, force=False):
@@ -980,7 +991,9 @@ class WorkSpace(object):
 #        self._logger.debug('Data has been loaded in import_default_data. flag "load_data" was set to True')
         
         # Update dtype_settings object
-        all_ok = self.dtype_settings.load_and_sync_dtype_settings()
+#        all_ok = self.dtype_settings.load_and_sync_dtype_settings()
+#        all_ok = self.dtype_settings.load_and_check_dtype_settings()
+        all_ok = self.datatype_settings.load_and_check_dtype_settings()
         
         if not all_ok:
             self._logger.warning('Default data not loaded correctly!')
@@ -1181,6 +1194,24 @@ class WorkSpace(object):
         self._logger.debug('')
         
     #==========================================================================
+    def delete_all_export_data(self):
+        """
+        Created     20180423    by Magnus Wenzer
+        Updated     20180423    by Magnus Wenzer
+        
+        Permanently deletes all files in the dta export directory. 
+        Also sets column "loaded" in datatype_settings.txt to 0. 
+        """
+        for file_name in os.listdir(self.paths['directory_path_export_data']): 
+            file_path = '/'.join([self.paths['directory_path_export_data'], file_name])
+            os.remove(file_path)
+        
+        # Reset loaded in datatype_settings 
+        self.datatype_settings.reset_loaded()
+        self._logger.debug('All files in export directory are deleted and all "loaded" in datatype_settings is 0.')
+        
+        
+    #==========================================================================
     def delete_alldata_export(self):
         """
         Created     20180411    by Lena Viktorsson
@@ -1196,6 +1227,35 @@ class WorkSpace(object):
         try:
             os.remove(self.paths['directory_path_input_data'] + '/exports/all_data.pickle')
             self._logger.debug('all_data.pickle deleted')
+        except OSError:
+            pass
+        
+    #==========================================================================
+    def delete_datatype_export(self, datatype):
+        """
+        Created:        20180422    by Magnus Wenzer 
+        Last modified:  20180422    by Magnus Wenzer   
+        
+        Permanently deletes the raw_format and column_format data files for the given datatype. 
+        """
+        
+        try:
+            file_name = 'column_format_{}_data.txt'.format(datatype)
+            os.remove('{}/{}'.format(self.paths['directory_path_export_data'], file_name))
+            self._logger.debug('{} deleted'.format(file_name))
+        except OSError:
+            pass
+        try:
+            file_name = 'column_format_{}_data.pickle'.format(datatype)
+            os.remove('{}/{}'.format(self.paths['directory_path_export_data'], file_name))
+            self._logger.debug('{} deleted'.format(file_name))
+        except OSError:
+            pass
+        
+        try:
+            file_name = 'raw_format_{}_data.txt'.format(datatype)
+            os.remove('{}/{}'.format(self.paths['directory_path_export_data'], file_name))
+            self._logger.debug('{} deleted'.format(file_name))
         except OSError:
             pass
         
@@ -1393,8 +1453,9 @@ class WorkSpace(object):
     def initiate_quality_factors(self, ):
         self.quality_factor_NP = core.QualityFactorNP()
         
+       
     #==========================================================================
-    def load_all_data(self, force=False): 
+    def old_load_all_data(self, force=False): 
         """ 
         Created:        2017        by Johannes Johansson (?)
         Last modified:  20180409    by Lena Viktorsson
@@ -1408,8 +1469,10 @@ class WorkSpace(object):
         """
 #        # TODO:  User should maybe choose which files to load in dtype_settings?
 
-        if os.path.isfile(self.paths['directory_path_input_data'] + '/exports/all_data.txt'):
+        if os.path.isfile(self.paths['directory_path_input_data'] + '/exports/all_data.txt'): 
+            print(self.paths['directory_path_input_data'])
             data_loaded, filetype = self.data_handler.load_all_datatxt()
+            print(data_loaded, filetype)
             if data_loaded:
                 self._logger.debug('data has been loaded from existing all_data.{} file.'.format(filetype))
             else:
@@ -1454,7 +1517,101 @@ class WorkSpace(object):
             self.data_handler.merge_all_data(save_to_txt=True)
             
         return data_loaded
+    
+    #==========================================================================
+    def load_all_data(self, force=False): 
+        """ 
+        Created:        2017        by Johannes Johansson (?)
+        Last modified:  20180423    by Magnus Wenzer
+        Loads all data from the input_data/raw_data-directory belonging to the workspace. 
+        Only loads data if any file in dtype_settings in set to not "loaded" (loaded=0)
+        """
+#        output_directory = self.paths['directory_path_export_data'] 
+        """
+        # The input_data directory is given to DataHandler during initation. 
+        # If no directory is given use the default directory! 
+        # This has to be done in physical_chemical, zoobenthos etc. 
+        """
+        if not self.datatype_settings.has_info:
+            self._logger.debug('Could not load datatype_settings.txt. No file found?')
+            return False
+            
+        if self.datatype_settings.no_data_to_load():
+            self._logger.debug('No data to load.')
+            self.delete_all_export_data()
+            
+        elif not self.datatype_settings.all_data_is_loaded(): 
+            self._logger.debug('All selected data in (status 1 in datatype_settings.txt) is not loaded.')
+            # dtype_settings is not matching the loaded files so we delete all_data (if excisting)
+            self.delete_alldata_export()
+        elif force: 
+            self._logger.debug('Method load_all_data is forced.')
+            # method is forced so we delete all_data (if excisting)
+            self.delete_alldata_export()
+
+        if os.path.isfile(self.paths['directory_path_export_data'] + '/all_data.txt'): 
+            # Data file excist. Try to load it, or pickle if excisting
+            data_loaded, filetype = self.data_handler.load_all_datatxt()
+            if data_loaded:
+                self._logger.debug('Data has been loaded from existing all_data.{} file.'.format(filetype))
+            else:
+                self._logger.debug("""all_data.txt already loaded and datatype_settings.txt is unchanged. 
+                                   Call "delete_alldata_export" and load data again to reload all_data""")
+        else:
+            # We know that all_data does not excist. We only want to load the datatypes that has been changed and then merge data. 
+            # Loop and load datatypes (if loaded are desided in metthod load datatype_data)
+            for datatype in self.datatype_settings.get_datatype_list():
+#                print(datatype)
+                self.load_datatype_data(datatype=datatype, force=False)
+            
+            self.data_handler.merge_all_data(save_to_txt=True) 
+            data_loaded = True
+            
+        return data_loaded
         
+    
+    #==========================================================================
+    def load_datatype_data(self, datatype=False, force=False): 
+        """ 
+        Created:        20180422    by Magnus Wenzer 
+        Last modified:  20180422    by Magnus Wenzer 
+        
+        Load data for the specific datatype. 
+        """ 
+        if not self.datatype_settings.all_selected_files_loaded_for_datatypes(datatype): 
+            self.delete_datatype_export(datatype)
+            
+        if force: 
+            self.delete_datatype_export(datatype) 
+
+
+        output_file_name = 'column_format_{}_data.pickle'.format(datatype)
+        output_file_path = '/'.join([self.paths['directory_path_export_data'], output_file_name])
+        if os.path.isfile(output_file_path):
+#            print('1')
+            # Data file excist. Try to load it, or pickle if excisting
+            data_loaded = self.data_handler.load_datatypetxt(datatype)
+            if data_loaded:
+#                print('2')
+                self._logger.debug('Data has been loaded from existing file: {}'.format(output_file_name))
+        else: 
+            # No datafile excist. 
+            datatype_handler_object = getattr(self.data_handler, datatype) 
+            
+            # Delete sources 
+            for source in self.datatype_settings.get_file_paths_to_delete_for_datatype(datatype, reload_file=True):
+                datatype_handler_object.delete_source(source) 
+                
+            # Add sources 
+#            print(datatype)
+            for source in self.datatype_settings.get_file_paths_to_load_for_datatype(datatype, force=False, reload_file=True): 
+                datatype_handler_object.load_source(file_path=source, raw_data_copy=True) 
+                self.datatype_settings.set_file_is_loaded(os.path.basename(source))
+            
+            datatype_handler_object.save_column_data(output_file_path) 
+            self._logger.debug('New data files has been loaded for datatype: {}'.format(datatype))
+    
+    
     #==========================================================================
     def set_data_filter(self, step='', subset='', filter_type='', filter_name='', data=None, save_filter=True, append_items=False): 
         """
