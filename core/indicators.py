@@ -45,7 +45,8 @@ class IndicatorBase(object):
         """
         setup indicator class attributes based on subset, parent workspace object and indicator name
         """
-        self.name = indicator
+        self.name = indicator.lower()
+        print(self.name)
         self.class_result = None
         self.subset = subset
         self.step = 'step_3'
@@ -64,13 +65,30 @@ class IndicatorBase(object):
         # attributes that will be calculated
         self.water_body_indicator_df = {}
         self.classification_results = {}
+        # perform checks before continuing
+        self._check()
+        self._set_directories()
+        
+    def _check(self):
+        
+        try:
+            variable = self.tolerance_settings.allowed_variables[0]
+            self.tolerance_settings.get_value(variable = variable, type_area = '1s')
+        except AttributeError as e:
+            raise AttributeError('Tolerance settings for indicator {} not in place. \n{}'.format(self.name, e))
+        try:
+            variable = self.ref_settings.allowed_variables[0]
+            self.ref_settings.get_value(variable = variable, type_area = '1s')
+        except AttributeError as e:
+            raise AttributeError('Reference value settings for indicator {} not in place. \n{}'.format(self.name, e))
+            
          
     #==========================================================================
     def _set_directories(self):
         #set paths
         self.paths = {}
         self.paths['output'] = self.step_object.paths['directory_paths']['output'] 
-        self.paths['results'] = self.step_objectf.paths['directory_paths']['results']
+        self.paths['results'] = self.step_object.paths['directory_paths']['results']
     
     #==========================================================================
     def _add_reference_value_to_df(self, df, type_area):    
@@ -81,6 +99,8 @@ class IndicatorBase(object):
         Nutrient reference values: Det aktuella referensvärdet erhålls utifrån den salthalt som är observerad vidvarje enskilt prov.
         Chl, Biov, Secchi in type 8, 12, 13, 24: Det aktuella referensvärdet erhålls utifrån den salthalt som är observerad vidvarje enskilt prov.
         """
+        if len(self.ref_settings.settings.refvalue_column) == 0:
+            return df
         
         if self.get_ref_value_type(type_area) == 'str':
             df['REFERENCE_VALUE'] = np.nan
@@ -156,6 +176,28 @@ class IndicatorBase(object):
             
             return n_low, ek_low, ek_high, status, n_class
     
+    
+    #==========================================================================        
+    def get_ref_value_type(self, type_area = None, get_type = True):
+        """
+        Created:        20180328     by Lena
+        Last modified:  
+        Get referencevalue either from equation or directly from settings
+        To get reference value from equation you need to supply both type_area and salinity
+        """
+        return self.ref_settings.get_ref_value_type(type_area)
+    
+    #==========================================================================        
+    def get_ref_value(self, type_area = None, salinity = None):
+        """
+        Created:        20180328     by Lena
+        Last modified:  
+        Get referencevalue either from equation or directly from settings
+        To get reference value from equation you need to supply both type_area and salinity
+        
+        """
+        return self.ref_settings.get_ref_value(type_area, salinity)
+    
     #==========================================================================
     def get_water_body_indicator_df(self, water_body = None, level = None):
         """
@@ -180,28 +222,7 @@ class IndicatorBase(object):
         
         df = self._add_reference_value_to_df(df, type_area)
         self.water_body_indicator_df[water_body] = df
-    
-    #==========================================================================        
-    def get_ref_value_type(self, type_area = None, get_type = True):
-        """
-        Created:        20180328     by Lena
-        Last modified:  
-        Get referencevalue either from equation or directly from settings
-        To get reference value from equation you need to supply both type_area and salinity
-        """
-        return self.ref_settings.get_ref_value_type(type_area)
-    
-    #==========================================================================        
-    def get_ref_value(self, type_area = None, salinity = None):
-        """
-        Created:        20180328     by Lena
-        Last modified:  
-        Get referencevalue either from equation or directly from settings
-        To get reference value from equation you need to supply both type_area and salinity
-        
-        """
-        return self.ref_settings.get_ref_value(type_area, salinity)
-    
+
     #==========================================================================  
     def get_closest_matching_salinity(self):
         """
@@ -319,11 +340,50 @@ class IndicatorBase(object):
 ###############################################################################
 class IndicatorBQI(IndicatorBase): 
     """
-    Class with methods incommon for BQI indicator. 
+    Class with methods for BQI indicator. 
     """
     
     def __init__(self, subset, parent_workspace_object, indicator):
-        super().__init__(subset, parent_workspace_object, indicator)  
+        super().__init__(subset, parent_workspace_object, indicator) 
+        self.indicator_parameter = self.parameter_list[0]
+        self.column_list.remove('DEPH')
+        self.column_list = self.column_list + ['MNDEP', 'MXDEP']
+        
+    def calculate_status_value(self, water_body):
+        """
+        Calculates indicatotr EQR for BQI values using bootstrap method described in HVMFS 2013:19
+        """
+        # get data to be used for status calculation
+        df = self.water_body_indicator_df[water_body]
+        type_area = self.mapping_objects['water_body'].get_type_area_for_water_body(water_body, include_suffix=True)
+       
+        by_year_pos = df.groupby(['YEAR', 'POSITION'])[self.indicator_parameter].agg(['count', 'min', 'max', 'mean']).reset_index()
+        by_year_pos.rename(columns={'mean':'position_mean', 'count': 'position_count', 'min': 'position_min', 'max': 'station_max'}, inplace=True)
+
+        by_year = by_year_pos.groupby(['YEAR']).position_mean.agg(['count', 'min', 'max', 'mean']).reset_index()
+
+        # Random selection with replacement of as many values as there are station means (frac = 1)
+        # TODO: spead-up! Is it possible more efficient way to get the list from the map object?
+        def bootstrap(df):
+            return df.sample(frac = 1, replace = True).mean()
+        
+        n = 9999
+        BQIsim_year = []
+        for ix, year in by_year.YEAR.items():
+            print('number of stations in year ({}): {}'.format(year,len(by_year_pos['position_mean'])))
+            print(by_year_pos.loc[by_year_pos.YEAR == year]['position_mean'])
+            df_list = [by_year_pos.loc[by_year_pos.YEAR == year]['position_mean'].dropna()]*n
+            print(water_body)
+            BQIsim = [*map(bootstrap, df_list)]
+#            BQIsim = []
+#            for x in range(n):
+#                BQIsim.append(by_year_pos.loc[by_year_pos.YEAR == year]['position_mean'].sample(frac = 1, replace = True).mean())
+            percentile = np.percentile(BQIsim, 0.2) 
+            print(percentile)            
+            BQIsim_year.append(percentile)
+        print(BQIsim_year)
+        periodmean = np.mean(BQIsim_year)
+        return periodmean
         
 ###############################################################################
 class IndicatorNutrients(IndicatorBase): 
@@ -340,7 +400,6 @@ class IndicatorNutrients(IndicatorBase):
         """
         Calculates indicator Ecological Ratio (ER) values, for nutrients this means reference value divided by observed value.
         Transforms ER values to numeric class values (num_class)
-        tolerance_filters is a dict with tolerance filters for the 
         """
         """
         Vid statusklassificering ska värden från ytvattnet användas (0-10 meter eller den övre vattenmassan om språngskiktet är grundare än 10 meter).
@@ -374,7 +433,7 @@ class IndicatorNutrients(IndicatorBase):
         
         """
         
-        df['ek_value'] = df[self.indicator_parameter]/df.REFERENCE_VALUE
+        df['ek_value'] = df.REFERENCE_VALUE/df[self.indicator_parameter]
         df['ek_value'] = df['ek_value'].apply(set_value_above_one)
         
         # add datafram to resultsclass
@@ -499,7 +558,7 @@ class IndicatorPhytoplankton(IndicatorBase):
         
         """
         
-        df['ek_value'] = df[self.indicator_parameter]/df.REFERENCE_VALUE
+        df['ek_value'] = df.REFERENCE_VALUE/df[self.indicator_parameter]
         df['ek_value'] = df['ek_value'].apply(set_value_above_one)
         
         # add datafram to resultsclass

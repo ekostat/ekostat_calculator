@@ -872,6 +872,9 @@ class SettingsRef(SettingsBase):
         Created     20180326    by Lena Viktorsson
         Updated     20180418    by Lena Viktorsson
         """
+        if len(self.settings.refvalue_column) == 0:
+            return False
+        
         ref_value = self.get_value(variable = self.settings.refvalue_column[0], type_area = type_area)
         
         if type(ref_value) is float:
@@ -893,6 +896,9 @@ class SettingsRef(SettingsBase):
         Created     20180403    by Lena Viktorsson
         Updated     20180418    by Lena Viktorsson     
         """
+        if len(self.settings.refvalue_column) == 0:
+            return False
+        
         ref_value = self.get_value(variable = self.settings.refvalue_column[0], type_area = type_area)
        
         if type(ref_value) is float:
