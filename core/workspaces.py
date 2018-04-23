@@ -1567,7 +1567,7 @@ class WorkSpace(object):
 #                print(datatype)
                 self.load_datatype_data(datatype=datatype, force=False)
             
-            self.data_handler.merge_all_data(save_to_txt=True) 
+            self.data_handler.merge_all_data(save_to_txt=False) 
             data_loaded = True
             
         return data_loaded

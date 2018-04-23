@@ -1039,3 +1039,19 @@
 2018-04-23 10:33:13,164	event_handler.py	1490	load_workspace	DEBUG	Trying to load workspace "1e4ae94f-b7b1-4617-8584-60db4b706938" with alias "ws_1"
 2018-04-23 10:33:14,493	event_handler.py	207	copy_subset	DEBUG	Trying to copy subset "default_subset". Copy has alias "sub_1"
 2018-04-23 10:33:16,301	event_handler.py	944	import_default_data	DEBUG	Trying to load default data in workspace "1e4ae94f-b7b1-4617-8584-60db4b706938" with alias "ws_1"
+2018-04-23 15:33:35,385	logger.py	85	add_log	DEBUG	
+2018-04-23 15:33:35,385	logger.py	86	add_log	DEBUG	========================================================================================================================
+2018-04-23 15:33:35,387	logger.py	87	add_log	DEBUG	### Log added for log_id "event_handler" at locaton: ..\log\main_event_handler.log
+2018-04-23 15:33:35,390	logger.py	88	add_log	DEBUG	------------------------------------------------------------------------------------------------------------------------
+2018-04-23 15:33:35,395	event_handler.py	64	__init__	DEBUG	Start EventHandler: event_handler
+2018-04-23 15:33:35,397	event_handler.py	65	__init__	DEBUG	
+2018-04-23 15:33:35,400	event_handler.py	66	__init__	INFO	TEST info logger
+2018-04-23 15:33:35,402	event_handler.py	67	__init__	WARNING	TEST warning logger
+2018-04-23 15:33:35,407	event_handler.py	68	__init__	ERROR	TEST error logger
+2018-04-23 15:33:35,415	event_handler.py	69	__init__	DEBUG	TEST debug logger
+2018-04-23 15:35:51,634	event_handler.py	235	copy_workspace	DEBUG	Could not add workspace with alias "ws_1". Workspace already exists!
+2018-04-23 15:35:53,122	event_handler.py	1396	load_all_workspaces_for_user	DEBUG	Trying to load all workspaces for user "user_1"
+2018-04-23 15:35:53,137	event_handler.py	1490	load_workspace	DEBUG	Trying to load workspace "default_workspace" with alias "default_workspace"
+2018-04-23 15:35:53,454	event_handler.py	1490	load_workspace	DEBUG	Trying to load workspace "1e4ae94f-b7b1-4617-8584-60db4b706938" with alias "ws_1"
+2018-04-23 15:35:55,174	event_handler.py	207	copy_subset	DEBUG	Trying to copy subset "default_subset". Copy has alias "sub_1"
+2018-04-23 15:35:56,797	event_handler.py	944	import_default_data	DEBUG	Trying to load default data in workspace "1e4ae94f-b7b1-4617-8584-60db4b706938" with alias "ws_1"
