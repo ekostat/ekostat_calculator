@@ -397,10 +397,12 @@ class SettingsFile(object):
         self.mapping_water_body = mapping_objects['water_body']
         
         self.int_columns = [] 
+        self.float_columns = [] 
         self.str_columns = [] 
         
         self.interval_columns = []
         self.list_columns = [] 
+        
         self.EQR_columns = []
         self.refvalue_column = []
         
@@ -421,7 +423,7 @@ class SettingsFile(object):
     def _load_file(self):
         """
         Created:        xxxxxxxx     by Magnus
-        Last modified:  20180328     by Lena
+        Last modified:  20180418     by Lena
         """
         self.df = pd.read_csv(self.file_path, sep='\t', dtype='str', encoding='cp1252') 
         print(self.file_path)
@@ -459,6 +461,8 @@ class SettingsFile(object):
                 self.str_columns.append(variable)
             elif suffix == 'INT': 
                 self.int_columns.append(variable) 
+            elif suffix == 'FLOAT': 
+                self.float_columns.append(variable)
             
             #------------------------------------------------------------------
             # Contains
@@ -560,9 +564,7 @@ class SettingsFile(object):
         """
         Created:        xxxxxxxx     by Magnus
         Last modified:  20180328     by Lena
-        """
-        print(type_area)
-        print(self.df.columns)        
+        """      
         num, suf = get_type_area_parts(type_area)
 
         if suf:
@@ -598,6 +600,9 @@ class SettingsFile(object):
             else:
                 value = self._convert(value, variable.upper())
             return_value.append(value)
+        # if only one row for given type_area, do not return as list, return as single value
+        if len(return_value) == 1:
+            return_value = return_value[0]
         return return_value
     
     #==========================================================================
@@ -626,7 +631,7 @@ class SettingsFile(object):
             new_value.append(val)
         else:
             print('Value to set for type_area "{}" and variable "{}": {}'.format(type_area, variable, new_value))
-#            print('type_area', type_area)
+
             num, suf = get_type_area_parts(type_area)
             if suf:
                 self.df.loc[(self.df['TYPE_AREA_NUMBER']==num) & (self.df['TYPE_AREA_SUFFIX']==suf), variable] = new_value 
@@ -694,6 +699,8 @@ class SettingsFile(object):
     def _convert(self, value, variable):
         if variable in self.int_columns: 
             return int(value)
+        if variable in self.float_columns:
+            return float(value)
         return value
     
     #==========================================================================
@@ -863,9 +870,12 @@ class SettingsRef(SettingsBase):
     def get_ref_value(self, type_area = None, salinity = None):
         """
         Created     20180326    by Lena Viktorsson
-        Updated     20180328    by Lena Viktorsson
+        Updated     20180418    by Lena Viktorsson
         """
-        ref_value = self.get_value(variable = self.settings.refvalue_column[0], type_area = type_area)[0]
+        if len(self.settings.refvalue_column) == 0:
+            return False
+        
+        ref_value = self.get_value(variable = self.settings.refvalue_column[0], type_area = type_area)
         
         if type(ref_value) is float:
             ref_value = ref_value
@@ -884,9 +894,12 @@ class SettingsRef(SettingsBase):
     def get_ref_value_type(self, type_area = None):
         """
         Created     20180403    by Lena Viktorsson
-        Updated     
+        Updated     20180418    by Lena Viktorsson     
         """
-        ref_value = self.get_value(variable = self.settings.refvalue_column[0], type_area = type_area)[0]
+        if len(self.settings.refvalue_column) == 0:
+            return False
+        
+        ref_value = self.get_value(variable = self.settings.refvalue_column[0], type_area = type_area)
        
         if type(ref_value) is float:
             return 'float'
@@ -932,8 +945,22 @@ class SettingsTolerance(SettingsBase):
         self.settings = settings_file_object 
         self.settings.connected_to_tolerance_settings_object = True
         self.allowed_variables = self.settings.tolerance_columns
-
-  
+        
+    def get_min_nr_years(self, type_area):
+        
+        get_variable = 'MIN_NR_YEARS'
+        if get_variable in self.allowed_variables:
+            return self.get_value(variable = get_variable, type_area = type_area)
+        else:
+            raise NameError('MIN_NR_YEARS not in tolerance settings')
+    
+    def get_min_nr_values(self, type_area):
+        
+        get_variable = 'MIN_NR_VALUES'
+        if get_variable in self.allowed_variables:
+            return self.get_value(variable = get_variable, type_area = type_area)
+        else:
+            raise NameError('MIN_NR_VALUES not in tolerance settings')
        
 ###############################################################################
 class WaterBodyStationFilter(object): 
@@ -1052,13 +1079,11 @@ def get_type_area_parts(type_area):
     """
     Returns a tuple like (type_area_number, type_area_suffix)
     """
-#    print(type_area)
     type_area = str(type_area)
     if type_area[-1].isalpha():
         suf = type_area[-1] 
     else:
         suf = ''
-    print('type_area_type_area', type_area)
     return re.findall('\d+', type_area)[0], suf
         
 ###############################################################################

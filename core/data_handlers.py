@@ -1083,12 +1083,16 @@ class DataHandler(object):
                 self.all_data['MONTH'] = self.all_data['MONTH'].astype(int) 
                 self.all_data['YEAR'] = self.all_data['YEAR'].astype(int)
                 self.all_data['DEPH'] = self.all_data['DEPH'].apply(lambda x: float(x) if x else np.nan) 
+                self.all_data['POSITION'] = self.all_data.apply(lambda x: '{0:.2f}'.format(float_convert(x.LATIT_DD)) + '_' + '{0:.2f}'.format(float_convert(x.LONGI_DD)), axis = 1)
                 
                 # MW: Add visit_id
-                self.all_data['visit_id_str'] = self.all_data['LATIT_DD'] + \
-                                                self.all_data['LONGI_DD'] + \
+                self.all_data['visit_id_str'] = self.all_data['POSITION'] + \
                                                 self.all_data['SDATE'] + \
                                                 self.all_data['STIME']
+#                self.all_data['visit_id_str'] = self.all_data['LATIT_DD'] + \
+#                                                self.all_data['LONGI_DD'] + \
+#                                                self.all_data['SDATE'] + \
+#                                                self.all_data['STIME']
 #                depth_interval=[0, 10]           
 #                #--------------------------------------------------------------
 #                par_boolean = ~self.all_data['CPHL_BTL'].isnull() 
@@ -1106,6 +1110,10 @@ class DataHandler(object):
 #                print('-'*50)
 #                #--------------------------------------------------------------
                 
+                
+
+                
+
                 for col in self.all_data.columns:
                     if col.startswith('Q_'): 
                         par = col[2:]

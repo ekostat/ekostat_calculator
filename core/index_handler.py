@@ -126,7 +126,7 @@ class IndexHandler(object):
             if key in use_keys.get('keys')[0]:
                 
                 if bool_dict.get('boolean') is not None:
-                    # Merge boolean from parent with new boolean from filter_object, filter_object is either DataFilter och SettingsDataFilter
+                    # Merge boolean from parent with new boolean from filter_object, filter_object is either DataFilter or SettingsDataFilter
                     bool_dict[key]['boolean'] = bool_dict.get('boolean') & filter_object.get_filter_boolean_for_df(df, type_area = type_area, level = level)
                     
                 else:
@@ -283,7 +283,7 @@ class IndexHandler(object):
         - Add boolean to the given subset, step, type_area (given as input), indicator and level
         
         If type_area is given: subset and step must also be given
-        If indicator is give: type_area must also be given
+        If indicator is given: type_area must also be given
         """
         print('add filter for step: {}, type area: {}, indicator: {}, level: {}'.format(step, type_area, indicator, level))
         df = self.data_handler_object.get_all_column_data_df()

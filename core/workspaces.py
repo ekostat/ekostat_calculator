@@ -294,6 +294,7 @@ class WorkStep(object):
     #==========================================================================
     def load_indicator_settings_filters(self): 
         """
+        Updated:     20180419        by Lena Viktorsson
         Loads all types of settings, data and config files/objects. 
         """
         
@@ -304,21 +305,23 @@ class WorkStep(object):
             self._indicator_setting_files[indicator] = core.SettingsFile(file_path, mapping_objects=self.mapping_objects)
             if self._indicator_setting_files[indicator].indicator != indicator:
                 self._logger.debug('Missmatch in indicator name and object name! {}:{}'.format(self._indicator_setting_files[indicator].indicator, indicator))
-            
+                raise IndicatorFileError('Error in indicator settings file',
+                                         'Missmatch in indicator name and object name! {}:{}'.format(self._indicator_setting_files[indicator].indicator, indicator))
+                
         # Load Filter settings. Filter settings are using indicator_setting_files-objects as data
         self.indicator_data_filter_settings = {} 
         for indicator, obj in self._indicator_setting_files.items():
-            self.indicator_data_filter_settings[indicator] = core.SettingsDataFilter(obj)
+            self.indicator_data_filter_settings[indicator.lower()] = core.SettingsDataFilter(obj)
             
         # Load Ref settings. Filter settings are using indicator_setting_files-objects as data
         self.indicator_ref_settings = {} 
         for indicator, obj in self._indicator_setting_files.items():
-            self.indicator_ref_settings[indicator] = core.SettingsRef(obj) 
+            self.indicator_ref_settings[indicator.lower()] = core.SettingsRef(obj) 
             
         # Load Tolerance settings. Filter settings are using indicator_setting_files-objects as data
         self.indicator_tolerance_settings = {} 
         for indicator, obj in self._indicator_setting_files.items():
-            self.indicator_tolerance_settings[indicator] = core.SettingsTolerance(obj)
+            self.indicator_tolerance_settings[indicator.lower()] = core.SettingsTolerance(obj)
             
     #==========================================================================
     def load_water_body_station_filter(self):
@@ -1062,7 +1065,7 @@ class WorkSpace(object):
             True:           If all is ok
             False:          If something faild
         """
-        
+        indicator = indicator.lower()
         if subset not in self.get_subset_list(): 
             self._logger.debug('Provided subset "{}" not in subset list'.format(subset))
             return False
@@ -1942,6 +1945,11 @@ class WorkSpace(object):
         return all_ok
     
 #==========================================================================
+class IndicatorFileError(Exception):
+    
+    def __init__(self, expression, message):
+        self.expression = expression
+        self.message = message
 #==========================================================================
 class Config(dict): 
     def __init__(self, file_path): 
