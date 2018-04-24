@@ -1068,19 +1068,19 @@ class WorkSpace(object):
         return all_ok
         
     #==========================================================================
-    def apply_indicator_data_filter(self, subset='', indicator='', type_area='', step='step_2'):
+    def apply_indicator_data_filter(self, subset='', indicator='', water_body = '', step='step_2'):
         """
         Created     ????????    by Magnus Wenzer
         Updated     20180319    by Magnus Wenzer
         
-        Applies indicator data filter to the index handler. Step. 
+        Applies indicator data filter to the index handler. Step 2. 
         
         Input:                
             subset:         subset to apply filter on. 
             
-            indicator:      name of indicator to apply, ex. "din_winter" 
+            indicator:      name of indicator to apply as a string, ex. "din_winter" 
             
-            water_body:     water body in question
+            water_body:     water body in question, given av VISS_EU_CD string
             
             step:           step_2 is default
         
@@ -1098,7 +1098,7 @@ class WorkSpace(object):
             # Indicator_settings are linked to step 2 by default
             step_object = subset_object.get_step_object(step) 
             filter_object = step_object.get_indicator_data_filter_settings(indicator) 
-            all_ok = self.index_handler.add_filter(filter_object=filter_object, step=step, subset=subset, indicator=indicator, type_area = type_area)
+            all_ok = self.index_handler.add_filter(filter_object=filter_object, step=step, subset=subset, indicator=indicator, water_body = water_body)
         
         return all_ok
         
@@ -1377,7 +1377,7 @@ class WorkSpace(object):
         return data_filter.get_filter_info()
     
     #==========================================================================
-    def get_filtered_data(self, step=None, subset=None, type_area=None, indicator=None): 
+    def get_filtered_data(self, step=None, subset=None, water_body=None, indicator=None): 
         """
         Returns filtered data using the given filter level. 
         """
@@ -1385,7 +1385,7 @@ class WorkSpace(object):
         if step == None:
             return False
         self._logger.debug('STEP: {}'.format(step))
-        return self.index_handler.get_filtered_data(subset=subset, step=step, type_area=type_area, indicator=indicator)
+        return self.index_handler.get_filtered_data(subset=subset, step=step, water_body=water_body, indicator=indicator)
     
     #==========================================================================
     def get_available_indicators(self, subset=None, step=None):

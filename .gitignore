@@ -10,7 +10,6 @@ workspaces/*
 !workspaces/uuid_mapping_default.txt
 log/*
 *.log
-*.log
-*.log
-*.log
+
+log/main_event_handler.log
 log/main_event_handler.log

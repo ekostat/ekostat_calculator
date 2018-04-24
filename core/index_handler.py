@@ -101,7 +101,7 @@ class IndexHandler(object):
                 bool_dict = bool_dict[key]
     #==========================================================================
     def _add_boolean_to_dict(self, step_0 = None, subset = None, step_1 = None, step_2 = None, 
-                             type_area = None, water_body = None, indicator = None,
+                             water_body = None, indicator = None,
                              filter_object=None, df=None): #  **kwargs ?
         """
         Updated     20180423    by Lena Viktorsson
@@ -189,7 +189,7 @@ class IndexHandler(object):
     #==========================================================================
     def _get_boolean(self, *args):
         """
-        *args: step_0, subset, step_1, step_2, type_area, indicator
+        *args: step_0, subset, step_1, step_2, water_body, indicator
         - Loop through *args, save a reference for the specific dictionary 
           within self.booleans
         - Return boolean for the specific argument input
@@ -316,7 +316,7 @@ class IndexHandler(object):
                                   wb=water_body)
         
     #==========================================================================
-    def add_filter(self, filter_object=None, subset=None, step=None, type_area=None, water_body = None, indicator=None): 
+    def add_filter(self, filter_object=None, subset=None, step=None, water_body = None, indicator=None, **kwargs): 
         """
         Updated     20180423    by Magnus Wenzer
         
@@ -326,7 +326,7 @@ class IndexHandler(object):
         - Add boolean to the given subset, step, type_area (given as input), indicator and level
         
         If type_area is given: subset and step must also be given
-        If indicator is given: type_area must also be given
+        If indicator is given: water_body must also be given
         """
         print('add filter for step: {}, type area: {}, indicator: {}'.format(step, water_body, indicator))
         df = self.data_handler_object.get_all_column_data_df()
@@ -341,7 +341,7 @@ class IndexHandler(object):
         
         self._add_boolean_to_dict(step_0, subset, step_1, step_2, water_body, indicator,
                                   filter_object=filter_object, 
-                                  df=df)
+                                  df=df, **kwargs)
     #==========================================================================
     def old_add_filter(self, filter_object=None, subset=None, step=None, type_area=None, indicator=None, level=None): 
         """
@@ -384,16 +384,16 @@ class IndexHandler(object):
 
 
     #==========================================================================
-    def get_filtered_data(self, subset=None, step=None, type_area=None, indicator=None): 
+    def get_filtered_data(self, subset=None, step=None, water_body=None, indicator=None): 
         """
         Updated     20180326    by Magnus Wenzer
         Returns filtered data for the given boolean specification
-        Takes input arguments: subset, step, type_area and indicator
+        Takes input arguments: subset, step, water_body and indicator
         """
         
         step_0, step_1, step_2 = self._get_steps(step=step)
         
-        boolean = self._get_boolean(step_0, subset, step_1, step_2, type_area, indicator)
+        boolean = self._get_boolean(step_0, subset, step_1, step_2, water_body, indicator)
         
         return self.data_handler_object.get_all_column_data_df(boolean_filter=boolean)
     

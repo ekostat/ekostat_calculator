@@ -992,6 +992,8 @@ class DataHandler(object):
         
         for dtype in all_datatypes:
             if dtype in dir(self):
+                #print(dtype)
+                #print(self.__getattribute__(dtype).column_data)
                 # Appends dataframes from each datatype into one dataframe
                 for source in self.__getattribute__(dtype).column_data:
                     # Each datatype might have multiple sources..
@@ -1072,7 +1074,7 @@ class DataHandler(object):
             try:
                 self.all_data = pickle.load(open(self.export_directory + "/all_data.pickle", "rb"))
                 filetype = 'pickle'
-            except (OSError, IOError) as e:
+            except (FileNotFoundError) as e:
                 
                 try: 
                     self.all_data = pickle.load(open(self.export_directory + "/all_data_raw.pickle", "rb"))
