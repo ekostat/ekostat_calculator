@@ -13,3 +13,4 @@ log/*
 *.log
 *.log
 *.log
+log/main_event_handler.log

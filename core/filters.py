@@ -560,21 +560,34 @@ class SettingsFile(object):
     
     
     #==========================================================================
-    def get_value(self, variable=None, type_area=None): 
+    def get_value(self, variable=None, type_area=None, water_body = None): 
         """
         Created:        xxxxxxxx     by Magnus
-        Last modified:  20180328     by Lena
-        """      
-        num, suf = get_type_area_parts(type_area)
-
-        if suf:
-            value_series = self.df.loc[(self.df['TYPE_AREA_NUMBER']==num) & (self.df['TYPE_AREA_SUFFIX']==suf), variable]
+        Last modified:  20180423     by Lena
+        """  
+        #NEW
+        if water_body in self.df['VISS_EU_CD']:
+            value_series = self.df.loc[(self.df['VISS_EU_CD']==water_body), variable]
         else:
-            value_series = self.df.loc[self.df['TYPE_AREA_NUMBER']==num, variable]
+            if not type_area:
+                type_area = self.mapping_water_body.get_type_area_for_water_body(water_body, include_suffix=True)
+            num, suf = get_type_area_parts(type_area)
+            if suf:
+                value_series = self.df.loc[(self.df['TYPE_AREA_NUMBER']==num) & (self.df['TYPE_AREA_SUFFIX']==suf), variable]
+            else:
+                value_series = self.df.loc[self.df['TYPE_AREA_NUMBER']==num, variable]
+
+         #OLD  
+#        num, suf = get_type_area_parts(type_area)
+#
+#        if suf:
+#            value_series = self.df.loc[(self.df['TYPE_AREA_NUMBER']==num) & (self.df['TYPE_AREA_SUFFIX']==suf), variable]
+#        else:
+#            value_series = self.df.loc[self.df['TYPE_AREA_NUMBER']==num, variable]
         
-#        print('----')
-#        print(value_series, type(value_series))
-#        print(value_series.values, type(value_series.values))
+        print('----')
+        print(value_series, type(value_series))
+        print(value_series.values, type(value_series.values))
         
 #        assert len(value) == 1, 'More than one setting for given filter_dict\n{}'.format(value)
         
@@ -712,9 +725,54 @@ class SettingsFile(object):
             if int(value) not in list(range(1,13)):
                 return False
         return True
-    
     #==========================================================================
-    def get_filter_boolean_for_df(self, df=None, water_body = None, type_area=None, level=None): 
+    def get_filter_boolean_for_df(self, df=None, water_body = None, type_area=None): 
+        """
+        Updated     20180326    by Lena Viktorsson
+        
+        Get boolean tuple to use for filtering
+        """
+        #TODO: add filter on type_area, as for now it only adds a key to boolean_dict for each type_area but the boolean under that key is the same as on step 2
+        combined_boolean = ()
+        if water_body:
+            type_area = self.mapping_water_body.get_type_area_for_water_body(water_body, include_suffix=True)
+            combined_boolean = df['VISS_EU_CD'] == water_body
+        else:
+            combined_boolean = ()
+            
+       
+        if type_area == None:
+            # you can not create a settingsfilter without specifying type_area
+            combined_boolean = ()
+        else:
+            for variable in self.filter_columns: 
+                if variable in self.interval_columns:
+                    boolean = self._get_boolean_from_interval(df=df,
+                                                              type_area=type_area,
+                                                              variable=variable)
+                    self.temp_boolean_interval = boolean
+                elif variable in self.list_columns:
+                    boolean = self._get_boolean_from_list(df=df,
+                                                          type_area=type_area,
+                                                          variable=variable)
+                    self.temp_boolean_list = boolean
+                else:
+                    print('No boolean for "{}"'.format(variable))
+                    continue
+                
+                if not type(boolean) == pd.Series:
+                    continue            
+                if type(combined_boolean) == pd.Series:
+                    combined_boolean = combined_boolean & boolean
+                else:
+                    combined_boolean = boolean 
+                combined_boolean = combined_boolean + df['TYPE_AREA'] == type_area
+        if len(combined_boolean) == 0: 
+            combined_boolean = pd.Series(np.ones(len(df), dtype=bool)) 
+            
+        return combined_boolean
+    #==========================================================================
+    def old_get_filter_boolean_for_df(self, df=None, water_body = None, type_area=None, level=None): 
         """
         Updated     20180326    by Lena Viktorsson
         
@@ -756,14 +814,33 @@ class SettingsFile(object):
                     combined_boolean = combined_boolean & boolean
                 else:
                     combined_boolean = boolean 
-                combined_boolean = combined_boolean + df['TYPE_AREA'] == type_area
         if len(combined_boolean) == 0: 
             combined_boolean = pd.Series(np.ones(len(df), dtype=bool)) 
             
         return combined_boolean
-    
     #==========================================================================
-    def _get_boolean_from_interval(self, df=None, type_area=None, variable=None, level=None): 
+    def _get_boolean_from_interval(self, df=None, type_area=None, water_body = None, variable=None): 
+        """
+        Updated     20180322    by Magnus Wenzer
+        """
+        
+        result = self.get_value(type_area=type_area, water_body = water_body,
+                                variable=variable)
+        
+        # Must check if there are several results. For example BQI has two depth intervalls.  
+        print('RESULT', result)
+        if not len(result):
+            return False
+        elif len(result) == 1:
+            from_value, to_value = result[0]
+        else:
+            raise InputError('at row 835 in filters.py _get_boolean_from_interval()', 'Returned multiple values from get_value, do not know which one do use')
+    
+        parameter = variable.split('_')[0]
+        
+        return (df[parameter] >= from_value) & (df[parameter] <= to_value)
+    #==========================================================================
+    def old_get_boolean_from_interval(self, df=None, type_area=None, variable=None, level=None): 
         """
         Updated     20180322    by Magnus Wenzer
         """
@@ -799,7 +876,7 @@ class SettingsFile(object):
 #                (df[parameter].apply(lambda x: float(x) if x else np.nan) <= to_value) # No depth for Chl. Can't float. 
 
     #==========================================================================
-    def _get_boolean_from_list(self, df=None, type_area=None, variable=None, level=None): 
+    def old_get_boolean_from_list(self, df=None, type_area=None, variable=None, level=None): 
         """
         Updated     20180322    by Magnus Wenzer
         """
@@ -815,6 +892,26 @@ class SettingsFile(object):
             if level == None:
                 return None
             value_list = result[level]
+        
+        parameter = variable.split('_')[0] 
+
+        return df[parameter].isin(value_list)
+        
+    #==========================================================================
+    def _get_boolean_from_list(self, df=None, type_area=None, water_body = None, variable=None): 
+        """
+        Updated     20180322    by Magnus Wenzer
+        """
+        result = self.get_value(type_area=type_area, water_body = water_body,
+                                    variable=variable)
+        
+        # Must check if there are several results. For example BQI has two depth intervalls.  
+        if not len(result):
+            return False
+        elif len(result) == 1:
+            value_list = result[0]
+        else:
+            raise InputError('in filters.py _get_boolean_from_interval()', 'Returned multiple setting values from get_value, do not know which one do use')
         
         parameter = variable.split('_')[0] 
 
@@ -837,13 +934,13 @@ class SettingsBase(object):
         self.settings.save_file()
         
     #==========================================================================
-    def get_value(self, type_area=None, variable=None): 
+    def get_value(self, type_area=None, variable=None, water_body = None): 
         """
         Created     20180321    by Magnus Wenzer
-        Updated     20180321    by Magnus Wenzer
+        Updated     20180423    by Lena Viktorsson
         """
   
-        return self.settings.get_value(variable=variable, type_area=type_area) 
+        return self.settings.get_value(variable=variable, type_area=type_area, water_body = water_body) 
     
     #==========================================================================
     def get_type_area_list(self): 
@@ -1072,7 +1169,19 @@ class WaterBodyStationFilter(object):
 #            return False
         self.directory = directory
         return True
-            
+
+class InputError(Exception):
+
+    """Exception raised for errors in the input.
+
+    Attributes:
+        expression -- input expression in which the error occurred
+        message -- explanation of the error
+    """
+
+    def __init__(self, expression, message):
+        self.expression = expression
+        self.message = message            
         
 ###############################################################################
 def get_type_area_parts(type_area): 
