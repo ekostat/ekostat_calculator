@@ -937,18 +937,27 @@ class WorkSpace(object):
         
 
     #==========================================================================
-    def import_file(self, file_path=None, data_type=None):
+    def import_file(self, file_path=None, data_type=None, force=True):
         """
         Created     ????????    by 
-        Updated     ????????    by 
+        Updated     20180424    by Magnus Wenzer
         
         Imports a data file to the raw_data directory in the workspace. 
-        Also adds information to the dtype_settings-object. 
+        Also adds information to the datatype_settings-object.
+        this method does not load data. 
         """ 
+        
         assert all([file_path, data_type]), 'Not enough input arguments to import file' 
-                  
-        if not os.path.exists(file_path):
-            return False 
+        
+                   # Not able to load data into default workspace
+        if not self._change_ok():
+            return False
+        
+        if not os.path.exists(file_path): 
+            if force:
+                os.remove(file_path)
+            else:
+                return False 
         
         # Copy file
         target_file_path = '/'.join([self.paths['directory_path_raw_data'], os.path.basename(file_path)])
@@ -956,13 +965,13 @@ class WorkSpace(object):
         
         # Add file to dtype_settings file
 #        self.dtype_settings.add_file(file_path=file_path, data_type=data_type)
-        self.datatype_settings.add_file(file_path=file_path, data_type=data_type)
+        self.datatype_settings.add_file(file_name=file_path, data_type=data_type)
 
     #==========================================================================
-    def import_default_data(self, force=False):
+    def import_default_data(self, force=True):
         """
         Created     ????????    by Lena
-        Updated     20180220    by Magnus Wenzer
+        Updated     20180424    by Magnus Wenzer
         
         Imports default data from the resources directory to input raw_data directory in workspace.
         """
@@ -970,25 +979,28 @@ class WorkSpace(object):
         if not self._change_ok():
             return False
         
-        if os.listdir(self.paths['directory_path_raw_data']): 
-            if not force:
-                self._logger.debug('raw_data directory is not empty. Will not copy default files from resource directory!')
-                return False
-        
         source_directory = self.paths['resource_directory'] + '/default_data'  
-        
         
         file_name_list = os.listdir(source_directory)
         
-        # copy files
+        all_datatypes = [u'chlorophyll',
+                         u'physicalchemical',
+                         u'physicalchemicalmodel',
+                         u'phytoplankton',
+                         u'zoobenthos']
+        
+        # Copy files
         for file_name in file_name_list: 
-            src = '/'.join([source_directory, file_name])
-            tar = '/'.join([self.paths['directory_path_raw_data'], file_name])
-            if os.path.exists(tar):
-                os.remove(tar)
-            shutil.copyfile(src, tar)
-        self._logger.debug('Default data has been copied to workspace raw data folder.')
-            
+            datatype = file_name.split('_')[0] 
+            if datatype not in all_datatypes:
+                continue
+            source_file_path  = '/'.join([source_directory, file_name])
+            self.import_file(file_path=source_file_path, data_type=datatype, force=force)
+            self._logger.debug('Default data file has been copied to workspace raw data folder: {}'.format(file_name))
+        
+        # Have to load and sync to set status and loaded as int. Dont know why...
+        self.datatype_settings.load_and_check_dtype_settings() 
+        
 #        # Load data 
 #        self.load_all_data() 
 #        self._logger.debug('Data has been loaded in import_default_data. flag "load_data" was set to True')
@@ -996,13 +1008,24 @@ class WorkSpace(object):
         # Update dtype_settings object
 #        all_ok = self.dtype_settings.load_and_sync_dtype_settings()
 #        all_ok = self.dtype_settings.load_and_check_dtype_settings()
-        all_ok = self.datatype_settings.load_and_check_dtype_settings()
-        
-        if not all_ok:
-            self._logger.warning('Default data not loaded correctly!')
-            return False
+#        all_ok = self.datatype_settings.load_and_check_dtype_settings()
+#        
+#        if not all_ok:
+#            self._logger.warning('Default data not loaded correctly!')
+#            return False
         return True
         
+    #==========================================================================
+    def set_status_for_file(self, file_list, status):
+        """
+        Created     20180424    by Magnus Wenzer
+        Updated     20180424    by Magnus Wenzer
+        """
+        if status:
+            status = 1 
+        else:
+            status = 0
+        self.datatype_settings.set_status(file_list, status)
     
     
     #==========================================================================
@@ -1468,7 +1491,7 @@ class WorkSpace(object):
         """
         # The input_data directory is given to DataHandler during initation. 
         # If no directory is given use the default directory! 
-        # This has to be done in physical_chemical, zoobenthos etc. 
+        # This has to be done in physicalchemical, zoobenthos etc. 
         """
 #        # TODO:  User should maybe choose which files to load in dtype_settings?
 
@@ -1489,14 +1512,14 @@ class WorkSpace(object):
             for file_path, data_type in self.dtype_settings.get_active_paths_with_data_type(): 
                 
                 if data_type == 'phyche':
-                    self.data_handler.physical_chemical.load_source(file_path=file_path, raw_data_copy=True)
+                    self.data_handler.physicalchemical.load_source(file_path=file_path, raw_data_copy=True)
                     data_loaded = True
-                    self.data_handler.physical_chemical.save_data_as_txt(directory=output_directory, prefix=u'Column_format') 
+                    self.data_handler.physicalchemical.save_data_as_txt(directory=output_directory, prefix=u'Column_format') 
                     
                 elif data_type == 'phyche_model':
-                    self.data_handler.physical_chemical_model.load_source(file_path=file_path, raw_data_copy=True)
+                    self.data_handler.physicalchemicalmodel.load_source(file_path=file_path, raw_data_copy=True)
                     data_loaded = True
-                    self.data_handler.physical_chemical_model.save_data_as_txt(directory=output_directory, prefix=u'Column_format')
+                    self.data_handler.physicalchemicalmodel.save_data_as_txt(directory=output_directory, prefix=u'Column_format')
     
                 elif data_type== 'zooben':
                     self.data_handler.zoobenthos.load_source(file_path=file_path,
@@ -1533,7 +1556,7 @@ class WorkSpace(object):
         """
         # The input_data directory is given to DataHandler during initation. 
         # If no directory is given use the default directory! 
-        # This has to be done in physical_chemical, zoobenthos etc. 
+        # This has to be done in physicalchemical, zoobenthos etc. 
         """
         if not self.datatype_settings.has_info:
             self._logger.debug('Could not load datatype_settings.txt. No file found?')

@@ -589,28 +589,28 @@ class RawDataFiles(object):
         return output_list
         
     
-    #==========================================================================
-    def activate(self, file_list): 
-        """
-        Activates the given filenames and deactivate the rest. Returns True if all ok. 
-        Returns False if filename is missing. 
-        file_list is a list with strings. 
-        """
-        file_list = [os.path.basename(item) for item in file_list] 
-        for file_name in file_list: 
-            print(file_name)
-            if file_name not in self.df['filename'].values: 
-                return False
-            
-        for file_name in self.df['filename']:
-            if file_name in file_list:
-                self.df.loc[self.df['filename']==file_name, 'status'] = 1
-            else:
-                self.df.loc[self.df['filename']==file_name, 'status'] = 0 
-                           
-        # Save file 
-        self._save_file()
-        return True
+#    #==========================================================================
+#    def activate(self, file_list): 
+#        """
+#        Activates the given filenames and deactivate the rest. Returns True if all ok. 
+#        Returns False if filename is missing. 
+#        file_list is a list with strings. 
+#        """
+#        file_list = [os.path.basename(item) for item in file_list] 
+#        for file_name in file_list: 
+#            print(file_name)
+#            if file_name not in self.df['filename'].values: 
+#                return False
+#            
+#        for file_name in self.df['filename']:
+#            if file_name in file_list:
+#                self.df.loc[self.df['filename']==file_name, 'status'] = 1
+#            else:
+#                self.df.loc[self.df['filename']==file_name, 'status'] = 0 
+#                           
+#        # Save file 
+#        self._save_file()
+#        return True
         
         
     #==========================================================================
@@ -652,8 +652,8 @@ class DataTypeMapping(object):
         self.info_file_name ='datatype_settings.txt'
         self.info_file_path = '/'.join([self.input_data_directory, self.info_file_name]) 
         
-        self.datatype_list = ['physical_chemical', 
-                              'physical_chemical_model', 
+        self.datatype_list = ['physicalchemical', 
+                              'physicalchemicalmodel', 
                               'chlorophyll', 
                               'phytoplankton', 
                               'zoobenthos']
@@ -670,7 +670,7 @@ class DataTypeMapping(object):
         Returns True if all is ok, else False. 
         """
         if not os.path.exists(self.info_file_path): 
-            print('No dtype_setting file found in raw_data directory')
+            print('No datatype_setting file found in raw_data directory')
             return False
         
         # Load info file
@@ -851,15 +851,21 @@ class DataTypeMapping(object):
         
     
     #==========================================================================
-    def activate(self, file_list): 
+    def old_activate(self, file_list, only_this_list=False): 
         """
         Activates the given filenames and deactivate the rest. Returns True if all ok. 
         Returns False if filename is missing. 
         file_list is a list with strings. 
+        
+        Created                 by Magnus Wenzer
+        Updated     20180424    by Magnus Wenzer
+        
         """
+        if type(file_list) != list:
+            file_list =  [file_list]
         file_list = [os.path.basename(item) for item in file_list] 
         for file_name in file_list: 
-            print(file_name)
+#            print(file_name)
             if file_name not in self.df['filename'].values: 
                 return False
             
@@ -867,8 +873,25 @@ class DataTypeMapping(object):
             if file_name in file_list:
                 self.df.loc[self.df['filename']==file_name, 'status'] = 1
             else:
-                self.df.loc[self.df['filename']==file_name, 'status'] = 0 
+                if only_this_list:
+                    self.df.loc[self.df['filename']==file_name, 'status'] = 0 
                            
+        # Save file 
+        self._save_file()
+        return True
+    
+    #==========================================================================
+    def set_status(self, file_name, status): 
+        """
+        Activates the given filenames and deactivate the rest. Returns True if all ok. 
+        Returns False if filename is missing. 
+        file_list is a list with strings. 
+        
+        Created                 by Magnus Wenzer
+        Updated     20180424    by Magnus Wenzer
+        
+        """
+        self.df.loc[self.df['filename']==file_name, 'status'] = status      
         # Save file 
         self._save_file()
         return True
@@ -879,6 +902,7 @@ class DataTypeMapping(object):
         """
         Takes tha basname of the file_name (Could be path) and adds it to the file. 
         """
+        self.load_and_check_dtype_settings()
         assert all([file_name, data_type]), 'Not enough input arguments' 
         
         file_name = os.path.basename(file_name)
@@ -886,10 +910,13 @@ class DataTypeMapping(object):
             print('File already added')
             return False
         next_index = len(self.df) 
-        self.df.iloc[next_index] = [1, 0, file_name, data_type]
+#        print(self.df)
+#        print(next_index)
+        self.df.loc[next_index, :] = [0, 0, file_name, data_type] # status = 0
         self._save_file()
         return True
         
+    
     #==========================================================================
     def _save_file(self):
         self.df.to_csv(self.info_file_path, index=False, sep='\t')
