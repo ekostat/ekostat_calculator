@@ -756,7 +756,7 @@ class SettingsFile(object):
                     combined_boolean = combined_boolean & boolean
                 else:
                     combined_boolean = boolean 
-                
+                combined_boolean = combined_boolean + df['TYPE_AREA'] == type_area
         if len(combined_boolean) == 0: 
             combined_boolean = pd.Series(np.ones(len(df), dtype=bool)) 
             
