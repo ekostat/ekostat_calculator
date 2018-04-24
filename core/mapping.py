@@ -898,7 +898,7 @@ class DataTypeMapping(object):
         
         
     #==========================================================================
-    def add_file(self, file_name=None, data_type=None): 
+    def add_file(self, file_name=None, data_type=None, status=0): 
         """
         Takes tha basname of the file_name (Could be path) and adds it to the file. 
         """
@@ -912,10 +912,11 @@ class DataTypeMapping(object):
         next_index = len(self.df) 
 #        print(self.df)
 #        print(next_index)
-        self.df.loc[next_index, :] = [0, 0, file_name, data_type] # status = 0
+        self.df.loc[next_index, :] = [status, 0, file_name, data_type] # status = 0
         self._save_file()
         return True
         
+
     
     #==========================================================================
     def _save_file(self):

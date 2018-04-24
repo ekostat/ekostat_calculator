@@ -937,7 +937,7 @@ class WorkSpace(object):
         
 
     #==========================================================================
-    def import_file(self, file_path=None, data_type=None, force=True):
+    def import_file(self, file_path=None, data_type=None, status=0, force=True):
         """
         Created     ????????    by 
         Updated     20180424    by Magnus Wenzer
@@ -965,7 +965,7 @@ class WorkSpace(object):
         
         # Add file to dtype_settings file
 #        self.dtype_settings.add_file(file_path=file_path, data_type=data_type)
-        self.datatype_settings.add_file(file_name=file_path, data_type=data_type)
+        self.datatype_settings.add_file(file_name=file_path, data_type=data_type, status=status)
 
     #==========================================================================
     def import_default_data(self, force=True):
