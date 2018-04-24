@@ -604,7 +604,7 @@ class DataHandlerPhysicalChemical(DataFrameHandler):
                  no_qflags=False): # no_qflags for data that has no quality flags (model data..)
         
         super().__init__()
-        self.dtype = 'physical_chemical'
+        self.dtype = 'physicalchemical'
         self.export_directory = export_directory
         self.read_filter_file(file_path=filter_path)
         self.parameter_mapping = parameter_mapping
@@ -865,11 +865,11 @@ class DataHandler(object):
                                                   parameter_mapping=self.parameter_mapping)
         
         
-        self.physical_chemical = DataHandlerPhysicalChemical(filter_path=path_fields_filter+'filter_fields_physical_chemical.txt',
+        self.physicalchemical = DataHandlerPhysicalChemical(filter_path=path_fields_filter+'filter_fields_physical_chemical.txt',
                                                              export_directory=self.export_directory,
                                                              parameter_mapping=self.parameter_mapping)
 
-        self.physical_chemical_model = DataHandlerPhysicalChemical(filter_path=path_fields_filter+'filter_fields_physical_chemical_model.txt',
+        self.physicalchemicalmodel = DataHandlerPhysicalChemical(filter_path=path_fields_filter+'filter_fields_physical_chemical_model.txt',
                                                                    export_directory=self.export_directory,
                                                                    parameter_mapping=self.parameter_mapping,
                                                                    no_qflags=True)        
@@ -985,8 +985,8 @@ class DataHandler(object):
         
         # All datatypes that might include data for setting ecological status
         all_datatypes = [u'chlorophyll',
-                         u'physical_chemical',
-                         u'physical_chemical_model',
+                         u'physicalchemical',
+                         u'physicalchemicalmodel',
                          u'phytoplankton',
                          u'zoobenthos']
         

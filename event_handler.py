@@ -191,6 +191,7 @@ class EventHandler(object):
         if workspace_alias:
             uuid_mapping = self._get_uuid_mapping_object(user_id)
             workspace_uuid = uuid_mapping.get_uuid(workspace_alias, user_id)
+#            print(workspace_alias, user_id, workspace_uuid)
         if not workspace_uuid:
 #            print('workspace_unique_id')
             return False
