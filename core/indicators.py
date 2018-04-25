@@ -46,6 +46,7 @@ class IndicatorBase(object):
         setup indicator class attributes based on subset, parent workspace object and indicator name
         """
         self.name = indicator.lower()
+        print('********')
         print(self.name)
         self.class_result = None
         self.subset = subset
@@ -91,7 +92,7 @@ class IndicatorBase(object):
         self.paths['results'] = self.step_object.paths['directory_paths']['results']
     
     #==========================================================================
-    def _add_reference_value_to_df(self, df, type_area):    
+    def _add_reference_value_to_df(self, df, water_body):    
         """
         Created:        20180328     by Lena
         Last modified:  
@@ -102,24 +103,24 @@ class IndicatorBase(object):
         if len(self.ref_settings.settings.refvalue_column) == 0:
             return df
         
-        if self.get_ref_value_type(type_area) == 'str':
+        if self.get_ref_value_type(water_body) == 'str':
             df['REFERENCE_VALUE'] = np.nan
             for ix in df.index:
                 salinity = df['SALT_CTD'][ix]
-                df['REFERENCE_VALUE'].loc[ix] = self.get_ref_value(type_area, salinity)
+                df['REFERENCE_VALUE'].loc[ix] = self.get_ref_value(water_body, salinity)
         else:
-            df['REFERENCE_VALUE'] = self.get_ref_value(type_area)
+            df['REFERENCE_VALUE'] = self.get_ref_value(water_body)
                                     
         return df
     
     #==========================================================================
-    def get_filtered_data(self, subset=None, step=None, type_area=None, indicator=None):
+    def get_filtered_data(self, subset=None, step=None, water_body=None, indicator=None):
         """
         Filter for water_body and indicator means filters from indicator_settings are applied.
         But the filters are only applied if they first are added to the index_handler so need to check if water_body and indicator have filters added
         """
 
-        return self.index_handler.get_filtered_data(subset, step, type_area, indicator)
+        return self.index_handler.get_filtered_data(subset, step, water_body, indicator)
    
     #==========================================================================
     def get_numerical_class(self, ek, type_area):
@@ -178,17 +179,17 @@ class IndicatorBase(object):
     
     
     #==========================================================================        
-    def get_ref_value_type(self, type_area = None, get_type = True):
+    def get_ref_value_type(self, type_area = None, water_body = None):
         """
         Created:        20180328     by Lena
         Last modified:  
         Get referencevalue either from equation or directly from settings
         To get reference value from equation you need to supply both type_area and salinity
         """
-        return self.ref_settings.get_ref_value_type(type_area)
+        return self.ref_settings.get_ref_value_type(type_area = type_area, water_body = water_body)
     
     #==========================================================================        
-    def get_ref_value(self, type_area = None, salinity = None):
+    def get_ref_value(self, type_area = None, water_body = None, salinity = None):
         """
         Created:        20180328     by Lena
         Last modified:  
@@ -196,10 +197,33 @@ class IndicatorBase(object):
         To get reference value from equation you need to supply both type_area and salinity
         
         """
-        return self.ref_settings.get_ref_value(type_area, salinity)
+        return self.ref_settings.get_ref_value(type_area = type_area, water_body = water_body, salinity = salinity)
     
     #==========================================================================
-    def get_water_body_indicator_df(self, water_body = None, level = None):
+    def get_water_body_indicator_df(self, water_body = None):
+        """
+        Created:        20180215     by Lena
+        Last modified:  20180328     by Lena
+        df should contains:
+            - all needed columns from get_filtered_data
+            - referencevalues
+        TODO: add other info needed for indicator functions
+        """
+        
+        return self.water_body_indicator_df[water_body]
+
+
+    #==========================================================================  
+    def get_closest_matching_salinity(self):
+        """
+        get closest matching salinity value when salinity is missing. 
+        use tolerance info from settings file
+        """
+        print('method is not written yet')
+        raise Exception
+
+      #==========================================================================
+    def set_water_body_indicator_df(self, water_body = None,):
         """
         Created:        20180215     by Lena
         Last modified:  20180328     by Lena
@@ -212,27 +236,12 @@ class IndicatorBase(object):
         self.tolerance_settings
         self.indicator_ref_settings
         """
-        type_area = self.mapping_objects['water_body'].get_type_area_for_water_body(water_body, include_suffix=True)
-        df = self.get_filtered_data(subset = self.subset, step = 'step_2', type_area = type_area, indicator = self.name)
+        #type_area = self.mapping_objects['water_body'].get_type_area_for_water_body(water_body, include_suffix=True)
+        df = self.get_filtered_data(subset = self.subset, step = 'step_2', water_body = water_body, indicator = self.name)
         df = df[self.column_list]
-        try:
-            df =  df[df['VISS_EU_CD'] == water_body]
-        except NameError:
-            raise NameError('Must give water_body to get indicator_df')
-        
-        df = self._add_reference_value_to_df(df, type_area)
-        self.water_body_indicator_df[water_body] = df
-
-    #==========================================================================  
-    def get_closest_matching_salinity(self):
-        """
-        get closest matching salinity value when salinity is missing. 
-        use tolerance info from settings file
-        """
-        print('method is not written yet')
-        raise Exception
-
-        
+        df = self._add_reference_value_to_df(df, water_body)
+        self.water_body_indicator_df[water_body] = df   
+                                    
 #    #==========================================================================
 #    def get_ref_value_for_par_with_salt_ref(self, par=None, salt_par='SALT_CTD', indicator_name=None, tolerance_filter=None):
 #        """
@@ -355,7 +364,7 @@ class IndicatorBQI(IndicatorBase):
         """
         # get data to be used for status calculation
         df = self.water_body_indicator_df[water_body]
-        type_area = self.mapping_objects['water_body'].get_type_area_for_water_body(water_body, include_suffix=True)
+        #type_area = self.mapping_objects['water_body'].get_type_area_for_water_body(water_body, include_suffix=True)
        
         by_year_pos = df.groupby(['YEAR', 'POSITION'])[self.indicator_parameter].agg(['count', 'min', 'max', 'mean']).reset_index()
         by_year_pos.rename(columns={'mean':'position_mean', 'count': 'position_count', 'min': 'position_min', 'max': 'station_max'}, inplace=True)
@@ -425,7 +434,7 @@ class IndicatorNutrients(IndicatorBase):
         
         # get data to be used for status calculation
         df = self.water_body_indicator_df[water_body]
-        type_area = self.mapping_objects['water_body'].get_type_area_for_water_body(water_body, include_suffix=True)
+        #type_area = self.mapping_objects['water_body'].get_type_area_for_water_body(water_body, include_suffix=True)
         
         """ 
         1) Beräkna EK för varje enskilt prov utifrån (ekvationer för) referensvärden i tabellerna 6.2-6.7.
@@ -468,7 +477,7 @@ class IndicatorNutrients(IndicatorBase):
         """
         by_period = by_year[['mean_ek_value']].describe()
         by_period = by_period.transpose()
-        limit = self.tolerance_settings.get_value(variable = 'MIN_NR_YEARS', type_area = type_area)
+        limit = self.tolerance_settings.get_value(variable = 'MIN_NR_YEARS', water_body = water_body)
         #limit = self.tolerance_settings.get_min_nr_years(type_area = type_area)
         if by_period['count'].get_value('mean_ek_value') >= limit:
             by_period['all_ok'] = False
@@ -483,7 +492,7 @@ class IndicatorNutrients(IndicatorBase):
         4) Statusklassificeringen för respektive parameter görs genom att medelvärdet av
         EK jämförs med de angivna EK-klassgränserna i tabellerna 6.2-6.7. 
         """
-        num_class = self.get_numerical_class(by_period['mean'].get_value('mean_ek_value'), type_area = type_area)
+        num_class = self.get_numerical_class(by_period['mean'].get_value('mean_ek_value'), water_body = water_body)
         
         # Add waterbody status to result class
         self.classification_results[water_body].add_info('mean_EQR_by_date', by_date)
@@ -504,7 +513,7 @@ class IndicatorNutrients(IndicatorBase):
 ###############################################################################
 class IndicatorOxygen(IndicatorBase): 
     """
-    Class with methods incommon for BQI indicator. 
+    Class with methods for Oxygen indicator. 
     """
     
     def __init__(self, subset, parent_workspace_object, indicator):
@@ -513,7 +522,7 @@ class IndicatorOxygen(IndicatorBase):
 ###############################################################################
 class IndicatorPhytoplankton(IndicatorBase): 
     """
-    Class with methods incommon for BQI indicator. 
+    Class with methods incommon for Phytoplankton indicators. 
     """
     
     def __init__(self, subset, parent_workspace_object, indicator):
@@ -550,7 +559,7 @@ class IndicatorPhytoplankton(IndicatorBase):
         
         # get data to be used for status calculation
         df = self.water_body_indicator_df[water_body]
-        type_area = self.mapping_objects['water_body'].get_type_area_for_water_body(water_body, include_suffix=True)
+        #type_area = self.mapping_objects['water_body'].get_type_area_for_water_body(water_body, include_suffix=True)
         
         """ 
         1) Beräkna EK för varje enskilt prov utifrån (ekvationer eller givna värden för) referensvärden.
@@ -582,7 +591,7 @@ class IndicatorPhytoplankton(IndicatorBase):
         """
         by_period = by_year[['mean_ek_value']].describe()
         by_period = by_period.transpose()
-        limit = self.tolerance_settings.get_value(variable = 'MIN_NR_YEARS', type_area = type_area)
+        limit = self.tolerance_settings.get_value(variable = 'MIN_NR_YEARS', water_body = water_body)
         #limit = self.tolerance_settings.get_min_nr_years(type_area = type_area)
         if by_period['count'].get_value('mean_ek_value') >= limit:
             by_period['all_ok'] = False
@@ -597,7 +606,7 @@ class IndicatorPhytoplankton(IndicatorBase):
         4) Statusklassificeringen för respektive parameter görs genom att medelvärdet av
         EK jämförs med de angivna EK-klassgränserna i tabellerna 6.2-6.7. 
         """
-        num_class = self.get_numerical_class(by_period['mean'].get_value('mean_ek_value'), type_area = type_area)
+        num_class = self.get_numerical_class(by_period['mean'].get_value('mean_ek_value'), water_body = water_body)
         
         # Add waterbody status to result class
         self.classification_results[water_body].add_info('mean_EQR_by_year_pos', by_year_pos)
@@ -612,12 +621,13 @@ class IndicatorPhytoplankton(IndicatorBase):
 ###############################################################################
 class IndicatorSecchi(IndicatorBase): 
     """
-    Class with methods incommon for BQI indicator. 
+    Class with methods  for Seccho indicator. 
     """
     
     def __init__(self, subset, parent_workspace_object, indicator):
-        super().__init__(subset, parent_workspace_object, indicator)  
-        
+        super().__init__(subset, parent_workspace_object, indicator) 
+        self.indicator_parameter = self.parameter_list[0]  
+        self.salt_parameter = self.parameter_list[1]
             
 ###############################################################################
 if __name__ == '__main__':

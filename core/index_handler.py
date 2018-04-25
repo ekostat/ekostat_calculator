@@ -106,10 +106,10 @@ class IndexHandler(object):
         """
         Updated     20180423    by Lena Viktorsson
         
-        boolean_dict_keys in order: step_0, subset, step_1, step_2, type_area, indicator
+        boolean_dict_keys in order: step_0, subset, step_1, step_2, water_body, indicator
         Uses bool_dict as a dynamic reference to a specific part of self.booleans
         
-        #TODO Should we be able to apply different booleans from one filter-object ? 
+        #TODO Should we be able to apply different booleans from one filter-object?
         """
         bool_dict = self.booleans
         
@@ -200,7 +200,7 @@ class IndexHandler(object):
                 bool_dict = bool_dict[key]
             else:
                 break
-        # MW:  Added [] as defaul so that if no filter applied lenght is 0
+        # MW:  Added [] as default so that if no filter applied lenght is 0
         return bool_dict.get('boolean', [])
         
         
@@ -316,7 +316,7 @@ class IndexHandler(object):
                                   wb=water_body)
         
     #==========================================================================
-    def add_filter(self, filter_object=None, subset=None, step=None, water_body = None, indicator=None, **kwargs): 
+    def add_filter(self, filter_object=None, subset=None, step=None, water_body = None, indicator=None): 
         """
         Updated     20180423    by Magnus Wenzer
         
@@ -328,7 +328,7 @@ class IndexHandler(object):
         If type_area is given: subset and step must also be given
         If indicator is given: water_body must also be given
         """
-        print('add filter for step: {}, type area: {}, indicator: {}'.format(step, water_body, indicator))
+        print('add filter for step: {}, waterbody: {}, indicator: {}'.format(step, water_body, indicator))
         df = self.data_handler_object.get_all_column_data_df()
 
         step_0, step_1, step_2 = self._get_steps(step=step)
@@ -341,7 +341,7 @@ class IndexHandler(object):
         
         self._add_boolean_to_dict(step_0, subset, step_1, step_2, water_body, indicator,
                                   filter_object=filter_object, 
-                                  df=df, **kwargs)
+                                  df=df)
     #==========================================================================
     def old_add_filter(self, filter_object=None, subset=None, step=None, type_area=None, indicator=None, level=None): 
         """
@@ -390,7 +390,8 @@ class IndexHandler(object):
         Returns filtered data for the given boolean specification
         Takes input arguments: subset, step, water_body and indicator
         """
-        
+        if indicator and not water_body:
+            return False
         step_0, step_1, step_2 = self._get_steps(step=step)
         
         boolean = self._get_boolean(step_0, subset, step_1, step_2, water_body, indicator)

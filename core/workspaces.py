@@ -125,6 +125,7 @@ class WorkStep(object):
         """
         self.data_filter = None
         self.indicator_settings = {} 
+        self.water_body_filter = None
         
         self.allowed_data_filter_steps = ['step_0', 'step_1']
         self.allowed_indicator_settings_steps = ['step_2'] 
@@ -201,6 +202,10 @@ class WorkStep(object):
         """
         self.data_filter.get_filter_info()
         
+    def get_water_body_filter_object(self):
+        
+        return self.water_body_filter
+    
     #==========================================================================
     def get_indicator_data_filter_settings(self, indicator): 
         """
@@ -257,12 +262,12 @@ class WorkStep(object):
         self.indicator_objects = dict.fromkeys(indicator_list)
         for indicator in self.indicator_objects.keys():
             class_name = self.parent_workspace_object.mapping_objects['quality_element'].indicator_config.loc[indicator]['indicator_class']
-            print(class_name)
+            #print(class_name)
             try:
                 class_ = getattr(core, class_name)
             except AttributeError as e:
                 raise AttributeError('{}\nClass does not exist'.foramt(e))
-            print(class_)
+            #print(class_)
             #instance = class_()
             # add indicator objects to dictionary
             self.indicator_objects[indicator] = class_(subset = subset_unique_id, 
@@ -272,10 +277,6 @@ class WorkStep(object):
 #                                                                      parent_workspace_object = self.parent_workspace_object,
 #                                                                      indicator = indicator)
             
-            # TODO: Indicator objects should be different classes from the Base-class depending on indicator. 
-            #       The Indicator classname should be given in the config file together with the indicator names and parameters
-            #       Or keep one Indicator class for all and give calculation_method as input?
-           
     #==========================================================================
     def load_all_files(self): 
         self._create_file_paths()
@@ -291,6 +292,12 @@ class WorkStep(object):
         self.data_filter = core.DataFilter(self.paths['directory_paths']['data_filters'], 
                                            mapping_objects=self.mapping_objects) 
     
+    def load_water_body_filter_object(self):
+        """
+        Load filter object for waterbodies
+        """
+        self.water_body_filter = core.WaterBodyFilter()        
+        
     #==========================================================================
     def load_indicator_settings_filters(self): 
         """
@@ -1068,7 +1075,7 @@ class WorkSpace(object):
         return all_ok
         
     #==========================================================================
-    def apply_indicator_data_filter(self, subset='', indicator='', water_body = '', step='step_2'):
+    def apply_indicator_data_filter(self, subset='', indicator='', step='step_2'):
         """
         Created     ????????    by Magnus Wenzer
         Updated     20180319    by Magnus Wenzer
@@ -1088,19 +1095,37 @@ class WorkSpace(object):
             True:           If all is ok
             False:          If something faild
         """
-        indicator = indicator.lower()
+        
+        water_body_list = self.get_filtered_data(step=step, subset=subset).VISS_EU_CD.unique()
+        if not len(water_body_list):
+            #raise Error?
+            print('no waterbodies in filtered data')
+            return False
+        
         if subset not in self.get_subset_list(): 
             self._logger.debug('Provided subset "{}" not in subset list'.format(subset))
             return False
-        else:
-            step = get_step_name(step)
-            subset_object = self.get_subset_object(subset) 
-            # Indicator_settings are linked to step 2 by default
-            step_object = subset_object.get_step_object(step) 
-            filter_object = step_object.get_indicator_data_filter_settings(indicator) 
-            all_ok = self.index_handler.add_filter(filter_object=filter_object, step=step, subset=subset, indicator=indicator, water_body = water_body)
         
-        return all_ok
+        # Get subset and step objects
+        step = get_step_name(step)
+        subset_object = self.get_subset_object(subset) 
+            # Indicator_settings are linked to step 2 by default
+        step_object = subset_object.get_step_object(step) 
+        step_object.load_water_body_filter_object()
+        # Get filter objects
+        water_body_filter_object = step_object.get_water_body_filter_object()
+        indicator = indicator.lower()
+        settings_filter_object = step_object.get_indicator_data_filter_settings(indicator)
+        #set filters for all indicator in all waterbodies and if no key in boolean dict for waterbody add waterbody filter
+        for water_body in water_body_list:
+            if step not in self.index_handler.booleans['step_0'][subset]['step_1'].keys():
+                self.index_handler.add_filter(filter_object=water_body_filter_object, step=step, subset=subset, water_body = water_body)
+            
+            if water_body not in self.index_handler.booleans['step_0'][subset]['step_1']['step_2'].keys():
+                self.index_handler.add_filter(filter_object=water_body_filter_object, step=step, subset=subset, water_body = water_body)
+                
+            self.index_handler.add_filter(filter_object=settings_filter_object, step=step, subset=subset, indicator=indicator, water_body = water_body)
+        
         
     #==========================================================================
     def apply_water_body_station_filter(self, subset=None, water_body=None): 

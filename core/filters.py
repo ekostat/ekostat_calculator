@@ -22,7 +22,7 @@ except:
 class DataFilter(object):
     """
     Holds information about data filter. 
-    Data filter is built up with several files listed in the given direktory. 
+    Data filter is built up with several files listed in the given directory. 
     """
     #==========================================================================
     def __init__(self, 
@@ -55,7 +55,6 @@ class DataFilter(object):
         if not value_list:
             return False
         return df[parameter].astype(str).isin(value_list)
-
     
     #==========================================================================
     def deprecate_include_statn(self, statn, include_current=False):
@@ -426,7 +425,6 @@ class SettingsFile(object):
         Last modified:  20180418     by Lena
         """
         self.df = pd.read_csv(self.file_path, sep='\t', dtype='str', encoding='cp1252') 
-        print(self.file_path)
         # Save columns
         self.columns_in_file = list(self.df.columns)
         self.columns = []
@@ -588,7 +586,7 @@ class SettingsFile(object):
             if water_body in self.df['VISS_EU_CD']:
                 value_series = self.df.loc[(self.df['VISS_EU_CD']==water_body), var]
             else:
-                if suf:
+                if suf and suf in self.df.loc[(self.df['TYPE_AREA_NUMBER']==num), 'TYPE_AREA_SUFFIX'].values:
                     value_series = self.df.loc[(self.df['TYPE_AREA_NUMBER']==num) & \
                                                (self.df['TYPE_AREA_SUFFIX']==suf) & \
                                                (self.df['VISS_EU_CD'] == 'unspecified'), var]
@@ -611,9 +609,11 @@ class SettingsFile(object):
 #            value_series = self.df.loc[self.df['TYPE_AREA_NUMBER']==num, variable]
         
         print('----')
+        print('water_body {}, type_area {}, variable {}'.format(water_body, type_area, variable))
+        print('num {}, suf {}, suf? {}'.format(num, suf, self.df.loc[self.df['TYPE_AREA_NUMBER']==num, 'TYPE_AREA_SUFFIX'].values))
         print(value_series, type(value_series))
         print(value_series.values, type(value_series.values))
-                
+        
         # if no variable is given, return dataframe
         if variable is None:
             return value_series
@@ -640,8 +640,13 @@ class SettingsFile(object):
             return_value.append(value)
             # TODO: return dataframe?
         # if only one row for given type_area or water_body, return as single value, else return as pandas series
+        print(return_value)
         if len(return_value) == 1:
             return return_value[0]
+        elif len(return_value) > 1 and all(x == return_value[0] for x in return_value):
+            return return_value[0]
+        elif not return_value:
+            return False
         else:
             return value_series
 
@@ -1024,9 +1029,11 @@ class SettingsRef(SettingsBase):
                 ref_value = eval(ref_value) 
             except TypeError as e:
                 raise TypeError('{}\nSalinity TypeError, salinity must be int, float or nan but is {}'.format(e, s))
-                #TODO: add closes matching salinity somewhere her
+                #TODO: add closes matching salinity somewhere here
+        elif not ref_value:
+            return False
         elif type(ref_value) is pd.Series:
-            raise InputError('In SettingsRer get_ref_value','')
+            raise InputError('In SettingsRef get_ref_value','returned pd.Series for ref_value, give more specific info to get the right row')
         else:
             raise TypeError('Unknown Type of reference value, must be either equation as string or float. Given reference value {} is {}. Or salinity missing, given salinity value is {}'.format(ref_value, type(ref_value), salinity))
         
@@ -1049,6 +1056,8 @@ class SettingsRef(SettingsBase):
             return 'float'
         elif type(ref_value) is str:
             return 'str'
+        elif not ref_value:
+            return False
         else:
             raise TypeError('unknown referencevalue type {}: {}'.format(type(ref_value),ref_value))
         
@@ -1088,29 +1097,46 @@ class SettingsTolerance(SettingsBase):
         self.settings.connected_to_tolerance_settings_object = True
         self.allowed_variables = self.settings.tolerance_columns
         
-    def get_min_nr_years(self, type_area):
+    def get_min_nr_years(self, type_area = None, water_body = None):
         
         get_variable = 'MIN_NR_YEARS'
         if get_variable in self.allowed_variables:
-            return self.get_value(variable = get_variable, type_area = type_area)
+            return self.get_value(variable = get_variable, type_area = type_area, water_body = water_body)
         else:
             raise NameError('MIN_NR_YEARS not in tolerance settings')
     
-    def get_min_nr_values(self, type_area):
+    def get_min_nr_values(self, type_area = None, water_body = None):
         
         get_variable = 'MIN_NR_VALUES'
         if get_variable in self.allowed_variables:
-            return self.get_value(variable = get_variable, type_area = type_area)
+            return self.get_value(variable = get_variable, type_area = type_area, water_body = water_body)
         else:
             raise NameError('MIN_NR_VALUES not in tolerance settings')
+
+###############################################################################
+class WaterBodyFilter(object): 
+    """
+    Class to get boolean for given water body in given df
+    water_body is given as VISS_EU_CD string
+    and df is the pandas dataframe for which to return the boolean 
+    """
+        
+    def get_filter_boolean_for_df(self, df = None, water_body = None, **kwargs):
+       """
+       get boolean for given water_body, must be given as a VISS_EU_CD string
+       """
        
+       boolean = df['VISS_EU_CD'] == water_body
+            
+       return boolean                    
+                                 
 ###############################################################################
 class WaterBodyStationFilter(object): 
     """
     Class to hold filters linked to water body. 
     Files in settings/water_body can specify which stations should be included 
     or excluded in the water body. 
-    All cuminication is directly with the files, no data is stored in instance. 
+    All communication is directly with the files, no data is stored in instance. 
     Is water_body_mapping_object going to hold link between STATN and Water Body? 
     """
     def __init__(self, water_body_settings_directory=None, 
@@ -1126,7 +1152,7 @@ class WaterBodyStationFilter(object):
             self.mapping_objects = mapping_objects
             self.mapping_water_body = mapping_objects['water_body']
             
-        self.water_body_parameter = 'WATER_BODY_NAME'
+        self.water_body_parameter = 'VISS_EU_CD'
         
     #==========================================================================
     def clear_filter(self): 

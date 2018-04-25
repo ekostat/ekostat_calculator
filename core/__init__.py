@@ -7,6 +7,7 @@ from .filters import SettingsFile
 from .filters import SettingsRef
 from .filters import SettingsDataFilter
 from .filters import SettingsTolerance
+from .filters import WaterBodyFilter
 from .filters import WaterBodyStationFilter
 
 from .index_handler import IndexHandler
