@@ -11,10 +11,10 @@ oxygen balance	Oxygen balance
 phytoplankton	Phytoplankton
 phytoplankton	Phytoplankton
 secchi depth	Secchi depth
-din_winter	Din winter
+din_winter	DIN winter
 ntot_summer	Ntot summer
 ntot_winter	Ntot winter
-dip_winter	Dip winter
+dip_winter	DIP winter
 ptot_summer	Ptot summer
 ptot_winter	Ptot winter
 bqi	BQI

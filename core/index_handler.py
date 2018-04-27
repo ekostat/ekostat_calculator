@@ -328,7 +328,7 @@ class IndexHandler(object):
         If type_area is given: subset and step must also be given
         If indicator is given: water_body must also be given
         """
-        print('add filter for step: {}, waterbody: {}, indicator: {}'.format(step, water_body, indicator))
+        #print('add filter for step: {}, waterbody: {}, indicator: {}'.format(step, water_body, indicator))
         df = self.data_handler_object.get_all_column_data_df()
 
         step_0, step_1, step_2 = self._get_steps(step=step)

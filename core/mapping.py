@@ -173,7 +173,15 @@ class Hypsograph():
             # Area fraction 
             self.wb_df[wb][self.frac_area_par] = self.wb_df[wb][self.area_par]/self.wb_df[wb][self.area_par].values[0]
             
-
+ #==========================================================================
+    def get_max_depth_of_water_body(self, water_body): 
+        result = self.wb_df[water_body][self.depth_par].max()
+        return result
+#        if len(result):
+#            return result.values[0] 
+#        else:
+#            return False
+    
     #==========================================================================
     def get_total_area_of_water_body(self, water_body): 
         result = self.wb_df[water_body].loc[self.wb_df[water_body][self.depth_par]==0, self.area_par]

@@ -561,7 +561,7 @@ class SettingsFile(object):
     def get_value(self, variable=None, type_area=None, water_body = None): 
         """
         Created:        xxxxxxxx     by Magnus
-        Last modified:  20180423     by Lena
+        Last modified:  20180426     by Lena
         returns value from settings file by given arguments
         if variable and water_body is given returns single value
         if variable and type_area is given returns single value when there is only one setting for the given type_area, else return pandas series for given variable
@@ -581,11 +581,18 @@ class SettingsFile(object):
         var = variable
         if variable is None:
             var = self.df.columns
+        if variable not in self.df.columns:
+            var = self.df.columns
         
         if water_body:
-            if water_body in self.df['VISS_EU_CD']:
-                value_series = self.df.loc[(self.df['VISS_EU_CD']==water_body), var]
-            else:
+            value_series = self.df.loc[(self.df['VISS_EU_CD']==water_body), var]
+            print(water_body)
+            print(self.df['VISS_EU_CD'].unique())
+            print('. . . . .')
+            print(value_series)
+            print(len(value_series))
+            print('. . . . .')
+            if not len(value_series):
                 if suf and suf in self.df.loc[(self.df['TYPE_AREA_NUMBER']==num), 'TYPE_AREA_SUFFIX'].values:
                     value_series = self.df.loc[(self.df['TYPE_AREA_NUMBER']==num) & \
                                                (self.df['TYPE_AREA_SUFFIX']==suf) & \
@@ -599,14 +606,6 @@ class SettingsFile(object):
                                            (self.df['TYPE_AREA_SUFFIX']==suf), var]
             else:
                 value_series = self.df.loc[(self.df['TYPE_AREA_NUMBER']==num), var]
-
-         #OLD  
-#        num, suf = get_type_area_parts(type_area)
-#
-#        if suf:
-#            value_series = self.df.loc[(self.df['TYPE_AREA_NUMBER']==num) & (self.df['TYPE_AREA_SUFFIX']==suf), variable]
-#        else:
-#            value_series = self.df.loc[self.df['TYPE_AREA_NUMBER']==num, variable]
         
         print('----')
         print('water_body {}, type_area {}, variable {}'.format(water_body, type_area, variable))
@@ -617,20 +616,18 @@ class SettingsFile(object):
         # if no variable is given, return dataframe
         if variable is None:
             return value_series
+        # if no variable not in columns, return dataframe
+        if variable not in self.df.columns:
+            return value_series
+        # Try to return single value, list or interval
         return_value = []
-        for value in value_series.values:  
-#            print(value)   
-#            print(value)
-#            print(variable)
-            
+        for value in value_series.values:              
             if variable in self.list_columns: 
                 value = self._get_list_from_string(value, variable)
-#                print('=', value, type(value[0]))
             elif variable in self.interval_columns: 
                 value = self._get_interval_from_string(value, variable)
-#                print('=', value, type(value[0]))
-    #            esf
             elif variable in self.refvalue_column:
+                print('value {} in refvalue_column'.format(value))
                 if variable.isnumeric():
                     value = float(value)
                 else:
@@ -854,7 +851,7 @@ class SettingsFile(object):
         result = self.get_value(type_area=type_area, water_body = water_body,
                                     variable=variable)
 
-        print('RESULT', result)
+        #print('RESULT', result)
         # Must check if there are several results. For example BQI has two depth intervalls.  
         if type(result) is list or result is False:
             if not result:

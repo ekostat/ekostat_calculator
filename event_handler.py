@@ -75,6 +75,7 @@ class EventHandler(object):
         self.mapping_objects['water_body'] = core.WaterBody(file_path=self.root_path + '/resources/mappings/water_body_match.txt')
         self.mapping_objects['quality_element'] = core.QualityElement(file_path=self.root_path + '/resources/Quality_Elements.cfg')
         self.mapping_objects['display_mapping'] = core.ParameterMapping()
+        self.mapping_objects['hypsographs'] = core.Hypsograph(file_path=self.root_path + '/resources/mappings/hypsographs.txt')
         self.mapping_objects['display_mapping'].load_mapping_settings(file_path=self.root_path + '/resources/mappings/display_mapping.txt')
         
         # Initiate uuid_mapping file for user if not present
