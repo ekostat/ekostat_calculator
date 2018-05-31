@@ -1,9 +1,8 @@
-"""
-Last modified:  20180525     by Magnus 
-
-"""
+#
 
 from .data_handlers import DataHandler
+from .data_handlers import save_data_file
+from .data_handlers import load_data_file
 
 from .filters import DataFilter
 from .filters import SettingsFile
@@ -27,7 +26,6 @@ from .lists import ParameterList
 from .lists import AreaList
 
 from .load import Load 
-from .load import SaveLoadDelete
 from .logger import add_log, get_log
 
 from .mapping import AttributeDict

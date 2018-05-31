@@ -1,5 +1,4 @@
 {
-  "user_id": "user_1",
-  "alias": "mw3_renamed", 
-  "uuid": "2e12443d-2537-450f-ba4f-d5a13a0db247"
+    "alias": "mw3_renamed",
+    "workspace_uuid": "3045c7c6-4a25-4e6b-aa69-cf6fe2fe1f8f"
 }

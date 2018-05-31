@@ -1,0 +1,65 @@
+{
+    "workspace_uuid": "3045c7c6-4a25-4e6b-aa69-cf6fe2fe1f8f",
+    "data_sources": [
+        {
+            "status": false,
+            "loaded": false,
+            "filename": "chlorophyll_integrated_2015_2016_row_format.txt",
+            "datatype": "chlorophyll"
+        },
+        {
+            "status": false,
+            "loaded": false,
+            "filename": "chlorophyll_sharkweb_data_chlorophyll_wb_2007-2017_20180320.txt",
+            "datatype": "chlorophyll"
+        },
+        {
+            "status": false,
+            "loaded": false,
+            "filename": "physicalchemicalmodel_110001_PROFILER_alldepths_SE652400-223501_toolbox.dat",
+            "datatype": "physicalchemicalmodel"
+        },
+        {
+            "status": false,
+            "loaded": false,
+            "filename": "physicalchemicalmodel_120004_PROFILER_alldepths_SE612520-172080_toolbox.dat",
+            "datatype": "physicalchemicalmodel"
+        },
+        {
+            "status": true,
+            "loaded": false,
+            "filename": "physicalchemical_sharkweb_data_fyskem_wb_2007-2017_20180320.txt",
+            "datatype": "physicalchemical"
+        },
+        {
+            "status": false,
+            "loaded": false,
+            "filename": "phytoplankton_2016_row_format.txt",
+            "datatype": "phytoplankton"
+        },
+        {
+            "status": false,
+            "loaded": false,
+            "filename": "phytoplankton_sharkweb_data_biovolume_wb_2007-2012_20180320.txt",
+            "datatype": "phytoplankton"
+        },
+        {
+            "status": false,
+            "loaded": false,
+            "filename": "phytoplankton_sharkweb_data_biovolume_wb_2013-2017_20180320.txt",
+            "datatype": "phytoplankton"
+        },
+        {
+            "status": false,
+            "loaded": false,
+            "filename": "zoobenthos_2016_row_format_2.txt",
+            "datatype": "zoobenthos"
+        },
+        {
+            "status": false,
+            "loaded": false,
+            "filename": "zoobenthos_sharkweb_data_BQIm_wb_2007-2017_20180320.txt",
+            "datatype": "zoobenthos"
+        }
+    ]
+}

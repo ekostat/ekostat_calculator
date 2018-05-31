@@ -758,6 +758,13 @@ class DataTypeMapping(object):
     
     
     #==========================================================================
+    def get_file_list(self): 
+        if not self.has_info:
+            return []
+        return self.df['filename'].values
+    
+    
+    #==========================================================================
     def get_datatype_list(self):
         return self.datatype_list
     
@@ -846,6 +853,25 @@ class DataTypeMapping(object):
             return False
         return sorted(['/'.join([self.raw_data_directory, item]) for item in self.df.loc[self.df['status']==1, 'filename']])
    
+    
+    #==========================================================================
+    def get_info_for_file(self, filename): 
+        """
+        Created     20180524    by Magnus Wenzer
+        Updated     
+        
+        returns a dict with information about a given file name 
+        """
+        
+        if filename not in self.df['filename'].values:
+            return {}
+        df_dict = {}
+        df = self.df.loc[(self.df['filename']==filename)]
+        for col in df.columns: 
+            df_dict[col] = df[col].values[0]
+        return df_dict
+    
+    
     #==========================================================================
     def get_active_paths_with_data_type(self):
         if not self.has_info:
@@ -899,7 +925,7 @@ class DataTypeMapping(object):
         Updated     20180424    by Magnus Wenzer
         
         """
-        self.df.loc[self.df['filename']==file_name, 'status'] = status      
+        self.df.loc[self.df['filename']==file_name, 'status'] = int(status)
         # Save file 
         self._save_file()
         return True
@@ -936,6 +962,191 @@ class DataTypeMapping(object):
 class UUIDmapping():
     """
     Holds the mapping file for uuid. 
+    
+    MW 20180530: In general user_id should be tha same in 
+    """
+    def __init__(self, file_path=None, user_id=None): 
+        self.file_path = file_path 
+        self.user_id = user_id
+        self.all_status = ['editable', 'readable', 'deleted']
+        self._load_file()
+        
+        
+    #==========================================================================
+    def _load_file(self): 
+        """
+        Created                 by Magnus Wenzer
+        Updated     20180321    by Magnus Wenzer
+        """
+#        print('FILE_PATH:', self.file_path)
+        self.df = pd.read_csv(self.file_path, sep='\t', encoding='cp1252')
+        self.df.fillna('', inplace=True)
+        self.df.loc[self.df['uuid']=='default_workspace', 'user_id'] = self.user_id
+        self._save_file()
+                   
+    #==========================================================================
+    def _save_file(self): 
+        self.df.to_csv(self.file_path, sep='\t', index=False)
+        
+        
+    #==========================================================================
+    def _get_status_list(self): 
+        return sorted(set(self.df['status']))
+        
+    
+    #==========================================================================
+    def add_new_uuid_for_alias(self, alias=None): 
+        """
+        Updated 20180530    by Magnus
+        
+        Adds a new uuid to the mapping file and returns its value. 
+        """
+        print('¤', alias)
+        status = self.all_status
+        if not alias or self.get_uuid(alias, status=status): 
+            return False 
+        
+        unique_id = str(uuid.uuid4())
+#        print('&&&&&')
+#        print(unique_id)
+#        print(alias)
+#        print(user_id)
+        add_df = pd.DataFrame([[unique_id, alias, self.user_id, 'editable', 'True']], columns=['uuid', 'alias', 'user_id', 'status', 'active'])
+        self.df = self.df.append(add_df)
+        self.df = self.df.reset_index(drop=True)
+        self._save_file()
+        return unique_id
+    
+    
+    #==========================================================================
+    def get_alias(self, unique_id=None, status=None): 
+        if not status:
+            status = self.all_status
+        
+        print('status', status)
+#        print('status', status)
+        result = self.df.loc[(self.df['user_id']==self.user_id) & \
+                             (self.df['uuid']==unique_id) & \
+                             (self.df['status'].isin(status)), 'alias']
+        if len(result):
+            return result.values[0]
+        return False
+        
+    
+    #==========================================================================
+    def get_status(self, alias=None, unique_id=None): 
+        if unique_id:
+            result = self.df.loc[self.df['uuid']==unique_id, 'status']
+        else:
+            result = self.df.loc[(self.df['alias']==alias) & \
+                                 (self.df['user_id']==self.user_id), 'status']
+        if len(result):
+            return result.values[0]
+        return False
+    
+    #==========================================================================
+    def get_user_id(self, unique_id, status=None): 
+        if not status:
+            status = self.all_status 
+        result = self.df.loc[(self.df['uuid']==unique_id) & \
+                             (self.df['status'].isin(status)), 'user_id']
+        if len(result):
+            return result.values[0]
+        return False
+                 
+    #==========================================================================
+    def get_uuid(self, alias=None, status=None): 
+        """
+        Updated 20180530    by Magnus 
+        """
+        if not status:
+            status = self.all_status
+        if alias in self.df['alias'].values: 
+            return False
+        
+        result = self.df.loc[(self.df['user_id']==self.user_id) & \
+                             (self.df['alias']==alias) & \
+                             (self.df['status'].isin(status)), 'uuid']
+        if len(result):
+            return result.values[0]
+        return False
+        
+    
+    #==========================================================================
+    def get_alias_list_for_user(self, status=None): 
+        if not status:
+            status = self.all_status
+        return list(self.df.loc[(self.df['user_id']==self.user_id) & \
+                                (self.df['status'].isin(status)), 'alias'])
+    
+    
+    #==========================================================================
+    def get_uuid_list_for_user(self, status=None): 
+        if not status:
+            status = self.all_status 
+        return list(self.df.loc[(self.df['user_id']==self.user_id) & \
+                                (self.df['status'].isin(status)), 'uuid'])
+        
+    
+    #==========================================================================
+    def is_active(self, unique_id):
+        result = self.df.loc[self.df['uuid']==unique_id, 'active']
+        if len(result):
+            result = str(result.values[0]).lower()
+            if result == 'true':
+                return True
+            elif result == 'false':
+                return False 
+        return None
+    
+    
+    #==========================================================================
+    def permanent_delete_uuid(self, unique_id):
+        self.df = self.df.drop(self.df.index[self.df['uuid']==unique_id])
+        self._save_file()
+        
+        
+    #==========================================================================
+    def set_active(self, unique_id): 
+        self.df.loc[self.df['uuid']==unique_id, 'active'] = 'True'
+        
+    
+    #==========================================================================
+    def set_inactive(self, unique_id): 
+        self.df.loc[self.df['uuid']==unique_id, 'active'] = 'False'
+        
+        
+    #==========================================================================
+    def set_alias(self, unique_id, new_alias): 
+        if new_alias in self.get_alias_list_for_user():
+            return False
+        self.df.loc[self.df['uuid']==unique_id, 'alias'] = new_alias
+        self._save_file()
+        return True
+        
+    
+    #==========================================================================
+    def set_new_uuid(self, current_uuid):
+        new_uuid = str(uuid.uuid4())
+        self.df.loc[self.df['uuid']==current_uuid, 'uuid'] = new_uuid
+        self._save_file()      
+        return new_uuid
+    
+    
+    #==========================================================================
+    def set_status(self, unique_id, status): 
+        self.df.loc[self.df['uuid']==unique_id, 'status'] = status
+        self._save_file() 
+        return status
+    
+
+#==========================================================================
+#==========================================================================
+class old_UUIDmapping():
+    """
+    Holds the mapping file for uuid. 
+    
+    MW 20180530: In general user_id should be tha same in 
     """
     def __init__(self, file_path=None): 
         self.file_path = file_path

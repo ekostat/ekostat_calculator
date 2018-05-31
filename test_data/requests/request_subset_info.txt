@@ -1,9 +1,8 @@
 {
-    "user_id": "user_1",
-    "workspace_uuid": "1a77220d-e76a-4224-a98c-8c0c234150d9",
+    "workspace_uuid": "3045c7c6-4a25-4e6b-aa69-cf6fe2fe1f8f",
     "subset": {
         "alias": "test_subset_1",
-        "uuid": "fa499f4c-ad1e-4978-b38a-510b672d5a7e",
+        "subset_uuid": "fa499f4c-ad1e-4978-b38a-510b672d5a7e",
         "status": "editable",
         "active": true,
         "time": {

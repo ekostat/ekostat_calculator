@@ -1,0 +1,4 @@
+col1	col2	index_column
+a	1	0
+b	2	1
+c	3	2

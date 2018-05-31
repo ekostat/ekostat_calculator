@@ -740,7 +740,6 @@ class WorkSpace(object):
     Updated     20180220    by Magnus Wenzer
         
     Class to hold and alter a workspace. 
-    Holds step_0 and subsets. 
     name is UUID. 
     """
     def __init__(self, 
@@ -1150,7 +1149,7 @@ class WorkSpace(object):
     def copy_subset(self, source_alias=None, target_alias=None):
         """
         Created     20180219    by Magnus Wenzer
-        Updated     20180219    by Magnus Wenzer
+        Updated     20180524    by Magnus Wenzer
         
         Creates a copy of a subset. 
         """
@@ -1192,7 +1191,7 @@ class WorkSpace(object):
         target_status = self.uuid_mapping.get_status(unique_id=target_uuid) # Check in case default is changed
         
         return {'alias': target_alias, 
-                'uuid': target_uuid, 
+                'subset_uuid': target_uuid, # MW: 20180524
                 'status': target_status}
     
     #==========================================================================
@@ -1250,7 +1249,7 @@ class WorkSpace(object):
         Created     20180423    by Magnus Wenzer
         Updated     20180423    by Magnus Wenzer
         
-        Permanently deletes all files in the dta export directory. 
+        Permanently deletes all files in the data export directory. 
         Also sets column "loaded" in datatype_settings.txt to 0. 
         """
         for file_name in os.listdir(self.paths['directory_path_export_data']): 
@@ -1266,20 +1265,25 @@ class WorkSpace(object):
     def delete_alldata_export(self):
         """
         Created     20180411    by Lena Viktorsson
-        Updated     
+        Updated     20180525    by Magnus
         
         Permanently deletes all_data.txt and all_data.pickle. 
         """
-        try:
-            os.remove(self.paths['directory_path_input_data'] + '/exports/all_data.txt')
-            self._logger.debug('all_data.txt deleted')
-        except OSError:
-            pass
-        try:
-            os.remove(self.paths['directory_path_input_data'] + '/exports/all_data.pickle')
-            self._logger.debug('all_data.pickle deleted')
-        except OSError:
-            pass
+        
+        sld_object = core.SaveLoadDelete(self.paths['directory_path_export_data'])
+        sld_object.delete_files('all_data')
+        
+#        try:
+#            os.remove(self.paths['directory_path_input_data'] + '/exports/all_data.txt')
+#            self._logger.debug('all_data.txt deleted')
+#        except OSError:
+#            pass
+#        try:
+#            os.remove(self.paths['directory_path_input_data'] + '/exports/all_data.pickle')
+#            self._logger.debug('all_data.pickle deleted')
+#        except OSError:
+#            pass
+        
         
     #==========================================================================
     def delete_datatype_export(self, datatype):
@@ -1573,7 +1577,7 @@ class WorkSpace(object):
     def load_all_data(self, force=False): 
         """ 
         Created:        2017        by Johannes Johansson (?)
-        Last modified:  20180423    by Magnus Wenzer
+        Last modified:  20180530    by Magnus Wenzer
         Loads all data from the input_data/raw_data-directory belonging to the workspace. 
         Only loads data if any file in dtype_settings in set to not "loaded" (loaded=0)
         """
@@ -1583,7 +1587,11 @@ class WorkSpace(object):
         # If no directory is given use the default directory! 
         # This has to be done in physicalchemical, zoobenthos etc. 
         """
-        if not self.datatype_settings.has_info:
+        if force: 
+            self._logger.debug('Method load_all_data is forced.')
+            # method is forced so we delete all_data (if excisting)
+            self.delete_alldata_export()
+        elif not self.datatype_settings.has_info:
             self._logger.debug('Could not load datatype_settings.txt. No file found?')
             return False
             
@@ -1594,10 +1602,6 @@ class WorkSpace(object):
         elif not self.datatype_settings.all_data_is_loaded(): 
             self._logger.debug('All selected data in (status 1 in datatype_settings.txt) is not loaded.')
             # dtype_settings is not matching the loaded files so we delete all_data (if excisting)
-            self.delete_alldata_export()
-        elif force: 
-            self._logger.debug('Method load_all_data is forced.')
-            # method is forced so we delete all_data (if excisting)
             self.delete_alldata_export()
 
         if os.path.isfile(self.paths['directory_path_export_data'] + '/all_data.txt'): 

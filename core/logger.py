@@ -93,13 +93,13 @@ def get_log(log_id):
     """
     Return a logging object set to the given id. 
     """
-    print('¤'*100)
-    print('¤'*100)
-    print('¤'*100)
-    print(logging.Logger.manager.loggerDict.keys())
-    print('¤'*100)
+#    print('¤'*100)
+#    print('¤'*100)
+#    print('¤'*100)
+#    print(logging.Logger.manager.loggerDict.keys())
+#    print('¤'*100)
     for item in logging.Logger.manager.loggerDict.keys():
-        print('{} _ {}'.format(log_id, item))
+#        print('{} _ {}'.format(log_id, item))
         if log_id in item:
             log_id = item
             break

@@ -976,7 +976,7 @@ class DataHandler(object):
     def merge_all_data(self, save_to_txt=False):
         """
         Created:        
-        Last modified:  20180416    by Magnus Wenzer
+        Last modified:  20180525    by Magnus Wenzer
         
         - Do we need to sort all_data ?
         - Merge data from different datatypes for the same visit ?
@@ -1004,12 +1004,14 @@ class DataHandler(object):
             print('No data available after "merge_all_data"!')
             return False
         
-        
-        pickle.dump(self.all_data, open(self.export_directory + "/all_data_raw.pickle", "wb"))
-        if save_to_txt:
-            save_data_file(df=self.all_data, 
-                           directory=self.export_directory, 
-                           file_name='all_data.txt')
+        # Save pkl-file for all_data_raw. Updated 20180525    by Magnus Wenzer
+        sld_object = core.SaveLoadDelete(self.export_directory)
+        sld_object.save_df(self.all_data, file_name='all_data_raw', force_save_txt=True, only_pkl=not save_to_txt)
+#        pickle.dump(self.all_data, open(self.export_directory + "/all_data_raw.pickle", "wb"))
+#        if save_to_txt:
+#            save_data_file(df=self.all_data, 
+#                           directory=self.export_directory, 
+#                           file_name='all_data.txt')
             
         # Load data again. This way we can treet new and old 
         #"self.all_data" the same way 
@@ -1051,7 +1053,7 @@ class DataHandler(object):
         """
         loads existing all_data file from export directory (from pickle if existing, otherwise from txt)
         Created:        20180318    by Lena Viktorsson 
-        Last modified:  20180423    by Magnus Wenzer
+        Last modified:  20180525    by Magnus Wenzer
         """
         def float_convert(x):
             try:
@@ -1071,13 +1073,17 @@ class DataHandler(object):
         if len(self.all_data): 
             return False, False
         else:
+            sld_object = core.SaveLoadDelete(self.export_directory) # 20180525    by Magnus Wenzer
             try:
-                self.all_data = pickle.load(open(self.export_directory + "/all_data.pickle", "rb"))
+                self.all_data = sld_object.load_df('all_data', load_txt=False) # 20180525    by Magnus Wenzer
+#                self.all_data = pickle.load(open(self.export_directory + "/all_data.pickle", "rb"))
                 filetype = 'pickle'
-            except (FileNotFoundError) as e:
+            except (FileNotFoundError, UnboundLocalError) as e: 
+                # UnboundLocalError is for when df was not created in sld_object.load_df()
                 
                 try: 
-                    self.all_data = pickle.load(open(self.export_directory + "/all_data_raw.pickle", "rb"))
+                    self.all_data = sld_object.load_df('all_data_raw', load_txt=False) # 20180525    by Magnus Wenzer
+#                    self.all_data = pickle.load(open(self.export_directory + "/all_data_raw.pickle", "rb"))
                 except (OSError, IOError) as e:
                     raise(OSError, IOError, 'Raw data pickle file does not exist! This is created during in "merge_all_data".')
 #                    self.all_data = load_data_file(self.export_directory + '/all_data.txt')
@@ -1187,10 +1193,11 @@ class DataHandler(object):
                                               min_nr_values=2)
                 
                 
-                pickle.dump(self.all_data, open(self.export_directory + "/all_data.pickle", "wb"))
-                save_data_file(df=self.all_data, 
-                               directory=self.export_directory, 
-                               file_name='all_data.txt')
+                sld_object.save_df(self.all_data, file_name='all_data', force_save_txt=True, only_pkl=False) # 20180525    by Magnus Wenzer
+#                pickle.dump(self.all_data, open(self.export_directory + "/all_data.pickle", "wb"))
+#                save_data_file(df=self.all_data, 
+#                               directory=self.export_directory, 
+#                               file_name='all_data.txt')
                 filetype = 'txt'
             return True, filetype
         
@@ -1661,53 +1668,7 @@ class DataHandler(object):
             pass
         
         
-#==========================================================================
-def save_data_file(df=None, directory=u'', file_name=u''):
-    """
-    Last modified:  20180423    by Magnus Wenzer
- 
-    """
-#            directory = os.path.dirname(os.path.realpath(__file__))[:-4] + 'test_data\\test_exports\\'
-        
-    if not directory.endswith(('/','\\')):
-        directory = directory + '/'
-    
-    file_path = directory + file_name
-    
-    print(u'Saving data to:',file_path)
-    
-    # MW: Name index
-    df['index_column']=df.index
-#    df = df.reset_index(drop=True)
-    
-    # MW: Index is set when loading via funktion load_data_file
-    df.to_csv(file_path, sep='\t', encoding='cp1252', index=False) 
-#        df.to_csv(file_path, sep='\t', encoding='cp1252', index=True)
 
-
-    
-#        column_file_path = directory + '/column_data.txt'
-#        self.column_data.to_csv(column_file_path, sep='\t', encoding='cp1252', index=False)
-#        
-#        row_file_path = directory + '/row_data.txt'
-#        self.row_data.to_csv(row_file_path, sep='\t', encoding='cp1252', index=False)
-
-#==========================================================================
-
-#==========================================================================
-def load_data_file(file_path=None, sep='\t', encoding='cp1252',  fill_nan=u'', ):
-    """
-    Created:        20180420    by Magnus Wenzer
-    Last modified:  20180420    by Magnus Wenzer
-    
-    1: Loads the given file using the core.Load().load_txt method. 
-    2: Fix index 
-    3: Returns the DataFrame  
-    """
-    df = core.Load().load_txt(file_path, sep=sep, encoding=encoding, fill_nan=fill_nan) 
-    df['index_column'] = df['index_column'].astype(int)
-    df = df.set_index('index_column')
-    return df
     
 
 

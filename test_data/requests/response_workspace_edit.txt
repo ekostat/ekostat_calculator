@@ -1,0 +1,5 @@
+{
+    "alias": "mw3_renamed",
+    "uuid": "3045c7c6-4a25-4e6b-aa69-cf6fe2fe1f8f",
+    "status": "editable"
+}
