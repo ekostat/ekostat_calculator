@@ -1025,7 +1025,7 @@ class UUIDmapping():
         if not status:
             status = self.all_status
         
-        print('status', status)
+#        print('status', status)
 #        print('status', status)
         result = self.df.loc[(self.df['user_id']==self.user_id) & \
                              (self.df['uuid']==unique_id) & \
@@ -1036,7 +1036,7 @@ class UUIDmapping():
         
     
     #==========================================================================
-    def get_status(self, alias=None, unique_id=None): 
+    def get_status(self, unique_id=None, alias=None): 
         if unique_id:
             result = self.df.loc[self.df['uuid']==unique_id, 'status']
         else:
