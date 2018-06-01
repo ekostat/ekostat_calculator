@@ -1194,6 +1194,7 @@ class DataHandler(object):
                 
                 
                 sld_object.save_df(self.all_data, file_name='all_data', force_save_txt=True, only_pkl=False) # 20180525    by Magnus Wenzer
+#                self.df = 
 #                pickle.dump(self.all_data, open(self.export_directory + "/all_data.pickle", "wb"))
 #                save_data_file(df=self.all_data, 
 #                               directory=self.export_directory, 

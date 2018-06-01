@@ -8,7 +8,7 @@
         {
             "workspace_uuid": "1a77220d-e76a-4224-a98c-8c0c234150d9",
             "alias": "test_subset_1",
-            "subset_uuid": "fa499f4c-ad1e-4978-b38a-510b672d5a7e",
+            "subset_uuid": "86e52d04-7ddc-4c28-9cc8-eb0a9779e1e3",
             "status": "editable",
             "active": true,
             "time": {

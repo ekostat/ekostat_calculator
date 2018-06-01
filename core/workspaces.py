@@ -1590,10 +1590,12 @@ class WorkSpace(object):
             return False
             
         if self.datatype_settings.no_data_to_load():
+            print('self.datatype_settings.no_data_to_load():')
             self._logger.debug('No data to load.')
             self.delete_all_export_data()
             
         elif not self.datatype_settings.all_data_is_loaded(): 
+            print('self.datatype_settings.all_data_is_loaded():')
             self._logger.debug('All selected data in (status 1 in datatype_settings.txt) is not loaded.')
             # dtype_settings is not matching the loaded files so we delete all_data (if excisting)
             self.delete_alldata_export()
@@ -1607,11 +1609,13 @@ class WorkSpace(object):
                 self._logger.debug("""all_data.txt already loaded and datatype_settings.txt is unchanged. 
                                    Call "delete_alldata_export" and load data again to reload all_data""")
         else:
+            print('load_all_data - else')
             # We know that all_data does not excist. We only want to load the datatypes that has been changed and then merge data. 
-            # Loop and load datatypes (if loaded are desided in metthod load datatype_data)
+            # Loop and load datatypes (if loaded are desided in method load datatype_data)
             for datatype in self.datatype_settings.get_datatype_list():
-#                print(datatype)
-                self.load_datatype_data(datatype=datatype, force=False)
+                print('datatype', datatype)
+                print('force', force)
+                self.load_datatype_data(datatype=datatype, force=force)
             
             self.data_handler.merge_all_data(save_to_txt=False) 
             data_loaded = True
@@ -1628,9 +1632,10 @@ class WorkSpace(object):
         Load data for the specific datatype. 
         """ 
         if not self.datatype_settings.all_selected_files_loaded_for_datatypes(datatype): 
+#            print('if not self.datatype_settings.all_selected_files_loaded_for_datatypes(datatype):')
             self.delete_datatype_export(datatype)
             
-        if force: 
+        elif force: 
             self.delete_datatype_export(datatype) 
 
 
@@ -1653,7 +1658,8 @@ class WorkSpace(object):
                 
             # Add sources 
 #            print(datatype)
-            for source in self.datatype_settings.get_file_paths_to_load_for_datatype(datatype, force=False, reload_file=True): 
+            for source in self.datatype_settings.get_file_paths_to_load_for_datatype(datatype, force=force, reload_file=True): 
+                print('source', source)
                 datatype_handler_object.load_source(file_path=source, raw_data_copy=True) 
                 self.datatype_settings.set_file_is_loaded(os.path.basename(source))
             

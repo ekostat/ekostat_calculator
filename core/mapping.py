@@ -679,6 +679,7 @@ class DataTypeMapping(object):
         Loads the info file and check if all links and info is present. 
         Returns True if all is ok, else False. 
         """
+        print('self.info_file_path', self.info_file_path)
         if not os.path.exists(self.info_file_path): 
             print('No datatype_setting file found in raw_data directory')
             return False
@@ -789,8 +790,10 @@ class DataTypeMapping(object):
         selection = self.df.loc[(self.df['datatype']==datatype) & (self.df['status']==1), :]
         file_paths = ['/'.join([self.raw_data_directory, path]) for path in selection['filename'].values]
         
+        if not len(selection):
+            return []
         if force:
-            return list(selection)
+            return file_paths
         else:
             if all(selection['loaded']):
                 return []

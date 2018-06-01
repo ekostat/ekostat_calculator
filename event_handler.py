@@ -373,8 +373,8 @@ class EventHandler(object):
 #            print(info_dict)
             
         return info_dict
-    
-    
+        
+        
     #==========================================================================
     def dict_indicator(self, 
                        workspace_unique_id=None, 
@@ -940,6 +940,7 @@ class EventHandler(object):
         
         print('='*nr_signs)
         
+        
     
     #==========================================================================
     def get_alias_for_unique_id(self, workspace_unique_id=None, subset_unique_id=None): 
@@ -1009,6 +1010,28 @@ class EventHandler(object):
     def get_workspaces_for_user(self, status=[]):
         uuid_mapping = self._get_uuid_mapping_object() 
         return uuid_mapping.get_uuid_list_for_user(status=status)
+    
+    
+    
+    #==========================================================================
+    def set_status_for_datasource(self, workspace_unique_id=None, file_name=None, status=None): 
+        """
+        Created     20180601    by Magnus Wenzer
+        Updated 
+        
+        """
+        assert all([workspace_unique_id, file_name, status])
+        
+        workspace_object = self._get_workspace_object(unique_id=workspace_unique_id) 
+        if not workspace_object:
+            return False
+        
+        datatype_settings_object = workspace_object.datatype_settings
+        if not datatype_settings_object.has_info:
+            return False
+        
+        return datatype_settings_object.set_status(file_name=file_name, status=status)
+    
     
     
     #==========================================================================
