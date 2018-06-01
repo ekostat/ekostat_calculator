@@ -1063,7 +1063,7 @@ class UUIDmapping():
         """
         if not status:
             status = self.all_status
-        if alias in self.df['alias'].values: 
+        if alias not in self.df['alias'].values: 
             return False
         
         result = self.df.loc[(self.df['user_id']==self.user_id) & \
