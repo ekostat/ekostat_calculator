@@ -900,7 +900,7 @@ class EventHandler(object):
     def dict_workspace(self, unique_id=None): 
         """
         Created     20180221    by Magnus Wenzer
-        Updated     201805030    by Magnus Wenzer
+        Updated     20180530    by Magnus Wenzer
         
         """
         uuid_mapping = self._get_uuid_mapping_object()
@@ -910,6 +910,36 @@ class EventHandler(object):
         return {'alias': alias, 
                 'workspace_uuid': unique_id,
                 'status': status}
+    
+    
+    #==========================================================================
+    def print_workspaces(self): 
+        """
+        Created     20180601    by Magnus Wenzer
+        Updated     
+        
+        """
+        nr_signs = 100
+        uuid_ljust = 40
+        alias_ljust = 30
+        status_ljust = 30
+        print('='*nr_signs)
+        print('Current workspaces for user are:')
+        print('')
+        print('{}{}{}'.format('uuid'.ljust(uuid_ljust), 'alias'.ljust(alias_ljust), 'status'.ljust(status_ljust)))
+        print('-'*nr_signs)
+        uuid_mapping = self._get_uuid_mapping_object() 
+        for u in self.get_workspaces_for_user(): 
+            alias = uuid_mapping.get_alias(u)
+            status = uuid_mapping.get_status(u)
+#            print(u)
+#            print(alias)
+#            print(status)
+            print('{}{}{}'.format(u.ljust(uuid_ljust), alias.ljust(alias_ljust), status.ljust(status_ljust)))
+            
+        
+        print('='*nr_signs)
+        
     
     #==========================================================================
     def get_alias_for_unique_id(self, workspace_unique_id=None, subset_unique_id=None): 

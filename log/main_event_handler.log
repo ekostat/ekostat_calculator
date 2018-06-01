@@ -1103,3 +1103,30 @@
 2018-06-01 10:36:06,740	event_handler.py	1641	load_workspace	INFO	Workspace "448eeeaa-50db-4873-a840-61bfba3cc719" with alias "New test workspace loaded."
 2018-06-01 10:36:06,741	event_handler.py	210	copy_subset	DEBUG	Trying to copy subset "default_subset"
 2018-06-01 10:36:12,063	event_handler.py	1724	request_subset_add	DEBUG	Time for excecuting request_subset_add: 5.334000110626221
+2018-06-01 11:18:25,549	logger.py	85	add_log	DEBUG	
+2018-06-01 11:18:25,549	logger.py	86	add_log	DEBUG	========================================================================================================================
+2018-06-01 11:18:25,549	logger.py	87	add_log	DEBUG	### Log added for log_id "event_handler" at locaton: ..\log\main_event_handler.log
+2018-06-01 11:18:25,549	logger.py	88	add_log	DEBUG	------------------------------------------------------------------------------------------------------------------------
+2018-06-01 11:18:25,550	event_handler.py	74	__init__	DEBUG	Start EventHandler: event_handler
+2018-06-01 11:18:44,816	logger.py	85	add_log	DEBUG	
+2018-06-01 11:18:44,816	logger.py	86	add_log	DEBUG	========================================================================================================================
+2018-06-01 11:18:44,816	logger.py	87	add_log	DEBUG	### Log added for log_id "event_handler" at locaton: ..\log\main_event_handler.log
+2018-06-01 11:18:44,816	logger.py	88	add_log	DEBUG	------------------------------------------------------------------------------------------------------------------------
+2018-06-01 11:18:44,817	event_handler.py	74	__init__	DEBUG	Start EventHandler: event_handler
+2018-06-01 11:19:06,681	event_handler.py	74	__init__	DEBUG	Start EventHandler: event_handler
+2018-06-01 11:19:13,739	event_handler.py	74	__init__	DEBUG	Start EventHandler: event_handler
+2018-06-01 11:20:09,791	event_handler.py	74	__init__	DEBUG	Start EventHandler: event_handler
+2018-06-01 11:20:24,558	logger.py	85	add_log	DEBUG	
+2018-06-01 11:20:24,558	logger.py	86	add_log	DEBUG	========================================================================================================================
+2018-06-01 11:20:24,558	logger.py	87	add_log	DEBUG	### Log added for log_id "event_handler" at locaton: ..\log\main_event_handler.log
+2018-06-01 11:20:24,568	logger.py	88	add_log	DEBUG	------------------------------------------------------------------------------------------------------------------------
+2018-06-01 11:20:24,568	event_handler.py	74	__init__	DEBUG	Start EventHandler: event_handler
+2018-06-01 11:20:56,998	event_handler.py	74	__init__	DEBUG	Start EventHandler: event_handler
+2018-06-01 11:22:38,739	event_handler.py	74	__init__	DEBUG	Start EventHandler: event_handler
+2018-06-01 11:22:48,498	event_handler.py	74	__init__	DEBUG	Start EventHandler: event_handler
+2018-06-01 11:23:13,210	event_handler.py	74	__init__	DEBUG	Start EventHandler: event_handler
+2018-06-01 11:25:10,479	event_handler.py	74	__init__	DEBUG	Start EventHandler: event_handler
+2018-06-01 11:25:15,362	event_handler.py	2097	request_workspace_list	DEBUG	Start: request_workspace_list
+2018-06-01 11:25:15,381	event_handler.py	2102	request_workspace_list	DEBUG	Time for excecuting request_workspace_list: 0.018999814987182617
+2018-06-01 11:27:46,070	event_handler.py	74	__init__	DEBUG	Start EventHandler: event_handler
+2018-06-01 11:27:57,902	event_handler.py	74	__init__	DEBUG	Start EventHandler: event_handler

@@ -6,9 +6,14 @@
             "status": "readable"
         },
         {
-            "alias": "default_workspace",
-            "workspace_uuid": "default_workspace",
-            "status": "readable"
+            "alias": "New test workspace",
+            "workspace_uuid": "448eeeaa-50db-4873-a840-61bfba3cc719",
+            "status": "editable"
+        },
+        {
+            "alias": "Another test workspace",
+            "workspace_uuid": "9ffb9abd-ce92-47ff-abaa-d98a81284ebd",
+            "status": "editable"
         }
     ]
 }
