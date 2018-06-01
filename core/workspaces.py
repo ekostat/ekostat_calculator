@@ -1375,7 +1375,7 @@ class WorkSpace(object):
     
     #==========================================================================
     def get_unique_id_for_alias(self, alias):
-        return self.uuid_mapping.get_uuid(alias, self.user_id)
+        return self.uuid_mapping.get_uuid(alias)
         
     #==========================================================================
     def get_data_filter_object(self, step=None, subset=None): 
