@@ -656,6 +656,8 @@ class DataTypeMapping(object):
     def __init__(self, input_data_directory): 
         self.input_data_directory = input_data_directory.replace('\\', '/') 
         self.raw_data_directory = '{}/raw_data'.format(self.input_data_directory)
+        if not os.path.exists(self.raw_data_directory):
+            os.mkdir(self.raw_data_directory)
         
         self.info_file_name ='datatype_settings.txt'
         self.info_file_path = '/'.join([self.input_data_directory, self.info_file_name]) 

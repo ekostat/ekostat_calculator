@@ -38,7 +38,7 @@ class EventHandler(object):
                  workspace_directory='',
                  resource_directory='', 
                  log_directory='', 
-                 test_data_diretory=''): 
+                 test_data_directory=''): 
         """
         Created     20180219    by Magnus Wenzer
         Updated     20180530    by Magnus Wenzer
@@ -54,7 +54,7 @@ class EventHandler(object):
         self.workspace_directory = workspace_directory
         self.resource_directory = resource_directory
         self.log_directory = log_directory
-        self.test_data_diretory = test_data_diretory
+        self.test_data_directory = test_data_directory
         
         
         self.log_id = 'event_handler'
@@ -89,7 +89,7 @@ class EventHandler(object):
         self.mapping_objects['display_mapping'] = core.ParameterMapping()
         self.mapping_objects['display_mapping'].load_mapping_settings(file_path=os.path.join(self.resource_directory, 'mappings/display_mapping.txt'))
         
-        if self.test_data_diretory:
+        if self.test_data_directory:
             self.load_test_requests()
     
     #==========================================================================
@@ -193,26 +193,22 @@ class EventHandler(object):
     #==========================================================================
     def copy_subset(self, 
                     workspace_uuid=None, 
-                    subset_source_alias=None, 
                     subset_source_uuid=None, 
                     subset_target_alias=None): 
         """
         Created     20180219    by Magnus Wenzer
-        Updated     20180530    by Magnus Wenzer
+        Updated     20180601    by Magnus Wenzer
         
         """
         workspace_object = self.workspaces.get(workspace_uuid, False)
         if not workspace_object:
-#            print('workspace_object')
+            self._logger.warning('Workspace "{}" not loaded.'.format(subset_source_uuid))
             return False
 #        print('!!!!!!!!!!!!', subset_source_alias) 
-#        print('!!!!!!!!!!!!', subset_target_alias)
-        if subset_source_uuid:
-#            print('subset_source_uuid'.upper(), subset_source_uuid)
-            subset_source_alias = workspace_object.uuid_mapping.get_alias(subset_source_uuid) 
+#        print('!!!!!!!!!!!!', subset_target_alias) 
 #            print('subset_source_alias'.upper(), subset_source_alias)
-        self._logger.debug('Trying to copy subset "{}". Copy has alias "{}"'.format(subset_source_alias, subset_target_alias))
-        return_dict = workspace_object.copy_subset(subset_source_alias, subset_target_alias)
+        self._logger.debug('Trying to copy subset "{}"'.format(subset_source_uuid))
+        return_dict = workspace_object.copy_subset(subset_source_uuid, subset_target_alias)
 #        print('return_dict'.upper(), return_dict)
         return return_dict
         
@@ -222,7 +218,11 @@ class EventHandler(object):
         Created     20180219    by Magnus Wenzer
         Updated     20180530    by Lena Viktorsson
         
-        """
+        """ 
+        if self.user_id == 'default':
+            self._logger.warning('Can not copy workspace as default user. ')
+            return 
+        
         uuid_mapping = self._get_uuid_mapping_object()
 
         # Add UUID for workspace in uuid_mapping 
@@ -918,6 +918,9 @@ class EventHandler(object):
             if not workspace_object:
                 return False
             return workspace_object.get_alias_for_unique_id(subset_unique_id)
+        elif workspace_unique_id:
+            uuid_mapping = self._get_uuid_mapping_object()
+            return uuid_mapping.get_alias(workspace_unique_id)
         
         
     #==========================================================================
@@ -1300,7 +1303,7 @@ class EventHandler(object):
     
     
     #==========================================================================
-    def list_workspaces(self, include_default=True): 
+    def list_workspaces(self): 
         """
         Created     20180317    by Magnus Wenzer
         Updated     20180317    by Magnus Wenzer 
@@ -1312,8 +1315,8 @@ class EventHandler(object):
         for unique_id in uuid_mapping.get_uuid_list_for_user(status=self.all_status):
             workspace_list.append(self.dict_workspace(unique_id=unique_id))
         
-        if include_default:
-            workspace_list.append(self.dict_workspace(unique_id='default_workspace')) 
+#        if include_default:
+#            workspace_list.append(self.dict_workspace(unique_id='default_workspace')) 
         
         return workspace_list
         
@@ -1539,7 +1542,7 @@ class EventHandler(object):
     #==========================================================================
     def load_test_requests(self): 
         self.test_requests = {} 
-        directory = '{}/requests'.format(self.test_data_diretory)
+        directory = '{}/requests'.format(self.test_data_directory)
         for file_name in os.listdir(directory):
             if 'response' in file_name:
                 continue
@@ -1553,7 +1556,7 @@ class EventHandler(object):
     def write_test_response(self, name, response): 
         if name.startswith('request_'):
             name = name[8:]
-        file_path = '{}/requests/response_{}.txt'.format(self.test_data_diretory, name)
+        file_path = '{}/requests/response_{}.txt'.format(self.test_data_directory, name)
         with codecs.open(file_path, 'w', encoding='cp1252') as fid:
             json.dump(response, fid, indent=4)        
         
@@ -1570,7 +1573,7 @@ class EventHandler(object):
         if len(new_uuid) != 36: 
             print('Not a valid uuid!')
             return
-        directory = '{}/requests'.format(self.test_data_diretory)
+        directory = '{}/requests'.format(self.test_data_directory)
         for file_name in os.listdir(directory):
             if 'response' in file_name:
                 continue 
@@ -1698,10 +1701,15 @@ class EventHandler(object):
         
         Returns a dict_subset            
         """ 
+        t0 = time.time()
         self._logger.debug('Start: request_subset_add')
         workspace_uuid = request['workspace_uuid']
         subset_uuid = request['subset_uuid']
         new_alias = request['alias']
+        
+        # Load workspace 
+        self.action_load_workspace(workspace_uuid) 
+        
         
         return_dict = self.copy_subset(workspace_uuid=workspace_uuid, 
                                        subset_source_uuid=subset_uuid, 
@@ -1716,6 +1724,7 @@ class EventHandler(object):
         response = self.dict_subset(workspace_unique_id=workspace_uuid, 
                                    subset_unique_id=subset_uuid)
         
+        self._logger.debug('Time for excecuting request_subset_add: {}'.format(time.time()-t0)) 
         return response
     
     #==========================================================================

@@ -1027,3 +1027,79 @@
 2018-05-31 08:54:36,405	event_handler.py	78	__init__	ERROR	TEST error logger
 2018-05-31 08:54:36,408	event_handler.py	79	__init__	DEBUG	TEST debug logger
 2018-05-31 08:54:40,080	event_handler.py	2016	request_workspace_edit	DEBUG	Start: request_workspace_edit
+2018-05-31 14:45:15,464	event_handler.py	74	__init__	DEBUG	Start EventHandler: event_handler
+2018-05-31 14:45:20,735	event_handler.py	1909	request_subset_list	DEBUG	Start: request_subset_list
+2018-05-31 14:45:20,754	event_handler.py	1623	load_workspace	DEBUG	Trying to load new workspace "3045c7c6-4a25-4e6b-aa69-cf6fe2fe1f8f" with alias "mw3_renamed"
+2018-05-31 14:45:21,158	event_handler.py	1641	load_workspace	INFO	Workspace "3045c7c6-4a25-4e6b-aa69-cf6fe2fe1f8f" with alias "mw3_renamed loaded."
+2018-05-31 14:52:48,854	logger.py	85	add_log	DEBUG	
+2018-05-31 14:52:48,854	logger.py	86	add_log	DEBUG	========================================================================================================================
+2018-05-31 14:52:48,858	logger.py	87	add_log	DEBUG	### Log added for log_id "event_handler" at locaton: ..\log\main_event_handler.log
+2018-05-31 14:52:48,862	logger.py	88	add_log	DEBUG	------------------------------------------------------------------------------------------------------------------------
+2018-05-31 14:52:48,863	event_handler.py	74	__init__	DEBUG	Start EventHandler: event_handler
+2018-05-31 14:52:53,574	event_handler.py	1949	request_workspace_add	DEBUG	Start: request_workspace_add
+2018-05-31 14:52:53,592	event_handler.py	242	copy_workspace	DEBUG	Trying to copy workspace "default_workspace". Copy has alias "New test workspace"
+2018-05-31 14:52:53,796	event_handler.py	1949	request_workspace_add	DEBUG	Start: request_workspace_add
+2018-05-31 14:52:53,816	event_handler.py	242	copy_workspace	DEBUG	Trying to copy workspace "default_workspace". Copy has alias "Another test workspace"
+2018-05-31 15:12:04,473	event_handler.py	74	__init__	DEBUG	Start EventHandler: event_handler
+2018-05-31 15:12:09,760	event_handler.py	1909	request_subset_list	DEBUG	Start: request_subset_list
+2018-05-31 15:12:09,778	event_handler.py	1617	load_workspace	WARNING	Could not load workspace "3045c7c6-4a25-4e6b-aa69-cf6fe2fe1f8f" with alias "False"
+2018-05-31 15:12:09,805	event_handler.py	1617	load_workspace	WARNING	Could not load workspace "3045c7c6-4a25-4e6b-aa69-cf6fe2fe1f8f" with alias "False"
+2018-05-31 15:17:58,213	event_handler.py	74	__init__	DEBUG	Start EventHandler: event_handler
+2018-05-31 15:18:04,764	event_handler.py	74	__init__	DEBUG	Start EventHandler: event_handler
+2018-05-31 15:18:08,563	event_handler.py	1909	request_subset_list	DEBUG	Start: request_subset_list
+2018-05-31 15:18:08,572	event_handler.py	1623	load_workspace	DEBUG	Trying to load new workspace "7c80e7ae-c033-4848-9ef9-0ec613db8ce8" with alias "New test workspace"
+2018-05-31 15:19:56,105	event_handler.py	74	__init__	DEBUG	Start EventHandler: event_handler
+2018-05-31 15:19:59,722	event_handler.py	1909	request_subset_list	DEBUG	Start: request_subset_list
+2018-05-31 15:19:59,732	event_handler.py	1623	load_workspace	DEBUG	Trying to load new workspace "7c80e7ae-c033-4848-9ef9-0ec613db8ce8" with alias "New test workspace"
+2018-05-31 15:20:00,064	event_handler.py	1641	load_workspace	INFO	Workspace "7c80e7ae-c033-4848-9ef9-0ec613db8ce8" with alias "New test workspace loaded."
+2018-05-31 16:03:53,888	event_handler.py	74	__init__	DEBUG	Start EventHandler: event_handler
+2018-05-31 16:03:57,718	event_handler.py	2167	request_workspace_load_default_data	DEBUG	Start: request_workspace_load_default_data
+2018-05-31 16:03:57,742	event_handler.py	1623	load_workspace	DEBUG	Trying to load new workspace "7c80e7ae-c033-4848-9ef9-0ec613db8ce8" with alias "New test workspace"
+2018-05-31 16:03:57,971	event_handler.py	1641	load_workspace	INFO	Workspace "7c80e7ae-c033-4848-9ef9-0ec613db8ce8" with alias "New test workspace loaded."
+2018-05-31 16:17:40,985	event_handler.py	74	__init__	DEBUG	Start EventHandler: event_handler
+2018-05-31 16:17:44,426	event_handler.py	1909	request_subset_list	DEBUG	Start: request_subset_list
+2018-05-31 16:17:44,435	event_handler.py	1623	load_workspace	DEBUG	Trying to load new workspace "7c80e7ae-c033-4848-9ef9-0ec613db8ce8" with alias "New test workspace"
+2018-05-31 16:17:44,628	event_handler.py	1641	load_workspace	INFO	Workspace "7c80e7ae-c033-4848-9ef9-0ec613db8ce8" with alias "New test workspace loaded."
+2018-06-01 09:26:47,492	event_handler.py	74	__init__	DEBUG	Start EventHandler: event_handler
+2018-06-01 09:26:51,233	event_handler.py	1701	request_subset_add	DEBUG	Start: request_subset_add
+2018-06-01 09:27:09,319	event_handler.py	74	__init__	DEBUG	Start EventHandler: event_handler
+2018-06-01 09:40:07,495	event_handler.py	74	__init__	DEBUG	Start EventHandler: event_handler
+2018-06-01 09:40:12,385	event_handler.py	1706	request_subset_add	DEBUG	Start: request_subset_add
+2018-06-01 09:40:12,405	event_handler.py	1627	load_workspace	DEBUG	Trying to load new workspace "7c80e7ae-c033-4848-9ef9-0ec613db8ce8" with alias "New test workspace"
+2018-06-01 09:40:12,779	event_handler.py	1645	load_workspace	INFO	Workspace "7c80e7ae-c033-4848-9ef9-0ec613db8ce8" with alias "New test workspace loaded."
+2018-06-01 09:40:12,779	event_handler.py	214	copy_subset	DEBUG	Trying to copy subset "False". Copy has alias "test_subset_1"
+2018-06-01 10:22:02,114	event_handler.py	74	__init__	DEBUG	Start EventHandler: event_handler
+2018-06-01 10:22:05,473	event_handler.py	1702	request_subset_add	DEBUG	Start: request_subset_add
+2018-06-01 10:22:05,487	event_handler.py	1623	load_workspace	DEBUG	Trying to load new workspace "7c80e7ae-c033-4848-9ef9-0ec613db8ce8" with alias "New test workspace"
+2018-06-01 10:22:05,740	event_handler.py	1641	load_workspace	INFO	Workspace "7c80e7ae-c033-4848-9ef9-0ec613db8ce8" with alias "New test workspace loaded."
+2018-06-01 10:22:05,741	event_handler.py	210	copy_subset	DEBUG	Trying to copy subset "default_subset"
+2018-06-01 10:25:43,153	event_handler.py	74	__init__	DEBUG	Start EventHandler: event_handler
+2018-06-01 10:25:47,038	event_handler.py	1702	request_subset_add	DEBUG	Start: request_subset_add
+2018-06-01 10:25:47,039	event_handler.py	1623	load_workspace	DEBUG	Trying to load new workspace "7c80e7ae-c033-4848-9ef9-0ec613db8ce8" with alias "New test workspace"
+2018-06-01 10:25:47,284	event_handler.py	1641	load_workspace	INFO	Workspace "7c80e7ae-c033-4848-9ef9-0ec613db8ce8" with alias "New test workspace loaded."
+2018-06-01 10:25:47,287	event_handler.py	210	copy_subset	DEBUG	Trying to copy subset "default_subset"
+2018-06-01 10:34:36,243	logger.py	85	add_log	DEBUG	
+2018-06-01 10:34:36,243	logger.py	86	add_log	DEBUG	========================================================================================================================
+2018-06-01 10:34:36,253	logger.py	87	add_log	DEBUG	### Log added for log_id "event_handler" at locaton: ..\log\main_event_handler.log
+2018-06-01 10:34:36,253	logger.py	88	add_log	DEBUG	------------------------------------------------------------------------------------------------------------------------
+2018-06-01 10:34:36,253	event_handler.py	74	__init__	DEBUG	Start EventHandler: event_handler
+2018-06-01 10:34:41,277	event_handler.py	1955	request_workspace_add	DEBUG	Start: request_workspace_add
+2018-06-01 10:34:41,291	event_handler.py	242	copy_workspace	DEBUG	Trying to copy workspace "default_workspace". Copy has alias "New test workspace"
+2018-06-01 10:34:41,474	event_handler.py	1955	request_workspace_add	DEBUG	Start: request_workspace_add
+2018-06-01 10:34:41,479	event_handler.py	242	copy_workspace	DEBUG	Trying to copy workspace "default_workspace". Copy has alias "Another test workspace"
+2018-06-01 10:35:29,032	event_handler.py	74	__init__	DEBUG	Start EventHandler: event_handler
+2018-06-01 10:35:34,871	event_handler.py	1702	request_subset_add	DEBUG	Start: request_subset_add
+2018-06-01 10:35:34,881	event_handler.py	1617	load_workspace	WARNING	Could not load workspace "7c80e7ae-c033-4848-9ef9-0ec613db8ce8" with alias "False"
+2018-06-01 10:35:34,882	event_handler.py	205	copy_subset	WARNING	Workspace "default_subset" not loaded.
+2018-06-01 10:35:40,340	event_handler.py	74	__init__	DEBUG	Start EventHandler: event_handler
+2018-06-01 10:35:55,819	event_handler.py	74	__init__	DEBUG	Start EventHandler: event_handler
+2018-06-01 10:36:00,898	event_handler.py	1702	request_subset_add	DEBUG	Start: request_subset_add
+2018-06-01 10:36:00,917	event_handler.py	1623	load_workspace	DEBUG	Trying to load new workspace "448eeeaa-50db-4873-a840-61bfba3cc719" with alias "New test workspace"
+2018-06-01 10:36:01,373	event_handler.py	1641	load_workspace	INFO	Workspace "448eeeaa-50db-4873-a840-61bfba3cc719" with alias "New test workspace loaded."
+2018-06-01 10:36:01,375	event_handler.py	210	copy_subset	DEBUG	Trying to copy subset "default_subset"
+2018-06-01 10:36:06,572	event_handler.py	1724	request_subset_add	DEBUG	Time for excecuting request_subset_add: 5.673999786376953
+2018-06-01 10:36:06,729	event_handler.py	1702	request_subset_add	DEBUG	Start: request_subset_add
+2018-06-01 10:36:06,740	event_handler.py	1634	load_workspace	DEBUG	Workspace "448eeeaa-50db-4873-a840-61bfba3cc719" with alias "New test workspace" is already loaded. Set reload=True if you want to reload the workspace.
+2018-06-01 10:36:06,740	event_handler.py	1641	load_workspace	INFO	Workspace "448eeeaa-50db-4873-a840-61bfba3cc719" with alias "New test workspace loaded."
+2018-06-01 10:36:06,741	event_handler.py	210	copy_subset	DEBUG	Trying to copy subset "default_subset"
+2018-06-01 10:36:12,063	event_handler.py	1724	request_subset_add	DEBUG	Time for excecuting request_subset_add: 5.334000110626221

@@ -1,7 +1,7 @@
 {
     "workspace": {
         "alias": "mw1",
-        "workspace_uuid": "3045c7c6-4a25-4e6b-aa69-cf6fe2fe1f8f",
+        "workspace_uuid": "448eeeaa-50db-4873-a840-61bfba3cc719",
         "status": "editable"
     },
     "subsets": [

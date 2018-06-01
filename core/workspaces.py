@@ -737,7 +737,7 @@ class Subset(object):
 class WorkSpace(object):
     """
     Created     ????????    by Magnus Wenzer
-    Updated     20180220    by Magnus Wenzer
+    Updated     20180601    by Magnus Wenzer
         
     Class to hold and alter a workspace. 
     name is UUID. 
@@ -778,7 +778,8 @@ class WorkSpace(object):
         self._initiate_attributes()
         
         # Load UUID mapping file for subsets
-        self.uuid_mapping = core.UUIDmapping('{}/uuid_mapping.txt'.format(self.paths['directory_path_subset']))
+        # 20180601 MW added user_id as argument
+        self.uuid_mapping = core.UUIDmapping('{}/uuid_mapping.txt'.format(self.paths['directory_path_subset']), user_id=self.user_id)
         
         self._setup_workspace()
         
@@ -1146,28 +1147,21 @@ class WorkSpace(object):
         return all_ok
         
     #==========================================================================
-    def copy_subset(self, source_alias=None, target_alias=None):
+    def copy_subset(self, source_uuid=None, target_alias=None):
         """
         Created     20180219    by Magnus Wenzer
-        Updated     20180524    by Magnus Wenzer
+        Updated     20180601    by Magnus Wenzer
         
         Creates a copy of a subset. 
         """
-        print(source_alias, target_alias)
-        print('self.user_id', self.user_id)
-        assert all([source_alias, target_alias, self.user_id])
+        assert all([source_uuid, target_alias])
         
-        if source_alias == 'default_subset':
-            source_uuid = self.uuid_mapping.get_uuid(source_alias, 'default') 
-        else:
-            source_uuid = self.uuid_mapping.get_uuid(source_alias, self.user_id) 
-            
         if not source_uuid:
-            self._logger.warning('No alias named "{}"'.format(source_alias))
+            self._logger.warning('No subset named "{}"'.format(source_uuid))
             return False
         
         # Add UUID for workspace in uuid_mapping 
-        target_uuid = self.uuid_mapping.add_new_uuid_for_alias(target_alias, self.user_id)
+        target_uuid = self.uuid_mapping.add_new_uuid_for_alias(target_alias)
         print('target_uuid', target_uuid)
         if not target_uuid:
             self._logger.debug('Could not add subset with alias "{}". Subset already exists!'.format(target_alias)) 
