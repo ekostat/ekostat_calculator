@@ -27,7 +27,7 @@ class ClassificationResult(dict):
         self['status_by_year'] = pd.DataFrame(columns = ['VISS_EU_CD', 'WATER_TYPE_AREA',
                                 'YEAR', 'STATUS	VALUE', 'REF VALUE', 'local_EQR','	global_EQR','Number of DATES', 'MONTHS INCLUDED'])
         self['status_by_period'] = pd.DataFrame(columns = ['VISS_EU_CD', 'WATER_TYPE_AREA',
-                                'PERIOD', 'STATUS	VALUE', 'REF VALUE', 'local_EQR','	global_EQR','	Number of YEARS', 'YEARS INCLUDED'])
+                                'PERIOD', 'STATUS','global_EQR','	Number of YEARS', 'YEARS INCLUDED'])
         
         self._set_attributes()
         
@@ -38,8 +38,14 @@ class ClassificationResult(dict):
             
     #========================================================================== 
     def add_info(self, key, value): 
-        self[key] = value
-        setattr(self, key, value)
+        try:
+            existing_value = getattr(self, key)
+            if getattr(self, key) != value:
+                raise('Error: Trying to set new value to existing attribute. new value {} does not match old value {} for attribute {}'.format(value, existing_value, key))
+        except AttributeError:
+            #Varför både nyckel och attribut?
+            self[key] = value
+            setattr(self, key, value)
         
 
 ###############################################################################
@@ -328,8 +334,9 @@ class IndicatorBase(object):
         
         # Weighted numerical class
         global_EQR = global_low + (ek - ek_low)/(ek_high-ek_low)*0.2
-        self.classification_results[water_body].add_info('global_EQR', global_EQR)
-        self.classification_results[water_body].add_info('status', status)
+        return global_EQR, status
+        #self.classification_results[water_body].add_info('global_EQR', global_EQR)
+        #self.classification_results[water_body].add_info('status', status)
 
         #OLD
 #        if local_EQR >= indicator_EQR_REF_limit: #indicator_EQR_REF_limit: 
@@ -667,32 +674,27 @@ class IndicatorNutrients(IndicatorBase):
         Om mätningar vid ett tillfälle är utförda vid diskreta djup, 
         exempelvis 0, 5 och 10 meter ska EK-värde beräknas för varje mätning och ett medel–EK skapas för de tre djupen.
         """
-        try:
-            getattr(self.classification_results, water_body)
-        except AttributeError:
-            setattr(self.classification_results, water_body, {})
-            
-        # Set up result class
-        if water_body not in self.classification_results.keys():
-            self.classification_results[water_body] = ClassificationResult()
-        self.classification_results[water_body].add_info('parameter', self.indicator_parameter)
-        self.classification_results[water_body].add_info('salt_parameter', self.salt_parameter)
-        self.classification_results[water_body].add_info('water_body', water_body)
-        
-        self._set_water_body_indicator_df(water_body)
-        """
-        Calculate local_EQR (EK-värde)
-        """
         def set_value_above_one(x):
             #y = x.indicator_parameter/x.REFERENCE_VALUE
             if x > 1:
                 return 1
             else:
                 return x
+                    
+        # Set up result class
+        self.classification_results.add_info('parameter', self.indicator_parameter)
+        self.classification_results.add_info('salt_parameter', self.salt_parameter)
+        #self.classification_results.add_info('water_body', water_body)
         
+        self._set_water_body_indicator_df(water_body)
         # get data to be used for status calculation, not deep copy because local_EQR values are relevant to see together with data
         df = self.water_body_indicator_df[water_body]
-        #type_area = self.mapping_objects['water_body'].get_type_area_for_water_body(water_body, include_suffix=True)
+        
+        """
+        Calculate local_EQR (EK-värde)
+        """        
+        
+        type_area = self.mapping_objects['water_body'].get_type_area_for_water_body(water_body, include_suffix=True)
         
         """ 
         1) Beräkna local_EQR (EK-värde) för varje enskilt prov utifrån (ekvationer för) referensvärden i tabellerna 6.2-6.7.
@@ -704,12 +706,11 @@ class IndicatorNutrients(IndicatorBase):
         df['local_EQR'] = df.REFERENCE_VALUE/df[self.indicator_parameter]
         df['local_EQR'] = df['local_EQR'].apply(set_value_above_one) 
         # TODO: should the set to one be done before or after all the means below?
+        df['global_EQR'] = df['local_EQR'].apply(self._calculate_global_EQR_from_local_EQR) 
         
-        # add datafram to resultsclass
-        self.classification_results[water_body].add_info('all_data', df)
-        
-        #par_df['REFERENCE_VALUE']/par_df[self.indicator_parameter]
-        #par_df['ek_value_calc'] = par_df['ek_value_calc'].apply(set_value_above_one)
+        # add dataframe to resultsclass
+        self.classification_results.add_info(water_body, df)
+        #self.classification_results[water_body].add_info('all_data', df)
         
         # calculate mean, max, min and count for local_EQR per measurement occasion. Here measurements on one day count as one occasion
         # .reset_index keeps all df column headers
@@ -717,7 +718,10 @@ class IndicatorNutrients(IndicatorBase):
         by_date = df.groupby(['SDATE', 'YEAR'],).local_EQR.agg(['count', 'min', 'max', 'mean']).reset_index()
         # by_occasion.to_csv(self.paths['results'] +'/' + self.name + water_body +'by_occation.txt', sep='\t')
         by_date.rename(columns={'mean':'mean_local_EQR', 'count': 'number_of_values'}, inplace=True) # Cant use "mean" below
-        
+        by_date['WATER_TYPE_AREA'] = type_area
+        by_date['VISS_EU_CD'] = water_body
+        self['status_by_date'] = by_date 
+            #pd.DataFrame(columns = ['VISS_EU_CD', 'WATER_TYPE_AREA', 'DATE', 'STATUS	VALUE', 'REF VALUE', 'local_EQR','	global_EQR'])
         # Remove occations with not enough samples
         # Or use count as a flag for what to display for the user?
             
@@ -726,6 +730,10 @@ class IndicatorNutrients(IndicatorBase):
         """
         by_year = by_date.groupby('YEAR').mean_local_EQR.agg(['count', 'min', 'max', 'mean'])
         by_year.rename(columns={'mean':'mean_local_EQR', 'count': 'number_of_dates'}, inplace=True)
+        by_year['WATER_TYPE_AREA'] = type_area
+        by_year['VISS_EU_CD'] = water_body      
+        
+        self['status_by_year'] = by_year 
         # by_year.to_csv(self.paths['results'] +'/' + self.name + water_body + 'by_year.txt', sep='\t')
         #by_year['all_ok'] = True
         #ix = by_year.loc[by_year['number_of_dates'] < self.tolerance_settings.get_min_nr_values(type_area), 'all_ok'].index
@@ -752,15 +760,19 @@ class IndicatorNutrients(IndicatorBase):
         4) Statusklassificeringen för respektive parameter görs genom att medelvärdet av
         EK jämförs med de angivna EK-klassgränserna i tabellerna 6.2-6.7. 
         """
-        self._calculate_global_EQR_from_local_EQR(water_body = water_body, local_EQR = by_period['mean'].get_value('mean_local_EQR'))
-        
+        global_EQR, status = self._calculate_global_EQR_from_local_EQR(water_body = water_body, local_EQR = by_period['mean'].get_value('mean_local_EQR')) 
+        columns = ['VISS_EU_CD', 'WATER_TYPE_AREA',
+                                'PERIOD', 'STATUS','global_EQR','	Number of YEARS', 'YEARS INCLUDED']
+        values = [water_body, type_area, 'x', status, global_EQR, by_period['count'].get_value('mean_local_EQR'), 'x']
+        self['status_by_year'].append(pd.DataFrame(values, columns=columns))
+
         # Add waterbody status to result class
-        self.classification_results[water_body].add_info('local_EQR_by_date', by_date)
-        self.classification_results[water_body].add_info('local_EQR_by_year', by_year)
-        self.classification_results[water_body].add_info('local_EQR_by_period', by_period['mean'].get_value('mean_local_EQR'))
-        self.classification_results[water_body].add_info('number_of_years', by_period['count'].get_value('mean_local_EQR'))
-        self.classification_results[water_body].add_info('all_ok', all_ok)
-                
+#        self.classification_results[water_body].add_info('local_EQR_by_date', by_date)
+#        self.classification_results[water_body].add_info('local_EQR_by_year', by_year)
+#        self.classification_results[water_body].add_info('local_EQR_by_period', by_period['mean'].get_value('mean_local_EQR'))
+#        self.classification_results[water_body].add_info('number_of_years', by_period['count'].get_value('mean_local_EQR'))
+#        self.classification_results[water_body].add_info('all_ok', all_ok)
+#                
         """
         5) EK vägs samman för ingående parametrar (tot-N, tot-P, DIN och DIP) enligt
         beskrivning nedan (6.4.2) för slutlig statusklassificering av hela kvalitetsfaktorn.
