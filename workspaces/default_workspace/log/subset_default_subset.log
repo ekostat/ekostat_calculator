@@ -258,3 +258,11 @@
 2018-04-24 11:40:32,499	logger.py	86	add_log	DEBUG	========================================================================================================================
 2018-04-24 11:40:32,499	logger.py	87	add_log	DEBUG	### Log added for log_id "default_subset" at locaton: ..\workspaces\default_workspace\log\subset_default_subset.log
 2018-04-24 11:40:32,499	logger.py	88	add_log	DEBUG	------------------------------------------------------------------------------------------------------------------------
+2018-06-01 11:43:05,980	logger.py	85	add_log	DEBUG	
+2018-06-01 11:43:05,983	logger.py	86	add_log	DEBUG	========================================================================================================================
+2018-06-01 11:43:05,985	logger.py	87	add_log	DEBUG	### Log added for log_id "default_subset" at locaton: ..\workspaces\default_workspace\log\subset_default_subset.log
+2018-06-01 11:43:05,987	logger.py	88	add_log	DEBUG	------------------------------------------------------------------------------------------------------------------------
+2018-06-01 13:24:22,888	logger.py	85	add_log	DEBUG	
+2018-06-01 13:24:22,890	logger.py	86	add_log	DEBUG	========================================================================================================================
+2018-06-01 13:24:22,892	logger.py	87	add_log	DEBUG	### Log added for log_id "default_subset" at locaton: D:\Utveckling\git\ekostat_calculator\workspaces\default_workspace\log\subset_default_subset.log
+2018-06-01 13:24:22,893	logger.py	88	add_log	DEBUG	------------------------------------------------------------------------------------------------------------------------

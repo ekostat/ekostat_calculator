@@ -242,3 +242,18 @@
 2018-04-24 11:40:32,691	logger.py	86	add_log	DEBUG	========================================================================================================================
 2018-04-24 11:40:32,693	logger.py	87	add_log	DEBUG	### Log added for log_id "default_workspace" at locaton: ..\workspaces\default_workspace\log\workspace_default_workspace.log
 2018-04-24 11:40:32,696	logger.py	88	add_log	DEBUG	------------------------------------------------------------------------------------------------------------------------
+2018-06-01 11:43:06,167	logger.py	85	add_log	DEBUG	
+2018-06-01 11:43:06,169	logger.py	86	add_log	DEBUG	========================================================================================================================
+2018-06-01 11:43:06,171	logger.py	87	add_log	DEBUG	### Log added for log_id "default_workspace" at locaton: ..\workspaces\default_workspace\log\workspace_default_workspace.log
+2018-06-01 11:43:06,172	logger.py	88	add_log	DEBUG	------------------------------------------------------------------------------------------------------------------------
+2018-06-01 13:24:23,097	logger.py	85	add_log	DEBUG	
+2018-06-01 13:24:23,097	logger.py	86	add_log	DEBUG	========================================================================================================================
+2018-06-01 13:24:23,097	logger.py	87	add_log	DEBUG	### Log added for log_id "default_workspace" at locaton: D:\Utveckling\git\ekostat_calculator\workspaces\default_workspace\log\workspace_default_workspace.log
+2018-06-01 13:24:23,107	logger.py	88	add_log	DEBUG	------------------------------------------------------------------------------------------------------------------------
+2018-06-01 13:24:23,107	workspaces.py	825	_change_ok	DEBUG	Not allowed to change default workspace!
+2018-06-01 13:24:45,179	workspaces.py	825	_change_ok	DEBUG	Not allowed to change default workspace!
+2018-06-01 13:25:39,108	workspaces.py	825	_change_ok	DEBUG	Not allowed to change default workspace!
+2018-06-01 13:26:00,285	workspaces.py	825	_change_ok	DEBUG	Not allowed to change default workspace!
+2018-06-01 13:28:46,312	workspaces.py	825	_change_ok	DEBUG	Not allowed to change default workspace!
+2018-06-01 13:33:26,093	workspaces.py	825	_change_ok	DEBUG	Not allowed to change default workspace!
+2018-06-01 13:34:23,960	workspaces.py	825	_change_ok	DEBUG	Not allowed to change default workspace!

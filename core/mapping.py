@@ -679,6 +679,7 @@ class DataTypeMapping(object):
         Loads the info file and check if all links and info is present. 
         Returns True if all is ok, else False. 
         """
+#        print('self.info_file_path', self.info_file_path)
         if not os.path.exists(self.info_file_path): 
             print('No datatype_setting file found in raw_data directory')
             return False
@@ -775,7 +776,7 @@ class DataTypeMapping(object):
     def get_file_paths_to_load_for_datatype(self, datatype, force=False, reload_file=True): 
         """
         Created     20180422    by Magnus Wenzer
-        Updated     20180422    by Magnus Wenzer
+        Updated     20180601    by Magnus Wenzer
         
         Creates a list with file paths of the active files for the give datatype. 
         By default (force=False): 
@@ -789,13 +790,16 @@ class DataTypeMapping(object):
         selection = self.df.loc[(self.df['datatype']==datatype) & (self.df['status']==1), :]
         file_paths = ['/'.join([self.raw_data_directory, path]) for path in selection['filename'].values]
         
+        if not len(selection):
+            return []
         if force:
-            return list(selection)
+            return file_paths
         else:
             if all(selection['loaded']):
                 return []
             else:
                 return file_paths
+            
             
     #==========================================================================
     def get_file_paths_to_delete_for_datatype(self, datatype, reload_file=True): 
@@ -804,10 +808,6 @@ class DataTypeMapping(object):
         Updated     20180422    by Magnus Wenzer
         
         Creates a list with file paths of the non active files for the give datatype. 
-        By default (force=False): 
-            The list is returned if any of the files are not "loaded". 
-            False is returned if all files are "loaded" 
-        If force = True the list is returned in any case. 
         """ 
         if reload_file:
             self.load_and_check_dtype_settings()
@@ -815,6 +815,7 @@ class DataTypeMapping(object):
         selection = self.df.loc[(self.df['datatype']==datatype) & (self.df['status']==0), :]
         return ['/'.join([self.raw_data_directory, path]) for path in selection['filename'].values]
         
+    
     #==========================================================================
     def reset_loaded(self): 
         """

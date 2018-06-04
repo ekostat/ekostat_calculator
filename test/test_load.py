@@ -146,8 +146,6 @@ class TestSaveAndLoad(unittest.TestCase):
             self.assertTrue(all(df == df_txt))
         
         
-        
-        
     #==========================================================================
     def test_save_load_boolean_dict(self): 
         test_dict_1 = {'a': [True, False], 
