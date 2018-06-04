@@ -1266,6 +1266,7 @@ class WorkSpace(object):
         
         sld_object = core.SaveLoadDelete(self.paths['directory_path_export_data'])
         sld_object.delete_files('all_data')
+#        sld_object.delete_files('all_data_raw')
         
 #        try:
 #            os.remove(self.paths['directory_path_input_data'] + '/exports/all_data.txt')
@@ -1584,7 +1585,7 @@ class WorkSpace(object):
         if force: 
             self._logger.debug('Method load_all_data is forced.')
             # method is forced so we delete all_data (if excisting)
-            self.delete_alldata_export()
+            self.delete_all_export_data()
         elif not self.datatype_settings.has_info:
             self._logger.debug('Could not load datatype_settings.txt. No file found?')
             return False
@@ -1631,6 +1632,11 @@ class WorkSpace(object):
         
         Load data for the specific datatype. 
         """ 
+#        print('¤'*50)
+#        print('load_datatype_data'.upper())
+#        print(self.datatype_settings.get_file_paths_to_load_for_datatype(datatype, force=False, reload_file=True))
+#        print(self.datatype_settings.df)
+#        print('&'*50)
         if not self.datatype_settings.all_selected_files_loaded_for_datatypes(datatype): 
 #            print('if not self.datatype_settings.all_selected_files_loaded_for_datatypes(datatype):')
             self.delete_datatype_export(datatype)
@@ -1658,8 +1664,8 @@ class WorkSpace(object):
                 
             # Add sources 
 #            print(datatype)
-            for source in self.datatype_settings.get_file_paths_to_load_for_datatype(datatype, force=force, reload_file=True): 
-                print('source', source)
+            for source in self.datatype_settings.get_file_paths_to_load_for_datatype(datatype, force=False, reload_file=True): 
+#                print('SOURCE', source)
                 datatype_handler_object.load_source(file_path=source, raw_data_copy=True) 
                 self.datatype_settings.set_file_is_loaded(os.path.basename(source))
             

@@ -113,8 +113,8 @@ class SaveLoadDelete(object):
         if load_txt:
             df = load_data_file(file_path=txt_file_path, sep='\t', encoding='cp1252',  fill_nan=u'')
         if os.path.exists(pickle_file_path):
-#            df = pickle.load(open(pickle_file_path, "rb"))
-            df = pd.read_pickle(pickle_file_path)
+            df = pickle.load(open(pickle_file_path, "rb"))
+#            df = pd.read_pickle(pickle_file_path)
         elif os.path.exists(txt_file_path):
             df = load_data_file(file_path=txt_file_path, sep='\t', encoding='cp1252',  fill_nan=u'')
         return df
@@ -146,8 +146,8 @@ class SaveLoadDelete(object):
             
         
         # Save pickle file 
-#        pickle.dump(df, open(pickle_file_path, "wb")) 
-        df.to_pickle(pickle_file_path)
+        pickle.dump(df, open(pickle_file_path, "wb")) 
+#        df.to_pickle(pickle_file_path)
         
         
     #==========================================================================

@@ -55,3 +55,143 @@
 2018-06-01 14:51:21,438	event_handler.py	231	copy_workspace	DEBUG	Could not add workspace with alias "test_workspace". Workspace already exists!
 2018-06-01 14:51:21,456	event_handler.py	1679	load_workspace	DEBUG	Trying to load new workspace "ee1231ae-95b9-404e-8213-9fc11de170be" with alias "test_workspace"
 2018-06-01 14:51:21,676	event_handler.py	1697	load_workspace	INFO	Workspace "ee1231ae-95b9-404e-8213-9fc11de170be" with alias "test_workspace loaded."
+2018-06-01 16:29:31,121	logger.py	85	add_log	DEBUG	
+2018-06-01 16:29:31,130	logger.py	86	add_log	DEBUG	========================================================================================================================
+2018-06-01 16:29:31,133	logger.py	87	add_log	DEBUG	### Log added for log_id "event_handler" at locaton: D:\Utveckling\git\ekostat_calculator\log\main_event_handler.log
+2018-06-01 16:29:31,136	logger.py	88	add_log	DEBUG	------------------------------------------------------------------------------------------------------------------------
+2018-06-01 16:29:31,138	event_handler.py	74	__init__	DEBUG	Start EventHandler: event_handler
+2018-06-01 16:29:34,733	event_handler.py	231	copy_workspace	DEBUG	Could not add workspace with alias "test_workspace". Workspace already exists!
+2018-06-01 16:29:34,756	event_handler.py	1680	load_workspace	DEBUG	Trying to load new workspace "65937123-ef28-4ee1-b28f-f43d8a762ab9" with alias "test_workspace"
+2018-06-01 16:29:34,978	event_handler.py	1698	load_workspace	INFO	Workspace "65937123-ef28-4ee1-b28f-f43d8a762ab9" with alias "test_workspace loaded."
+2018-06-01 16:36:55,414	event_handler.py	74	__init__	DEBUG	Start EventHandler: event_handler
+2018-06-01 16:36:58,702	event_handler.py	231	copy_workspace	DEBUG	Could not add workspace with alias "test_workspace". Workspace already exists!
+2018-06-01 16:36:58,721	event_handler.py	1680	load_workspace	DEBUG	Trying to load new workspace "65937123-ef28-4ee1-b28f-f43d8a762ab9" with alias "test_workspace"
+2018-06-01 16:36:58,899	event_handler.py	1698	load_workspace	INFO	Workspace "65937123-ef28-4ee1-b28f-f43d8a762ab9" with alias "test_workspace loaded."
+2018-06-01 16:37:38,293	event_handler.py	74	__init__	DEBUG	Start EventHandler: event_handler
+2018-06-01 16:37:41,658	event_handler.py	231	copy_workspace	DEBUG	Could not add workspace with alias "test_workspace". Workspace already exists!
+2018-06-01 16:37:41,676	event_handler.py	1680	load_workspace	DEBUG	Trying to load new workspace "65937123-ef28-4ee1-b28f-f43d8a762ab9" with alias "test_workspace"
+2018-06-01 16:37:41,862	event_handler.py	1698	load_workspace	INFO	Workspace "65937123-ef28-4ee1-b28f-f43d8a762ab9" with alias "test_workspace loaded."
+2018-06-01 16:38:29,654	event_handler.py	74	__init__	DEBUG	Start EventHandler: event_handler
+2018-06-01 16:38:33,104	event_handler.py	231	copy_workspace	DEBUG	Could not add workspace with alias "test_workspace". Workspace already exists!
+2018-06-01 16:38:33,121	event_handler.py	1680	load_workspace	DEBUG	Trying to load new workspace "65937123-ef28-4ee1-b28f-f43d8a762ab9" with alias "test_workspace"
+2018-06-01 16:38:33,298	event_handler.py	1698	load_workspace	INFO	Workspace "65937123-ef28-4ee1-b28f-f43d8a762ab9" with alias "test_workspace loaded."
+2018-06-01 16:48:23,490	logger.py	85	add_log	DEBUG	
+2018-06-01 16:48:23,498	logger.py	86	add_log	DEBUG	========================================================================================================================
+2018-06-01 16:48:23,500	logger.py	87	add_log	DEBUG	### Log added for log_id "event_handler" at locaton: D:\Utveckling\git\ekostat_calculator\log\main_event_handler.log
+2018-06-01 16:48:23,502	logger.py	88	add_log	DEBUG	------------------------------------------------------------------------------------------------------------------------
+2018-06-01 16:48:23,503	event_handler.py	74	__init__	DEBUG	Start EventHandler: event_handler
+2018-06-01 16:48:27,090	event_handler.py	242	copy_workspace	DEBUG	Trying to copy workspace "default_workspace". Copy has alias "test_workspace"
+2018-06-01 16:48:27,203	event_handler.py	1679	load_workspace	DEBUG	Trying to load new workspace "f8fb3d42-3ee9-4c47-8aa8-41f28f532290" with alias "test_workspace"
+2018-06-01 16:48:27,417	event_handler.py	1697	load_workspace	INFO	Workspace "f8fb3d42-3ee9-4c47-8aa8-41f28f532290" with alias "test_workspace loaded."
+2018-06-01 16:49:04,495	event_handler.py	74	__init__	DEBUG	Start EventHandler: event_handler
+2018-06-01 16:49:07,953	event_handler.py	231	copy_workspace	DEBUG	Could not add workspace with alias "test_workspace". Workspace already exists!
+2018-06-01 16:49:07,970	event_handler.py	1679	load_workspace	DEBUG	Trying to load new workspace "f8fb3d42-3ee9-4c47-8aa8-41f28f532290" with alias "test_workspace"
+2018-06-01 16:49:08,147	event_handler.py	1697	load_workspace	INFO	Workspace "f8fb3d42-3ee9-4c47-8aa8-41f28f532290" with alias "test_workspace loaded."
+2018-06-01 16:49:45,300	logger.py	85	add_log	DEBUG	
+2018-06-01 16:49:45,309	logger.py	86	add_log	DEBUG	========================================================================================================================
+2018-06-01 16:49:45,311	logger.py	87	add_log	DEBUG	### Log added for log_id "event_handler" at locaton: D:\Utveckling\git\ekostat_calculator\log\main_event_handler.log
+2018-06-01 16:49:45,314	logger.py	88	add_log	DEBUG	------------------------------------------------------------------------------------------------------------------------
+2018-06-01 16:49:45,316	event_handler.py	74	__init__	DEBUG	Start EventHandler: event_handler
+2018-06-01 16:49:48,797	event_handler.py	242	copy_workspace	DEBUG	Trying to copy workspace "default_workspace". Copy has alias "test_workspace"
+2018-06-01 16:49:48,903	event_handler.py	1679	load_workspace	DEBUG	Trying to load new workspace "83a74a3a-c65a-4ddf-a236-94101aac1411" with alias "test_workspace"
+2018-06-01 16:49:49,135	event_handler.py	1697	load_workspace	INFO	Workspace "83a74a3a-c65a-4ddf-a236-94101aac1411" with alias "test_workspace loaded."
+2018-06-01 16:53:06,661	event_handler.py	1690	load_workspace	DEBUG	Workspace "83a74a3a-c65a-4ddf-a236-94101aac1411" with alias "test_workspace" is already loaded. Set reload=True if you want to reload the workspace.
+2018-06-01 16:53:06,666	event_handler.py	1697	load_workspace	INFO	Workspace "83a74a3a-c65a-4ddf-a236-94101aac1411" with alias "test_workspace loaded."
+2018-06-01 16:53:43,792	event_handler.py	74	__init__	DEBUG	Start EventHandler: event_handler
+2018-06-01 16:53:47,273	event_handler.py	231	copy_workspace	DEBUG	Could not add workspace with alias "test_workspace". Workspace already exists!
+2018-06-01 16:53:52,647	event_handler.py	74	__init__	DEBUG	Start EventHandler: event_handler
+2018-06-01 16:53:55,993	event_handler.py	231	copy_workspace	DEBUG	Could not add workspace with alias "test_workspace". Workspace already exists!
+2018-06-01 16:54:02,188	event_handler.py	74	__init__	DEBUG	Start EventHandler: event_handler
+2018-06-01 16:54:05,650	event_handler.py	231	copy_workspace	DEBUG	Could not add workspace with alias "test_workspace". Workspace already exists!
+2018-06-01 16:54:05,666	event_handler.py	1679	load_workspace	DEBUG	Trying to load new workspace "83a74a3a-c65a-4ddf-a236-94101aac1411" with alias "test_workspace"
+2018-06-01 16:54:05,847	event_handler.py	1697	load_workspace	INFO	Workspace "83a74a3a-c65a-4ddf-a236-94101aac1411" with alias "test_workspace loaded."
+2018-06-01 16:58:47,475	logger.py	85	add_log	DEBUG	
+2018-06-01 16:58:47,486	logger.py	86	add_log	DEBUG	========================================================================================================================
+2018-06-01 16:58:47,488	logger.py	87	add_log	DEBUG	### Log added for log_id "event_handler" at locaton: D:\Utveckling\git\ekostat_calculator\log\main_event_handler.log
+2018-06-01 16:58:47,490	logger.py	88	add_log	DEBUG	------------------------------------------------------------------------------------------------------------------------
+2018-06-01 16:58:47,494	event_handler.py	74	__init__	DEBUG	Start EventHandler: event_handler
+2018-06-01 16:58:51,228	event_handler.py	242	copy_workspace	DEBUG	Trying to copy workspace "default_workspace". Copy has alias "test_workspace"
+2018-06-01 16:58:51,354	event_handler.py	1679	load_workspace	DEBUG	Trying to load new workspace "5755da79-b0c1-446e-a33c-97c43b0b5077" with alias "test_workspace"
+2018-06-01 16:58:51,595	event_handler.py	1697	load_workspace	INFO	Workspace "5755da79-b0c1-446e-a33c-97c43b0b5077" with alias "test_workspace loaded."
+2018-06-01 16:59:19,672	event_handler.py	74	__init__	DEBUG	Start EventHandler: event_handler
+2018-06-01 16:59:23,389	event_handler.py	231	copy_workspace	DEBUG	Could not add workspace with alias "test_workspace". Workspace already exists!
+2018-06-01 16:59:23,407	event_handler.py	1679	load_workspace	DEBUG	Trying to load new workspace "5755da79-b0c1-446e-a33c-97c43b0b5077" with alias "test_workspace"
+2018-06-01 16:59:23,637	event_handler.py	1697	load_workspace	INFO	Workspace "5755da79-b0c1-446e-a33c-97c43b0b5077" with alias "test_workspace loaded."
+2018-06-01 17:00:38,990	event_handler.py	74	__init__	DEBUG	Start EventHandler: event_handler
+2018-06-01 17:00:43,688	event_handler.py	231	copy_workspace	DEBUG	Could not add workspace with alias "test_workspace". Workspace already exists!
+2018-06-01 17:00:43,709	event_handler.py	1679	load_workspace	DEBUG	Trying to load new workspace "5755da79-b0c1-446e-a33c-97c43b0b5077" with alias "test_workspace"
+2018-06-01 17:00:43,930	event_handler.py	1697	load_workspace	INFO	Workspace "5755da79-b0c1-446e-a33c-97c43b0b5077" with alias "test_workspace loaded."
+2018-06-01 17:01:06,292	event_handler.py	74	__init__	DEBUG	Start EventHandler: event_handler
+2018-06-01 17:01:11,389	event_handler.py	231	copy_workspace	DEBUG	Could not add workspace with alias "test_workspace". Workspace already exists!
+2018-06-01 17:01:11,407	event_handler.py	1679	load_workspace	DEBUG	Trying to load new workspace "5755da79-b0c1-446e-a33c-97c43b0b5077" with alias "test_workspace"
+2018-06-01 17:01:11,736	event_handler.py	1697	load_workspace	INFO	Workspace "5755da79-b0c1-446e-a33c-97c43b0b5077" with alias "test_workspace loaded."
+2018-06-01 17:01:42,903	event_handler.py	74	__init__	DEBUG	Start EventHandler: event_handler
+2018-06-01 17:01:46,830	event_handler.py	231	copy_workspace	DEBUG	Could not add workspace with alias "test_workspace". Workspace already exists!
+2018-06-01 17:01:46,849	event_handler.py	1679	load_workspace	DEBUG	Trying to load new workspace "5755da79-b0c1-446e-a33c-97c43b0b5077" with alias "test_workspace"
+2018-06-01 17:01:47,110	event_handler.py	1697	load_workspace	INFO	Workspace "5755da79-b0c1-446e-a33c-97c43b0b5077" with alias "test_workspace loaded."
+2018-06-01 17:03:22,065	event_handler.py	1004	get_workspace	DEBUG	Getting workspace "5755da79-b0c1-446e-a33c-97c43b0b5077" with alias "None"
+2018-06-01 17:06:53,803	event_handler.py	1004	get_workspace	DEBUG	Getting workspace "5755da79-b0c1-446e-a33c-97c43b0b5077" with alias "None"
+2018-06-04 08:05:19,673	logger.py	85	add_log	DEBUG	
+2018-06-04 08:05:19,683	logger.py	86	add_log	DEBUG	========================================================================================================================
+2018-06-04 08:05:19,683	logger.py	87	add_log	DEBUG	### Log added for log_id "event_handler" at locaton: D:\Utveckling\git\ekostat_calculator\log\main_event_handler.log
+2018-06-04 08:05:19,683	logger.py	88	add_log	DEBUG	------------------------------------------------------------------------------------------------------------------------
+2018-06-04 08:05:19,683	event_handler.py	74	__init__	DEBUG	Start EventHandler: event_handler
+2018-06-04 08:05:24,633	event_handler.py	231	copy_workspace	DEBUG	Could not add workspace with alias "test_workspace". Workspace already exists!
+2018-06-04 08:05:24,653	event_handler.py	1674	load_workspace	DEBUG	Trying to load new workspace "5755da79-b0c1-446e-a33c-97c43b0b5077" with alias "test_workspace"
+2018-06-04 08:05:24,953	event_handler.py	1692	load_workspace	INFO	Workspace "5755da79-b0c1-446e-a33c-97c43b0b5077" with alias "test_workspace loaded."
+2018-06-04 08:16:32,292	event_handler.py	74	__init__	DEBUG	Start EventHandler: event_handler
+2018-06-04 08:16:36,929	event_handler.py	231	copy_workspace	DEBUG	Could not add workspace with alias "test_workspace". Workspace already exists!
+2018-06-04 08:16:36,949	event_handler.py	1674	load_workspace	DEBUG	Trying to load new workspace "5755da79-b0c1-446e-a33c-97c43b0b5077" with alias "test_workspace"
+2018-06-04 08:16:37,159	event_handler.py	1692	load_workspace	INFO	Workspace "5755da79-b0c1-446e-a33c-97c43b0b5077" with alias "test_workspace loaded."
+2018-06-04 08:21:04,982	logger.py	85	add_log	DEBUG	
+2018-06-04 08:21:04,982	logger.py	86	add_log	DEBUG	========================================================================================================================
+2018-06-04 08:21:04,982	logger.py	87	add_log	DEBUG	### Log added for log_id "event_handler" at locaton: D:\Utveckling\git\ekostat_calculator\log\main_event_handler.log
+2018-06-04 08:21:04,992	logger.py	88	add_log	DEBUG	------------------------------------------------------------------------------------------------------------------------
+2018-06-04 08:21:04,992	event_handler.py	74	__init__	DEBUG	Start EventHandler: event_handler
+2018-06-04 08:21:10,094	event_handler.py	231	copy_workspace	DEBUG	Could not add workspace with alias "test_workspace". Workspace already exists!
+2018-06-04 08:21:10,114	event_handler.py	1674	load_workspace	DEBUG	Trying to load new workspace "5755da79-b0c1-446e-a33c-97c43b0b5077" with alias "test_workspace"
+2018-06-04 08:21:10,424	event_handler.py	1692	load_workspace	INFO	Workspace "5755da79-b0c1-446e-a33c-97c43b0b5077" with alias "test_workspace loaded."
+2018-06-04 08:22:28,331	event_handler.py	74	__init__	DEBUG	Start EventHandler: event_handler
+2018-06-04 08:22:33,669	event_handler.py	231	copy_workspace	DEBUG	Could not add workspace with alias "test_workspace". Workspace already exists!
+2018-06-04 08:22:33,691	event_handler.py	1674	load_workspace	DEBUG	Trying to load new workspace "5755da79-b0c1-446e-a33c-97c43b0b5077" with alias "test_workspace"
+2018-06-04 08:22:34,002	event_handler.py	1692	load_workspace	INFO	Workspace "5755da79-b0c1-446e-a33c-97c43b0b5077" with alias "test_workspace loaded."
+2018-06-04 08:25:11,976	event_handler.py	74	__init__	DEBUG	Start EventHandler: event_handler
+2018-06-04 08:25:16,445	event_handler.py	231	copy_workspace	DEBUG	Could not add workspace with alias "test_workspace". Workspace already exists!
+2018-06-04 08:25:16,464	event_handler.py	1674	load_workspace	DEBUG	Trying to load new workspace "5755da79-b0c1-446e-a33c-97c43b0b5077" with alias "test_workspace"
+2018-06-04 08:25:16,732	event_handler.py	1692	load_workspace	INFO	Workspace "5755da79-b0c1-446e-a33c-97c43b0b5077" with alias "test_workspace loaded."
+2018-06-04 08:45:58,993	event_handler.py	74	__init__	DEBUG	Start EventHandler: event_handler
+2018-06-04 08:46:03,741	event_handler.py	231	copy_workspace	DEBUG	Could not add workspace with alias "test_workspace". Workspace already exists!
+2018-06-04 08:46:03,761	event_handler.py	1674	load_workspace	DEBUG	Trying to load new workspace "5755da79-b0c1-446e-a33c-97c43b0b5077" with alias "test_workspace"
+2018-06-04 08:46:04,038	event_handler.py	1692	load_workspace	INFO	Workspace "5755da79-b0c1-446e-a33c-97c43b0b5077" with alias "test_workspace loaded."
+2018-06-04 08:46:33,302	event_handler.py	74	__init__	DEBUG	Start EventHandler: event_handler
+2018-06-04 08:46:58,579	event_handler.py	74	__init__	DEBUG	Start EventHandler: event_handler
+2018-06-04 08:47:03,659	event_handler.py	231	copy_workspace	DEBUG	Could not add workspace with alias "test_workspace". Workspace already exists!
+2018-06-04 08:47:03,679	event_handler.py	1674	load_workspace	DEBUG	Trying to load new workspace "5755da79-b0c1-446e-a33c-97c43b0b5077" with alias "test_workspace"
+2018-06-04 08:47:03,918	event_handler.py	1692	load_workspace	INFO	Workspace "5755da79-b0c1-446e-a33c-97c43b0b5077" with alias "test_workspace loaded."
+2018-06-04 08:47:31,687	event_handler.py	74	__init__	DEBUG	Start EventHandler: event_handler
+2018-06-04 09:07:11,290	event_handler.py	74	__init__	DEBUG	Start EventHandler: event_handler
+2018-06-04 09:07:17,859	event_handler.py	231	copy_workspace	DEBUG	Could not add workspace with alias "test_workspace". Workspace already exists!
+2018-06-04 09:07:17,878	event_handler.py	1674	load_workspace	DEBUG	Trying to load new workspace "5755da79-b0c1-446e-a33c-97c43b0b5077" with alias "test_workspace"
+2018-06-04 09:07:18,263	event_handler.py	1692	load_workspace	INFO	Workspace "5755da79-b0c1-446e-a33c-97c43b0b5077" with alias "test_workspace loaded."
+2018-06-04 09:07:54,855	event_handler.py	74	__init__	DEBUG	Start EventHandler: event_handler
+2018-06-04 09:08:31,377	event_handler.py	74	__init__	DEBUG	Start EventHandler: event_handler
+2018-06-04 09:08:39,066	event_handler.py	231	copy_workspace	DEBUG	Could not add workspace with alias "test_workspace". Workspace already exists!
+2018-06-04 09:08:39,076	event_handler.py	74	__init__	DEBUG	Start EventHandler: event_handler
+2018-06-04 09:09:35,968	event_handler.py	74	__init__	DEBUG	Start EventHandler: event_handler
+2018-06-04 09:09:41,695	event_handler.py	231	copy_workspace	DEBUG	Could not add workspace with alias "test_workspace". Workspace already exists!
+2018-06-04 09:09:41,708	event_handler.py	74	__init__	DEBUG	Start EventHandler: event_handler
+2018-06-04 09:09:56,308	event_handler.py	74	__init__	DEBUG	Start EventHandler: event_handler
+2018-06-04 09:10:04,584	event_handler.py	231	copy_workspace	DEBUG	Could not add workspace with alias "test_workspace". Workspace already exists!
+2018-06-04 09:10:04,604	event_handler.py	74	__init__	DEBUG	Start EventHandler: event_handler
+2018-06-04 09:11:30,246	event_handler.py	74	__init__	DEBUG	Start EventHandler: event_handler
+2018-06-04 09:11:35,058	event_handler.py	231	copy_workspace	DEBUG	Could not add workspace with alias "test_workspace". Workspace already exists!
+2018-06-04 09:11:35,078	event_handler.py	1674	load_workspace	DEBUG	Trying to load new workspace "5755da79-b0c1-446e-a33c-97c43b0b5077" with alias "test_workspace"
+2018-06-04 09:11:35,409	event_handler.py	1692	load_workspace	INFO	Workspace "5755da79-b0c1-446e-a33c-97c43b0b5077" with alias "test_workspace loaded."
+2018-06-04 09:11:35,425	event_handler.py	74	__init__	DEBUG	Start EventHandler: event_handler
+2018-06-04 09:12:01,422	event_handler.py	74	__init__	DEBUG	Start EventHandler: event_handler
+2018-06-04 09:12:06,216	event_handler.py	231	copy_workspace	DEBUG	Could not add workspace with alias "test_workspace". Workspace already exists!
+2018-06-04 09:12:06,236	event_handler.py	1674	load_workspace	DEBUG	Trying to load new workspace "5755da79-b0c1-446e-a33c-97c43b0b5077" with alias "test_workspace"
+2018-06-04 09:12:06,509	event_handler.py	1692	load_workspace	INFO	Workspace "5755da79-b0c1-446e-a33c-97c43b0b5077" with alias "test_workspace loaded."
+2018-06-04 09:12:06,519	event_handler.py	74	__init__	DEBUG	Start EventHandler: event_handler
+2018-06-04 09:12:10,990	event_handler.py	1674	load_workspace	DEBUG	Trying to load new workspace "5755da79-b0c1-446e-a33c-97c43b0b5077" with alias "test_workspace"
+2018-06-04 09:12:11,244	event_handler.py	1692	load_workspace	INFO	Workspace "5755da79-b0c1-446e-a33c-97c43b0b5077" with alias "test_workspace loaded."

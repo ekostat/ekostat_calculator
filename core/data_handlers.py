@@ -1069,18 +1069,20 @@ class DataHandler(object):
                 x = ''
             return x
         
-
+        print('self.all_data', len(self.all_data))
         if len(self.all_data): 
             return False, False
         else:
             sld_object = core.SaveLoadDelete(self.export_directory) # 20180525    by Magnus Wenzer
             try:
                 self.all_data = sld_object.load_df('all_data', load_txt=False) # 20180525    by Magnus Wenzer
-#                self.all_data = pickle.load(open(self.export_directory + "/all_data.pickle", "rb"))
+#                print()
+#                with open(self.export_directory + "/all_data.pkl", "rb") as fid:
+#                    self.all_data = pickle.load(fid)
                 filetype = 'pickle'
             except (FileNotFoundError, UnboundLocalError) as e: 
                 # UnboundLocalError is for when df was not created in sld_object.load_df()
-                
+                print('MMMMMMMMM')
                 try: 
                     self.all_data = sld_object.load_df('all_data_raw', load_txt=False) # 20180525    by Magnus Wenzer
 #                    self.all_data = pickle.load(open(self.export_directory + "/all_data_raw.pickle", "rb"))
@@ -1195,8 +1197,9 @@ class DataHandler(object):
                 
                 sld_object.save_df(self.all_data, file_name='all_data', force_save_txt=True, only_pkl=False) # 20180525    by Magnus Wenzer
 #                self.df = 
-#                pickle.dump(self.all_data, open(self.export_directory + "/all_data.pickle", "wb"))
-#                save_data_file(df=self.all_data, 
+#                with open(self.export_directory + "/all_data.pkl", "rb") as fid:
+#                    pickle.dump(self.all_data, fid, "wb")
+#                core.load.save_data_file(df=self.all_data, 
 #                               directory=self.export_directory, 
 #                               file_name='all_data.txt')
                 filetype = 'txt'

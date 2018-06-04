@@ -8,12 +8,13 @@ import unittest
 import os 
 import sys 
 import time
-import pandas as pd
+import pandas as pd 
+from pandas.util.testing import assert_frame_equal # <-- for testing dataframes
 import pickle
 #import core
 
-TEST_DIRECTORY = 'D:\\Utveckling\\git\\ekostat_calculator\\test'
-#TEST_DIRECTORY = os.path.dirname(os.path.realpath(__file__)) 
+#TEST_DIRECTORY = 'D:\\Utveckling\\git\\ekostat_calculator\\test'
+TEST_DIRECTORY = os.path.dirname(os.path.realpath(__file__)) 
 TESTDATA_DIRECTORY = TEST_DIRECTORY + '/testdata'
 BASE_DIRECTORY = os.path.dirname(TEST_DIRECTORY)
 if BASE_DIRECTORY not in sys.path:
@@ -50,14 +51,22 @@ class TestEventHandler(unittest.TestCase):
         
         
         self.workspace_uuid = self.ekos.get_unique_id_for_alias(self.workspace_alias)
+        self.ekos.action_load_workspace(self.workspace_uuid)
         
-        self.ekos.action_workspace_load_default_data(self.workspace_uuid)
+        
+        if LOAD_DEFAULT_DATA:
+            self.ekos.action_workspace_load_default_data(self.workspace_uuid)
         
         file_names = ['physicalchemical_sharkweb_data_fyskem_wb_2007-2017_20180320.txt']
         for file_name in file_names: 
             self.ekos.set_status_for_datasource(workspace_unique_id=self.workspace_uuid, file_name=file_name, status=True)        
         
+        
         self.ekos.load_data(unique_id=self.workspace_alias)
+        
+        print('-'*50)
+        print(self.ekos.workspaces)
+        print('-'*50)
     
     #==========================================================================
     @classmethod
@@ -75,17 +84,30 @@ class TestEventHandler(unittest.TestCase):
     
     
     #==========================================================================
-    def test_1(self):
-        pass
+    def test_compare_all_data(self):
+        self.ekos.action_load_workspace(self.workspace_uuid)
+        print('='*50)
+        print(self.ekos.workspaces)
+        print('='*50)
+        all_data = self.ekos.workspaces[self.workspace_uuid].data_handler.all_data
         
+        directory = 'D:/Utveckling/git/ekostat_calculator/workspaces/{}/input_data/exports'.format(self.workspace_uuid)
+        with open(directory + "/all_data.pkl", "rb") as fid:
+            all_data_pkl = pickle.load(fid)
+        all_data_txt = pd.read_csv(directory + "/all_data.txt", sep='\t', encoding='cp1252')
+        
+        assert_frame_equal(all_data, all_data_txt)
+        assert_frame_equal(all_data, all_data_pkl)
        
+        
+        
 class EKOS(): 
     """
     Created:        20180601     by Magnus
     Last modified:  
     """ 
     #==========================================================================
-    @classmethod
+#    @classmethod
     def setUpClass(self): 
         print('='*50)
         print('setUpClass in TestEventHandler')
@@ -103,22 +125,35 @@ class EKOS():
         
         
         self.workspace_uuid = self.ekos.get_unique_id_for_alias(self.workspace_alias)
-        
+#        
         self.ekos.action_workspace_load_default_data(self.workspace_uuid)
-        
+#        
         file_names = ['physicalchemical_sharkweb_data_fyskem_wb_2007-2017_20180320.txt']
         for file_name in file_names: 
+            print('AAAAAAAAAAAAAA', file_name)
             self.ekos.set_status_for_datasource(workspace_unique_id=self.workspace_uuid, file_name=file_name, status=True)        
+            
         
-        self.ekos.load_data(unique_id=self.workspace_alias)
+        self.ekos.load_data(unique_id=self.workspace_uuid)
+        
+    def compare(self): 
+        
+        self.all_data = self.ekos.workspaces[self.workspace_uuid].data_handler.all_data
+        
+        self.directory = 'D:/Utveckling/git/ekostat_calculator/workspaces/{}/input_data/exports'.format(self.workspace_uuid)
+        self.all_data_pkl = pickle.load(open(self.directory + "/all_data.pkl", "rb"))
+        self.all_data_txt = pd.read_csv(self.directory + "/all_data.txt", sep='\t', encoding='cp1252')
         
 #==============================================================================
 #==============================================================================
 #==============================================================================      
 if __name__ == "__main__":
-    e = EKOS()
-    e.setUpClass()
-#    unittest.main() 
+#    e = EKOS()
+#    e.setUpClass()
+    
+    LOAD_DEFAULT_DATA = False
+    
+    unittest.main() 
     
     
     

@@ -982,26 +982,21 @@ class EventHandler(object):
     
     
     #==========================================================================
-    def get_workspace(self, alias=None, unique_id=None, include_deleted=False): 
+    def get_workspace(self, unique_id=None): 
         """
         Created     20180219    by Magnus Wenzer
-        Updated     20180219    by Magnus Wenzer
+        Updated     20180601    by Magnus Wenzer
         
         """
         # Get UUID for workspace
-        if alias == 'default_workspace':
-            unique_id = 'default_workspace'
+        if unique_id == 'default_workspace': 
+            pass
         else:
             uuid_mapping = self._get_uuid_mapping_object()
-            status = self.include_status[:]
-            if include_deleted:
-                status.append('deleted')
-            if not unique_id:
-                unique_id = uuid_mapping.get_uuid(alias, status=status)
-        if not unique_id:
-            return False
-        # return matching workspace 
-        self._logger.debug('Getting workspace "{}" with alias "{}"'.format(unique_id, alias)) 
+
+            alias = uuid_mapping.get_alias(unique_id)
+            # return matching workspace 
+            self._logger.debug('Getting workspace "{}" with alias "{}"'.format(unique_id, alias)) 
         
         return self.workspaces.get(unique_id, None)
     
