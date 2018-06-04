@@ -1025,7 +1025,7 @@ class SettingsRef(SettingsBase):
                 s = salinity
                 ref_value = eval(ref_value) 
             except TypeError as e:
-                raise TypeError('{}\nSalinity TypeError, salinity must be int, float or nan but is {}'.format(e, s))
+                raise TypeError('{}\nSalinity TypeError, salinity must be int, float or nan but is {}'.format(e, repr(s)))
                 #TODO: add closes matching salinity somewhere here
         elif not ref_value:
             return False
