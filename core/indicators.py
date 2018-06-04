@@ -5,6 +5,7 @@ Created on Mon Jul 10 15:24:34 2017
 @author: a001985
 """
 import numpy as np
+import pandas as pd
 
 import core 
 
@@ -18,10 +19,15 @@ class ClassificationResult(dict):
         
         self['parameter'] = None 
         self['salt_parameter'] = None
-        self['water_body'] = None
+        self['indicator'] = None
         self['all_data'] = None
         self['all_ok'] = False
-        self['water_body_status'] = None
+        self['status_by_date'] = pd.DataFrame(columns = ['VISS_EU_CD', 'WATER_TYPE_AREA',
+                                'DATE', 'STATUS	VALUE', 'REF VALUE', 'local_EQR','	global_EQR'])
+        self['status_by_year'] = pd.DataFrame(columns = ['VISS_EU_CD', 'WATER_TYPE_AREA',
+                                'YEAR', 'STATUS	VALUE', 'REF VALUE', 'local_EQR','	global_EQR','Number of DATES', 'MONTHS INCLUDED'])
+        self['status_by_period'] = pd.DataFrame(columns = ['VISS_EU_CD', 'WATER_TYPE_AREA',
+                                'PERIOD', 'STATUS	VALUE', 'REF VALUE', 'local_EQR','	global_EQR','	Number of YEARS', 'YEARS INCLUDED'])
         
         self._set_attributes()
         
@@ -66,7 +72,7 @@ class IndicatorBase(object):
         self.indicator_parameter = self.parameter_list[0]
         # attributes that will be calculated
         self.water_body_indicator_df = {}
-        self.classification_results = {}
+        self.classification_results = ClassificationResult()
         # perform checks before continuing
         self._check()
         self._set_directories()
@@ -130,7 +136,8 @@ class IndicatorBase(object):
         
         if not value:
             value = getattr(self.classification_results[water_body], 'value')
-
+        if value < 0:
+            raise('Error: _calculate_global_EQR_from_indicator_value: {} value below 0.'.format(value))
         # Get EQR-class limits for the type area to be able to calculate the weighted numerical class
         REF_VALUE = self.ref_settings.get_ref_value(water_body = water_body)
         HG_VALUE_LIMIT = self.ref_settings.get_value(variable = 'HG_VALUE_LIMIT', water_body = water_body)
@@ -138,7 +145,8 @@ class IndicatorBase(object):
         MP_VALUE_LIMIT = self.ref_settings.get_value(variable = 'MP_VALUE_LIMIT', water_body = water_body)
         PB_VALUE_LIMIT = self.ref_settings.get_value(variable = 'PB_VALUE_LIMIT', water_body = water_body)
 
-        if self.name == 'BQI'  or self.name.lower() == 'oxygen':
+#        if self.name == 'BQI'  or self.name.lower() == 'oxygen':
+        if HG_VALUE_LIMIT - GM_VALUE_LIMIT > 0:
             if value > HG_VALUE_LIMIT: 
                 status = 'HIGH'
                 global_low = 0.8 
@@ -168,8 +176,45 @@ class IndicatorBase(object):
                 global_low = 0 
                 high_value = PB_VALUE_LIMIT
                 low_value = 0
+                
         else:
-            return False
+             # When higher value means lower status (decreasing)
+            if value > PB_VALUE_LIMIT:
+                status = 'BAD'
+                global_low = 0.2
+                high_value = 1
+                # om värde ist för ek ska ek_high vara ref_värdet eller Bmax värde
+                low_value = PB_VALUE_LIMIT
+                if value > REF_VALUE:
+                    value = 1
+                
+            elif value > MP_VALUE_LIMIT:
+                status = 'POOR'
+                global_low = 0.4 
+                high_value = PB_VALUE_LIMIT
+                low_value = MP_VALUE_LIMIT
+                
+            elif value > GM_VALUE_LIMIT:
+                status = 'MODERATE'
+                global_low = 0.6 
+                high_value = MP_VALUE_LIMIT
+                low_value = GM_VALUE_LIMIT
+
+            elif value > HG_VALUE_LIMIT:
+                status = 'GOOD'
+                global_low = 0.8 
+                high_value = GM_VALUE_LIMIT
+                low_value = HG_VALUE_LIMIT
+                
+            else:
+                status = 'HIGH'
+                global_low = 1
+                high_value = HG_VALUE_LIMIT 
+                low_value = 0
+                if value < Bmin:
+                    value = 0
+                
+                    
         print('******',REF_VALUE,'******')
         print('-------***-------')
         print(type(global_low), type(value), type(low_value), type(high_value))
@@ -179,8 +224,10 @@ class IndicatorBase(object):
         self.classification_results[water_body].add_info('global_EQR', global_EQR)
         self.classification_results[water_body].add_info('status', status)
     
+    
+    
     #==========================================================================
-    def _calculate_global_EQR_from_ER(self, water_body, local_EQR):
+    def _calculate_global_EQR_from_local_EQR(self, water_body, local_EQR):
         """
         Calculates EQR from local_EQR values according to eq. 1 in WATERS final report p 153.
         Boundaries for all classes are read from RefSettings object
@@ -190,22 +237,30 @@ class IndicatorBase(object):
             local_EQR = getattr(self.classification_results[water_body], 'local_EQR')
         else:
             self.classification_results[water_body].add_info('local_EQR', local_EQR)
-
+        
+        if local_EQR < 0:
+            raise('Error: _calculate_global_EQR_from_indicator_value: {} local_EQR value below 0.'.format(local_EQR))
+        
         # Get EQR-class limits for the type area to be able to calculate the weighted numerical class
         HG_EQR_LIMIT = self.ref_settings.get_value(variable = 'HG_EQR_LIMIT', water_body = water_body)
         GM_EQR_LIMIT = self.ref_settings.get_value(variable = 'GM_EQR_LIMIT', water_body = water_body)
         MP_EQR_LIMIT = self.ref_settings.get_value(variable = 'MP_EQR_LIMIT', water_body = water_body)
         PB_EQR_LIMIT = self.ref_settings.get_value(variable = 'PB_EQR_LIMIT', water_body = water_body)
+        
         ek = local_EQR
-        if self.name == 'BQI' or self.name.lower() == 'secchi' or self.name.lower() == 'oxygen':
-            return False
-        else:
+#        if self.name == 'BQI' or self.name.lower() == 'secchi' or self.name.lower() == 'oxygen':
+#            return False
+#        else:
+        if HG_EQR_LIMIT - GM_EQR_LIMIT > 0:
+            # When higher EQR means higher status (increasing)
             if ek > HG_EQR_LIMIT: 
                 status = 'HIGH'
                 global_low = 0.8 
                 ek_high = 1
-                # om värde ist för ek ska ek_high vara ref_värdet
+                # om värde ist för ek ska ek_high vara ref_värdet eller Bmax värde
                 ek_low = HG_EQR_LIMIT
+                if ek > 1:
+                    ek = 1
                 
             elif ek > GM_EQR_LIMIT:
                 status = 'GOOD'
@@ -230,6 +285,45 @@ class IndicatorBase(object):
                 global_low = 0 
                 ek_high = PB_EQR_LIMIT
                 ek_low = 0
+                if ek < 0:
+                    ek = 0
+                
+        else:
+            # When higher EQR means lower status (decreasing)
+            if ek > PB_EQR_LIMIT:
+                status = 'BAD'
+                global_low = 0.2
+                ek_high = 1
+                # om värde ist för ek ska ek_high vara ref_värdet eller Bmax värde
+                ek_low = PB_EQR_LIMIT
+                if ek > 1:
+                    ek = 1
+                
+            elif ek > MP_EQR_LIMIT:
+                status = 'POOR'
+                global_low = 0.4 
+                ek_high = PB_EQR_LIMIT
+                ek_low = MP_EQR_LIMIT
+                
+            elif ek > GM_EQR_LIMIT:
+                status = 'MODERATE'
+                global_low = 0.6 
+                ek_high = MP_EQR_LIMIT
+                ek_low = GM_EQR_LIMIT
+
+            elif ek > HG_EQR_LIMIT:
+                status = 'GOOD'
+                global_low = 0.8 
+                ek_high = GM_EQR_LIMIT
+                ek_low = HG_EQR_LIMIT
+                
+            else:
+                status = 'HIGH'
+                global_low = 1
+                ek_high = HG_EQR_LIMIT 
+                ek_low = 0
+                if ek < 0:
+                    ek = 0
         
         
         # Weighted numerical class
@@ -260,6 +354,33 @@ class IndicatorBase(object):
 #            raise('Error: numeric class: {} incorrect.'.format(local_EQR))
 #    
 #        return EQR, status
+
+    #==========================================================================
+    def _set_water_body_indicator_df(self, water_body = None):
+        """
+        Created:        20180215     by Lena
+        Last modified:  20180328     by Lena
+        df should contain:
+            - all needed columns from get_filtered_data
+            - referencevalues
+            - maybe other info needed for indicator functions
+        skapa df utifrån:
+        self.index_handler
+        self.tolerance_settings
+        self.indicator_ref_settings
+        """
+        #type_area = self.mapping_objects['water_body'].get_type_area_for_water_body(water_body, include_suffix=True)
+        if water_body:
+            print(water_body)
+            df = self.get_filtered_data(subset = self.subset, step = 'step_2', water_body = water_body, indicator = self.name).copy(deep = True)
+            df = df[self.column_list]
+            df = df.dropna(subset = [self.indicator_parameter])
+            print(df.dtypes)
+            df = self._add_reference_value_to_df(df, water_body)
+            self.water_body_indicator_df[water_body] = df 
+        else:
+            print('water_body must be given to set_water_body_indicator_df')
+            
     #==========================================================================
     def get_filtered_data(self, subset=None, step=None, water_body=None, indicator=None):
         """
@@ -269,62 +390,62 @@ class IndicatorBase(object):
 
         return self.index_handler.get_filtered_data(subset, step, water_body, indicator)
    
-    #==========================================================================
-    def get_numerical_class(self, ek, water_body):
-        """
-        Calculates indicator class (Nklass) according to eq 2.1 in HVMFS 2013:19.
-        Returns a tuple with four values, low, ek_low, ek_heigh and the resulting Nklass.
-        This is specific for the nutrient and phytoplankton indicators.
-        There needs to be:
-            - one def to get nutrient num_class for nutrient indicators (this one as is)
-            - one def to get indicator class and value with the indicator specific EQR and the EQR transformed to the common scale
-            (for nutrients that is num_class on scale 0-4.99 for most others some values on a 0-1 scale)
-        """
-        type_area = self.mapping_objects['water_body'].get_type_area_for_water_body(water_body, include_suffix=True)
-        # Get EQR-class limits for the type area to be able to calculate the weighted numerical class
-        HG_EQR_LIMIT = self.ref_settings.get_value(variable = 'HG_EQR_LIMIT', type_area = type_area)
-        GM_EQR_LIMIT = self.ref_settings.get_value(variable = 'GM_EQR_LIMIT', type_area = type_area)
-        MP_EQR_LIMIT = self.ref_settings.get_value(variable = 'MP_EQR_LIMIT', type_area = type_area)
-        PB_EQR_LIMIT = self.ref_settings.get_value(variable = 'PB_EQR_LIMIT', type_area = type_area)
-        
-        if self.name == 'BQI' or self.name.lower() == 'secchi' or self.name.lower() == 'oxygen':
-            return False
-        else:
-            if ek > HG_EQR_LIMIT: 
-                status = 'HIGH'
-                n_low = 4 
-                ek_high = 1
-                ek_low = HG_EQR_LIMIT
-                
-            elif ek > GM_EQR_LIMIT:
-                status = 'GOOD'
-                n_low = 3 
-                ek_high = HG_EQR_LIMIT
-                ek_low = GM_EQR_LIMIT
-    
-            elif ek > MP_EQR_LIMIT:
-                status = 'MODERATE'
-                n_low = 2 
-                ek_high = GM_EQR_LIMIT
-                ek_low = MP_EQR_LIMIT
-                
-            elif ek > PB_EQR_LIMIT:
-                status = 'POOR'
-                n_low = 1 
-                ek_high = MP_EQR_LIMIT
-                ek_low = PB_EQR_LIMIT
-                
-            else:
-                status = 'BAD'
-                n_low = 0 
-                ek_high = PB_EQR_LIMIT
-                ek_low = 0
-            
-            # Weighted numerical class
-            n_class = n_low + (ek - ek_low)/(ek_high-ek_low)
-            
-            return n_low, ek_low, ek_high, status, n_class
-    
+#    #==========================================================================
+#    def get_numerical_class(self, ek, water_body):
+#        """
+#        Calculates indicator class (Nklass) according to eq 2.1 in HVMFS 2013:19.
+#        Returns a tuple with four values, low, ek_low, ek_heigh and the resulting Nklass.
+#        This is specific for the nutrient and phytoplankton indicators.
+#        There needs to be:
+#            - one def to get nutrient num_class for nutrient indicators (this one as is)
+#            - one def to get indicator class and value with the indicator specific EQR and the EQR transformed to the common scale
+#            (for nutrients that is num_class on scale 0-4.99 for most others some values on a 0-1 scale)
+#        """
+#        type_area = self.mapping_objects['water_body'].get_type_area_for_water_body(water_body, include_suffix=True)
+#        # Get EQR-class limits for the type area to be able to calculate the weighted numerical class
+#        HG_EQR_LIMIT = self.ref_settings.get_value(variable = 'HG_EQR_LIMIT', type_area = type_area)
+#        GM_EQR_LIMIT = self.ref_settings.get_value(variable = 'GM_EQR_LIMIT', type_area = type_area)
+#        MP_EQR_LIMIT = self.ref_settings.get_value(variable = 'MP_EQR_LIMIT', type_area = type_area)
+#        PB_EQR_LIMIT = self.ref_settings.get_value(variable = 'PB_EQR_LIMIT', type_area = type_area)
+#        
+#        if self.name == 'BQI' or self.name.lower() == 'secchi' or self.name.lower() == 'oxygen':
+#            return False
+#        else:
+#            if ek > HG_EQR_LIMIT: 
+#                status = 'HIGH'
+#                n_low = 4 
+#                ek_high = 1
+#                ek_low = HG_EQR_LIMIT
+#                
+#            elif ek > GM_EQR_LIMIT:
+#                status = 'GOOD'
+#                n_low = 3 
+#                ek_high = HG_EQR_LIMIT
+#                ek_low = GM_EQR_LIMIT
+#    
+#            elif ek > MP_EQR_LIMIT:
+#                status = 'MODERATE'
+#                n_low = 2 
+#                ek_high = GM_EQR_LIMIT
+#                ek_low = MP_EQR_LIMIT
+#                
+#            elif ek > PB_EQR_LIMIT:
+#                status = 'POOR'
+#                n_low = 1 
+#                ek_high = MP_EQR_LIMIT
+#                ek_low = PB_EQR_LIMIT
+#                
+#            else:
+#                status = 'BAD'
+#                n_low = 0 
+#                ek_high = PB_EQR_LIMIT
+#                ek_low = 0
+#            
+#            # Weighted numerical class
+#            n_class = n_low + (ek - ek_low)/(ek_high-ek_low)
+#            
+#            return n_low, ek_low, ek_high, status, n_class
+#    
     
     #==========================================================================        
     def get_ref_value_type(self, type_area = None, water_body = None):
@@ -370,31 +491,6 @@ class IndicatorBase(object):
         print('method is not written yet')
         raise Exception
 
-      #==========================================================================
-    def set_water_body_indicator_df(self, water_body = None):
-        """
-        Created:        20180215     by Lena
-        Last modified:  20180328     by Lena
-        df should contain:
-            - all needed columns from get_filtered_data
-            - referencevalues
-            - maybe other info needed for indicator functions
-        skapa df utifrån:
-        self.index_handler
-        self.tolerance_settings
-        self.indicator_ref_settings
-        """
-        #type_area = self.mapping_objects['water_body'].get_type_area_for_water_body(water_body, include_suffix=True)
-        if water_body:
-            print(water_body)
-            df = self.get_filtered_data(subset = self.subset, step = 'step_2', water_body = water_body, indicator = self.name).copy(deep = True)
-            df = df[self.column_list]
-            df = df.dropna(subset = [self.indicator_parameter])
-            print(df.dtypes)
-            df = self._add_reference_value_to_df(df, water_body)
-            self.water_body_indicator_df[water_body] = df 
-        else:
-            print('water_body must be given to set_water_body_indicator_df')
                                     
 #    #==========================================================================
 #    def get_ref_value_for_par_with_salt_ref(self, par=None, salt_par='SALT_CTD', indicator_name=None, tolerance_filter=None):
@@ -571,6 +667,11 @@ class IndicatorNutrients(IndicatorBase):
         Om mätningar vid ett tillfälle är utförda vid diskreta djup, 
         exempelvis 0, 5 och 10 meter ska EK-värde beräknas för varje mätning och ett medel–EK skapas för de tre djupen.
         """
+        try:
+            getattr(self.classification_results, water_body)
+        except AttributeError:
+            setattr(self.classification_results, water_body, {})
+            
         # Set up result class
         if water_body not in self.classification_results.keys():
             self.classification_results[water_body] = ClassificationResult()
@@ -578,7 +679,7 @@ class IndicatorNutrients(IndicatorBase):
         self.classification_results[water_body].add_info('salt_parameter', self.salt_parameter)
         self.classification_results[water_body].add_info('water_body', water_body)
         
-    
+        self._set_water_body_indicator_df(water_body)
         """
         Calculate local_EQR (EK-värde)
         """
@@ -596,11 +697,13 @@ class IndicatorNutrients(IndicatorBase):
         """ 
         1) Beräkna local_EQR (EK-värde) för varje enskilt prov utifrån (ekvationer för) referensvärden i tabellerna 6.2-6.7.
         Beräkna local_EQR (EK-värde) för varje mätning och sedan ett medel-EK för varje specifikt mättillfälle.
+        TO BE UPDATED TO local_EQR for mean of nutrient conc and salinity 0-10 m.
         
         """
         
         df['local_EQR'] = df.REFERENCE_VALUE/df[self.indicator_parameter]
-        df['local_EQR'] = df['local_EQR'].apply(set_value_above_one)
+        df['local_EQR'] = df['local_EQR'].apply(set_value_above_one) 
+        # TODO: should the set to one be done before or after all the means below?
         
         # add datafram to resultsclass
         self.classification_results[water_body].add_info('all_data', df)
@@ -636,7 +739,7 @@ class IndicatorNutrients(IndicatorBase):
         by_period = by_period.transpose()
         limit = self.tolerance_settings.get_value(variable = 'MIN_NR_YEARS', water_body = water_body)
         #limit = self.tolerance_settings.get_min_nr_years(type_area = type_area)
-        if by_period['count'].get_value('mean_ek_value') >= limit:
+        if by_period['count'].get_value('mean_local_EQR') >= limit:
             by_period['all_ok'] = False
         else:
             by_period['all_ok']  = True
@@ -649,13 +752,13 @@ class IndicatorNutrients(IndicatorBase):
         4) Statusklassificeringen för respektive parameter görs genom att medelvärdet av
         EK jämförs med de angivna EK-klassgränserna i tabellerna 6.2-6.7. 
         """
-        self._calculate_global_EQR_from_ER(water_body = water_body, local_EQR = by_period['mean'].get_value('mean_local_EQR'))
+        self._calculate_global_EQR_from_local_EQR(water_body = water_body, local_EQR = by_period['mean'].get_value('mean_local_EQR'))
         
         # Add waterbody status to result class
         self.classification_results[water_body].add_info('local_EQR_by_date', by_date)
         self.classification_results[water_body].add_info('local_EQR_by_year', by_year)
-        self.classification_results[water_body].add_info('local_EQR_by_period', by_period['mean'].get_value('mean_ek_value'))
-        self.classification_results[water_body].add_info('number_of_years', by_period['count'].get_value('mean_ek_value'))
+        self.classification_results[water_body].add_info('local_EQR_by_period', by_period['mean'].get_value('mean_local_EQR'))
+        self.classification_results[water_body].add_info('number_of_years', by_period['count'].get_value('mean_local_EQR'))
         self.classification_results[water_body].add_info('all_ok', all_ok)
                 
         """
@@ -834,7 +937,7 @@ class IndicatorOxygen(IndicatorBase):
             REF_VALUE_LIMIT = self.ref_settings.get_value(variable = 'REF_VALUE_LIMIT', water_body = water_body)
             local_EQR = REF_VALUE_LIMIT/value
             # Saves status and global_EQR to classification_results[water_body]
-            self._calculate_global_EQR_from_ER(water_body, local_EQR)
+            self._calculate_global_EQR_from_local_EQR(water_body, local_EQR)
         
         self.classification_results[water_body].add_info('value', value)
         self.classification_results[water_body].add_info('test1_resultlist', self.test1_result_list)
@@ -954,7 +1057,7 @@ class IndicatorPhytoplankton(IndicatorBase):
         4) Statusklassificeringen för respektive parameter görs genom att medelvärdet av
         EK jämförs med de angivna EK-klassgränserna i tabellerna 6.2-6.7. 
         """
-        self._calculate_global_EQR_from_ER(water_body = water_body, local_EQR = by_period['mean'].get_value('mean_local_EQR'))
+        self._calculate_global_EQR_from_local_EQR(water_body = water_body, local_EQR = by_period['mean'].get_value('mean_local_EQR'))
         
         # Add waterbody status to result class
         self.classification_results[water_body].add_info('local_EQR_by_year_pos', by_year_pos)
@@ -1012,7 +1115,7 @@ class IndicatorSecchi(IndicatorBase):
         
         """
         
-        df['local_EQR'] = df.REFERENCE_VALUE/df[self.indicator_parameter]
+        df['local_EQR'] = df[self.indicator_parameter]/df.REFERENCE_VALUE
         df['local_EQR'] = df['local_EQR'].apply(set_value_above_one)
         
         # add datafram to resultsclass
@@ -1039,7 +1142,7 @@ class IndicatorSecchi(IndicatorBase):
         4) Statusklassificeringen för respektive parameter görs genom att medelvärdet av
         EK jämförs med de angivna EK-klassgränserna i tabellerna 6.2-6.7. 
         """
-        self._calculate_global_EQR_from_ER(water_body = water_body, local_EQR = by_period['mean'].get_value('local_EQR'))
+        self._calculate_global_EQR_from_local_EQR(water_body = water_body, local_EQR = by_period['mean'].get_value('local_EQR'))
         
         # Add waterbody status to result class
         self.classification_results[water_body].add_info('local_EQR_by_period', by_period['mean'].get_value('local_EQR'))

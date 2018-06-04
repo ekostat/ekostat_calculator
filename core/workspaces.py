@@ -244,7 +244,7 @@ class WorkStep(object):
     #==========================================================================
     def indicator_setup(self, subset_unique_id = None, indicator_list = None):  
         """
-        when step 3 is initiated indicator objects should be instansiated for all  indicators selected in step 2 as default
+        when step 3 is initiated indicator objects should be instantiated for all  indicators selected in step 2 as default
         where do we save info on selected indicators? in step_2/datafilters folder?
         We can calculate all indicators available but then the indicator selection is useless with regards to saving time for the user.
         """ 
@@ -252,7 +252,7 @@ class WorkStep(object):
         Created:        20180215     by Lena
         Last modified:  20180403     by Lena
         create dict containing indicator objects according to data availability or choice?
-        This should be moved to WorkStep class, and should be run accesed only for step 3.
+        Should be run accesed only for step 3.
         """
         if indicator_list == None:
             indicator_list = self.parent_workspace_object.available_indicators
@@ -1075,7 +1075,7 @@ class WorkSpace(object):
         return all_ok
         
     #==========================================================================
-    def apply_indicator_data_filter(self, subset='', indicator='', step='step_2'):
+    def apply_indicator_data_filter(self, subset='', indicator='', step='step_2', water_body_list = False):
         """
         Created     ????????    by Magnus Wenzer
         Updated     20180319    by Magnus Wenzer
@@ -1096,7 +1096,8 @@ class WorkSpace(object):
             False:          If something faild
         """
         
-        water_body_list = self.get_filtered_data(step=step, subset=subset).VISS_EU_CD.unique()
+        if not water_body_list:
+            water_body_list = self.get_filtered_data(step=step, subset=subset).VISS_EU_CD.unique()
         if not len(water_body_list):
             #raise Error?
             print('no waterbodies in filtered data')
