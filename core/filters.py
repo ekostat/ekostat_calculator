@@ -586,12 +586,12 @@ class SettingsFile(object):
         
         if water_body:
             value_series = self.df.loc[(self.df['VISS_EU_CD']==water_body), var]
-            print(water_body)
-            print(self.df['VISS_EU_CD'].unique())
-            print('. . . . .')
-            print(value_series)
-            print(len(value_series))
-            print('. . . . .')
+#            print(water_body)
+#            print(self.df['VISS_EU_CD'].unique())
+#            print('. . . . .')
+#            print(value_series)
+#            print(len(value_series))
+#            print('. . . . .')
             if not len(value_series):
                 if suf and suf in self.df.loc[(self.df['TYPE_AREA_NUMBER']==num), 'TYPE_AREA_SUFFIX'].values:
                     value_series = self.df.loc[(self.df['TYPE_AREA_NUMBER']==num) & \
@@ -607,11 +607,11 @@ class SettingsFile(object):
             else:
                 value_series = self.df.loc[(self.df['TYPE_AREA_NUMBER']==num), var]
         
-        print('----')
-        print('water_body {}, type_area {}, variable {}'.format(water_body, type_area, variable))
-        print('num {}, suf {}, suf? {}'.format(num, suf, self.df.loc[self.df['TYPE_AREA_NUMBER']==num, 'TYPE_AREA_SUFFIX'].values))
-        print(value_series, type(value_series))
-        print(value_series.values, type(value_series.values))
+#        print('----')
+#        print('water_body {}, type_area {}, variable {}'.format(water_body, type_area, variable))
+#        print('num {}, suf {}, suf? {}'.format(num, suf, self.df.loc[self.df['TYPE_AREA_NUMBER']==num, 'TYPE_AREA_SUFFIX'].values))
+#        print(value_series, type(value_series))
+#        print(value_series.values, type(value_series.values))
         
         # if no variable is given, return dataframe
         if variable is None:
@@ -627,7 +627,7 @@ class SettingsFile(object):
             elif variable in self.interval_columns: 
                 value = self._get_interval_from_string(value, variable)
             elif variable in self.refvalue_column:
-                print('value {} in refvalue_column'.format(value))
+#                print('value {} in refvalue_column'.format(value))
                 if variable.isnumeric():
                     value = float(value)
                 else:
@@ -637,7 +637,7 @@ class SettingsFile(object):
             return_value.append(value)
             # TODO: return dataframe?
         # if only one row for given type_area or water_body, return as single value, else return as pandas series
-        print(return_value)
+#        print(return_value)
         if len(return_value) == 1:
             return return_value[0]
         elif len(return_value) > 1 and all(x == return_value[0] for x in return_value):
@@ -1023,7 +1023,9 @@ class SettingsRef(SettingsBase):
         elif type(ref_value) is str:
             try: 
                 s = salinity
-                ref_value = eval(ref_value) 
+                print(s, ref_value)
+                ref_value = eval(ref_value)
+                print('resulting ref value: {}'.format(ref_value))
             except TypeError as e:
                 raise TypeError('{}\nSalinity TypeError, salinity must be int, float or nan but is {}'.format(e, repr(s)))
                 #TODO: add closes matching salinity somewhere here

@@ -22,6 +22,13 @@ from .indicators import IndicatorOxygen
 from .indicators import IndicatorPhytoplankton
 from .indicators import IndicatorSecchi
 
+#from .indicators_old import IndicatorBase
+#from .indicators_old import IndicatorBQI
+#from .indicators_old import IndicatorNutrients
+#from .indicators_old import IndicatorOxygen
+#from .indicators_old import IndicatorPhytoplankton
+#from .indicators_old import IndicatorSecchi
+
 from .lists import StationList 
 from .lists import ParameterList
 from .lists import AreaList

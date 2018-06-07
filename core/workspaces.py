@@ -270,7 +270,7 @@ class WorkStep(object):
             #print(class_)
             #instance = class_()
             # add indicator objects to dictionary
-            self.indicator_objects[indicator] = class_(subset = subset_unique_id, 
+            self.indicator_objects[indicator] = class_(subset_uuid = subset_unique_id, 
                                                                       parent_workspace_object = self.parent_workspace_object,
                                                                       indicator = indicator)
 #            self.indicator_objects[indicator] = core.IndicatorBase(subset = subset_unique_id, 

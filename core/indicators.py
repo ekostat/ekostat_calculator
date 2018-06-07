@@ -22,12 +22,9 @@ class ClassificationResult(dict):
         self['indicator'] = None
         self['all_data'] = None
         self['all_ok'] = False
-        self['status_by_date'] = pd.DataFrame(columns = ['VISS_EU_CD', 'WATER_TYPE_AREA',
-                                'DATE', 'STATUS	VALUE', 'REF VALUE', 'local_EQR','	global_EQR'])
-        self['status_by_year'] = pd.DataFrame(columns = ['VISS_EU_CD', 'WATER_TYPE_AREA',
-                                'YEAR', 'STATUS	VALUE', 'REF VALUE', 'local_EQR','	global_EQR','Number of DATES', 'MONTHS INCLUDED'])
-        self['status_by_period'] = pd.DataFrame(columns = ['VISS_EU_CD', 'WATER_TYPE_AREA',
-                                'PERIOD', 'STATUS','global_EQR','	Number of YEARS', 'YEARS INCLUDED'])
+        self['status_by_date'] = None#pd.DataFrame(columns = ['VISS_EU_CD', 'WATER_TYPE_AREA','SDATE', 'STATUS', 'REF VALUE', 'local_EQR','global_EQR'])
+        self['status_by_year'] = None#pd.DataFrame(columns = ['VISS_EU_CD', 'WATER_TYPE_AREA','YEAR', 'STATUS', 'REF VALUE', 'local_EQR', 'global_EQR', 'Number of DATES', 'MONTHS INCLUDED'])
+        self['status_by_period'] = None#pd.DataFrame(columns = ['VISS_EU_CD', 'WATER_TYPE_AREA','PERIOD', 'STATUS', 'global_EQR', 'Number of YEARS', 'YEARS INCLUDED'])
         
         self._set_attributes()
         
@@ -40,8 +37,8 @@ class ClassificationResult(dict):
     def add_info(self, key, value): 
         try:
             existing_value = getattr(self, key)
-            if getattr(self, key) != value:
-                raise('Error: Trying to set new value to existing attribute. new value {} does not match old value {} for attribute {}'.format(value, existing_value, key))
+#            if getattr(self, key) != value:
+#                raise('Error: Trying to set new value to existing attribute. new value {} does not match old value {} for attribute {}'.format(value, existing_value, key))
         except AttributeError:
             #Varför både nyckel och attribut?
             self[key] = value
@@ -53,7 +50,7 @@ class IndicatorBase(object):
     """
     Class to calculate status for a specific indicator. 
     """ 
-    def __init__(self, subset, parent_workspace_object, indicator):
+    def __init__(self, subset_uuid, parent_workspace_object, indicator):
         """
         setup indicator class attributes based on subset, parent workspace object and indicator name
         """
@@ -61,7 +58,7 @@ class IndicatorBase(object):
         print('********')
         print(self.name)
         self.class_result = None
-        self.subset = subset
+        self.subset = subset_uuid
         self.step = 'step_3'
         # from workspace
         self.parent_workspace_object = parent_workspace_object
@@ -69,8 +66,8 @@ class IndicatorBase(object):
         self.index_handler = self.parent_workspace_object.index_handler
         self.step_object = self.parent_workspace_object.get_step_object(step = 3, subset = self.subset)
         # from SettingsFile
-        self.tolerance_settings = self.parent_workspace_object.get_step_object(step = 2, subset = subset).get_indicator_tolerance_settings(self.name)
-        self.ref_settings = self.parent_workspace_object.get_step_object(step = 2, subset = subset).get_indicator_ref_settings(self.name)
+        self.tolerance_settings = self.parent_workspace_object.get_step_object(step = 2, subset = self.subset).get_indicator_tolerance_settings(self.name)
+        self.ref_settings = self.parent_workspace_object.get_step_object(step = 2, subset = self.subset).get_indicator_ref_settings(self.name)
         # To be read from config-file
         self.meta_columns = ['SDATE', 'YEAR', 'MONTH', 'POSITION', 'VISS_EU_CD', 'WATER_TYPE_AREA', 'DEPH']
         self.parameter_list =  [item.strip() for item in self.mapping_objects['quality_element'].indicator_config.loc[self.name]['parameters'].split(', ')] #[item.strip() for item in self.parent_workspace_object.cfg['indicators'].loc[self.name][0].split(', ')]
@@ -233,19 +230,19 @@ class IndicatorBase(object):
     
     
     #==========================================================================
-    def _calculate_global_EQR_from_local_EQR(self, water_body, local_EQR):
+    def _calculate_global_EQR_from_local_EQR(self, local_EQR, water_body):
         """
         Calculates EQR from local_EQR values according to eq. 1 in WATERS final report p 153.
         Boundaries for all classes are read from RefSettings object
         boundarie_variable is used to retrieve class boundaries from settings file and must match the type of local_EQR_variable
         """
-        if not local_EQR:
-            local_EQR = getattr(self.classification_results[water_body], 'local_EQR')
-        else:
-            self.classification_results[water_body].add_info('local_EQR', local_EQR)
-        
+#        if not local_EQR:
+#            local_EQR = getattr(self.classification_results[water_body], 'local_EQR')
+#        else:
+#            self.classification_results[water_body].add_info('local_EQR', local_EQR)
+#        
         if local_EQR < 0:
-            raise('Error: _calculate_global_EQR_from_indicator_value: {} local_EQR value below 0.'.format(local_EQR))
+            raise Exception('Error: _calculate_global_EQR_from_indicator_value: {} local_EQR value below 0.'.format(local_EQR))
         
         # Get EQR-class limits for the type area to be able to calculate the weighted numerical class
         HG_EQR_LIMIT = self.ref_settings.get_value(variable = 'HG_EQR_LIMIT', water_body = water_body)
@@ -380,6 +377,8 @@ class IndicatorBase(object):
         if water_body:
             print(water_body)
             df = self.get_filtered_data(subset = self.subset, step = 'step_2', water_body = water_body, indicator = self.name).copy(deep = True)
+            if len(df.VISS_EU_CD.unique()) > 1 or df.VISS_EU_CD.unique() != water_body:
+                raise Exception('Error: get_filtered_data() returns incorrect waterbody.')
             df = df[self.column_list]
             df = df.dropna(subset = [self.indicator_parameter])
             print(df.dtypes)
@@ -609,8 +608,8 @@ class IndicatorBQI(IndicatorBase):
     Class with methods for BQI indicator. 
     """
     
-    def __init__(self, subset, parent_workspace_object, indicator):
-        super().__init__(subset, parent_workspace_object, indicator) 
+    def __init__(self, subset_uuid, parent_workspace_object, indicator):
+        super().__init__(subset_uuid, parent_workspace_object, indicator) 
         self.indicator_parameter = self.parameter_list[0]
         self.column_list.remove('DEPH')
         self.column_list = self.column_list + ['MNDEP', 'MXDEP']
@@ -659,10 +658,10 @@ class IndicatorNutrients(IndicatorBase):
     Class with methods common for all nutrient indicators (TOTN, DIN, TOTP and DIP). 
     """
     
-    def __init__(self, subset, parent_workspace_object, indicator):
-        super().__init__(subset, parent_workspace_object, indicator)  
+    def __init__(self, subset_uuid, parent_workspace_object, indicator):
+        super().__init__(subset_uuid, parent_workspace_object, indicator)  
         self.indicator_parameter = self.parameter_list[0]
-        self.salt_parameter = self.parameter_list[1]
+        self.salt_parameter = self.parameter_list[-1]            
         
     def calculate_status(self, water_body):
         """
@@ -706,7 +705,9 @@ class IndicatorNutrients(IndicatorBase):
         df['local_EQR'] = df.REFERENCE_VALUE/df[self.indicator_parameter]
         df['local_EQR'] = df['local_EQR'].apply(set_value_above_one) 
         # TODO: should the set to one be done before or after all the means below?
-        df['global_EQR'] = df['local_EQR'].apply(self._calculate_global_EQR_from_local_EQR) 
+#        df['global_EQR'] = df['local_EQR'].apply(self._calculate_global_EQR_from_local_EQR, water_body = water_body)
+        df['global_EQR'], df['STATUS'] = zip(*df['local_EQR'].apply(self._calculate_global_EQR_from_local_EQR, water_body = water_body))
+        
         
         # add dataframe to resultsclass
         self.classification_results.add_info(water_body, df)
@@ -720,8 +721,14 @@ class IndicatorNutrients(IndicatorBase):
         by_date.rename(columns={'mean':'mean_local_EQR', 'count': 'number_of_values'}, inplace=True) # Cant use "mean" below
         by_date['WATER_TYPE_AREA'] = type_area
         by_date['VISS_EU_CD'] = water_body
-        self['status_by_date'] = by_date 
-            #pd.DataFrame(columns = ['VISS_EU_CD', 'WATER_TYPE_AREA', 'DATE', 'STATUS	VALUE', 'REF VALUE', 'local_EQR','	global_EQR'])
+               
+        if type(self.classification_results['status_by_date']) is pd.DataFrame:
+            self.classification_results['status_by_date'] = pd.concat([self.classification_results['status_by_date'], by_date])
+        else:
+            self.classification_results['status_by_date'] = by_date 
+#        self.classification_results['status_by_date'] = pd.concat([self.classification_results['status_by_date'], by_date])
+
+        #pd.DataFrame(columns = ['VISS_EU_CD', 'WATER_TYPE_AREA', 'DATE', 'STATUS	VALUE', 'REF VALUE', 'local_EQR','	global_EQR'])
         # Remove occations with not enough samples
         # Or use count as a flag for what to display for the user?
             
@@ -733,7 +740,12 @@ class IndicatorNutrients(IndicatorBase):
         by_year['WATER_TYPE_AREA'] = type_area
         by_year['VISS_EU_CD'] = water_body      
         
-        self['status_by_year'] = by_year 
+        if type(self.classification_results['status_by_year']) is pd.DataFrame:
+            self.classification_results['status_by_year'] = pd.concat([self.classification_results['status_by_year'], by_year])
+        else:
+            self.classification_results['status_by_year'] = by_year 
+#        self.classification_results['status_by_year'] = pd.concat([self.classification_results['status_by_year'], by_year])
+
         # by_year.to_csv(self.paths['results'] +'/' + self.name + water_body + 'by_year.txt', sep='\t')
         #by_year['all_ok'] = True
         #ix = by_year.loc[by_year['number_of_dates'] < self.tolerance_settings.get_min_nr_values(type_area), 'all_ok'].index
@@ -761,11 +773,16 @@ class IndicatorNutrients(IndicatorBase):
         EK jämförs med de angivna EK-klassgränserna i tabellerna 6.2-6.7. 
         """
         global_EQR, status = self._calculate_global_EQR_from_local_EQR(water_body = water_body, local_EQR = by_period['mean'].get_value('mean_local_EQR')) 
-        columns = ['VISS_EU_CD', 'WATER_TYPE_AREA',
-                                'PERIOD', 'STATUS','global_EQR','	Number of YEARS', 'YEARS INCLUDED']
+        temp_dict = {'VISS_EU_CD': [water_body], 'WATER_TYPE_AREA': [type_area],
+                                'PERIOD': ['x'], 'STATUS': [status],'global_EQR': [global_EQR], 'Number of YEARS': [by_period['count'].get_value('mean_local_EQR')], 'YEARS INCLUDED': ['x']}
         values = [water_body, type_area, 'x', status, global_EQR, by_period['count'].get_value('mean_local_EQR'), 'x']
-        self['status_by_year'].append(pd.DataFrame(values, columns=columns))
-
+        temp = pd.DataFrame.from_dict(temp_dict)
+        if type(self.classification_results['status_by_period']) is pd.DataFrame:
+            self.classification_results['status_by_period'] = pd.concat([self.classification_results['status_by_period'], temp])
+        else:
+            self.classification_results['status_by_period'] = temp 
+#        self.classification_results['status_by_period'] = pd.concat([self.classification_results['status_by_period'], temp])
+        
         # Add waterbody status to result class
 #        self.classification_results[water_body].add_info('local_EQR_by_date', by_date)
 #        self.classification_results[water_body].add_info('local_EQR_by_year', by_year)
@@ -785,8 +802,8 @@ class IndicatorOxygen(IndicatorBase):
     Class with methods for Oxygen indicator. 
     """
     
-    def __init__(self, subset, parent_workspace_object, indicator):
-        super().__init__(subset, parent_workspace_object, indicator)  
+    def __init__(self, subset_uuid, parent_workspace_object, indicator):
+        super().__init__(subset_uuid, parent_workspace_object, indicator)  
         self.indicator_parameter = self.parameter_list[0]
         self.Hypsographs = self.mapping_objects['hypsographs']
         self.column_list = self.column_list + ['source_DOXY']
@@ -988,10 +1005,10 @@ class IndicatorPhytoplankton(IndicatorBase):
     Class with methods incommon for Phytoplankton indicators. 
     """
     
-    def __init__(self, subset, parent_workspace_object, indicator):
-        super().__init__(subset, parent_workspace_object, indicator) 
+    def __init__(self, subset_uuid, parent_workspace_object, indicator):
+        super().__init__(subset_uuid, parent_workspace_object, indicator) 
         self.indicator_parameter = self.parameter_list[0]
-        self.salt_parameter = self.parameter_list[1]
+        self.salt_parameter = self.parameter_list[-1]
         
     def calculate_status(self, water_body):
         """
@@ -1085,10 +1102,10 @@ class IndicatorSecchi(IndicatorBase):
     Class with methods  for Seccho indicator. 
     """
     
-    def __init__(self, subset, parent_workspace_object, indicator):
-        super().__init__(subset, parent_workspace_object, indicator) 
+    def __init__(self, subset_uuid, parent_workspace_object, indicator):
+        super().__init__(subset_uuid, parent_workspace_object, indicator) 
         self.indicator_parameter = self.parameter_list[0]  
-        self.salt_parameter = self.parameter_list[1]
+        self.salt_parameter = self.parameter_list[-1]
     ###############################################################################   
     def calculate_status(self, water_body):
         """
