@@ -1023,6 +1023,12 @@ class SettingsRef(SettingsBase):
         elif type(ref_value) is str:
             try: 
                 s = salinity
+                if water_body:
+                    max_s = self.get_value(variable = self.settings.ref_columns[-1], water_body = water_body)
+                else:
+                    max_s = self.get_value(variable = self.settings.ref_columns[-1], type_area = type_area)
+                if s > max_s:
+                    s = max_s
                 print(s, ref_value)
                 ref_value = eval(ref_value)
                 print('resulting ref value: {}'.format(ref_value))
