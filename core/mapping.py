@@ -92,15 +92,25 @@ class AttributeDict(dict):
     #==========================================================================
     def get(self, key):
         """
-        Updated     20180319    by Magnus Wenzer
+        Updated     20180613    by Lena Viktorsson
         """ 
-        try:
+        if key.lower() in self.keys():
             return getattr(self, key.lower())
-        except: 
-            try:
-                return getattr(self, key)
-            except:
-                return getattr(self, 'SE' + key)
+        
+        if key in self.keys():
+            return getattr(self, key)
+        
+        if 'SE' + key in self.keys():
+            return getattr(self, 'SE' + key)
+        
+        return None
+#        try:
+#            return getattr(self, key.lower())
+#        except: 
+#            try:
+#                return getattr(self, key)
+#            except:
+#                return getattr(self, 'SE' + key)
     
     #==========================================================================
     def _get_array_from_df(self, df=None, key_a=u'', key_b=u'', match=None):
@@ -453,6 +463,12 @@ class WaterBody(AttributeDict):
     def get_type_area_for_water_body(self, wb, include_suffix=False, 
                                      key_number=u'TYPE_AREA_NO', 
                                      key_suffix=u'TYPE_AREA_SUFFIX'):
+        """
+        Updated     20180613    by Lena Viktorsson
+        """
+        if self.get(wb) == None:
+            return None
+        
         if include_suffix:
             string = self.get(wb).get(key_number) + '-' + \
                      self.get(wb).get(key_suffix)

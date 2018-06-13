@@ -384,15 +384,16 @@ class IndicatorBase(object):
         """
         #type_area = self.mapping_objects['water_body'].get_type_area_for_water_body(water_body, include_suffix=True)
         if water_body:
-            print(water_body)
+            #print(water_body)
             df = self.get_filtered_data(subset = self.subset, step = 'step_2', water_body = water_body, indicator = self.name).copy(deep = True)
             if len(df.VISS_EU_CD.unique()) > 1 or df.VISS_EU_CD.unique() != water_body:
                 warnings.warn(message = 'Error: get_filtered_data() returns {} waterbody. Input waterbody is {}'.format(df.VISS_EU_CD.unique(), water_body))
                 #raise Exception('Error: get_filtered_data() returns {} waterbody. Input waterbody is {}'.format(df.VISS_EU_CD.unique(), water_body))
                 df = df.iloc[0:0]
+            #print(self.name, self.column_list)
             df = df[self.column_list]
             df = df.dropna(subset = [self.indicator_parameter])
-            print(df.dtypes)
+            #print(df.dtypes)
             df = self._add_reference_value_to_df(df, water_body)
             self.water_body_indicator_df[water_body] = df 
         else:
@@ -700,13 +701,15 @@ class IndicatorNutrients(IndicatorBase):
         # get data to be used for status calculation, not deep copy because local_EQR values are relevant to see together with data
         df = self.water_body_indicator_df[water_body]
         if len(df) < 1:
-            return 
+            return False, False, False
         
         """
         Calculate local_EQR (EK-värde)
         """        
         
         type_area = self.mapping_objects['water_body'].get_type_area_for_water_body(water_body, include_suffix=True)
+        if type_area == None:
+            return False, False, False
         
         """ 
         1) Beräkna local_EQR (EK-värde) för varje enskilt prov utifrån (ekvationer för) referensvärden i tabellerna 6.2-6.7.
@@ -734,7 +737,12 @@ class IndicatorNutrients(IndicatorBase):
         ################# i gamla föreskriften så ska det vara medel av local_EQR inte medel av konc. och sedan ny local_EQR #############
         if len(df.VISS_EU_CD.unique()) > 1:
             raise Exception('more than one waterbody in dataframe')
-        by_date = df.groupby(['SDATE', 'YEAR'],).agg({self.indicator_parameter: 'mean', self.salt_parameter: 'mean', 'DEPH': 'count', 'VISS_EU_CD': 'max', 'WATER_TYPE_AREA': 'unique'}).reset_index()
+            
+       
+        agg_dict1 = {self.indicator_parameter: 'mean', self.salt_parameter: 'mean', 'DEPH': 'count', 'VISS_EU_CD': 'max', 'WATER_TYPE_AREA': 'unique'}       
+        agg_dict2 = {key: 'mean' for key in self.additionel_parameter_list}       
+        
+        by_date = df.groupby(['SDATE', 'YEAR'],).agg({**agg_dict1, **agg_dict2}).reset_index()
         by_date.rename(columns={'DEPH':'DEPH_count'}, inplace=True)
         
         #by_date = df.groupby(['SDATE', 'YEAR'],).local_EQR.agg(['count', 'min', 'max', 'mean']).reset_index()
@@ -747,11 +755,11 @@ class IndicatorNutrients(IndicatorBase):
             if self.indicator_parameter == 'NTOT' or self.indicator_parameter == 'DIN':
                 check_par = 'DIN'
             else:
-                check_par = 'DIP'
+                check_par = 'PHOS'
             by_date['highest_'+check_par] = False
             for name, group in by_date.groupby('YEAR'):
                 by_date.loc[group[check_par].idxmax(), 'highest_'+check_par] = True 
-            print(by_date['highest_'+check_par])     
+            #print(by_date['highest_'+check_par])     
             by_date = by_date[by_date['highest_'+check_par]]
         
         by_date = self._add_reference_value_to_df(by_date, water_body)
@@ -760,19 +768,19 @@ class IndicatorNutrients(IndicatorBase):
         by_date.set_index(keys = 'VISS_EU_CD', append =True, drop = False, inplace = True)
         
         #SAVE by_date results
-        if type(self.classification_results['status_by_date']) is pd.DataFrame:
-            if water_body in self.classification_results['status_by_date'].VISS_EU_CD.unique():
-                self.classification_results['status_by_date'].drop(self.classification_results['status_by_date'].loc[self.classification_results['status_by_date'].VISS_EU_CD == water_body].index, inplace = True)
-            self.classification_results['status_by_date'] = pd.concat([self.classification_results['status_by_date'], by_date])
-        elif os.path.exists(self.result_directory + self.name+'_by_date.txt'):
-            self.classification_results['status_by_date'] = self.sld.load_df(file_name=self.name+'_by_date')
-            if water_body in self.classification_results['status_by_date'].VISS_EU_CD.unique():
-                self.classification_results['status_by_date'].drop(self.classification_results['status_by_date'].loc[self.classification_results['status_by_date'].VISS_EU_CD == water_body].index, inplace = True)
-            self.classification_results['status_by_date'] = pd.concat([self.classification_results['status_by_date'], by_date])
-        else:
-            self.classification_results['status_by_date'] = by_date 
-                                       
-        self.sld.save_df(self.classification_results['status_by_date'], file_name=self.name+'_by_date', force_save_txt=True)
+#        if type(self.classification_results['status_by_date']) is pd.DataFrame:
+#            if water_body in self.classification_results['status_by_date'].VISS_EU_CD.unique():
+#                self.classification_results['status_by_date'].drop(self.classification_results['status_by_date'].loc[self.classification_results['status_by_date'].VISS_EU_CD == water_body].index, inplace = True)
+#            self.classification_results['status_by_date'] = pd.concat([self.classification_results['status_by_date'], by_date])
+#        elif os.path.exists(self.result_directory + self.name+'_by_date.txt'):
+#            self.classification_results['status_by_date'] = self.sld.load_df(file_name=self.name+'_by_date')
+#            if water_body in self.classification_results['status_by_date'].VISS_EU_CD.unique():
+#                self.classification_results['status_by_date'].drop(self.classification_results['status_by_date'].loc[self.classification_results['status_by_date'].VISS_EU_CD == water_body].index, inplace = True)
+#            self.classification_results['status_by_date'] = pd.concat([self.classification_results['status_by_date'], by_date])
+#        else:
+#            self.classification_results['status_by_date'] = by_date 
+#                                       
+#        self.sld.save_df(self.classification_results['status_by_date'], file_name=self.name+'_by_date', force_save_txt=True)
 #        self.classification_results['status_by_date'] = pd.concat([self.classification_results['status_by_date'], by_date])
 
         #pd.DataFrame(columns = ['VISS_EU_CD', 'WATER_TYPE_AREA', 'DATE', 'STATUS	VALUE', 'REF VALUE', 'local_EQR','	global_EQR'])
@@ -815,7 +823,7 @@ class IndicatorNutrients(IndicatorBase):
                      
         all_ok = by_period['all_ok']    
         print('\t\t\t{} local_EQR Calculated'.format(self.name)) 
-        print(by_period)
+        #print(by_period)
          
         """
         4) Statusklassificeringen för respektive parameter görs genom att medelvärdet av
@@ -832,6 +840,8 @@ class IndicatorNutrients(IndicatorBase):
             self.classification_results['status_by_period'] = temp 
 #        self.classification_results['status_by_period'] = pd.concat([self.classification_results['status_by_period'], temp])
         
+
+        return by_date, by_year, by_period
         # Add waterbody status to result class
 #        self.classification_results[water_body].add_info('local_EQR_by_date', by_date)
 #        self.classification_results[water_body].add_info('local_EQR_by_year', by_year)

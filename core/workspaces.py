@@ -175,7 +175,55 @@ class WorkStep(object):
             shutil.copy(from_file_path, to_file_path)
         
         self.load_all_files()    
+    
+    #==========================================================================
+    def calculate_status(self, indicator_list = None, water_body_list = None):
+        """
+        Created     20180613    by Lena Viktorsson
+        Calls calculate_status for each indicator object and returns the result for each waterbody as dataframes in a dict
+        """
+        if self.name != 'step_3':
+            return False
+        
+        if water_body_list == None:
+            water_body_list = self.parent_workspace_object.get_filtered_data(step='step_2', subset = self.parent_subset_object.unique_id).VISS_EU_CD.unique()
+        if not len(water_body_list):
+            #raise Error?
+            print('no waterbodies in filtered data')
+            return False
             
+            
+        if indicator_list == None:
+            indicator_list = self.parent_workspace_object.available_indicators
+            if indicator_list == None:
+                indicator_list = self.parent_workspace_object.get_available_indicators(subset = self.parent_subset_object.unique_id, step = 2)
+            
+            
+        for indicator in indicator_list:
+            status_by_date = None
+            indicator_name = self.indicator_objects[indicator].name
+            print(indicator_name)
+            for water_body in water_body_list:
+                 
+                by_date, by_year, by_period = self.indicator_objects[indicator].calculate_status(water_body = water_body)
+                
+                if type(by_date) is not bool:
+                    #SAVE by_date results
+                    if type(status_by_date) is pd.DataFrame:
+                        if water_body in status_by_date.VISS_EU_CD.unique():
+                            status_by_date.drop(status_by_date.loc[status_by_date.VISS_EU_CD == water_body].index, inplace = True)
+                        status_by_date = pd.concat([status_by_date, by_date])
+                    elif os.path.exists(self.indicator_objects[indicator].result_directory + indicator_name + '_by_date.txt'):
+                        status_by_date = self.indicator_objects[indicator].sld.load_df(file_name = indicator_name + '_by_date')
+                        if water_body in status_by_date.VISS_EU_CD.unique():
+                            status_by_date.drop(status_by_date.loc[status_by_date.VISS_EU_CD == water_body].index, inplace = True)
+                        status_by_date = pd.concat([status_by_date, by_date])
+                    else:
+                        status_by_date = by_date 
+                
+                                               
+            self.indicator_objects[indicator].sld.save_df(status_by_date, file_name = indicator_name + '_by_date', force_save_txt=True)
+        
     #==========================================================================
     def get_all_file_paths_in_workstep(self): 
         """

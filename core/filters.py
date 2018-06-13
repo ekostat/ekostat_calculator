@@ -561,7 +561,7 @@ class SettingsFile(object):
     def get_value(self, variable=None, type_area=None, water_body = None): 
         """
         Created:        xxxxxxxx     by Magnus
-        Last modified:  20180426     by Lena
+        Last modified:  20180613     by Lena
         returns value from settings file by given arguments
         if variable and water_body is given returns single value
         if variable and type_area is given returns single value when there is only one setting for the given type_area, else return pandas series for given variable
@@ -572,6 +572,9 @@ class SettingsFile(object):
         if water_body:
             try:
                 type_area = self.mapping_water_body.get_type_area_for_water_body(water_body, include_suffix=True)
+                if type_area == None:
+                    print('waterbody matching file does not recognise water body with VISS_EU_CD {}'.format(water_body))
+                    return False
             except AttributeError as e:
                 print(e)
                 print('waterbody matching file does not recognise water body with VISS_EU_CD {}'.format(water_body))
@@ -1029,9 +1032,9 @@ class SettingsRef(SettingsBase):
                     max_s = self.get_value(variable = self.settings.ref_columns[-1], type_area = type_area)
                 if s > max_s:
                     s = max_s
-                print(s, ref_value)
+                #print(s, ref_value)
                 ref_value = eval(ref_value)
-                print('resulting ref value: {}'.format(ref_value))
+                #print('resulting ref value: {}'.format(ref_value))
             except TypeError as e:
                 raise TypeError('{}\nSalinity TypeError, salinity must be int, float or nan but is {}'.format(e, repr(s)))
                 #TODO: add closes matching salinity somewhere here
