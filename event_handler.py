@@ -1601,7 +1601,7 @@ class EventHandler(object):
         workspace_list = []
         uuid_mapping = self._get_uuid_mapping_object()
         for unique_id in uuid_mapping.get_uuid_list_for_user(status=self.all_status):
-            workspace_list.append(self.dict_workspace(unique_id=unique_id))
+            workspace_list.append(self.dict_workspace(workspace_uuid=unique_id))
         
 #        if include_default:
 #            workspace_list.append(self.dict_workspace(unique_id='default_workspace')) 

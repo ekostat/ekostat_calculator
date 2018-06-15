@@ -612,3 +612,19 @@
 2018-06-15 13:16:26,732	event_handler.py	1983	load_workspace	INFO	Workspace "40e11bb1-49fb-4eb3-bb2b-4d5b9f520b2c" with alias "New test workspace loaded."
 2018-06-15 13:16:30,079	event_handler.py	1976	load_workspace	DEBUG	Workspace "40e11bb1-49fb-4eb3-bb2b-4d5b9f520b2c" with alias "New test workspace" is already loaded. Set reload=True if you want to reload the workspace.
 2018-06-15 13:16:30,702	event_handler.py	2308	request_subset_set_indicator_settings	DEBUG	Time for excecuting request_subset_set_indicator_settings: 4.921000003814697
+2018-06-15 13:28:51,563	event_handler.py	76	__init__	DEBUG	Start EventHandler: event_handler
+2018-06-15 13:28:55,863	event_handler.py	2691	request_workspace_list	DEBUG	Start: request_workspace_list
+2018-06-15 13:30:42,971	event_handler.py	76	__init__	DEBUG	Start EventHandler: event_handler
+2018-06-15 13:30:47,667	event_handler.py	2691	request_workspace_list	DEBUG	Start: request_workspace_list
+2018-06-15 13:31:32,203	event_handler.py	76	__init__	DEBUG	Start EventHandler: event_handler
+2018-06-15 13:31:36,585	event_handler.py	2691	request_workspace_list	DEBUG	Start: request_workspace_list
+2018-06-15 13:32:41,784	event_handler.py	76	__init__	DEBUG	Start EventHandler: event_handler
+2018-06-15 13:32:46,161	event_handler.py	2691	request_workspace_list	DEBUG	Start: request_workspace_list
+2018-06-15 13:32:46,213	event_handler.py	2696	request_workspace_list	DEBUG	Time for excecuting request_workspace_list: 0.05200004577636719
+2018-06-15 13:35:53,331	logger.py	85	add_log	DEBUG	
+2018-06-15 13:35:53,334	logger.py	86	add_log	DEBUG	========================================================================================================================
+2018-06-15 13:35:53,335	logger.py	87	add_log	DEBUG	### Log added for log_id "event_handler" at locaton: ..\log\main_event_handler.log
+2018-06-15 13:35:53,337	logger.py	88	add_log	DEBUG	------------------------------------------------------------------------------------------------------------------------
+2018-06-15 13:35:53,339	event_handler.py	76	__init__	DEBUG	Start EventHandler: event_handler
+2018-06-15 13:35:57,697	event_handler.py	2691	request_workspace_list	DEBUG	Start: request_workspace_list
+2018-06-15 13:35:57,728	event_handler.py	2696	request_workspace_list	DEBUG	Time for excecuting request_workspace_list: 0.031000137329101562
