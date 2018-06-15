@@ -112,6 +112,7 @@ class IndicatorBase(object):
             df['REFERENCE_VALUE'] = np.nan
             for ix in df.index:
                 salinity = df['SALT'][ix]
+                print(repr(salinity))
                 df['REFERENCE_VALUE'].loc[ix] = self.get_ref_value(water_body = water_body, salinity = salinity)
         else:
             df['REFERENCE_VALUE'] = self.get_ref_value(water_body)
@@ -389,6 +390,7 @@ class IndicatorBase(object):
             df = self.get_filtered_data(subset = self.subset, step = 'step_2', water_body = water_body, indicator = self.name).copy(deep = True)
             df = df[self.column_list]
             df = df.dropna(subset = [self.indicator_parameter])
+            print(df.dtypes)
             df = self._add_reference_value_to_df(df, water_body)
             self.water_body_indicator_df[water_body] = df 
         else:
