@@ -12,7 +12,7 @@
         "time": {
             "year_interval": [
                 2013,
-                2019
+                2018
             ]
         },
         "areas": [
@@ -7358,7 +7358,7 @@
                         "value": "2",
                         "type": "type_area",
                         "status": "selectable",
-                        "active": false,
+                        "active": true,
                         "children": [
                             {
                                 "label": "Inre Idefjorden",
@@ -7406,7 +7406,7 @@
                                 "type": "water_body",
                                 "status": "selectable",
                                 "url": " http://www.viss.lansstyrelsen.se/waters.aspx?waterEUID=SE580688-114860",
-                                "active": false
+                                "active": true
                             },
                             {
                                 "label": "Ell\u00f6sefjorden",
@@ -7502,7 +7502,7 @@
                                 "type": "water_body",
                                 "status": "selectable",
                                 "url": " http://www.viss.lansstyrelsen.se/waters.aspx?waterEUID=SE582000-115270",
-                                "active": false
+                                "active": true
                             },
                             {
                                 "label": "Brofjorden",

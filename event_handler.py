@@ -864,7 +864,7 @@ class EventHandler(object):
 #                                                   subset_uuid=subset_uuid, 
 #                                                   request=request.get('periods', {}))
         
-        
+
         # Areas (contains water_district, type_area and water_body in a tree structure) 
         if kwargs.get('areas'):
             subset_dict['areas'] = self.list_areas(workspace_uuid=workspace_uuid, 
@@ -917,7 +917,7 @@ class EventHandler(object):
         else:
             active = False 
             data_filter_object = subset_object.get_data_filter_object('step_1')
-            wb_active_list = data_filter_object.get_include_list_filter('WATER_BODY')
+            wb_active_list = data_filter_object.get_include_list_filter('VISS_EU_CD')
             water_body_mapping = self.mapping_objects['water_body']
             if water_body in wb_active_list:
                 active = True
@@ -2139,6 +2139,8 @@ class EventHandler(object):
         
         response['subset'] = self.dict_subset(workspace_uuid=workspace_uuid, 
                                               subset_uuid=subset_uuid, 
+                                              time=True, 
+                                              areas=True, 
                                               indicator_settings=False, 
                                               quality_elements=False, 
                                               supporting_elements=False)
@@ -2422,7 +2424,11 @@ class EventHandler(object):
         
         response['subset'] = self.dict_subset(workspace_uuid=workspace_uuid, 
                                     subset_uuid=subset_uuid, 
-                                    include_indicator_settings=True)
+                                    include_indicator_settings=True, 
+                                    time=True, 
+                                    areas=True, 
+                                    quality_elements=True, 
+                                    supporting_elements=True)
         self._logger.debug('Time for excecuting request_subset_info: {}'.format(time.time()-t0))
         return response
     
