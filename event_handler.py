@@ -308,7 +308,7 @@ class EventHandler(object):
         
         uuid_mapping = self._get_uuid_mapping_object()
 #        print('USER_ID', user_id)
-        if unique_id not in uuid_mapping.get_uuid_list_for_user(self.user_id):
+        if unique_id not in uuid_mapping.get_uuid_list_for_user():
             return False
 
         alias = uuid_mapping.get_alias(unique_id)
