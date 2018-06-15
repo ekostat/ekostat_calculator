@@ -11,6 +11,7 @@ import time
 import pandas as pd 
 from pandas.util.testing import assert_frame_equal # <-- for testing dataframes
 import pickle
+import numpy as np
 #import core
 
 #TEST_DIRECTORY = 'D:\\Utveckling\\git\\ekostat_calculator\\test'
@@ -62,7 +63,7 @@ class TestEventHandler(unittest.TestCase):
             self.ekos.set_status_for_datasource(workspace_unique_id=self.workspace_uuid, file_name=file_name, status=True)        
         
         
-        self.ekos.load_data(unique_id=self.workspace_alias)
+        self.ekos.load_data(unique_id=self.workspace_uuid)
         
         print('-'*50)
         print(self.ekos.workspaces)
@@ -85,7 +86,23 @@ class TestEventHandler(unittest.TestCase):
     
     #==========================================================================
     def test_compare_all_data(self):
+        
+        def float_convert(x):
+            try:
+                return float(x)
+            except:
+#                print('float_convert')
+                return np.nan 
+            
+        def str_convert(x):
+            x = str(x)
+            if x == 'nan':
+                x = ''
+            return x
+        
+            
         self.ekos.action_load_workspace(self.workspace_uuid)
+        self.ekos.load_data(unique_id=self.workspace_uuid)
         print('='*50)
         print(self.ekos.workspaces)
         print('='*50)
@@ -94,10 +111,28 @@ class TestEventHandler(unittest.TestCase):
         directory = 'D:/Utveckling/git/ekostat_calculator/workspaces/{}/input_data/exports'.format(self.workspace_uuid)
         with open(directory + "/all_data.pkl", "rb") as fid:
             all_data_pkl = pickle.load(fid)
-        all_data_txt = pd.read_csv(directory + "/all_data.txt", sep='\t', encoding='cp1252')
+        all_data_txt = pd.read_csv(directory + "/all_data.txt", sep='\t', encoding='cp1252',  dtype=str).fillna('')
         
-        assert_frame_equal(all_data, all_data_txt)
-        assert_frame_equal(all_data, all_data_pkl)
+#        print(len(all_data['STIME']))
+#        print(all(all_data['STIME']==all_data_txt['STIME']))
+#        for a, b in zip(all_data['STIME'].values, all_data_txt['STIME'].values):
+#            if a!=b:
+#                print('a!=b', a, b, type(a), type(b))
+                
+        for col in all_data.columns:
+            if col.startswith('Q_'): 
+                par = col[2:]
+#                        print(par)
+                all_data_txt[par] = all_data_txt[par].apply(float_convert)
+                all_data_txt[col] = all_data_txt[col].apply(str_convert)
+                
+            print('col:', col)
+            self.assertTrue(all_data_txt[col].dtype==all_data[col].dtype)
+            self.assertTrue(all_data_txt[col].dtype==all_data_pkl[col].dtype)
+            
+#        assert_frame_equal(all_data, all_data)
+#        assert_frame_equal(all_data, all_data_txt)
+#        assert_frame_equal(all_data, all_data_pkl)
        
         
         
@@ -141,8 +176,11 @@ class EKOS():
         self.all_data = self.ekos.workspaces[self.workspace_uuid].data_handler.all_data
         
         self.directory = 'D:/Utveckling/git/ekostat_calculator/workspaces/{}/input_data/exports'.format(self.workspace_uuid)
-        self.all_data_pkl = pickle.load(open(self.directory + "/all_data.pkl", "rb"))
+        with open(self.directory + "/all_data.pkl", "rb") as fid:
+            self.all_data_pkl = pickle.load(fid)
         self.all_data_txt = pd.read_csv(self.directory + "/all_data.txt", sep='\t', encoding='cp1252')
+#        for a, b in zip(self.all_data['STIME'].values, self.all_data_txt['STIME'].values):
+#            print('a!=b', a, b, type(a), type(b))
         
 #==============================================================================
 #==============================================================================

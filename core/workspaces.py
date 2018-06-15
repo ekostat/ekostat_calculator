@@ -72,7 +72,7 @@ class WorkStep(object):
         self.load_all_files()
         self._check_folder_structure()        
         
-        print('Initiating WorkStep: {}'.format(self.paths['step_directory']))    
+#        print('Initiating WorkStep: {}'.format(self.paths['step_directory']))    
         
     #==========================================================================
     def _create_folder_structure(self):
@@ -332,7 +332,7 @@ class WorkStep(object):
             
     #==========================================================================
     def load_water_body_station_filter(self):
-        print('load_water_body_station_filter')
+#        print('load_water_body_station_filter')
         self.water_body_station_filter = core.WaterBodyStationFilter(water_body_settings_directory=self.paths['directory_paths']['water_body_station_filter'], 
                                                                      mapping_objects=self.mapping_objects)
         
@@ -456,9 +456,7 @@ class Subset(object):
         self.paths['subset_directory'] = '/'.join([self.paths['parent_directory'], self.unique_id]) 
         self.parent_workspace_object = parent_workspace_object
         self.paths['directory_path_log'] = self.parent_workspace_object.paths['directory_path_log']
-        
-        print('-'*100)
-        print('Initiating Subset: {}'.format(self.paths['subset_directory'])) 
+         
         
         self.mapping_objects = mapping_objects
         
@@ -477,6 +475,7 @@ class Subset(object):
         self.steps = {}
         self.available_indicators = []
             
+        
     #==========================================================================
     def _set_logger(self, log_id):
         # Add logger 
@@ -488,10 +487,12 @@ class Subset(object):
         self._logger = core.get_log(log_id)
 #        self._logger.debug('Logger set for subset {} with unique_id {}'.format(self. name, log_id))
     
+
     #==========================================================================
     def _set_loggers_to_steps(self): 
         for step in self.steps.keys():
             self.steps[step]._logger = self._logger
+    
     
     #==========================================================================
     def _change_ok(self): 
@@ -506,19 +507,21 @@ class Subset(object):
             return False
         return True
     
+    
     #==========================================================================
     def deprecated__load_subset_config(self): 
         self.config_object = Config(self.paths['subset_directory'] + '/subset.cfg')
+        
         
     #==========================================================================
     def _load_steps(self): 
         if not os.path.exists(self.paths['subset_directory']): 
             os.makedirs(self.paths['subset_directory'])
-        print('===')
-        print(self.paths['subset_directory'])
+            
         step_list = [item for item in os.listdir(self.paths['subset_directory']) if '.' not in item]
         for step in step_list:
             self._load_workstep(step)
+        
         
     #==========================================================================
     def deprecated__add_files_from_subset(self, subset_object=None, overwrite=False):
@@ -751,12 +754,6 @@ class WorkSpace(object):
                  mapping_objects=None, 
                  user_id=None): 
         
-#        print('='*30)
-#        print(alias)
-#        print(unique_id)
-#        print(parent_directory)
-#        print(user_id)
-#        print('-'*30)
         assert all([alias, unique_id, parent_directory, user_id])
         assert nr_subsets_allowed
         
@@ -794,7 +791,7 @@ class WorkSpace(object):
     #==========================================================================
     def _add_subset(self, unique_id=None): 
         assert unique_id, 'No subset name given!'
-        print('===', unique_id)
+        
         if unique_id == 'default_subset':
             alias = 'default_subset' 
         else:
@@ -805,9 +802,7 @@ class WorkSpace(object):
         
         
         self.paths['directory_path_subsets'][unique_id] = self.paths['directory_path_subset'] + '/{}'.format(unique_id)
-        print('!!!', alias)
-        print('!!!', unique_id)
-        print('!!!', self.paths['directory_path_subset'])
+
         self.subset_dict[unique_id] = Subset(alias=alias, 
                                              unique_id=unique_id, 
                                              parent_directory=self.paths['directory_path_subset'],
@@ -833,12 +828,6 @@ class WorkSpace(object):
         # Setup default paths 
         self.paths['mapping_directory'] = '/'.join([self.paths['resource_directory'], 'mappings'])
         self.paths['workspace_directory'] = '/'.join([self.paths['parent_directory'], self.unique_id]) 
-
-        print('')
-        print('='*100)
-        print('Initiating WorkSpace: {}'.format(self.paths['workspace_directory'])) 
-        print('Parent directory is: {}'.format(self.paths['parent_directory']))
-        print('Resource directory is: {}'.format(self.paths['resource_directory']))
         
         self.paths['directory_path_subsets'] = {}
         self.paths['directory_path_input_data'] = self.paths['workspace_directory'] + '/input_data'
@@ -1036,7 +1025,32 @@ class WorkSpace(object):
     
     
     #==========================================================================
-    def apply_data_filter(self, step=None, subset=None):
+    def apply_data_filter(self, step=None, subset=None, apply_all_previous_filters=True):
+        """
+        Created     20180608    by Magnus Wenzer
+        Updated     
+        
+        Applies the data filter on the step given. 
+        If apply_all_previous_filters==True all previous steps are applied before. 
+        """
+        if apply_all_previous_filters:
+            step = get_step_name(step)
+            step_nr = int(step[-1])
+            
+            for s in range(step_nr+1):
+#                print('s', s)
+#                self._apply_data_filter(step=s, subset=subset)
+                if s==0:
+                    self._apply_data_filter(step=s) # Cannot handle subset if step=0
+                else:
+                    self._apply_data_filter(step=s, subset=subset)
+                
+        else:
+            self._apply_data_filter(step=step, subset=subset)
+        
+
+    #==========================================================================
+    def _apply_data_filter(self, step=None, subset=None):
         """
         Created     ????????    by Magnus Wenzer
         Updated     20180220    by Magnus Wenzer
@@ -1074,6 +1088,7 @@ class WorkSpace(object):
         all_ok = self.index_handler.add_filter(filter_object=filter_object, step=step, subset=subset)
         return all_ok
         
+    
     #==========================================================================
     def apply_indicator_data_filter(self, subset='', indicator='', step='step_2'):
         """
@@ -1099,7 +1114,7 @@ class WorkSpace(object):
         water_body_list = self.get_filtered_data(step=step, subset=subset).VISS_EU_CD.unique()
         if not len(water_body_list):
             #raise Error?
-            print('no waterbodies in filtered data')
+            self._logger.warning('No waterbodies in filtered data')
             return False
         
         if subset not in self.get_subset_list(): 
@@ -1162,7 +1177,6 @@ class WorkSpace(object):
         
         # Add UUID for workspace in uuid_mapping 
         target_uuid = self.uuid_mapping.add_new_uuid_for_alias(target_alias)
-        print('target_uuid', target_uuid)
         if not target_uuid:
             self._logger.debug('Could not add subset with alias "{}". Subset already exists!'.format(target_alias)) 
             return False
@@ -1172,8 +1186,8 @@ class WorkSpace(object):
         target_subset_path = '/'.join([self.paths['directory_path_subset'], target_uuid]) 
         
         
-        print('source_subset_path:', source_subset_path)
-        print('target_subset_path:', target_subset_path)
+#        print('source_subset_path:', source_subset_path)
+#        print('target_subset_path:', target_subset_path)
         
         # Copy files
         shutil.copytree(source_subset_path, target_subset_path)
@@ -1408,14 +1422,14 @@ class WorkSpace(object):
         step = get_step_name(step)
         if step == None:
             return False
-        self._logger.debug('STEP: {}'.format(step))
+#        self._logger.debug('STEP: {}'.format(step))
         return self.index_handler.get_filtered_data(subset=subset, step=step, water_body=water_body, indicator=indicator)
     
     #==========================================================================
     def get_available_indicators(self, subset=None, step=None):
         """
         Created:        201801   by Lena
-        Last modified:  20180406 by Lena
+        Last modified:  20180611 by Magnus
         """
         #TODO: nu kollar den bara om det finns fler än 0 rader med givna parameters för indikatorn, kanske öka den gräns?
         try:
@@ -1430,13 +1444,17 @@ class WorkSpace(object):
         for indicator, row in self.mapping_objects['quality_element'].indicator_config.iterrows():
             parameter_list = [item.strip() for item in row['parameters'].split(', ')]
             #parameter_list = [item.strip() for item in parameters[0].split(', ')]
-            print('subset', subset)
+#            print('subset', subset)
             try:
                 #TODO: speed of pd.to_numeric?
-                self.get_filtered_data(step = step, subset = subset)[parameter_list].apply(pd.to_numeric).dropna(thresh = len(parameter_list))
-                available_indicators.append(indicator)
+                filtered_data = self.get_filtered_data(step = step, subset = subset)
+                if len(filtered_data): # 20180611, MW added if 
+#                    self.filtered_data = filtered_data
+                    self.get_filtered_data(step = step, subset = subset)[parameter_list].apply(pd.to_numeric).dropna(thresh = len(parameter_list))
+                    available_indicators.append(indicator)
             except KeyError as e:
                 #TODO: lägga till felmeddelande i log?
+#                print('7777777', indicator)
                 print(e)
         
         self.available_indicators = available_indicators            
@@ -1495,78 +1513,17 @@ class WorkSpace(object):
     def get_step_1_object(self, subset): 
         return self.subset_dict[subset].get_step_1_object()
     
+    
     #==========================================================================
     def get_step_2_object(self, subset): 
         return self.subset_dict[subset].get_step_2_object()
+    
     
     #==========================================================================
     def initiate_quality_factors(self, ):
         self.quality_factor_NP = core.QualityFactorNP()
         
        
-    #==========================================================================
-    def old_load_all_data(self, force=False): 
-        """ 
-        Created:        2017        by Johannes Johansson (?)
-        Last modified:  20180409    by Lena Viktorsson
-        Loads all data from the input_data/raw_data-directory belonging to the workspace. 
-        """
-        output_directory = self.paths['directory_path_input_data'] + '/exports/' 
-        """
-        # The input_data directory is given to DataHandler during initation. 
-        # If no directory is given use the default directory! 
-        # This has to be done in physicalchemical, zoobenthos etc. 
-        """
-#        # TODO:  User should maybe choose which files to load in dtype_settings?
-
-        if os.path.isfile(self.paths['directory_path_input_data'] + '/exports/all_data.txt'): 
-            print(self.paths['directory_path_input_data'])
-            data_loaded, filetype = self.data_handler.load_all_datatxt()
-            print(data_loaded, filetype)
-            if data_loaded:
-                self._logger.debug('data has been loaded from existing all_data.{} file.'.format(filetype))
-            else:
-                self._logger.debug('all_data.txt already loaded, delete it if you want to re-create it.')
-        else:
-                                                                 
-            if not self.dtype_settings.has_info:
-                self._logger.debug('No info found')
-                return False
-            data_loaded = False
-            for file_path, data_type in self.dtype_settings.get_active_paths_with_data_type(): 
-                
-                if data_type == 'phyche':
-                    self.data_handler.physicalchemical.load_source(file_path=file_path, raw_data_copy=True)
-                    data_loaded = True
-                    self.data_handler.physicalchemical.save_data_as_txt(directory=output_directory, prefix=u'Column_format') 
-                    
-                elif data_type == 'phyche_model':
-                    self.data_handler.physicalchemicalmodel.load_source(file_path=file_path, raw_data_copy=True)
-                    data_loaded = True
-                    self.data_handler.physicalchemicalmodel.save_data_as_txt(directory=output_directory, prefix=u'Column_format')
-    
-                elif data_type== 'zooben':
-                    self.data_handler.zoobenthos.load_source(file_path=file_path,
-                                                             raw_data_copy=True)
-                    data_loaded = True
-                    self.data_handler.zoobenthos.save_data_as_txt(directory=output_directory, prefix=u'Column_format')
-                elif data_type == 'pp':
-                    self.data_handler.phytoplankton.load_source(file_path=file_path,
-                                                             raw_data_copy=True)
-                    data_loaded = True
-                    self.data_handler.phytoplankton.save_data_as_txt(directory=output_directory, prefix=u'Column_format')
-                elif data_type == 'chlorophyll':
-                    self.data_handler.chlorophyll.load_source(file_path=file_path,
-                                                             raw_data_copy=True)
-                    data_loaded = True
-                    self.data_handler.chlorophyll.save_data_as_txt(directory=output_directory, prefix=u'Column_format')   
-                else:
-                    self._logger.debug('could not read {} from raw_data directory. Check data type'.format(os.path.basename(file_path)))
-    
-            
-            self.data_handler.merge_all_data(save_to_txt=True)
-            
-        return data_loaded
     
     #==========================================================================
     def load_all_data(self, force=False): 
@@ -1591,12 +1548,12 @@ class WorkSpace(object):
             return False
             
         if self.datatype_settings.no_data_to_load():
-            print('self.datatype_settings.no_data_to_load():')
+#            print('self.datatype_settings.no_data_to_load():')
             self._logger.debug('No data to load.')
             self.delete_all_export_data()
             
         elif not self.datatype_settings.all_data_is_loaded(): 
-            print('self.datatype_settings.all_data_is_loaded():')
+#            print('self.datatype_settings.all_data_is_loaded():')
             self._logger.debug('All selected data in (status 1 in datatype_settings.txt) is not loaded.')
             # dtype_settings is not matching the loaded files so we delete all_data (if excisting)
             self.delete_alldata_export()
@@ -1610,12 +1567,12 @@ class WorkSpace(object):
                 self._logger.debug("""all_data.txt already loaded and datatype_settings.txt is unchanged. 
                                    Call "delete_alldata_export" and load data again to reload all_data""")
         else:
-            print('load_all_data - else')
+#            print('load_all_data - else')
             # We know that all_data does not excist. We only want to load the datatypes that has been changed and then merge data. 
             # Loop and load datatypes (if loaded are desided in method load datatype_data)
             for datatype in self.datatype_settings.get_datatype_list():
-                print('datatype', datatype)
-                print('force', force)
+#                print('datatype', datatype)
+#                print('force', force)
                 self.load_datatype_data(datatype=datatype, force=force)
             
             self.data_handler.merge_all_data(save_to_txt=False) 
@@ -1673,6 +1630,21 @@ class WorkSpace(object):
             self._logger.debug('New data files has been loaded for datatype: {}'.format(datatype))
     
     
+    #==========================================================================
+    def reset_data_filter(self, subset_uuid=None, step=1, include_filters=[], exclude_filters=[]): 
+        """
+        Created 20180608    by Magnus Wenzer 
+        Updated 
+        
+        Resets the data filter in include_filters and exclude_filters. 
+        If arguments=True all filters in group are reset. 
+        """ 
+        data_filter_object = self.get_data_filter_object(step=step, subset=subset_uuid)
+        data_filter_object.reset_filter(include_filters=include_filters, 
+                                        exclude_filters=exclude_filters)
+        
+        
+        
     #==========================================================================
     def set_data_filter(self, step='', subset='', filter_type='', filter_name='', data=None, save_filter=True, append_items=False): 
         """

@@ -10,9 +10,55 @@ import core
 import os, sys
 import uuid
 import re
+import codecs
 
 #if current_path not in sys.path: 
 #    sys.path.append(os.path.dirname(os.path.realpath(__file__)))
+
+
+"""
+#==============================================================================
+#==============================================================================
+""" 
+class IndSetHomPar(dict):
+    """
+    Created     20180612    by Magnus Wenzer
+    
+    """ 
+    def __init__(self, file_path): 
+        self.file_path = file_path 
+        self.load_file() 
+        
+    def load_file(self): 
+        with codecs.open(self.file_path) as fid: 
+            for line in fid:
+                line = line.strip()
+                if line:
+                    indicator, par = [item.strip() for item in line.split('\t')]
+                    if not self.get(indicator):
+                        self[indicator] = []
+                    self[indicator].append(par) 
+                    
+                    
+"""
+#==============================================================================
+#==============================================================================
+""" 
+class IndSetMatCol(list):
+    """
+    Created     20180612    by Magnus Wenzer
+    
+    """ 
+    def __init__(self, file_path): 
+        self.file_path = file_path 
+        self.load_file() 
+        
+    def load_file(self): 
+        with codecs.open(self.file_path) as fid: 
+            for line in fid:
+                line = line.strip()
+                if line:
+                    self.append(line)
 
 
 """
@@ -343,6 +389,10 @@ class WaterBody(AttributeDict):
         """
         Created     20180315    by Magnus Wenzer
         Updated     20180315    by Magnus Wenzer
+        
+        kwargs examples: 
+            water_body='SE633710-200500'
+            type_area='1n'
         """
         area = list(kwargs.keys())[0]
         value = kwargs[area]
@@ -453,20 +503,24 @@ class WaterBody(AttributeDict):
     def get_type_area_for_water_body(self, wb, include_suffix=False, 
                                      key_number=u'TYPE_AREA_NO', 
                                      key_suffix=u'TYPE_AREA_SUFFIX'):
-        if include_suffix:
+        if include_suffix: 
+            print('WB', wb)
             string = self.get(wb).get(key_number) + '-' + \
                      self.get(wb).get(key_suffix)
             return string.strip('-')
         else:
             return self.get(wb).get(key_number)
     
+    
     #==========================================================================
     def get_type_area_suffix_for_water_body(self, wb, key=u'TYPE_AREA_SUFFIX'):
         return self.get(wb).get(key)
     
+    
     #==========================================================================
     def get_eu_cd_for_water_body(self, wb, key=u'EU_CD'):
         return self.get(wb).get(key)
+
 
     #==========================================================================
     def get_basin_number_for_water_body(self, wb, key=u'BASIN_NUMBER'):
@@ -475,14 +529,17 @@ class WaterBody(AttributeDict):
         """
         return self.get(wb).get(key)
         
+    
     #==========================================================================
     def get_hid_for_water_body(self, wb, key=u'HID'):
         return self.get(wb).get(key)
         
+    
     #==========================================================================
     def get_url_viss_for_water_body(self, wb, key=u'URL_VISS'):
         return self.get(wb).get(key)
         
+    
     #==========================================================================
     def get_center_position_for_water_body(self, wb, key_lat=u'CENTER_LAT', 
                                            key_lon=u'CENTER_LON'):

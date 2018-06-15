@@ -112,6 +112,15 @@ class IndexHandler(object):
         #TODO Should we be able to apply different booleans from one filter-object?
         """
         bool_dict = self.booleans
+#        print('**********')
+#        print(bool_dict)
+#        print(step_0)
+#        print(subset)
+#        print(step_1)
+#        print(step_2)
+#        print(water_body)
+#        print(indicator)
+#        print(filter_object)
         
         #boolean_dict_keys = [step_0, subset, step_1, step_2, type_area, indicator]
         boolean_dict_keys = [step_0, subset, step_1, step_2, water_body, indicator]
@@ -342,6 +351,8 @@ class IndexHandler(object):
         self._add_boolean_to_dict(step_0, subset, step_1, step_2, water_body, indicator,
                                   filter_object=filter_object, 
                                   df=df)
+        
+        
     #==========================================================================
     def old_add_filter(self, filter_object=None, subset=None, step=None, type_area=None, indicator=None, level=None): 
         """

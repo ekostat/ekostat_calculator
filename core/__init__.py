@@ -1,5 +1,5 @@
 """
-Last modified:  20180525     by Magnus 
+Last modified:  20180612     by Magnus 
 
 """
 
@@ -38,6 +38,8 @@ from .mapping import QualityElement
 from .mapping import UUIDmapping
 from .mapping import Hypsograph
 from .mapping import DataTypeMapping
+from .mapping import IndSetHomPar
+from .mapping import IndSetMatCol
 
 from .parameters import ParameterSALT_CTD
 from .parameters import ParameterNTRA 

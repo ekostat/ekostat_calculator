@@ -36,6 +36,8 @@ class DataFilter(object):
         self.exclude_header_filter = {}
         self.all_filters = {}
         
+        self.int_filters = ['MYEAR']
+        
         self.mapping_water_body = mapping_objects['water_body']
         
         self.load_filter_files()
@@ -54,78 +56,14 @@ class DataFilter(object):
         value_list = self.get_include_list_filter(parameter)
         if not value_list:
             return False
+#        print('¤¤¤¤¤¤¤¤¤¤¤¤¤¤¤¤¤')
+#        print('\n'*5)
+#        print(parameter)
+#        print(value_list)
+#        print('\n'*5)
         return df[parameter].astype(str).isin(value_list)
     
-    #==========================================================================
-    def deprecate_include_statn(self, statn, include_current=False):
-        """
-        statn => water_body => type_area => water_district
-        Makes sure that the water_body containing the station is included in the include_water_body filter. 
-        include_current nor used
-        """
-        if type(statn) != list:
-            statn = list(statn) 
-        
-        statn = sorted(set([item.strip() for item in statn]))
-        self.include_list_filter['STATN'] = statn
-         
-        water_body_list = self.include_list_filter['WATER_BODY_NAME'][:] 
-        # Add water bodies
-        for s in statn: 
-            #TODO: Link between statn and water body
-            water_body_list.append('')
-             
-        self.include_water_body(water_body_list)
-        
     
-    #==========================================================================
-    def deprecate_include_type_area(self, type_area, include_current=False): 
-        """
-        type_area => water_district
-        include_current nor used
-        """
-        if type(type_area) != list:
-            type_area = list(type_area) 
-        
-        type_area = sorted(set([item.strip() for item in type_area]))
-        self.include_list_filter['TYPE_AREA_NUMBER'] = type_area 
-         
-        water_district_list = self.include_list_filter['WATER_DISTRICT_NAME'][:] 
-        # Add water districts
-        for ta in type_area: 
-            #TODO: Link between type area and water district
-            water_district_list.append('')
-
-        self.include_water_district(water_district_list)
-
-    #==========================================================================
-    def deprecate_include_water_district(self, water_district, include_current=False): 
-        """
-        water_district
-        include_current nor used
-        """
-        water_district = sorted(set([item.strip() for item in water_district]))
-        self.include_list_filter['WATER_DISTRICT_NAME'] = water_district
-        
-    #==========================================================================
-    def deprecate_include_water_body(self, water_body, include_current=False): 
-        """
-        water_body => type_area => water_district
-        include_current nor used
-        """
-        if type(water_body) != list:
-            water_body = list(water_body) 
-        
-        water_body = sorted(set([item.strip() for item in water_body]))
-        self.include_list_filter['WATER_BODY_NAME'] = water_body[:]
-        
-        # Get current type areas
-        type_area_list = self.include_list_filter['TYPE_AREA_NUMBER'][:] 
-        
-        for wb in water_body:
-            type_area_list.append(self.mapping_water_body.get_type_area_for_water_body(wb, include_suffix=True))
-             
-        self.include_type_area(type_area_list)
         
     #==========================================================================
     def get_filter_boolean_for_df(self, df=None, **kwargs): 
@@ -153,6 +91,7 @@ class DataFilter(object):
             boolean = self._get_filter_boolean_for_df_from_include_list(df=df, parameter=par)
 
             if not type(boolean) == pd.Series:
+                print(par)
                 continue            
             if type(combined_boolean) == pd.Series:
                 combined_boolean = combined_boolean & boolean
@@ -259,6 +198,36 @@ class DataFilter(object):
                     fid.write('\n')
               
     #==========================================================================
+    def reset_filter(self, include_filters=[], exclude_filters=[]): 
+        """
+        Created 20180608    by Magnus Wenzer 
+        Updated 
+        
+        Resets the data filter in include_filters and exclude_filters. 
+        If arguments=True all filters in group are reset. 
+        """
+        if include_filters == True:
+#            print('include_list_filter', self.include_list_filter)
+            include_filters = self.include_list_filter.keys()
+            
+        if exclude_filters == True:
+            exclude_filters = self.exclude_list_filter.keys()
+            
+        for f in include_filters:
+            self.set_include_list_filter(filter_name=f, 
+                                         filter_list=[], 
+                                         save_files=True, 
+                                         append_items=False)
+            
+            
+        for f in exclude_filters:
+            self.set_exclude_list_filter(filter_name=f, 
+                                         filter_list=[], 
+                                         save_files=True, 
+                                         append_items=False)
+        
+        
+    #==========================================================================
     def set_filter(self, filter_type=None, filter_name=None, data=None, save_filter=True, append_items=False): 
         """
         Sets the given filter_name of the given filter_type to data. 
@@ -275,6 +244,10 @@ class DataFilter(object):
 #        print(filter_name)
 #        print(data)
 #        print(save_filter)
+    
+        # Convert
+#        data = self._convert(filter_name=filter_name, data=data)
+
         if filter_type == 'exclude_list':
             return self.set_exclude_list_filter(filter_name=filter_name, 
                                                 filter_list=data, 
@@ -285,6 +258,26 @@ class DataFilter(object):
                                                 filter_list=data, 
                                                 save_files=save_filter, 
                                                 append_items=append_items)
+        
+    
+#    #==========================================================================
+#    def _convert(self, filter_name=None, data=None): 
+#        """
+#        Created     20180611    by Magnus Wenzer
+#        Updated     
+#        """
+#        
+##        print('¤¤¤¤¤¤¤¤¤¤¤¤¤¤¤¤¤')
+##        print('\n'*10)
+##        print(filter_name)
+##        print(data)
+##        print('\n'*10)
+#        
+#        if filter_name in self.int_filters:
+#            data = map(int, data)
+#            
+#        return data
+        
         
     #==========================================================================
     def set_include_list_filter(self, filter_name=None, filter_list=None, save_files=True, append_items=False): 
@@ -308,7 +301,8 @@ class DataFilter(object):
 #        print('filter_list'.upper(), filter_list)
         filter_list = sorted(set([item.strip() for item in map(str, filter_list)]))
         self.include_list_filter[filter_name] = filter_list
-        
+#        print('***')
+#        print(self.include_list_filter[filter_name])
         if save_files: 
             self.save_filter_files() 
         return True
@@ -385,7 +379,13 @@ class DataFilterFile(object):
 ###############################################################################
 class SettingsFile(object):
     """
+    Created                by Magnus Wenzer
+    Updated     20180612   by Magnus Wenzer
+        
     Holds Settings file information. Reading and writing file. Basic file handling. 
+    
+    Updates: 
+        20180605 MW: Added level columns
     """
     #==========================================================================
     def __init__(self, file_path, mapping_objects=None):
@@ -394,6 +394,8 @@ class SettingsFile(object):
         
         self.mapping_objects = mapping_objects
         self.mapping_water_body = mapping_objects['water_body']
+        self.homogeneous_parameters_dict = mapping_objects['indicator_settings_homogeneous_parameters']
+        self.match_columns_list = mapping_objects['indicator_settings_matching_columns']
         
         self.int_columns = [] 
         self.float_columns = [] 
@@ -408,21 +410,23 @@ class SettingsFile(object):
         self.filter_columns = [] 
         self.ref_columns = [] 
         self.tolerance_columns = []
+        self.level_columns = []
         
         self.connected_to_filter_settings_object = False
         self.connected_to_ref_settings_object = False
         self.connected_to_tolerance_settings_object = False
         
-        self._prefix_list = ['FILTER', 'REF', 'TOLERANCE'] 
+        self._prefix_list = ['FILTER', 'REF', 'TOLERANCE', 'LEVEL'] 
         self._suffix_list = ['INT', 'EQ', 'FLOAT']
         
         self._load_file()    
+    
     
     #==========================================================================
     def _load_file(self):
         """
         Created:        xxxxxxxx     by Magnus
-        Last modified:  20180418     by Lena
+        Last modified:  20180605     by Magnus
         """
         self.df = pd.read_csv(self.file_path, sep='\t', dtype='str', encoding='cp1252') 
         # Save columns
@@ -452,6 +456,8 @@ class SettingsFile(object):
                 self.ref_columns.append(variable) 
             elif prefix == 'TOLERANCE': 
                 self.tolerance_columns.append(variable)
+            elif prefix == 'LEVEL': 
+                self.level_columns.append(variable)
             
             #------------------------------------------------------------------
             # Suffix
@@ -505,9 +511,19 @@ class SettingsFile(object):
         
     #==========================================================================
     def save_file(self, file_path=None):
+        """
+        Created:        20180612     by Magnus
+        Last modified:  
+        """
+        
+        self._remove_viss_eu_cd_matching_type_area()
+        
         if not file_path:
             file_path = self.file_path
         # Rename columns 
+        print(len(self.df.columns))
+        print(self.df.columns)
+        print(len(self.columns_in_file))
         self.df.columns = self.columns_in_file 
         
         self.df.to_csv(file_path, sep='\t', encoding='cp1252', index=False) 
@@ -548,6 +564,7 @@ class SettingsFile(object):
             value = self._convert(value, variable.upper())
         return value
     
+    
     #==========================================================================
     def get_type_area_list(self): 
         """
@@ -558,13 +575,22 @@ class SettingsFile(object):
     
     
     #==========================================================================
-    def get_value(self, variable=None, type_area=None, water_body = None): 
+    def get_viss_eu_cd_list(self): 
+        """
+        Created     20180611    by Magnus Wenzer
+        Updated     
+        """
+        return sorted([item for item in self.df['VISS_EU_CD'] if item != 'unspecified'])
+    
+    
+    #==========================================================================
+    def get_value(self, variable=None, type_area=None, water_body=None, return_series=True): 
         """
         Created:        xxxxxxxx     by Magnus
-        Last modified:  20180426     by Lena
+        Last modified:  20180615     by Magnus
         returns value from settings file by given arguments
         if variable and water_body is given returns single value
-        if variable and type_area is given returns single value when there is only one setting for the given type_area, else return pandas series for given variable
+        if variable and type_area is given returns single value when there is only one setting for the given type_area, else return pandas series for given variable (MW: If return_series==True (default) else return "result")
         if no variable i given return pandas dataframe with all columns in object for the lines corresponding to given water_body or type_area
         Do not give both type_area and water_body , if both type_area and water_body is given type_area is replaces by type_area from mapping_water_body to be sure they are consistent
         """ 
@@ -586,12 +612,12 @@ class SettingsFile(object):
         
         if water_body:
             value_series = self.df.loc[(self.df['VISS_EU_CD']==water_body), var]
-            print(water_body)
-            print(self.df['VISS_EU_CD'].unique())
-            print('. . . . .')
-            print(value_series)
-            print(len(value_series))
-            print('. . . . .')
+#            print(water_body)
+#            print(self.df['VISS_EU_CD'].unique())
+#            print('. . . . .')
+#            print(value_series)
+#            print(len(value_series))
+#            print('. . . . .')
             if not len(value_series):
                 if suf and suf in self.df.loc[(self.df['TYPE_AREA_NUMBER']==num), 'TYPE_AREA_SUFFIX'].values:
                     value_series = self.df.loc[(self.df['TYPE_AREA_NUMBER']==num) & \
@@ -601,17 +627,20 @@ class SettingsFile(object):
                     value_series = self.df.loc[(self.df['TYPE_AREA_NUMBER']==num) & \
                                                (self.df['VISS_EU_CD'] == 'unspecified'), var]
         else:
+            # 20180615 MW: added (self.df['VISS_EU_CD'] == 'unspecified')
             if suf:
                 value_series = self.df.loc[(self.df['TYPE_AREA_NUMBER']==num) & \
-                                           (self.df['TYPE_AREA_SUFFIX']==suf), var]
+                                           (self.df['TYPE_AREA_SUFFIX']==suf) & \
+                                           (self.df['VISS_EU_CD'] == 'unspecified'), var]
             else:
-                value_series = self.df.loc[(self.df['TYPE_AREA_NUMBER']==num), var]
+                value_series = self.df.loc[(self.df['TYPE_AREA_NUMBER']==num) % \
+                                           (self.df['VISS_EU_CD'] == 'unspecified'), var]
         
-        print('----')
-        print('water_body {}, type_area {}, variable {}'.format(water_body, type_area, variable))
-        print('num {}, suf {}, suf? {}'.format(num, suf, self.df.loc[self.df['TYPE_AREA_NUMBER']==num, 'TYPE_AREA_SUFFIX'].values))
-        print(value_series, type(value_series))
-        print(value_series.values, type(value_series.values))
+#        print('----')
+#        print('water_body {}, type_area {}, variable {}'.format(water_body, type_area, variable))
+#        print('num {}, suf {}, suf? {}'.format(num, suf, self.df.loc[self.df['TYPE_AREA_NUMBER']==num, 'TYPE_AREA_SUFFIX'].values))
+#        print(value_series, type(value_series))
+#        print(value_series.values, type(value_series.values))
         
         # if no variable is given, return dataframe
         if variable is None:
@@ -637,7 +666,7 @@ class SettingsFile(object):
             return_value.append(value)
             # TODO: return dataframe?
         # if only one row for given type_area or water_body, return as single value, else return as pandas series
-        print(return_value)
+#        print(return_value)
         if len(return_value) == 1:
             return return_value[0]
         elif len(return_value) > 1 and all(x == return_value[0] for x in return_value):
@@ -645,11 +674,69 @@ class SettingsFile(object):
         elif not return_value:
             return False
         else:
-            return value_series
+            if return_series:
+                return value_series
+            else:
+                return return_value
 
+
+    #==========================================================================
+    def has_depth_interval(self): 
+        """
+        Created     20180606   by Magnus Wenzer
+        """
+        if 'DEPH_INTERVAL' in self.df.columns:
+            return True
+        else:
+            return False
+    
     
     #==========================================================================
-    def set_value(self, type_area=None, variable=None, value=None): 
+    def set_value(self, type_area=None, variable=None, value=None, viss_eu_cd=None): 
+        """
+        Updated     20180612   by Magnus Wenzer
+        
+        20180612: MW added viss_eu_cd
+        """
+        if not all([variable, value]):
+            return False
+        if not any([type_area, viss_eu_cd]):
+            return False
+        
+        new_value = []
+        for val in value:
+            if variable in self.list_columns: 
+                print('List column')
+                val = self._get_string_from_list(val, variable)
+            elif variable in self.interval_columns: 
+                print('Interval column')
+                val = self._get_string_from_interval(val, variable) 
+            elif variable in self.tolerance_columns: 
+                print('Tolerance column')
+                val = str(val)
+            
+            if val == False: 
+                print('Value could not be changed!')
+                return False
+            new_value.append(val)
+        
+        if type_area:
+            print('Value to set for type_area "{}" and variable "{}": {}'.format(type_area, variable, new_value))
+            num, suf = get_type_area_parts(type_area)
+            if suf:
+                self.df.loc[(self.df['TYPE_AREA_NUMBER']==num) & (self.df['TYPE_AREA_SUFFIX']==suf), variable] = new_value 
+            else:
+                self.df.loc[self.df['TYPE_AREA_NUMBER']==num, variable] = new_value
+            
+        elif viss_eu_cd: 
+            print('Value to set for water body (viss_eu_cd) "{}" and variable "{}": {}'.format(viss_eu_cd, variable, new_value))
+            self.df.loc[self.df['VISS_EU_CD']==viss_eu_cd, variable] = new_value
+        
+        return True
+        
+    
+    #==========================================================================
+    def old_set_value(self, type_area=None, variable=None, value=None): 
         """
         Updated     20180323   by Magnus Wenzer
         """
@@ -682,25 +769,137 @@ class SettingsFile(object):
                 self.df.loc[self.df['TYPE_AREA_NUMBER']==num, variable] = new_value
             return True
         
+        
+    #==========================================================================
+    def _add_new_rows_for_viss_eu_cd(self, viss_eu_cd, nr_rows=1): 
+        """
+        Created     20180612   by Magnus Wenzer
+        Updated     20180613   by Magnus Wenzer
+        
+        Method to add new rows to the settings file. 
+        The type area row corresponding to the viss_eu_cd is copied. 
+        """
+        # Find the corresponding type_area 
+        type_area = self.mapping_water_body.get_type_area_for_water_body(viss_eu_cd, include_suffix=True)
+        water_body_name = self.mapping_water_body.get_display_name(water_body=viss_eu_cd)
+        if not type_area:
+            return False
+        
+        # Find line for type_area 
+        series = get_matching_rows_in_indicator_settings(type_area=type_area, df=self.df)
+        
+#        series = self.df.loc[((self.df['TYPE_AREA_NUMBER'].astype(str) + \
+#                               self.df['TYPE_AREA_SUFFIX'])==type_area) & \
+#                                (self.df['VISS_EU_CD']=='unspecified')].copy()
+        
+        
+        # Change VISS_EU_CD and name in series
+        series['VISS_EU_CD'] = viss_eu_cd
+        series['WATERBODY_NAME'] = water_body_name
+        
+        
+        # Add new line(s) with copy of type_area
+        self.df = self.df.append(series)
+        
+        self.df.reset_index(inplace=True, drop=True)
+        
+        return True
+        
+    
+    #==========================================================================
+    def _remove_viss_eu_cd_matching_type_area(self): 
+        """
+        Created     20180612   by Magnus Wenzer
+        Updated     20180615   by Magnus Wenzer
+        
+        Removes all lines for a viss_eu_cd if data in te corresponding type_area is the same. 
+        
+        """
+        
+        for viss_eu_cd in set(self.df['VISS_EU_CD']):
+            if viss_eu_cd =='unspecified':
+                continue 
+            type_area = self.mapping_objects['water_body'].get_type_area_for_water_body(viss_eu_cd, include_suffix=True).replace('-', '')
+            type_area_series = get_matching_rows_in_indicator_settings(type_area=type_area, df=self.df)
+            
+            viss_eu_cd_boolean = self.df['VISS_EU_CD']==viss_eu_cd
+            viss_eu_cd_series = self.df.loc[viss_eu_cd_boolean, :] 
+            
+            # Compare. If all values are the same remove viss_eu_cd lines 
+            equal_list = []
+            for col in self.match_columns_list:
+                if col not in viss_eu_cd_series.columns:
+                    continue
+                if list(viss_eu_cd_series[col].values) == list(type_area_series[col].values): 
+#                    print('='*50)
+#                    print(viss_eu_cd_series[col].values)
+#                    print()
+#                    print(type_area_series[col].values)
+#                    print('-'*50)
+                    equal_list.append(True)
+                else:
+                    equal_list.append(False)
+            
+            if all(equal_list):
+                self.df = self.df.drop(np.where(viss_eu_cd_boolean)[0])
+                self.df.reset_index(inplace=True, drop=True) 
+                
+            
+        
+        
+        
     #==========================================================================
     def set_values(self, value_dict, allowed_variables): 
         """
+        Updated     20180615   by Magnus Wenzer
+        
         Sets values for several type_areas and variables. 
         Values to be set are given in dict like: 
-            value_dict[type_area][variable] = value 
+            value_dict[area][variable] = value 
+            area could be type_area or water_body (viss_eu_cd)
         """
-#        print('#'*40)
-#        print(value_dict)
+        print('set_values')
+        print(allowed_variables)
         all_ok = True
-        for type_area in value_dict.keys():
-            for variable in value_dict[type_area].keys(): 
+        for area in value_dict.keys():
+            print('AREA:', area, type(area))
+            for variable in value_dict[area].keys(): 
                 if variable not in allowed_variables:
-                    print('Not allowed to change variable "{}". Allowed variables to change are:\n{}\n'.format(variable, '\n'.join(allowed_variables)))
+#                    print('Not allowed to change variable "{}". Allowed variables to change are:\n{}\n'.format(variable, '\n'.join(allowed_variables)))
                     continue
-                value = value_dict[type_area][variable]
-                if not self.set_value(type_area, variable, value):
-                    all_ok = False
+                value_list = value_dict[area][variable] 
+                
+                # Three cases when data i set
+                if area in (self.df['TYPE_AREA_NUMBER'].astype(str) + self.df['TYPE_AREA_SUFFIX']).values:
+                    print('1')
+                    # Area is type_area which should always be present in settings file 
+                    if not self.set_value(type_area=area, variable=variable, value=value_list, viss_eu_cd=None):
+                        all_ok = False
+                elif area in self.df['VISS_EU_CD'].values:
+                    print('2')
+                    # Area is VISS_EU_CD and present in settings file
+                    if not self.set_value(type_area=None, variable=variable, value=value_list, viss_eu_cd=area):
+                        all_ok = False
+                else:
+                    print('3333333333')
+                    # Area is new VISS_EU_CD NOT present in settings file
+                    self._add_new_rows_for_viss_eu_cd(viss_eu_cd=area)
+                    if not self.set_value(type_area=None, variable=variable, value=value_list, viss_eu_cd=area):
+                        all_ok = False
         return all_ok
+    
+    
+#        all_ok = True
+#        for type_area in value_dict.keys():
+#            for variable in value_dict[type_area].keys(): 
+#                if variable not in allowed_variables:
+##                    print('Not allowed to change variable "{}". Allowed variables to change are:\n{}\n'.format(variable, '\n'.join(allowed_variables)))
+#                    continue
+#                value = value_dict[type_area][variable]
+#                if not self.set_value(type_area, variable, value):
+#                    all_ok = False
+#        return all_ok
+    
     
     #==========================================================================
     def _get_list_from_string(self, value, variable): 
@@ -709,6 +908,7 @@ class SettingsFile(object):
             item = self._convert(item.strip(), variable)
             return_list.append(item)
         return return_list
+    
     
     #==========================================================================
     def _get_interval_from_string(self, value, variable): 
@@ -974,14 +1174,16 @@ class SettingsBase(object):
         self.settings.set_values(value_dict, self.allowed_variables) 
         self.settings.save_file()
         
+        
     #==========================================================================
-    def get_value(self, type_area=None, variable=None, water_body = None): 
+    def get_value(self, type_area=None, variable=None, water_body=None, return_series=True): 
         """
         Created     20180321    by Magnus Wenzer
-        Updated     20180423    by Lena Viktorsson
+        Updated     20180606    by Magnus (Added return_series option)
         """
   
-        return self.settings.get_value(variable=variable, type_area=type_area, water_body = water_body) 
+        return self.settings.get_value(variable=variable, type_area=type_area, water_body=water_body, return_series=return_series) 
+    
     
     #==========================================================================
     def get_type_area_list(self): 
@@ -990,6 +1192,22 @@ class SettingsBase(object):
         Updated     20180323    by Magnus Wenzer
         """
         return self.settings.get_type_area_list()
+    
+    
+    #==========================================================================
+    def get_viss_eu_cd_list(self): 
+        """
+        Created     20180615    by Magnus Wenzer
+        Updated     
+        """
+        return self.settings.get_viss_eu_cd_list()
+    
+    
+    #==========================================================================
+    def has_depth_interval(self):
+        return self.settings.has_depth_interval()
+        
+    
     
 ###############################################################################
 class SettingsRef(SettingsBase):
@@ -1035,6 +1253,8 @@ class SettingsRef(SettingsBase):
             raise TypeError('Unknown Type of reference value, must be either equation as string or float. Given reference value {} is {}. Or salinity missing, given salinity value is {}'.format(ref_value, type(ref_value), salinity))
         
         return ref_value
+    
+    
     #==========================================================================    
     def get_ref_value_type(self, type_area = None, water_body = None):
         """
@@ -1057,6 +1277,7 @@ class SettingsRef(SettingsBase):
             return False
         else:
             raise TypeError('unknown referencevalue type {}: {}'.format(type(ref_value),ref_value))
+        
         
 ###############################################################################
 class SettingsDataFilter(SettingsBase):
@@ -1251,6 +1472,7 @@ class InputError(Exception):
         self.expression = expression
         self.message = message            
         
+        
 ###############################################################################
 def get_type_area_parts(type_area): 
     """
@@ -1264,6 +1486,21 @@ def get_type_area_parts(type_area):
     
     return re.findall('\d+', type_area)[0], suf
         
+
+###############################################################################
+def get_matching_rows_in_indicator_settings(type_area=None, df=None): 
+    """
+    Created     20180612   by Magnus Wenzer
+    Updated     
+        
+    """
+    s = df.loc[((df['TYPE_AREA_NUMBER'].astype(str) + df['TYPE_AREA_SUFFIX'])==type_area) & (df['VISS_EU_CD']=='unspecified')].copy(deep=True)
+    if not len(s):
+        type_area = re.findall('\d+', type_area)[0]
+        s = df.loc[((df['TYPE_AREA_NUMBER'].astype(str) + df['TYPE_AREA_SUFFIX'])==type_area) & (df['VISS_EU_CD']=='unspecified')].copy(deep=True)
+    return s
+    
+
 ###############################################################################
 if __name__ == '__main__':
     nr_marks = 60
