@@ -2552,7 +2552,7 @@ class EventHandler(object):
 #        self.assure_data_is_loaded(workspace_uuid=workspace_uuid)
 #        print('2:', time.time()-t0)
         # Add workspace info
-        response['workspace'] = self.dict_workspace(unique_id=workspace_uuid)
+        response['workspace'] = self.dict_workspace(workspace_uuid=workspace_uuid)
 #        print('3:', time.time()-t0)      
         subset_list = self.list_subsets(workspace_uuid=workspace_uuid)
 #        print('4:', time.time()-t0)

@@ -1080,8 +1080,15 @@ class UUIDmapping():
     
     #==========================================================================
     def get_alias(self, unique_id=None, status=None): 
+        """
+        Updated 20180530    by Magnus
+        
+        """
         if not status:
             status = self.all_status
+            
+        if 'default_' in unique_id:
+            return unique_id
         
 #        print('status', status)
 #        print('status', status)
