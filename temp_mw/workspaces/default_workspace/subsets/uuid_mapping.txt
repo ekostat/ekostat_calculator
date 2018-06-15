@@ -1,2 +1,0 @@
-uuid	alias	user_id	status	active
-default_subset	default_subset	default	readable	False

@@ -1,4 +1,0 @@
-uuid	alias	user_id	status	active
-default_workspace	default_workspace	user_1	readable	False
-40e11bb1-49fb-4eb3-bb2b-4d5b9f520b2c	New test workspace	user_1	editable	True
-6ce61c5f-468c-4d5f-83d8-96c50a4b1d3c	Another test workspace	user_1	editable	True
