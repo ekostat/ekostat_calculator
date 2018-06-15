@@ -1216,7 +1216,12 @@ class SettingsRef(SettingsBase):
     """
     #==========================================================================
     def __init__(self, settings_file_object): 
+        """
+        Updated     20180615    by Magnus Wenzer
+    
+        """
         super().__init__()
+        self.filter_type = 'reference'
         self.settings = settings_file_object 
         self.settings.connected_to_ref_settings_object = True
         self.allowed_variables = self.settings.ref_columns
@@ -1286,7 +1291,12 @@ class SettingsDataFilter(SettingsBase):
     """
     #==========================================================================
     def __init__(self, settings_file_object): 
-        super().__init__()
+        """
+        Updated     20180615    by Magnus Wenzer
+    
+        """
+        super().__init__() 
+        self.filter_type = 'data'
         self.settings = settings_file_object 
         self.settings.connected_to_filter_settings_object = True 
         self.allowed_variables = self.settings.filter_columns
@@ -1310,7 +1320,12 @@ class SettingsTolerance(SettingsBase):
     """
     #==========================================================================
     def __init__(self, settings_file_object): 
+        """
+        Updated     20180615    by Magnus Wenzer
+    
+        """
         super().__init__()
+        self.filter_type = 'tolerance'
         self.settings = settings_file_object 
         self.settings.connected_to_tolerance_settings_object = True
         self.allowed_variables = self.settings.tolerance_columns
@@ -1322,6 +1337,7 @@ class SettingsTolerance(SettingsBase):
             return self.get_value(variable = get_variable, type_area = type_area, water_body = water_body)
         else:
             raise NameError('MIN_NR_YEARS not in tolerance settings')
+    
     
     def get_min_nr_values(self, type_area = None, water_body = None):
         

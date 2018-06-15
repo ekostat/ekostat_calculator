@@ -27,6 +27,7 @@ import importlib
 #    sys.path.append(current_path)
 
 import core
+import core.exceptions as exceptions
 """
 Module to handle all events linked to the Django application. 
 Maybe this should be in the root? Maybe not a class, only functions? Maybe __name__ == "__main__"?
@@ -184,6 +185,7 @@ class EventHandler(object):
                                                step=step)
         return all_ok
         
+    
     #==========================================================================
     def change_workspace_alias(self, unique_id, new_alias): 
         """
@@ -371,13 +373,14 @@ class EventHandler(object):
         if request:
             datatype_settings_object.set_status(file_name=file_name, status=request['status'])
             info_dict = request
-        else:
-            info_dict = datatype_settings_object.get_info_for_file(file_name) 
-            info_dict['loaded'] = bool(info_dict['loaded'])
-            info_dict['status'] = bool(info_dict['status'])
+
+        info_dict = datatype_settings_object.get_info_for_file(file_name) 
+        info_dict['loaded'] = bool(info_dict['loaded'])
+        info_dict['status'] = bool(info_dict['status'])
 #            print('-'*50)
 #            print(info_dict)
-            
+        if info_dict['filename'] == 'physicalchemical_sharkweb_data_fyskem_wb_2007-2017_20180320.txt':
+            self.info_dict = info_dict
         return info_dict
         
         
@@ -497,6 +500,260 @@ class EventHandler(object):
     
     #==========================================================================
     def dict_indicator_settings(self, 
+                              workspace_uuid=None, 
+                              subset_uuid=None, 
+                              indicator=None, 
+                              type_area=None, 
+                              viss_eu_cd=None, 
+                              request={}, 
+                              **kwargs): 
+        """
+        Created     20180321   by Magnus Wenzer
+        Updated     20180615   by Magnus Wenzer
+        
+        Takes information from settings filter in step 2. 
+        """
+        
+        
+        workspace_object = self._get_workspace_object(unique_id=workspace_uuid) 
+        subset_object = workspace_object.get_subset_object(subset_uuid) 
+        if not subset_object:
+            self._logger.warning('Could not find subset object {}. Subset is probably not loaded.'.format(subset_uuid))
+            return {}
+        
+#        if indicator == 'din_winter':
+#            print('='*50)
+#            print(workspace_uuid)
+#            print(subset_uuid)
+#            print(indicator)
+#            print(type_area)
+#            print('='*50)
+#            df
+        
+
+    #==========================================================================
+    def list_indicator_settings_items(self, 
+                              workspace_uuid=None, 
+                              subset_uuid=None, 
+                              indicator=None, 
+                              type_area=None, 
+                              viss_eu_cd=None, 
+                              request={}, 
+                              **kwargs): 
+        """
+        Created     20180615   by Magnus Wenzer
+        Updated     
+        
+        Returns a list of all the items in the settings file. 
+        itmes are set to status="editable" if in kwargs. 
+        """
+        response = [] 
+        
+        # Load filter objects 
+        settings_data_filter_object = self.get_settings_filter_object(workspace_uuid=workspace_uuid, 
+                                                                           subset_uuid=subset_uuid,
+                                                                           indicator=indicator, 
+                                                                           filter_type='data')
+        if not settings_data_filter_object:
+            self._logger.debug('Could not load data filter object for indicator "{}"'.format(indicator))
+            return {}
+        
+        
+        settings_tolerance_filter_object = self.get_settings_filter_object(workspace_uuid=workspace_uuid, 
+                                                                           subset_uuid=subset_uuid,
+                                                                           indicator=indicator,
+                                                                           filter_type='tolerance') 
+        if request:
+            item_mapping = self._get_mapping_for_name_in_dict('value', request)
+        
+        # Loop and add data_filters 
+        for settings_item in settings_data_filter_object.allowed_varabales:
+            
+       sdfs 
+         
+    #==========================================================================
+    def dict_indicator_settings_item(self, 
+                                     settings_filter_object=None, 
+                                     settings_item=None, 
+                                     request={}): 
+        """
+        Created     20180615   by Magnus Wenzer
+        Updated     
+        
+        Information for a specifick settings "item" in indicator_settings_filter object 
+        """
+        
+        if not all([settings_filter_object:, settings_item]): 
+            return {}
+                
+        
+        
+        
+#        type_area = self.mapping_objects['water_body'].get_list('type_area', water_body=water_body)
+        if not any([type_area, viss_eu_cd]):
+            return {}
+#        type_area = type_area[0]
+#        self.request = request
+            
+        if request:
+            if type_area: 
+                area_key = type_area
+            elif viss_eu_cd:
+                area_key = viss_eu_cd
+                
+            value_dict = {area_key: {}} 
+            depth_interval_list = []
+            month_list_list = []
+            min_no_years_list = []
+            
+            # Either depth_interval or month_list can be a list with more than one element 
+            depth_interval_list = request['depth_interval']
+            month_interval_list = request['month_interval'] 
+            if len(depth_interval_list) == 1 and len(month_interval_list) > 1:
+                depth_interval_list = [depth_interval_list[0]]*len(month_interval_list)
+            elif len(month_interval_list) == 1 and len(depth_interval_list) > 1:
+                month_interval_list = [month_interval_list[0]]*len(depth_interval_list)
+                
+            min_no_years_list = [request['min_no_years']]*len(month_interval_list)
+            
+            # Convert month interval to list 
+            month_list_list = [] 
+            for month_interval in month_interval_list:
+                month_list = []
+                month = month_interval[0]
+                while month != month_interval[-1]:
+                    month_list.append(month)
+                    month += 1
+                    if month == 13:
+                        month = 1
+                month_list.append(month_interval[-1])
+                month_list_list.append(month_list)
+            
+#            for k in range(len(request['depth_interval'])):
+#                # Add data filter
+#                depth_interval = request['depth_interval'][k]
+#                month_interval = request['month_interval'][k]
+#                month_list = [] 
+#                month = month_interval[0]
+#                while month != month_interval[-1]:
+#                    month_list.append(month)
+#                    month += 1
+#                    if month == 13:
+#                        month = 1
+#                month_list.append(month_interval[-1])  
+#                
+#                # Add tolerance filter
+#                min_no_years = request['min_no_years'][k]
+#
+#                depth_interval_list.append(depth_interval)
+#                month_list_list.append(month_list)
+#                min_no_years_list.append(min_no_years)
+                
+            value_dict[area_key]['DEPH_INTERVAL'] = depth_interval_list 
+            value_dict[area_key]['MONTH_LIST'] = month_list_list
+            value_dict[area_key]['MIN_NR_YEARS'] = min_no_years_list 
+            
+            if indicator == 'oxygen' and viss_eu_cd == 'SE580688-114860': 
+                self.request = request
+                self.value_dict = value_dict
+                self.settings_data_filter_object = settings_data_filter_object
+            settings_data_filter_object.set_values(value_dict) 
+            settings_tolerance_filter_object.set_values(value_dict)
+            return request 
+            
+            
+        else:
+            return_dict = {}
+            indicator_settings_object = workspace_object.get_indicator_settings_data_filter_object(subset=subset_uuid, 
+                                                                                                   step='step_2', 
+                                                                                                   indicator=indicator)
+            if not indicator_settings_object:
+                # No settings for indicator 
+                return return_dict
+            
+            if viss_eu_cd not in indicator_settings_object.get_viss_eu_cd_list():
+                return return_dict
+            
+            if type_area:
+                return_dict['area_type'] = 'type_area'
+                return_dict['value'] = type_area 
+                return_dict['label'] = self.mapping_objects['water_body'].get_display_name(type_area=type_area)
+            elif viss_eu_cd:
+                return_dict['area_type'] = 'viss_eu_cd'
+                return_dict['value'] = viss_eu_cd 
+                return_dict['label'] = self.mapping_objects['water_body'].get_display_name(water_body=viss_eu_cd) 
+            
+            return_dict['indicator'] = indicator
+            self.indicator = indicator
+            
+            #------------------------------------------------------------------
+            # Depth
+            if settings_data_filter_object.has_depth_interval():
+#                print('DEPTH')
+                depth_interval = settings_data_filter_object.get_value(type_area=type_area, 
+                                                                       water_body=viss_eu_cd, 
+                                                                       variable='DEPH_INTERVAL', 
+                                                                       return_series=False)
+#                if viss_eu_cd:
+#                    print('===', depth_interval)
+#                self.depth_interval = depth_interval
+                if len(depth_interval) == 2:
+    #                jjj
+                    pass
+                else:
+                    aaa
+                    pass
+                
+                if len(depth_interval) and type(depth_interval[0]) != list:
+                    depth_interval = [depth_interval]
+            else:
+                depth_interval = []
+            
+            return_dict['depth_interval'] = depth_interval
+        
+        
+            self.type_area = type_area
+            self.set = settings_data_filter_object
+            
+            
+            #------------------------------------------------------------------
+            # Month
+            month_list = settings_data_filter_object.get_value(type_area=type_area, 
+                                                               water_body=viss_eu_cd, 
+                                                               variable='MONTH_LIST', 
+                                                               return_series=False) 
+            # Give interval instead of list. Each item in the list should be converted 
+            month_interval = []
+#            print('month_list'.upper())
+#            print(month_list)
+            self.month_list = month_list
+                    
+            if type(month_list[0]) == list:
+                for month in month_list:
+                    month_interval.append([month[0], month[-1]])
+                self.month_interval = month_interval
+#                rtwert
+            else:
+                month_interval = [[month_list[0], month_list[-1]]]
+                self.month_interval = month_interval
+#                dfssasf
+            return_dict['month_interval'] = month_interval
+            
+        
+            #------------------------------------------------------------------
+            # Min number of years 
+            return_dict['min_no_years'] = settings_tolerance_filter_object.get_value(type_area=type_area, 
+                                                                                     water_body=viss_eu_cd, 
+                                                                                     variable='MIN_NR_YEARS')
+            
+#        if indicator == 'bqi':
+#            self.return_dict = return_dict
+#            qq
+        return return_dict
+        
+    
+    #==========================================================================
+    def old_dict_indicator_settings(self, 
                               workspace_uuid=None, 
                               subset_uuid=None, 
                               indicator=None, 
@@ -701,7 +958,7 @@ class EventHandler(object):
 #            self.return_dict = return_dict
 #            qq
         return return_dict
-        
+    
     
     #==========================================================================
     def get_month_interval_list(month_list): 
@@ -1825,7 +2082,7 @@ class EventHandler(object):
             return False 
         
         workspace_object.load_all_data(force=force)
-        
+        return True
         
     #==========================================================================
     def load_test_requests(self): 
@@ -2738,13 +2995,16 @@ class EventHandler(object):
         response = {} 
         
         # Load workspace 
-        self.action_load_workspace()
+        self.action_load_workspace(workspace_uuid)
         
         response['data_sources'] = self.list_data_sources(workspace_uuid=workspace_uuid, 
                                                           request=request['data_sources']) 
         
         # Load data 
-        self.load_data(unique_id=workspace_uuid)
+        all_ok = self.load_data(unique_id=workspace_uuid) 
+        if all_ok: 
+            response = self.request_workspace_data_sources_list({'workspace_uuid': workspace_uuid})
+        
         self._logger.debug('Time for excecuting request_workspace_data_sources_edit: {}'.format(time.time()-t0))
         return response
     

@@ -5,6 +5,8 @@ Last modified:  20180612     by Magnus
 
 from .data_handlers import DataHandler
 
+from . import exceptions
+
 from .filters import DataFilter
 from .filters import SettingsFile
 from .filters import SettingsRef

@@ -26,7 +26,7 @@
             "datatype": "physicalchemicalmodel"
         },
         {
-            "status": true,
+            "status": false,
             "loaded": false,
             "filename": "physicalchemical_sharkweb_data_fyskem_wb_2007-2017_20180320.txt",
             "datatype": "physicalchemical"
