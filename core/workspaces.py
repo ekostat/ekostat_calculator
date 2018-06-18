@@ -14,6 +14,7 @@ import pandas as pd
 import uuid
 import re
 import pathlib
+import time
 
 current_path = os.path.dirname(os.path.realpath(__file__))[:-4]
 if current_path not in sys.path:
@@ -191,8 +192,26 @@ class WorkStep(object):
             #raise Error?
             print('no waterbodies in filtered data')
             return False
-            
-            
+        
+        #---------------------------------------------------------------------    
+        def concat_df(df, save_df, filename, water_body, indicator_object):
+            #concatenate results
+            if type(save_df) is pd.DataFrame:
+                if water_body in save_df.VISS_EU_CD.unique():
+                    save_df.drop(save_df.loc[save_df.VISS_EU_CD == water_body].index, inplace = True)
+                save_df = pd.concat([save_df, df])
+            elif os.path.exists(indicator_object.result_directory + filename + '.txt'):
+                save_df = indicator_object.sld.load_df(file_name = filename)
+                if water_body in save_df.VISS_EU_CD.unique():
+                    save_df.drop(save_df.loc[save_df.VISS_EU_CD == water_body].index, inplace = True)
+                save_df = pd.concat([save_df, df])
+            else:
+                save_df = df
+            save_df['new_index'] = [str(ix) +'_' + wb for ix, wb in zip(save_df.index, save_df.VISS_EU_CD)]
+            save_df.set_index(keys = 'new_index')
+            return save_df
+        #---------------------------------------------------------------------
+        
         if indicator_list == None:
             indicator_list = self.parent_workspace_object.available_indicators
             if indicator_list == None:
@@ -200,29 +219,62 @@ class WorkStep(object):
             
             
         for indicator in indicator_list:
-            status_by_date = None
+            status_by_date = False
+            status_by_year_pos = False
+            status_by_year = False
+            status_by_period = False
             indicator_name = self.indicator_objects[indicator].name
             print(indicator_name)
+            t_ind = time.time()
             for water_body in water_body_list:
-                 
-                by_date, by_year, by_period = self.indicator_objects[indicator].calculate_status(water_body = water_body)
-                
+                print(water_body)
+                t_wb = time.time()
+                by_date, by_year_pos, by_year, by_period = self.indicator_objects[indicator].calculate_status(water_body = water_body)
+                time_wb = time.time() - t_wb
+                print('-'*50)
+                print('Total time to calculate status for water body {}:'.format(water_body), time_wb)
+                print('-'*50)
                 if type(by_date) is not bool:
-                    #SAVE by_date results
-                    if type(status_by_date) is pd.DataFrame:
-                        if water_body in status_by_date.VISS_EU_CD.unique():
-                            status_by_date.drop(status_by_date.loc[status_by_date.VISS_EU_CD == water_body].index, inplace = True)
-                        status_by_date = pd.concat([status_by_date, by_date])
-                    elif os.path.exists(self.indicator_objects[indicator].result_directory + indicator_name + '_by_date.txt'):
-                        status_by_date = self.indicator_objects[indicator].sld.load_df(file_name = indicator_name + '_by_date')
-                        if water_body in status_by_date.VISS_EU_CD.unique():
-                            status_by_date.drop(status_by_date.loc[status_by_date.VISS_EU_CD == water_body].index, inplace = True)
-                        status_by_date = pd.concat([status_by_date, by_date])
-                    else:
-                        status_by_date = by_date 
+                    status_by_date = concat_df(by_date, status_by_date, indicator_name + '_by_date',
+                          water_body, self.indicator_objects[indicator])
+                if type(by_year_pos) is not bool:
+                    status_by_year_pos = concat_df(by_year_pos, status_by_year_pos, indicator_name + '_by_year_pos',
+                          water_body, self.indicator_objects[indicator])
+                if type(by_year) is not bool:
+                    status_by_year = concat_df(by_year, status_by_year, indicator_name + '_by_year',
+                          water_body, self.indicator_objects[indicator])
+                if type(by_period) is not bool:
+                    status_by_period = concat_df(by_period, status_by_period, indicator_name + '_by_period',
+                          water_body, self.indicator_objects[indicator])
                 
-                                               
-            self.indicator_objects[indicator].sld.save_df(status_by_date, file_name = indicator_name + '_by_date', force_save_txt=True)
+                
+#                if type(by_date) is not bool:
+#                    #SAVE by_date results
+#                    if type(status_by_date) is pd.DataFrame:
+#                        if water_body in status_by_date.VISS_EU_CD.unique():
+#                            status_by_date.drop(status_by_date.loc[status_by_date.VISS_EU_CD == water_body].index, inplace = True)
+#                        status_by_date = pd.concat([status_by_date, by_date])
+#                    elif os.path.exists(self.indicator_objects[indicator].result_directory + indicator_name + '_by_date.txt'):
+#                        status_by_date = self.indicator_objects[indicator].sld.load_df(file_name = indicator_name + '_by_date')
+#                        if water_body in status_by_date.VISS_EU_CD.unique():
+#                            status_by_date.drop(status_by_date.loc[status_by_date.VISS_EU_CD == water_body].index, inplace = True)
+#                        status_by_date = pd.concat([status_by_date, by_date])
+#                    else:
+#                        status_by_date = by_date 
+            time_ind = time.time() - t_ind
+            print('-'*50)
+            print('Total time to calculate status for indicator {}:'.format(indicator), time_ind)
+            print('-'*50)    
+            
+            if type(status_by_date) is not bool:                                  
+                self.indicator_objects[indicator].sld.save_df(status_by_date, file_name = indicator_name + '_by_date', force_save_txt=True)
+            if type(status_by_year_pos) is not bool:
+                self.indicator_objects[indicator].sld.save_df(status_by_year_pos, file_name = indicator_name + '_by_year', force_save_txt=True)
+            if type(status_by_year) is not bool:
+                self.indicator_objects[indicator].sld.save_df(status_by_year, file_name = indicator_name + '_by_year_pos', force_save_txt=True)
+            if type(status_by_period) is not bool:
+                self.indicator_objects[indicator].sld.save_df(status_by_period, file_name = indicator_name + '_by_period', force_save_txt=True)
+        
         
     #==========================================================================
     def get_all_file_paths_in_workstep(self): 
@@ -1143,7 +1195,7 @@ class WorkSpace(object):
             True:           If all is ok
             False:          If something faild
         """
-        
+        t_tot = time.time()
         if not water_body_list:
             water_body_list = self.get_filtered_data(step=step, subset=subset).VISS_EU_CD.unique()
         if not len(water_body_list):
@@ -1175,6 +1227,10 @@ class WorkSpace(object):
                 
             self.index_handler.add_filter(filter_object=settings_filter_object, step=step, subset=subset, indicator=indicator, water_body = water_body)
         
+        time_total = time.time() - t_tot
+        print('-'*50)
+        print('Total time to apply data filters for indicator {}:'.format(indicator), time_total)
+        print('-'*50)
         
     #==========================================================================
     def apply_water_body_station_filter(self, subset=None, water_body=None): 
@@ -1633,7 +1689,7 @@ class WorkSpace(object):
         """
         if force: 
             self._logger.debug('Method load_all_data is forced.')
-            # method is forced so we delete all_data (if excisting)
+            # method is forced so we delete all_data (if existing)
             self.delete_all_export_data()
         elif not self.datatype_settings.has_info:
             self._logger.debug('Could not load datatype_settings.txt. No file found?')
@@ -1651,7 +1707,7 @@ class WorkSpace(object):
             self.delete_alldata_export()
 
         if os.path.isfile(self.paths['directory_path_export_data'] + '/all_data.txt'): 
-            # Data file excist. Try to load it, or pickle if excisting
+            # Data file excist. Try to load it, or pickle if existing
             data_loaded, filetype = self.data_handler.load_all_datatxt()
             if data_loaded:
                 self._logger.debug('Data has been loaded from existing all_data.{} file.'.format(filetype))
@@ -1661,7 +1717,7 @@ class WorkSpace(object):
         else:
             print('load_all_data - else')
             # We know that all_data does not excist. We only want to load the datatypes that has been changed and then merge data. 
-            # Loop and load datatypes (if loaded are desided in method load datatype_data)
+            # Loop and load datatypes (if loaded are decided in method load datatype_data)
             for datatype in self.datatype_settings.get_datatype_list():
                 print('datatype', datatype)
                 print('force', force)
