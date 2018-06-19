@@ -152,7 +152,7 @@ class IndicatorBase(object):
         """
         
         if not value:
-            value = getattr(self.classification_results[water_body], 'value')
+            return False, False
         if value < 0:
             raise('Error: _calculate_global_EQR_from_indicator_value: {} value below 0.'.format(value))
         # Get EQR-class limits for the type area to be able to calculate the weighted numerical class
@@ -161,7 +161,7 @@ class IndicatorBase(object):
         GM_VALUE_LIMIT = self.ref_settings.get_value(variable = 'GM_VALUE_LIMIT', water_body = water_body)
         MP_VALUE_LIMIT = self.ref_settings.get_value(variable = 'MP_VALUE_LIMIT', water_body = water_body)
         PB_VALUE_LIMIT = self.ref_settings.get_value(variable = 'PB_VALUE_LIMIT', water_body = water_body)
-
+        
 #        if self.name == 'BQI'  or self.name.lower() == 'oxygen':
         if HG_VALUE_LIMIT - GM_VALUE_LIMIT > 0:
             if value > HG_VALUE_LIMIT: 
@@ -228,7 +228,7 @@ class IndicatorBase(object):
                 global_low = 1
                 high_value = HG_VALUE_LIMIT 
                 low_value = 0
-                if value < Bmin:
+                if value < 0:
                     value = 0
                 
                     
@@ -238,8 +238,10 @@ class IndicatorBase(object):
         # Weighted numerical class
         global_EQR = global_low + (value - low_value)/(high_value-low_value)*0.2
         
-        self.classification_results[water_body].add_info('global_EQR', global_EQR)
-        self.classification_results[water_body].add_info('status', status)
+        return global_EQR, status
+    
+#        self.classification_results[water_body].add_info('global_EQR', global_EQR)
+#        self.classification_results[water_body].add_info('status', status)
     
     
     
@@ -339,6 +341,7 @@ class IndicatorBase(object):
                 global_low = 1
                 ek_high = HG_EQR_LIMIT 
                 ek_low = 0
+                #should this not be 1?
                 if ek < 0:
                     ek = 0
         
@@ -401,6 +404,10 @@ class IndicatorBase(object):
                 df.dropna(subset = self.parameter_list[0:1], how = 'all', inplace = True)
             elif self.name == 'secchi':
                 df.dropna(subset = [self.indicator_parameter]).drop_duplicates(subset = ['SDATE', 'VISS_EU_CD', 'SECCHI'], inplace = True)
+            elif self.name == 'oxygen':
+                tol_BW = 5
+                maxD = self.Hypsographs.get_max_depth_of_water_body(water_body)
+                self.df_bottomwater[water_body] = df.loc[df['DEPH'] > maxD-tol_BW]
             else:
                 df.dropna(subset = [self.indicator_parameter], inplace = True)
             #print(df.dtypes)
@@ -922,18 +929,18 @@ class IndicatorOxygen(IndicatorBase):
         else:
             status = 'BAD'
         
-        return status, value     
+        return status, value, GM_VALUE_LIMIT     
     
     ###############################################################################        
     def _get_affected_area_fraction(self, df, water_body):
        
         # df = df[df['MONTH'].isin(list(range(1,5+1)))]
         maxD = self.Hypsographs.get_max_depth_of_water_body(water_body)
-        minimum_deficiency_depth = df[df[self.indicator_parameter] <= self.deficiency_limit, 'DEPH'].min()
+        minimum_deficiency_depth = df.loc[df[self.indicator_parameter] <= self.deficiency_limit, 'DEPH'].min()
         print(minimum_deficiency_depth)
         if minimum_deficiency_depth > maxD:
             minimum_deficiency_depth = maxD
-        affected_area_fraction = self.Hypsographs.get_area_fraction_at_depth(self, water_body=water_body, depth=minimum_deficiency_depth)
+        affected_area_fraction = self.Hypsographs.get_area_fraction_at_depth(water_body=water_body, depth=minimum_deficiency_depth)
         
         return affected_area_fraction
     
@@ -944,7 +951,8 @@ class IndicatorOxygen(IndicatorBase):
         """
         if month_list:
             df = df[df['MONTH'].isin(list(range(1,5+1)))]
-        if len(df['YEAR'].unique()) >= 3:
+        no_yr = len(df['YEAR'].unique())
+        if no_yr >= 1:
             tol_BW = 5
             maxD = self.Hypsographs.get_max_depth_of_water_body(water_body)
             value_list = []
@@ -952,116 +960,15 @@ class IndicatorOxygen(IndicatorBase):
             for key, group in df.groupby(['POSITION']):
                 group.reset_index()
                 q = group.loc[group['DEPH'] > maxD-tol_BW,self.indicator_parameter].quantile(0.25)
-                print(group.loc[group['DEPH'] > maxD-tol_BW])
+                #print(group.loc[group['DEPH'] > maxD-tol_BW])
                 #deph_list
                 value_list.append(group.loc[group[self.indicator_parameter] < q, self.indicator_parameter].mean())
         else:
-            value_list = None
+            value_list = False
             
-        return value_list
-
-    ###############################################################################    
-    def _test1(self, df, water_body):
-        """
-        To decide if the water body suffers from oxygen deficiency or not.
-        Takes bottomwater data for the whole year and checks if the mean of the 25% percentile is above or below limit
-        """
-        result_list = self._mean_of_quantile(df = df, water_body = water_body, month_list = None)
-        self.test1_result_list = result_list
-        
-        if all(r > self.deficiency_limit for r in result_list):
-            return 'High'
-        elif any(r <= self.deficiency_limit for r in result_list):
-            return True
-        else:
-            return None
-    
-    ###############################################################################    
-    def _test2(self, df, water_body):
-        """
-        To decide if the water body suffers from seasonla or longterm oxygen deficiency.
-        Takes bottomwater data for jan-maj and for every position checks if the mean of the 25% percentile is above or below limit 
-        """
-        month_list = list(range(6,5+1))
-        result = self._mean_of_quantile(df = df, water_body = water_body, month_list = month_list)
-        self.test2_result_list = result
-        
-        status = None 
-        deficiency_type = None
-        
-        if all(r > self.deficiency_limit for r in self.test2_result_list):
-            # seasonal oxygen deficiency
-            deficiency_type = 'seasonal'
-            value = min(self.test2_result_list)
-            status, value = self._get_status_from_classboundaries(value, water_body)
-        elif any(r <= self.deficiency_limit for r in self.test2_result_list):
-            # Methods to determine longterm oxygen deficiency (perennial and permanent)
-            deficiency_type = 'longterm'
-            month_list = list(range(6,12+1))
-            df = df[df['MONTH'].isin(month_list)]
-            if len(df['YEAR'].unique()) >= 3:
-                affected_area_fraction = self._get_affected_area_fraction(df, water_body)
-                status, value = self._get_status_from_classboundaries(affected_area_fraction*100, water_body)
-            else:
-                status, value = None, None
-            
-        else:
-            status = None
-        
-        return status, value, deficiency_type
-    
-    ############################################################################### 
-    def calculate_status(self, water_body):
-        """
-        Created     20180426    by Lena Viktorsson
-        Updated     20180426    by Lena Viktorsson
-        Method to calculate status for oxygen indicator
-        """
-        # set or get waterbody df
-        if water_body not in self.water_body_indicator_df.keys():
-            self.set_water_body_indicator_df()
-            
-        df = self.get_water_body_indicator_df(water_body = water_body) #self.get_filtered_data(subset = self.subset, step = 'step_2', water_body = water_body)
-        
-        # Set up result class 
-        if water_body not in self.classification_results.keys():
-            self.classification_results[water_body] = ClassificationResult()
-        self.classification_results[water_body].add_info('parameter', self.indicator_parameter)
-        self.classification_results[water_body].add_info('water_body', water_body)
-        self.classification_results[water_body].add_info('data_used', df)
-        
-        
-        # Test1 checks of the waterbody suffers from oxygen deficiency or not
-        status = self._test1(df, water_body)
-        deficiency_type = None
-        
-        if status:
-            if status == 'High':
-                value = min(self.test1_result_list)
-                deficiency_type = 'no deficiency'
-            else:
-                # Test2 tests the type of oxygen deficiency if status was not 'High'.
-                status, value, deficiency_type = self._test2(df, water_body)
-        else:
-            value = None
-        
-        # has only written global EQR calculation for increasing status indicator
-        if deficiency_type in ['seasonal', 'no deficiency']:
-            # Saves status and global_EQR to classification_results[water_body]
-            self._calculate_global_EQR_from_indicator_value(water_body, value)
-        # Calculated oxygen reference values from GM value limit and is using this to get a local_EQR value to transform to global_EQR
-        if deficiency_type in ['longterm']:
-            REF_VALUE_LIMIT = self.ref_settings.get_value(variable = 'REF_VALUE_LIMIT', water_body = water_body)
-            local_EQR = REF_VALUE_LIMIT/value
-            # Saves status and global_EQR to classification_results[water_body]
-            self._calculate_global_EQR_from_local_EQR(water_body, local_EQR)
-        
-        self.classification_results[water_body].add_info('value', value)
-        self.classification_results[water_body].add_info('test1_resultlist', self.test1_result_list)
-        self.classification_results[water_body].add_info('test2_resultlist', self.test2_result_list)
-
+        return np.array(value_list), no_yr
     ###############################################################################     
-    def set_water_body_indicator_df(self, water_body = None):
+    def _set_water_body_indicator_df(self, water_body = None):
         """
         Created:        20180427     by Lena
         Last modified:  20180427     by Lena
@@ -1082,9 +989,168 @@ class IndicatorOxygen(IndicatorBase):
             self.water_body_indicator_df[water_body] = df 
             tol_BW = 5
             maxD = self.Hypsographs.get_max_depth_of_water_body(water_body)
-            self.df_bottomwater[water_body] = df.loc[df['DEPH'] > maxD-tol_BW]
+            if maxD:
+                self.df_bottomwater[water_body] = df.loc[df['DEPH'] > maxD-tol_BW]
+            else:
+                self.df_bottomwater[water_body] = df
+            self.water_body_indicator_df[water_body] = df
         else:
             print('water_body must be given to set_water_body_indicator_df')
+            
+
+    ###############################################################################    
+    def _test1(self, df, water_body):
+        """
+        To decide if the water body suffers from oxygen deficiency or not.
+        Takes bottomwater data for the whole year and checks if the mean of the 25% percentile is above or below limit
+        """
+        result_array, no_yr = self._mean_of_quantile(df = df, water_body = water_body, month_list = None)
+        self.test1_result_array = result_array
+        
+        if len(result_array) == 1 and result_array[0] == False:
+            return False, None, None
+        
+        if all(r > self.deficiency_limit for r in result_array[~np.isnan(result_array)]):
+            return True, self.deficiency_limit, no_yr
+        elif any(r <= self.deficiency_limit for r in result_array[~np.isnan(result_array)]):
+            return False, self.deficiency_limit, no_yr
+        else:
+            return False, None, None
+    
+    ###############################################################################    
+    def _test2(self, df, water_body, skip_longterm = False):
+        """
+        To decide if the water body suffers from seasonla or longterm oxygen deficiency.
+        Takes bottomwater data for jan-maj and for every position checks if the mean of the 25% percentile is above or below limit 
+        """
+        month_list = list(range(6,5+1))
+        result_array, no_yr = self._mean_of_quantile(df = df, water_body = water_body, month_list = month_list)
+        self.test2_result_array = result_array
+        
+#        if len(result_array) == 1 and result_array[0] == False:
+#            return False, None, None, None
+        
+        #status = None 
+        deficiency_type = None
+        deficiency_limit = None
+        
+        # When all values are above the deficiency limit the deficiency type is seasonal
+        if all(r > self.deficiency_limit for r in result_array[~np.isnan(result_array)]):
+            # seasonal oxygen deficiency
+            deficiency_limit = self.deficiency_limit 
+            deficiency_type = 'seasonal'
+            value = np.nanmin(self.test2_result_list)
+            #status, value = self._get_status_from_classboundaries(value, water_body)
+        # When anu value is below the deficiency limit the deficiency type is longterm
+        elif any(r <= self.deficiency_limit for r in result_array[~np.isnan(result_array)]):
+            # Methods to determine longterm oxygen deficiency (perennial and permanent)
+            deficiency_type = 'longterm'
+            month_list = list(range(6,12+1))
+            df = df[df['MONTH'].isin(month_list)]
+            no_yr = len(df['YEAR'].unique())
+            affected_area_fraction = self._get_affected_area_fraction(df, water_body)
+            value = affected_area_fraction*100
+#            if len(df['YEAR'].unique()) >= 3:
+#                affected_area_fraction = self._get_affected_area_fraction(df, water_body)
+#                value = affected_area_fraction
+#                #status, value, GM_limit = self._get_status_from_classboundaries(affected_area_fraction*100, water_body)
+#            else:
+#                #status, 
+#                value, GM_limit = None, None, None
+#            limit = GM_limit
+        else:
+            #status, 
+            value = None
+            no_yr = None
+        
+        if skip_longterm:
+           deficiency_limit = self.deficiency_limit 
+           deficiency_type = 'seasonal (longterm)'
+           value = np.nanmin(self.test2_result_list)
+        
+#        return status, value, deficiency_type, limit
+        return value, deficiency_type, deficiency_limit, no_yr
+    
+    ############################################################################### 
+    def calculate_status(self, water_body):
+        """
+        Created     20180619    by Lena Viktorsson
+        Updated     20180619    by Lena Viktorsson
+        Method to calculate status for oxygen indicator
+        """
+        # Set up result class
+        self.classification_results.add_info('parameter', self.indicator_parameter)
+        
+#        if water_body not in self.classification_results.keys():
+#            self.classification_results[water_body] = ClassificationResult()
+#        self.classification_results[water_body].add_info('parameter', self.indicator_parameter)
+#        self.classification_results[water_body].add_info('water_body', water_body)
+#        self.classification_results[water_body].add_info('data_used', df)
+        
+        self._set_water_body_indicator_df(water_body)
+        # get data to be used for status calculation, not deep copy because local_EQR values are relevant to see together with data
+        df = self.water_body_indicator_df[water_body].copy(deep = True)
+                
+        if len(df) < 1:
+            return False, False, False, False
+               
+        if len(df.VISS_EU_CD.unique()) > 1:
+                    #TODO hur ska vi hantera detta om vi tillåter val av stationer i angränsande waterbody?
+            raise Exception('more than one waterbody in dataframe') 
+            
+        type_area = self.mapping_objects['water_body'].get_type_area_for_water_body(water_body, include_suffix=True)
+        if type_area == None:
+            return False, False, False, False
+        
+        wb_name = self.mapping_objects['water_body'][water_body]['WATERBODY_NAME']
+        by_year_pos, by_year = False, False
+        by_date = df
+        
+        ######## Test1 checks of the waterbody suffers from oxygen deficiency or not #######################
+        no_deficiency, deficiency_limit, no_yr = self._test1(df, water_body)
+#        print(no_deficiency, deficiency_limit, no_yr)
+#        deficiency_type = None
+        comment = ''
+        
+        if no_deficiency:
+            value = np.nanmin(self.test1_result_array)
+            deficiency_type = 'no deficiency'
+            no_yr = no_yr
+            status = 'HIGH'
+            global_EQR = 1
+        else:
+            ######### Test2 tests the type of oxygen deficiency if status was not 'High'. ######################
+            value, deficiency_type, deficiency_limit, no_yr = self._test2(df, water_body)
+            print(value, deficiency_type, deficiency_limit)
+            print(self.test1_result_array)
+            print(self.test2_result_array)
+            if deficiency_type in ['longterm']:
+                if self.ref_settings.get_value(variable = 'VISS_EU_CD', water_body = water_body) == water_body: 
+                    deficiency_limit = self.ref_settings.get_ref_value(water_body = water_body)
+                    print(water_body, self.ref_settings.get_value(variable = 'VISS_EU_CD', water_body = water_body), wb_name)
+                else:
+                    value, deficiency_type, deficiency_limit, no_yr = self._test2(df, water_body, skip_longterm = True)
+                    comment = 'no classboundaries defined for longterm deficieny in this waterbody, using definition of seasonal'
+#        else:
+#            value, deficiency_type, deficiency_limit, no_yr = None, None, None, None
+        if deficiency_type is not 'no deficiency':
+            global_EQR, status = self._calculate_global_EQR_from_indicator_value(value = value, water_body = water_body)
+        print(value, deficiency_type, deficiency_limit)
+        print(global_EQR, status)      
+#       global_EQR, status = self._calculate_global_EQR_from_indicator_value(water_body = 'unspecified', value = value)
+        
+        by_period = pd.DataFrame({'VISS_EU_CD': [water_body], 'WATER_BODY_NAME': [wb_name],'WATER_TYPE_AREA': [type_area], 
+                                  'GLOBAL_EQR': [global_EQR],  'STATUS': [status], 'VALUE': [value], 
+                                  'DEFICIENCY_TYPE': [deficiency_type], 'LIMIT': [deficiency_limit], 
+                                  'NUMBER OF YEARS': [no_yr], 'COMMENT': [comment]})
+        
+        by_period = by_period[['VISS_EU_CD', 'WATER_BODY_NAME', 'WATER_TYPE_AREA', 'GLOBAL_EQR', 'STATUS', 'VALUE', 'DEFICIENCY_TYPE', 'LIMIT',	'NUMBER OF YEARS', 'COMMENT']]
+        
+#        self.classification_results[water_body].add_info('value', value)
+#        self.classification_results[water_body].add_info('test1_resultlist', self.test1_result_list)
+#        self.classification_results[water_body].add_info('test2_resultlist', self.test2_result_list)
+
+        return by_date, by_year_pos, by_year, by_period
           
     
 ###############################################################################

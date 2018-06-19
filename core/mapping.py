@@ -185,8 +185,11 @@ class Hypsograph():
             
  #==========================================================================
     def get_max_depth_of_water_body(self, water_body): 
-        result = self.wb_df[water_body][self.depth_par].max()
-        return result
+        if water_body in self.wb_df.keys(): 
+            result = self.wb_df[water_body][self.depth_par].max()
+            return result
+        else:
+            return False
 #        if len(result):
 #            return result.values[0] 
 #        else:
@@ -194,36 +197,45 @@ class Hypsograph():
     
     #==========================================================================
     def get_total_area_of_water_body(self, water_body): 
-        result = self.wb_df[water_body].loc[self.wb_df[water_body][self.depth_par]==0, self.area_par]
-        if len(result):
-            return result.values[0] 
+        if water_body in self.wb_df.keys(): 
+            result = self.wb_df[water_body].loc[self.wb_df[water_body][self.depth_par]==0, self.area_par]
+            if len(result):
+                return result.values[0] 
+            else:
+                return False
         else:
             return False
         
     #==========================================================================
     def get_volume_below_depth(self, water_body=None, depth=None): 
-        result = self.wb_df[water_body].loc[self.wb_df[water_body][self.depth_par]==depth, self.volume_par]
-        if len(result):
-            return result.values[0] 
+        if water_body in self.wb_df.keys(): 
+            result = self.wb_df[water_body].loc[self.wb_df[water_body][self.depth_par]==depth, self.volume_par]
+            if len(result):
+                return result.values[0] 
+            else:
+                return False 
         else:
-            return False 
-        
+            return False
     #==========================================================================
     def get_volume_fraction_below_depth(self, water_body=None, depth=None): 
-        result = self.wb_df[water_body].loc[self.wb_df[water_body][self.depth_par]==depth, self.frac_volume_par]
-        if len(result):
-            return result.values[0] 
+        if water_body in self.wb_df.keys(): 
+            result = self.wb_df[water_body].loc[self.wb_df[water_body][self.depth_par]==depth, self.frac_volume_par]
+            if len(result):
+                return result.values[0] 
+            else:
+                return False 
         else:
-            return False 
-        
+            return False
     #==========================================================================
     def get_area_fraction_at_depth(self, water_body=None, depth=None): 
-        result = self.wb_df[water_body].loc[self.wb_df[water_body][self.depth_par]==depth, self.frac_area_par]
-        if len(result):
-            return result.values[0] 
+        if water_body in self.wb_df.keys(): 
+            result = self.wb_df[water_body].loc[self.wb_df[water_body][self.depth_par]==depth, self.frac_area_par]
+            if len(result):
+                return result.values[0] 
+            else:
+                return False 
         else:
-            return False 
-        
+            return False
 """
 #==============================================================================
 #==============================================================================
