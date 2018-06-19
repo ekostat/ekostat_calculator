@@ -1020,6 +1020,10 @@ class SettingsRef(SettingsBase):
             ref_value = self.get_value(variable = self.settings.refvalue_column[0], water_body = water_body)
         else:
             ref_value = self.get_value(variable = self.settings.refvalue_column[0], type_area = type_area)
+        try:
+            ref_value = float(ref_value)
+        except ValueError:
+            pass
         
         if type(ref_value) is float:
             ref_value = ref_value
