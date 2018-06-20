@@ -227,7 +227,7 @@ class WorkStep(object):
             print(indicator_name)
             t_ind = time.time()
             for water_body in water_body_list:
-                print(water_body)
+                #print(water_body)
                 t_wb = time.time()
                 by_date, by_year_pos, by_year, by_period = self.indicator_objects[indicator].calculate_status(water_body = water_body)
                 time_wb = time.time() - t_wb
