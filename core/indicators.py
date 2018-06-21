@@ -7,6 +7,7 @@ Created on Mon Jul 10 15:24:34 2017
 import numpy as np
 import pandas as pd
 import warnings
+import random
 
 import core 
 
@@ -70,7 +71,7 @@ class IndicatorBase(object):
         self.tolerance_settings = self.parent_workspace_object.get_step_object(step = 2, subset = self.subset).get_indicator_tolerance_settings(self.name)
         self.ref_settings = self.parent_workspace_object.get_step_object(step = 2, subset = self.subset).get_indicator_ref_settings(self.name)
         # To be read from config-file
-        self.meta_columns = ['SDATE', 'YEAR', 'MONTH', 'POSITION', 'VISS_EU_CD', 'WATER_TYPE_AREA', 'DEPH']
+        self.meta_columns = ['SDATE', 'YEAR', 'MONTH', 'POSITION', 'STATN', 'VISS_EU_CD', 'WATER_TYPE_AREA', 'DEPH']
         self.parameter_list =  [item.strip() for item in self.mapping_objects['quality_element'].indicator_config.loc[self.name]['parameters'].split(', ')] #[item.strip() for item in self.parent_workspace_object.cfg['indicators'].loc[self.name][0].split(', ')]
         self.additional_parameter_list = []
         if type(self.mapping_objects['quality_element'].indicator_config.loc[self.name]['additional_parameters']) is str:
@@ -143,24 +144,38 @@ class IndicatorBase(object):
         return df
 
     #==========================================================================
-    def _calculate_global_EQR_from_indicator_value(self, water_body = None, value = None, max_value = None, min_value = 0):
+    def _calculate_global_EQR_from_indicator_value(self, water_body = None, value = None, max_value = None, min_value = 0, **kwargs):
         """
         Calculates EQR from local_EQR values according to eq. 1 in WATERS final report p 153.
         Boundaries for all classes are read from RefSettings object
         boundarie_variable is used to retrieve class boundaries from settings file and must match the type of value
         This is only valid for values with increasing quality (higher value = higher EQR)
         """
-        
         if not value:
             return False, False
         if value < 0:
             raise('Error: _calculate_global_EQR_from_indicator_value: {} value below 0.'.format(value))
         # Get EQR-class limits for the type area to be able to calculate the weighted numerical class
-        REF_VALUE = self.ref_settings.get_ref_value(water_body = water_body)
-        HG_VALUE_LIMIT = self.ref_settings.get_value(variable = 'HG_VALUE_LIMIT', water_body = water_body)
-        GM_VALUE_LIMIT = self.ref_settings.get_value(variable = 'GM_VALUE_LIMIT', water_body = water_body)
-        MP_VALUE_LIMIT = self.ref_settings.get_value(variable = 'MP_VALUE_LIMIT', water_body = water_body)
-        PB_VALUE_LIMIT = self.ref_settings.get_value(variable = 'PB_VALUE_LIMIT', water_body = water_body)
+        def select_source(kwargs, key):
+            if key in kwargs.keys():
+                return kwargs[key]
+            else:
+                return self.ref_settings.get_value(variable = key, water_body = water_body)
+        
+        if 'REF_VALUE_LIMIT' in kwargs.keys():
+            REF_VALUE = kwargs['REF_VALUE_LIMIT']
+        else:
+            REF_VALUE = self.ref_settings.get_ref_value(water_body = water_body)
+            
+        HG_VALUE_LIMIT = select_source(kwargs, 'HG_VALUE_LIMIT')
+        GM_VALUE_LIMIT = select_source(kwargs, 'GM_VALUE_LIMIT')
+        MP_VALUE_LIMIT = select_source(kwargs, 'MP_VALUE_LIMIT')
+        PB_VALUE_LIMIT = select_source(kwargs, 'PB_VALUE_LIMIT')
+
+#        HG_VALUE_LIMIT = self.ref_settings.get_value(variable = 'HG_VALUE_LIMIT', water_body = water_body)
+#        GM_VALUE_LIMIT = self.ref_settings.get_value(variable = 'GM_VALUE_LIMIT', water_body = water_body)
+#        MP_VALUE_LIMIT = self.ref_settings.get_value(variable = 'MP_VALUE_LIMIT', water_body = water_body)
+#        PB_VALUE_LIMIT = self.ref_settings.get_value(variable = 'PB_VALUE_LIMIT', water_body = water_body)
         if not max_value:
             max_value = REF_VALUE
         
@@ -236,9 +251,9 @@ class IndicatorBase(object):
                     value = 0
           #global_EQR = global_low + (ek - ek_low)/(ek_high-ek_low)*-0.2      
                     
-        print('******',REF_VALUE,'******')
-        print('-------', HG_VALUE_LIMIT - GM_VALUE_LIMIT , '-------')
-        print(global_low, value, low_value, high_value)
+#        print('******',REF_VALUE,'******')
+#        print('-------', HG_VALUE_LIMIT - GM_VALUE_LIMIT , '-------')
+#        print(global_low, value, low_value, high_value)
         # Weighted numerical class
         global_EQR = global_low + (value - low_value)/(high_value-low_value)*slope
         
@@ -647,64 +662,57 @@ class IndicatorBQI(IndicatorBase):
         self.indicator_parameter = self.parameter_list[0]
         self.column_list.remove('DEPH')
         self.column_list = self.column_list + ['MNDEP', 'MXDEP']
-    
-    #===============================================================
-    def new_calculate_status(self, water_body):
-        """
-        Calculates indicatotr EQR for BQI values using bootstrap method described in HVMFS 2013:19
-        """
-        # Set up result class
-        self.classification_results.add_info('parameter', self.indicator_parameter)
-
-        # Set dataframe to use        
-        self._set_water_body_indicator_df(water_body)
-        # get data to be used for status calculation
-        df = self.water_body_indicator_df[water_body].copy(deep = True)
-        year_list = df.YEAR.unique()
-        # Get type area and return False if there is not match for the given waterbody    
-        type_area = self.mapping_objects['water_body'].get_type_area_for_water_body(water_body, include_suffix=True)
-        if type_area == None:
-            return False, False, False, False
         
-        wb_name = self.mapping_objects['water_body'][water_body]['WATERBODY_NAME']
+    def _get_deph_interval_list(self, water_body, MXDEP_list, MNDEP_list):
         
-        by_date = False
+        interval = self.ref_settings.get_value(variable = 'LEVEL_DEPH_INTERVAL', water_body = water_body)
+#        print('interval is', interval)
+        deph_interval_list = False
+        if type(interval) is list:
+            # check that position depths are within interval
+            if np.isnan(min(MNDEP_list)):
+                MNDEP_list = [min(interval)]
+            if max(MXDEP_list) <= max(interval) and min(MNDEP_list) >= min(interval):
+                deph_interval_list =  [str(interval[0]) +'-'+ str(interval[1])]
+        else:
+            for row in (interval.get_values()):
+#                print('row is ',row)
+                interval_list = [int(value) for value in row.split('-')]
+#                print('interval_list is',interval_list)
+#                print('min dep is ',min(MNDEP_list))
+#                print('max dep is ',min(MXDEP_list))
+#                print('check mxdep {} <= {} and mndep {} >= {}'.format(max(MXDEP_list), max(interval_list), min(MNDEP_list),min(interval_list)))
+                if np.isnan(min(MNDEP_list)):
+                    MNDEP_list = [min(interval_list)]
+                if max(MXDEP_list) <= max(interval_list) and min(MNDEP_list) >= min(interval_list):
+                    deph_interval_list = [str(interval_list[0]) +'-'+ str(interval_list[1])]
+                if deph_interval_list:
+                    break
+                
+        return deph_interval_list
        
-        by_year_pos = df.groupby(['VISS_EU_CD','YEAR', 'POSITION'])[self.indicator_parameter].agg(['count', 'min', 'max', 'mean']).reset_index()
-        by_year_pos.rename(columns={'mean':'position_mean', 'count': 'position_count', 'min': 'position_min', 'max': 'station_max'}, inplace=True)
-
-        by_year = by_year_pos.groupby(['VISS_EU_CD','YEAR']).position_mean.agg(['count', 'min', 'max', 'mean']).reset_index()
-
-        # Random selection with replacement of as many values as there are station means (frac = 1)
-        # TODO: spead-up! Is it possible more efficient way to get the list from the map object?
-        def bootstrap(df):
-            return df.sample(frac = 1, replace = True).mean()
+    def _get_settings_index(self, water_body, MXDEP_list, MNDEP_list): 
         
-        n = 9999
-        BQIsim_year = []
-        for year in year_list:
-            values = df.loc[df.YEAR == year, self.indicator_parameter]
-            print('number of stations in year ({}): {}'.format(year,len(by_year_pos['position_mean'])))
-            print(by_year_pos.loc[by_year_pos.YEAR == year]['position_mean'])
-            df_list = [by_year_pos.loc[by_year_pos.YEAR == year]['position_mean'].dropna()]*n
-            print(water_body)
-            BQIsim = [*map(bootstrap, df_list)]
-#            BQIsim = []
-#            for x in range(n):
-#                BQIsim.append(by_year_pos.loc[by_year_pos.YEAR == year]['position_mean'].sample(frac = 1, replace = True).mean())
-            percentile = np.percentile(BQIsim, 0.2) 
-            print(percentile)            
-            BQIsim_year.append(percentile)
-        print(BQIsim_year)
-        BQI_by_period = np.mean(BQIsim_year)
+        deph_interval_list = self._get_deph_interval_list(water_body, MXDEP_list, MNDEP_list)
+#        print('deph_interval_list', deph_interval_list)
         
-        by_period = pd.DataFrame({'VISS_EU_CD': [water_body], 'WATER_BODY_NAME': [wb_name],'WATER_TYPE_AREA': [type_area], 'BQI': [BQI_by_period]})
-                                  #'GLOBAL_EQR': [global_EQR],  'STATUS': [status], })
+        if deph_interval_list:
+            df = self.ref_settings.get_value(water_body = water_body)
+#            print(df['LEVEL_DEPH_INTERVAL'])
+            ix = df.loc[df['LEVEL_DEPH_INTERVAL'] == deph_interval_list[0]].index
+            return ix[0]
+        else:
+            return False
+                   
+    def _get_value(self, water_body, variable, MXDEP_list, MNDEP_list):
         
-        # TODO: Add BQImax to settingsfile (from handbok or ask Mats L). Call _calculate_global_EQR and add results to resul class
-        return by_date, by_year_pos, by_year, by_period
+        ix = self._get_settings_index(water_body, MXDEP_list, MNDEP_list)
+        if ix:
+            return float(self.ref_settings.get_value(water_body = water_body).loc[ix][variable])
+        else:
+            return False
         
-    
+    #===============================================================
     def calculate_status(self, water_body):
         """
         Calculates indicatotr EQR for BQI values using bootstrap method described in HVMFS 2013:19
@@ -717,6 +725,121 @@ class IndicatorBQI(IndicatorBase):
         # get data to be used for status calculation
         df = self.water_body_indicator_df[water_body].copy(deep = True)
         year_list = df.YEAR.unique()
+        position_list = df.STATN.unique()
+        # Get type area and return False if there is not match for the given waterbody    
+        type_area = self.mapping_objects['water_body'].get_type_area_for_water_body(water_body, include_suffix=True)
+        if type_area == None:
+            return False, False, False, False
+        
+        wb_name = self.mapping_objects['water_body'][water_body]['WATERBODY_NAME']
+        
+        
+        by_date = False
+        by_year = False
+       
+#        by_year_pos = df.groupby(['VISS_EU_CD','YEAR', 'POSITION'])[self.indicator_parameter].agg(['count', 'min', 'max', 'mean']).reset_index()
+#        by_year_pos.rename(columns={'mean':'position_mean', 'count': 'position_count', 'min': 'position_min', 'max': 'station_max'}, inplace=True)
+#
+#        by_year = by_year_pos.groupby(['VISS_EU_CD','YEAR']).position_mean.agg(['count', 'min', 'max', 'mean']).reset_index()
+
+        # Random selection with replacement of as many values as there are station means (frac = 1)
+        # TODO: spead-up! Is it possible more efficient way to get the list from the map object?
+        def float_convert(x):
+            try:
+                return float(x)
+            except:
+#                print('float_convert')
+                return np.nan 
+            
+        def bootstrap(value_list, n):
+            result2 = []
+            for i in range(1,n):
+                result1 = []
+                for j in range(1,len(value_list)):
+                    result1.append(value_list[random.randrange(0,len(value_list)-1)])
+                result2.append(np.mean(result1))
+            return result2
+        
+        n = 9999
+        by_year_pos_result_list = []
+        by_position_result_list = []
+        for position in position_list:
+            # All values in year
+            position_values = df.loc[df.STATN == position].dropna(subset = [self.indicator_parameter])
+            mxdep_list = [float_convert(p) for p in position_values.MXDEP.unique()]
+            mndep_list = [float_convert(p) for p in position_values.MNDEP.unique()]
+            ref_value = self._get_value(water_body = water_body, variable = 'REF_VALUE_LIMIT', MXDEP_list = mxdep_list, MNDEP_list = mndep_list)
+            hg_value = self._get_value(water_body = water_body, variable = 'HG_VALUE_LIMIT', MXDEP_list = mxdep_list, MNDEP_list = mndep_list)
+            gm_value = self._get_value(water_body = water_body, variable = 'GM_VALUE_LIMIT', MXDEP_list = mxdep_list, MNDEP_list = mndep_list)
+            mp_value = self._get_value(water_body = water_body, variable = 'MP_VALUE_LIMIT', MXDEP_list = mxdep_list, MNDEP_list = mndep_list)
+            pb_value = self._get_value(water_body = water_body, variable = 'PB_VALUE_LIMIT', MXDEP_list = mxdep_list, MNDEP_list = mndep_list)
+#            print('number of years at position {}: {}'.format(position,len(position_values.YEAR.unique())))
+#            print(position_values)
+            position_mean_list = []
+            for year in year_list:
+                # all values at position in year
+                position_year_values = position_values.loc[position_values.YEAR == year]   
+                if position_year_values.empty:
+                    position_mean= np.nan
+                    #global_EQR = np.nan
+                    by_year_pos_result_list.append((year, position, position_mean, np.nan))
+                else:
+                    position_mean = position_year_values[self.indicator_parameter].mean()
+                    global_EQR, status = self._calculate_global_EQR_from_indicator_value(water_body = water_body, value = position_mean, 
+                                                                                     REF_VALUE_LIMIT = ref_value, HG_VALUE_LIMIT = hg_value,
+                                                                                     GM_VALUE_LIMIT = gm_value, MP_VALUE_LIMIT = mp_value,
+                                                                                     PB_VALUE_LIMIT = pb_value)
+                    by_year_pos_result_list.append((int(year), position, position_mean, global_EQR, status, ref_value, hg_value, gm_value, mp_value, pb_value))
+                    position_mean_list.append(position_mean)
+#            print(position_mean_list)
+            if len(position_mean_list) > 1:
+                BQIsim = bootstrap(position_mean_list, n)
+            elif len(position_mean_list ) == 0:
+                BQIsim = np.nan
+            else:
+                BQIsim = position_mean_list
+             
+            percentile = np.percentile(BQIsim, 0.2)
+            global_EQR, status = self._calculate_global_EQR_from_indicator_value(water_body = water_body, value = percentile, 
+                                                                                     REF_VALUE_LIMIT = ref_value, HG_VALUE_LIMIT = hg_value,
+                                                                                     GM_VALUE_LIMIT = gm_value, MP_VALUE_LIMIT = mp_value,
+                                                                                     PB_VALUE_LIMIT = pb_value)
+                    
+#            print('percentile', percentile)            
+            by_position_result_list.append((position, percentile, global_EQR, status, ref_value, hg_value, gm_value, mp_value, pb_value))
+            
+        
+#        print(by_position_result_list)
+        
+        by_year_pos = pd.DataFrame(data = by_year_pos_result_list, columns = ['YEAR', 'position', 'position_mean', 'global_EQR','STATUS','ref_value', 'hg_value', 'gm_value', 'mp_value', 'pb_value'])
+        by_year_pos['WATER_BODY_NAME'] = wb_name
+        by_year_pos['VISS_EU_CD'] = water_body
+        by_year_pos['WATER_TYPE_AREA'] = type_area
+                   
+        by_pos = pd.DataFrame(data = by_position_result_list, columns = ['STATN', '20th percentile', 'global_EQR','STATUS','ref_value', 'hg_value', 'gm_value', 'mp_value', 'pb_value'])
+        by_pos['WATER_BODY_NAME'] = wb_name
+        by_pos['VISS_EU_CD'] = water_body
+        by_pos['WATER_TYPE_AREA'] = type_area
+        
+#        by_period = pd.DataFrame({'VISS_EU_CD': [water_body], 'WATER_BODY_NAME': [wb_name],'WATER_TYPE_AREA': [type_area], 'BQI': [BQI_by_period]})
+                                  #'GLOBAL_EQR': [global_EQR],  'STATUS': [status], })
+        
+        # TODO: Add BQImax to settingsfile (from handbok or ask Mats L). Call _calculate_global_EQR and add results to resul class
+        return by_date, by_year_pos, by_year, by_pos
+        
+    
+    def old_calculate_status(self, water_body):
+        """
+        Calculates indicatotr EQR for BQI values using bootstrap method described in HVMFS 2013:19
+        """
+        # Set up result class
+        self.classification_results.add_info('parameter', self.indicator_parameter)
+
+        # Set dataframe to use        
+        self._set_water_body_indicator_df(water_body)
+        # get data to be used for status calculation
+        df = self.water_body_indicator_df[water_body].copy(deep = True)
+        year_list = df.YEAR.unique()
         # Get type area and return False if there is not match for the given waterbody    
         type_area = self.mapping_objects['water_body'].get_type_area_for_water_body(water_body, include_suffix=True)
         if type_area == None:
@@ -733,24 +856,39 @@ class IndicatorBQI(IndicatorBase):
 
         # Random selection with replacement of as many values as there are station means (frac = 1)
         # TODO: spead-up! Is it possible more efficient way to get the list from the map object?
-        def bootstrap(df):
+        def old_bootstrap(df):
             return df.sample(frac = 1, replace = True).mean()
+        def bootstrap(value_list, n):
+            result2 = []
+            for i in range(1,n):
+                result1 = []
+                for j in range(1,len(value_list)):
+                    result1.append(value_list[random.randrange(0,len(value_list)-1)])
+                result2.append(np.mean(result1))
+            return result2
         
         n = 9999
         BQIsim_year = []
         for ix, year in by_year.YEAR.items():
-            print('number of stations in year ({}): {}'.format(year,len(by_year_pos['position_mean'])))
-            print(by_year_pos.loc[by_year_pos.YEAR == year]['position_mean'])
-            df_list = [by_year_pos.loc[by_year_pos.YEAR == year]['position_mean'].dropna()]*n
-            print(water_body)
-            BQIsim = [*map(bootstrap, df_list)]
+#            print('number of stations in year ({}): {}'.format(year,len(by_year_pos.loc[by_year_pos.YEAR == year]['position_mean'])))
+#            print(by_year_pos.loc[by_year_pos.YEAR == year]['position_mean'])
+#            df_list = [by_year_pos.loc[by_year_pos.YEAR == year]['position_mean'].dropna()]*n
+            df_list = by_year_pos.loc[by_year_pos.YEAR == year]['position_mean'].dropna().tolist()
+            no_stns = len(df_list)
+#            print(df_list)
+#            print(water_body)
+            if no_stns > 1:
+                BQIsim = bootstrap(df_list, n)
+            else:
+                BQIsim = df_list
+#            BQIsim = [*map(bootstrap, df_list)]
 #            BQIsim = []
 #            for x in range(n):
 #                BQIsim.append(by_year_pos.loc[by_year_pos.YEAR == year]['position_mean'].sample(frac = 1, replace = True).mean())
             percentile = np.percentile(BQIsim, 0.2) 
-            print(percentile)            
+#            print(percentile)            
             BQIsim_year.append(percentile)
-        print(BQIsim_year)
+#        print(BQIsim_year)
         BQI_by_period = np.mean(BQIsim_year)
         
         by_period = pd.DataFrame({'VISS_EU_CD': [water_body], 'WATER_BODY_NAME': [wb_name],'WATER_TYPE_AREA': [type_area], 'BQI': [BQI_by_period]})
@@ -1240,12 +1378,12 @@ class IndicatorOxygen(IndicatorBase):
             if self.test2_result > self.deficiency_limit or np.isnan(self.test2_result):
                 #### METHOD 1 ####
                 deficiency_type = 'seasonal'
-                global_EQR, status = self._calculate_global_EQR_from_indicator_value(value = self.test1_result, water_body = water_body)
+                global_EQR, status = self._calculate_global_EQR_from_indicator_value(water_body = water_body, value = self.test1_result, max_value = 100)
             elif self.test2_result <= self.deficiency_limit:
                 deficiency_type = 'longterm'
                 if self.ref_settings.get_value(variable = 'VISS_EU_CD', water_body = water_body) == water_body:
                     #### METHOD 2 ####
-                    global_EQR, status = self._calculate_global_EQR_from_indicator_value(value = area_fraction_value, water_body = water_body, max_value = 100)
+                    global_EQR, status = self._calculate_global_EQR_from_indicator_value(water_body = water_body, value = area_fraction_value, max_value = 100)
                 else:
                     #### METHOD 1 #####
                     comment = 'no classboundaries defined for longterm deficieny in this waterbody, using definition of seasonal deficiency'
@@ -1253,8 +1391,8 @@ class IndicatorOxygen(IndicatorBase):
         else:
             return False, False, False, False
         
-        print(wb_name)
-        print(deficiency_type, 'test1_result {}'.format(self.test1_result))
+#        print(wb_name)
+#        print(deficiency_type, 'test1_result {}'.format(self.test1_result))
 
 #        comment = ''
 #        
@@ -1289,11 +1427,11 @@ class IndicatorOxygen(IndicatorBase):
 #        else:
 #            print('deficiency type {}'.format(deficiency_type))
         
-        print(deficiency_type)
-        print('test1_result {}'.format(self.test1_result))
-        print('test2_result {}'.format(self.test2_result))
-        print('area_fraction_value {} minimum_deficiency_depth {} \t{} limit {}'.format(area_fraction_value, self.minimum_deficiency_depth, deficiency_type, self.deficiency_limit))
-        print('global EQR {} status {}'.format(global_EQR, status)      )
+#        print(deficiency_type)
+#        print('test1_result {}'.format(self.test1_result))
+#        print('test2_result {}'.format(self.test2_result))
+#        print('area_fraction_value {} minimum_deficiency_depth {} \t{} limit {}'.format(area_fraction_value, self.minimum_deficiency_depth, deficiency_type, self.deficiency_limit))
+#        print('global EQR {} status {}'.format(global_EQR, status)      )
 #       global_EQR, status = self._calculate_global_EQR_from_indicator_value(water_body = 'unspecified', value = value)
         
         by_period = pd.DataFrame({'VISS_EU_CD': [water_body], 'WATER_BODY_NAME': [wb_name],'WATER_TYPE_AREA': [type_area], 
