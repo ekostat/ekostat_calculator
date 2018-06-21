@@ -1011,16 +1011,16 @@ class SettingsRef(SettingsBase):
     def get_ref_value(self, type_area = None, water_body = None, salinity = None):
         """
         Created     20180326    by Lena Viktorsson
-        Updated     20180418    by Lena Viktorsson
+        Updated     20180621    by Lena Viktorsson (added float(ref_value in the first try/except statement))
         """
-
         if len(self.settings.refvalue_column) == 0:
             return False
         if water_body:
-            ref_value = self.get_value(variable = self.settings.refvalue_column[0], water_body = water_body)
+            ref_value = self.get_value(variable = 'REF_VALUE_LIMIT', water_body = water_body)
         else:
-            ref_value = self.get_value(variable = self.settings.refvalue_column[0], type_area = type_area)
+            ref_value = self.get_value(variable = 'REF_VALUE_LIMIT', type_area = type_area)
         try:
+            print(ref_value)
             ref_value = float(ref_value)
         except ValueError:
             pass
@@ -1031,9 +1031,9 @@ class SettingsRef(SettingsBase):
             try: 
                 s = salinity
                 if water_body:
-                    max_s = self.get_value(variable = self.settings.ref_columns[-1], water_body = water_body)
+                    max_s = self.get_value(variable = 'SALINITY_MAX', water_body = water_body)
                 else:
-                    max_s = self.get_value(variable = self.settings.ref_columns[-1], type_area = type_area)
+                    max_s = self.get_value(variable = 'SALINITY_MAX', type_area = type_area)
                 if s > max_s:
                     s = max_s
                 #print(s, ref_value)
@@ -1060,9 +1060,9 @@ class SettingsRef(SettingsBase):
             return False
         
         if water_body:
-            ref_value = self.get_value(variable = self.settings.refvalue_column[0], water_body = water_body)
+            ref_value = self.get_value(variable = 'REF_VALUE_LIMIT', water_body = water_body)
         else:
-            ref_value = self.get_value(variable = self.settings.refvalue_column[0], type_area = type_area)
+            ref_value = self.get_value(variable = 'REF_VALUE_LIMIT', type_area = type_area)
         
         if type(ref_value) is float:
             return 'float'
