@@ -1993,7 +1993,7 @@ class EventHandler(object):
                                   "label": "Balgöarkipelagen",
                                   "value": "SE570900-121060",
                                   "type": "water_body",
-                                  "status": "disabled",
+                                  "status": "readable",
                                   "active": false
                                 }
                               ]
@@ -2492,6 +2492,7 @@ class EventHandler(object):
         self.action_load_workspace(workspace_uuid)
         
         response = {}
+        response['workspace_uuid'] = workspace_uuid
         response['workspace'] = self.dict_workspace(workspace_uuid) 
         
         response['subset'] = self.dict_subset(workspace_uuid=workspace_uuid, 
@@ -2530,7 +2531,9 @@ class EventHandler(object):
         t0 = time.time()
         self._logger.debug('Start: request_subset_get_indicator_settings')
         
-        workspace_uuid = request['workspace']['workspace_uuid']
+        workspace_uuid = request.get('workspace_uuid', {}) 
+        if not workspace_uuid:
+            workspace_uuid = request['workspace']['workspace_uuid'] 
         subset_uuid = request['subset']['subset_uuid']
         
         # Load workspace 
@@ -2548,6 +2551,7 @@ class EventHandler(object):
         response = {} 
         
         # Add workspace info to response 
+        response['workspace_uuid'] = workspace_uuid
         response['workspace'] = self.dict_workspace(workspace_uuid)
         
         
@@ -2611,7 +2615,9 @@ class EventHandler(object):
         t0 = time.time()
         self._logger.debug('Start: request_subset_set_indicator_settings')
         
-        workspace_uuid = request['workspace']['workspace_uuid']
+        workspace_uuid = request.get('workspace_uuid', {}) 
+        if not workspace_uuid:
+            workspace_uuid = request['workspace']['workspace_uuid'] 
         subset_uuid = request['subset']['subset_uuid']
         
         # Load workspace 
@@ -2740,7 +2746,9 @@ class EventHandler(object):
         """    
         
         self._logger.debug('Start: request_subset_edit')
-        workspace_uuid = request['workspace']['workspace_uuid'] 
+        workspace_uuid = request.get('workspace_uuid', {}) 
+        if not workspace_uuid:
+            workspace_uuid = request['workspace']['workspace_uuid'] 
         request_subset_list = request['subsets']
         
         all_ok = self.action_load_workspace(workspace_uuid)
@@ -2777,6 +2785,7 @@ class EventHandler(object):
 #            return {'workspace_uuid': workspace_uuid}
         
         response = {}
+        response['workspace_uuid'] = workspace_uuid
         response['workspace'] = self.dict_workspace(workspace_uuid)
         
         response['subset'] = self.dict_subset(workspace_uuid=workspace_uuid, 
@@ -2914,7 +2923,8 @@ class EventHandler(object):
         self.action_load_workspace(workspace_uuid)
 #        self.assure_data_is_loaded(workspace_uuid=workspace_uuid)
 #        print('2:', time.time()-t0)
-        # Add workspace info
+        # Add workspace info 
+        response['workspace_uuid'] = workspace_uuid
         response['workspace'] = self.dict_workspace(workspace_uuid=workspace_uuid)
 #        print('3:', time.time()-t0)      
         subset_list = self.list_subsets(workspace_uuid=workspace_uuid)
@@ -2944,7 +2954,7 @@ class EventHandler(object):
         """
         self._logger.debug('Start: request_workspace_add')
         alias = request['alias'] 
-        source_uuid = request['source'] 
+        source_uuid = request['workspace_uuid'] 
 #        print('###', user_id)
 #        print('###', alias)
 #        print('###', source_uuid)

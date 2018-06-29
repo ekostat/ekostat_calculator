@@ -1,12 +1,12 @@
 {
     "workspace": {
         "alias": "New test workspace",
-        "workspace_uuid": "8178806f-7829-4132-afac-a4ebcbd9ad27",
+        "workspace_uuid": "327bbf4f-f367-4d85-80f4-e9151907eadc",
         "status": "editable"
     },
     "subset": {
         "alias": "subset_20180615",
-        "subset_uuid": "638fb450-8c8b-443d-87ae-f75e3fa297b2",
+        "subset_uuid": "ac45fef1-3042-44f4-bdca-e121d1d93f45",
         "status": "editable",
         "active": true,
         "time": {
@@ -7776,48 +7776,10 @@
             "children": [
                 {
                     "label": "BQI",
-                    "status": "selectable",
-                    "selected": true,
+                    "status": "not selectable",
+                    "selected": false,
                     "value": "bqi",
-                    "settings": [
-                        {
-                            "area_type": "type_area",
-                            "value": "2",
-                            "label": "2 - V\u00e4stkustens fjordar",
-                            "children": [
-                                {
-                                    "value": "MIN_NR_YEARS",
-                                    "label": "MIN_NR_YEARS",
-                                    "status": "editable",
-                                    "children": 3
-                                },
-                                {
-                                    "value": "MONTH_LIST",
-                                    "label": "Month interval",
-                                    "status": "editable",
-                                    "children": [
-                                        5,
-                                        6
-                                    ]
-                                },
-                                {
-                                    "value": "DEPH_INTERVAL",
-                                    "label": "Depth interval ",
-                                    "status": "readable",
-                                    "children": [
-                                        [
-                                            5,
-                                            20
-                                        ],
-                                        [
-                                            20,
-                                            500
-                                        ]
-                                    ]
-                                }
-                            ]
-                        }
-                    ]
+                    "settings": []
                 }
             ]
         },
@@ -7859,33 +7821,10 @@
             "children": [
                 {
                     "label": "Secchi ",
-                    "status": "selectable",
-                    "selected": true,
+                    "status": "not selectable",
+                    "selected": false,
                     "value": "secchi",
-                    "settings": [
-                        {
-                            "area_type": "type_area",
-                            "value": "2",
-                            "label": "2 - V\u00e4stkustens fjordar",
-                            "children": [
-                                {
-                                    "value": "MIN_NR_YEARS",
-                                    "label": "MIN_NR_YEARS",
-                                    "status": "editable",
-                                    "children": 3
-                                },
-                                {
-                                    "value": "MONTH_LIST",
-                                    "label": "Month interval",
-                                    "status": "editable",
-                                    "children": [
-                                        6,
-                                        8
-                                    ]
-                                }
-                            ]
-                        }
-                    ]
+                    "settings": []
                 }
             ]
         },
@@ -7894,237 +7833,45 @@
             "children": [
                 {
                     "label": "DIN winter",
-                    "status": "selectable",
-                    "selected": true,
+                    "status": "not selectable",
+                    "selected": false,
                     "value": "din_winter",
-                    "settings": [
-                        {
-                            "area_type": "type_area",
-                            "value": "2",
-                            "label": "2 - V\u00e4stkustens fjordar",
-                            "children": [
-                                {
-                                    "value": "MIN_NR_YEARS",
-                                    "label": "MIN_NR_YEARS",
-                                    "status": "editable",
-                                    "children": 3
-                                },
-                                {
-                                    "value": "MONTH_LIST",
-                                    "label": "Month interval",
-                                    "status": "editable",
-                                    "children": [
-                                        12,
-                                        3
-                                    ]
-                                },
-                                {
-                                    "value": "DEPH_INTERVAL",
-                                    "label": "Depth interval ",
-                                    "status": "editable",
-                                    "children": [
-                                        0,
-                                        10
-                                    ]
-                                }
-                            ]
-                        }
-                    ]
+                    "settings": []
                 },
                 {
                     "label": "DIP winter",
-                    "status": "selectable",
-                    "selected": true,
+                    "status": "not selectable",
+                    "selected": false,
                     "value": "dip_winter",
-                    "settings": [
-                        {
-                            "area_type": "type_area",
-                            "value": "2",
-                            "label": "2 - V\u00e4stkustens fjordar",
-                            "children": [
-                                {
-                                    "value": "MIN_NR_YEARS",
-                                    "label": "MIN_NR_YEARS",
-                                    "status": "editable",
-                                    "children": 3
-                                },
-                                {
-                                    "value": "MONTH_LIST",
-                                    "label": "Month interval",
-                                    "status": "editable",
-                                    "children": [
-                                        12,
-                                        3
-                                    ]
-                                },
-                                {
-                                    "value": "DEPH_INTERVAL",
-                                    "label": "Depth interval ",
-                                    "status": "editable",
-                                    "children": [
-                                        0,
-                                        10
-                                    ]
-                                }
-                            ]
-                        }
-                    ]
+                    "settings": []
                 },
                 {
                     "label": "Ntot summer",
-                    "status": "selectable",
-                    "selected": true,
+                    "status": "not selectable",
+                    "selected": false,
                     "value": "ntot_summer",
-                    "settings": [
-                        {
-                            "area_type": "type_area",
-                            "value": "2",
-                            "label": "2 - V\u00e4stkustens fjordar",
-                            "children": [
-                                {
-                                    "value": "MIN_NR_YEARS",
-                                    "label": "MIN_NR_YEARS",
-                                    "status": "editable",
-                                    "children": 3
-                                },
-                                {
-                                    "value": "MONTH_LIST",
-                                    "label": "Month interval",
-                                    "status": "editable",
-                                    "children": [
-                                        6,
-                                        8
-                                    ]
-                                },
-                                {
-                                    "value": "DEPH_INTERVAL",
-                                    "label": "Depth interval ",
-                                    "status": "editable",
-                                    "children": [
-                                        0,
-                                        10
-                                    ]
-                                }
-                            ]
-                        }
-                    ]
+                    "settings": []
                 },
                 {
                     "label": "Ntot winter",
-                    "status": "selectable",
-                    "selected": true,
+                    "status": "not selectable",
+                    "selected": false,
                     "value": "ntot_winter",
-                    "settings": [
-                        {
-                            "area_type": "type_area",
-                            "value": "2",
-                            "label": "2 - V\u00e4stkustens fjordar",
-                            "children": [
-                                {
-                                    "value": "MIN_NR_YEARS",
-                                    "label": "MIN_NR_YEARS",
-                                    "status": "editable",
-                                    "children": 3
-                                },
-                                {
-                                    "value": "MONTH_LIST",
-                                    "label": "Month interval",
-                                    "status": "editable",
-                                    "children": [
-                                        12,
-                                        3
-                                    ]
-                                },
-                                {
-                                    "value": "DEPH_INTERVAL",
-                                    "label": "Depth interval ",
-                                    "status": "editable",
-                                    "children": [
-                                        0,
-                                        10
-                                    ]
-                                }
-                            ]
-                        }
-                    ]
+                    "settings": []
                 },
                 {
                     "label": "Ptot summer",
-                    "status": "selectable",
-                    "selected": true,
+                    "status": "not selectable",
+                    "selected": false,
                     "value": "ptot_summer",
-                    "settings": [
-                        {
-                            "area_type": "type_area",
-                            "value": "2",
-                            "label": "2 - V\u00e4stkustens fjordar",
-                            "children": [
-                                {
-                                    "value": "MIN_NR_YEARS",
-                                    "label": "MIN_NR_YEARS",
-                                    "status": "editable",
-                                    "children": 3
-                                },
-                                {
-                                    "value": "MONTH_LIST",
-                                    "label": "Month interval",
-                                    "status": "editable",
-                                    "children": [
-                                        6,
-                                        8
-                                    ]
-                                },
-                                {
-                                    "value": "DEPH_INTERVAL",
-                                    "label": "Depth interval ",
-                                    "status": "editable",
-                                    "children": [
-                                        0,
-                                        10
-                                    ]
-                                }
-                            ]
-                        }
-                    ]
+                    "settings": []
                 },
                 {
                     "label": "Ptot winter",
-                    "status": "selectable",
-                    "selected": true,
+                    "status": "not selectable",
+                    "selected": false,
                     "value": "ptot_winter",
-                    "settings": [
-                        {
-                            "area_type": "type_area",
-                            "value": "2",
-                            "label": "2 - V\u00e4stkustens fjordar",
-                            "children": [
-                                {
-                                    "value": "MIN_NR_YEARS",
-                                    "label": "MIN_NR_YEARS",
-                                    "status": "editable",
-                                    "children": 3
-                                },
-                                {
-                                    "value": "MONTH_LIST",
-                                    "label": "Month interval",
-                                    "status": "editable",
-                                    "children": [
-                                        12,
-                                        3
-                                    ]
-                                },
-                                {
-                                    "value": "DEPH_INTERVAL",
-                                    "label": "Depth interval ",
-                                    "status": "editable",
-                                    "children": [
-                                        0,
-                                        10
-                                    ]
-                                }
-                            ]
-                        }
-                    ]
+                    "settings": []
                 }
             ]
         },
@@ -8133,49 +7880,10 @@
             "children": [
                 {
                     "label": "oxygen",
-                    "status": "selectable",
-                    "selected": true,
+                    "status": "not selectable",
+                    "selected": false,
                     "value": "oxygen",
-                    "settings": [
-                        {
-                            "area_type": "type_area",
-                            "value": "2",
-                            "label": "2 - V\u00e4stkustens fjordar",
-                            "children": [
-                                {
-                                    "value": "MIN_NR_YEARS",
-                                    "label": "MIN_NR_YEARS",
-                                    "status": "editable",
-                                    "children": 3
-                                },
-                                {
-                                    "value": "BOTTOM_WATER",
-                                    "label": "BOTTOM_WATER",
-                                    "status": "editable",
-                                    "children": 10
-                                }
-                            ]
-                        },
-                        {
-                            "area_type": "viss_eu_cd",
-                            "value": "SE582000-115270",
-                            "label": "Byfjorden",
-                            "children": [
-                                {
-                                    "value": "MIN_NR_YEARS",
-                                    "label": "MIN_NR_YEARS",
-                                    "status": "editable",
-                                    "children": 3
-                                },
-                                {
-                                    "value": "BOTTOM_WATER",
-                                    "label": "BOTTOM_WATER",
-                                    "status": "editable",
-                                    "children": 10
-                                }
-                            ]
-                        }
-                    ]
+                    "settings": []
                 }
             ]
         }
