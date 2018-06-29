@@ -1095,7 +1095,6 @@ class UUIDmapping():
         if not status:
             status = self.all_status
         
-        dfjsd
         if 'default_' in unique_id:
             return unique_id
         
