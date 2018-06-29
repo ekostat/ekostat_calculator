@@ -1,27 +1,15 @@
 {
     "workspace": {
         "alias": "New test workspace",
-        "workspace_uuid": "40e11bb1-49fb-4eb3-bb2b-4d5b9f520b2c",
+        "workspace_uuid": "8178806f-7829-4132-afac-a4ebcbd9ad27",
         "status": "editable"
     },
     "subsets": [
-        {
-            "alias": "test_subset_1",
-            "subset_uuid": "a15e6f23-5f78-4e78-b3fa-d9cc14e88f93",
-            "status": "editable",
-            "active": true
-        },
         {
             "alias": "default_subset",
             "subset_uuid": "default_subset",
             "status": "readable",
             "active": false
-        },
-        {
-            "alias": "test_subset_2",
-            "subset_uuid": "eef1283a-557c-4804-9d5f-fcf4175ef112",
-            "status": "editable",
-            "active": true
         }
     ]
 }

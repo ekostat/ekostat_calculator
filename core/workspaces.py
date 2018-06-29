@@ -1571,10 +1571,9 @@ class WorkSpace(object):
             # We know that all_data does not excist. We only want to load the datatypes that has been changed and then merge data. 
             # Loop and load datatypes (if loaded are desided in method load datatype_data)
             for datatype in self.datatype_settings.get_datatype_list():
-#                print('datatype', datatype)
-#                print('force', force)
+#                print('-- datatype', datatype)
+#                print('-- force', force)
                 self.load_datatype_data(datatype=datatype, force=force)
-            
             self.data_handler.merge_all_data(save_to_txt=False) 
             data_loaded = True
             

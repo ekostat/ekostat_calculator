@@ -22,4 +22,6 @@ msmdi	MSMDI
 o2	Oxygen
 biov	Biovolume
 chl	Chlorophyll
-secchi 	Secchi 
+secchi	Secchi 
+DEPH_INTERVAL	Depth interval 
+MONTH_LIST	Month interval

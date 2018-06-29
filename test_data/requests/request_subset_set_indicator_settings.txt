@@ -1,12 +1,12 @@
 {
     "workspace": {
         "alias": "New test workspace",
-        "workspace_uuid": "40e11bb1-49fb-4eb3-bb2b-4d5b9f520b2c",
+        "workspace_uuid": "8178806f-7829-4132-afac-a4ebcbd9ad27",
         "status": "editable"
     },
     "subset": {
-        "alias": "test_subset_1",
-        "subset_uuid": "a15e6f23-5f78-4e78-b3fa-d9cc14e88f93",
+        "alias": "subset_20180615",
+        "subset_uuid": "638fb450-8c8b-443d-87ae-f75e3fa297b2",
         "status": "editable",
         "active": true,
         "time": {
@@ -7776,10 +7776,48 @@
             "children": [
                 {
                     "label": "BQI",
-                    "status": "not selectable",
-                    "selected": false,
+                    "status": "selectable",
+                    "selected": true,
                     "value": "bqi",
-                    "settings": []
+                    "settings": [
+                        {
+                            "area_type": "type_area",
+                            "value": "2",
+                            "label": "2 - V\u00e4stkustens fjordar",
+                            "children": [
+                                {
+                                    "value": "MIN_NR_YEARS",
+                                    "label": "MIN_NR_YEARS",
+                                    "status": "editable",
+                                    "children": 3
+                                },
+                                {
+                                    "value": "MONTH_LIST",
+                                    "label": "Month interval",
+                                    "status": "editable",
+                                    "children": [
+                                        5,
+                                        7
+                                    ]
+                                },
+                                {
+                                    "value": "DEPH_INTERVAL",
+                                    "label": "Depth interval ",
+                                    "status": "readable",
+                                    "children": [
+                                        [
+                                            5,
+                                            20
+                                        ],
+                                        [
+                                            20,
+                                            500
+                                        ]
+                                    ]
+                                }
+                            ]
+                        }
+                    ]
                 }
             ]
         },
@@ -7820,7 +7858,7 @@
             "label": "secchi depth",
             "children": [
                 {
-                    "label": "secchi",
+                    "label": "Secchi ",
                     "status": "selectable",
                     "selected": true,
                     "value": "secchi",
@@ -7829,15 +7867,23 @@
                             "area_type": "type_area",
                             "value": "2",
                             "label": "2 - V\u00e4stkustens fjordar",
-                            "indicator": "secchi",
-                            "depth_interval": [],
-                            "month_interval": [
-                                [
-                                    6,
-                                    8
-                                ]
-                            ],
-                            "min_no_years": 3
+                            "children": [
+                                {
+                                    "value": "MIN_NR_YEARS",
+                                    "label": "MIN_NR_YEARS",
+                                    "status": "editable",
+                                    "children": 3
+                                },
+                                {
+                                    "value": "MONTH_LIST",
+                                    "label": "Month interval",
+                                    "status": "editable",
+                                    "children": [
+                                        6,
+                                        8
+                                    ]
+                                }
+                            ]
                         }
                     ]
                 }
@@ -7856,20 +7902,32 @@
                             "area_type": "type_area",
                             "value": "2",
                             "label": "2 - V\u00e4stkustens fjordar",
-                            "indicator": "din_winter",
-                            "depth_interval": [
-                                [
-                                    0,
-                                    10
-                                ]
-                            ],
-                            "month_interval": [
-                                [
-                                    12,
-                                    3
-                                ]
-                            ],
-                            "min_no_years": 3
+                            "children": [
+                                {
+                                    "value": "MIN_NR_YEARS",
+                                    "label": "MIN_NR_YEARS",
+                                    "status": "editable",
+                                    "children": 3
+                                },
+                                {
+                                    "value": "MONTH_LIST",
+                                    "label": "Month interval",
+                                    "status": "editable",
+                                    "children": [
+                                        12,
+                                        3
+                                    ]
+                                },
+                                {
+                                    "value": "DEPH_INTERVAL",
+                                    "label": "Depth interval ",
+                                    "status": "editable",
+                                    "children": [
+                                        0,
+                                        10
+                                    ]
+                                }
+                            ]
                         }
                     ]
                 },
@@ -7883,20 +7941,32 @@
                             "area_type": "type_area",
                             "value": "2",
                             "label": "2 - V\u00e4stkustens fjordar",
-                            "indicator": "dip_winter",
-                            "depth_interval": [
-                                [
-                                    0,
-                                    10
-                                ]
-                            ],
-                            "month_interval": [
-                                [
-                                    12,
-                                    3
-                                ]
-                            ],
-                            "min_no_years": 3
+                            "children": [
+                                {
+                                    "value": "MIN_NR_YEARS",
+                                    "label": "MIN_NR_YEARS",
+                                    "status": "editable",
+                                    "children": 3
+                                },
+                                {
+                                    "value": "MONTH_LIST",
+                                    "label": "Month interval",
+                                    "status": "editable",
+                                    "children": [
+                                        12,
+                                        3
+                                    ]
+                                },
+                                {
+                                    "value": "DEPH_INTERVAL",
+                                    "label": "Depth interval ",
+                                    "status": "editable",
+                                    "children": [
+                                        0,
+                                        10
+                                    ]
+                                }
+                            ]
                         }
                     ]
                 },
@@ -7910,20 +7980,32 @@
                             "area_type": "type_area",
                             "value": "2",
                             "label": "2 - V\u00e4stkustens fjordar",
-                            "indicator": "ntot_summer",
-                            "depth_interval": [
-                                [
-                                    0,
-                                    10
-                                ]
-                            ],
-                            "month_interval": [
-                                [
-                                    6,
-                                    8
-                                ]
-                            ],
-                            "min_no_years": 3
+                            "children": [
+                                {
+                                    "value": "MIN_NR_YEARS",
+                                    "label": "MIN_NR_YEARS",
+                                    "status": "editable",
+                                    "children": 3
+                                },
+                                {
+                                    "value": "MONTH_LIST",
+                                    "label": "Month interval",
+                                    "status": "editable",
+                                    "children": [
+                                        6,
+                                        8
+                                    ]
+                                },
+                                {
+                                    "value": "DEPH_INTERVAL",
+                                    "label": "Depth interval ",
+                                    "status": "editable",
+                                    "children": [
+                                        0,
+                                        10
+                                    ]
+                                }
+                            ]
                         }
                     ]
                 },
@@ -7937,20 +8019,32 @@
                             "area_type": "type_area",
                             "value": "2",
                             "label": "2 - V\u00e4stkustens fjordar",
-                            "indicator": "ntot_winter",
-                            "depth_interval": [
-                                [
-                                    0,
-                                    10
-                                ]
-                            ],
-                            "month_interval": [
-                                [
-                                    12,
-                                    3
-                                ]
-                            ],
-                            "min_no_years": 3
+                            "children": [
+                                {
+                                    "value": "MIN_NR_YEARS",
+                                    "label": "MIN_NR_YEARS",
+                                    "status": "editable",
+                                    "children": 3
+                                },
+                                {
+                                    "value": "MONTH_LIST",
+                                    "label": "Month interval",
+                                    "status": "editable",
+                                    "children": [
+                                        12,
+                                        3
+                                    ]
+                                },
+                                {
+                                    "value": "DEPH_INTERVAL",
+                                    "label": "Depth interval ",
+                                    "status": "editable",
+                                    "children": [
+                                        0,
+                                        10
+                                    ]
+                                }
+                            ]
                         }
                     ]
                 },
@@ -7964,20 +8058,32 @@
                             "area_type": "type_area",
                             "value": "2",
                             "label": "2 - V\u00e4stkustens fjordar",
-                            "indicator": "ptot_summer",
-                            "depth_interval": [
-                                [
-                                    0,
-                                    10
-                                ]
-                            ],
-                            "month_interval": [
-                                [
-                                    6,
-                                    8
-                                ]
-                            ],
-                            "min_no_years": 3
+                            "children": [
+                                {
+                                    "value": "MIN_NR_YEARS",
+                                    "label": "MIN_NR_YEARS",
+                                    "status": "editable",
+                                    "children": 3
+                                },
+                                {
+                                    "value": "MONTH_LIST",
+                                    "label": "Month interval",
+                                    "status": "editable",
+                                    "children": [
+                                        6,
+                                        8
+                                    ]
+                                },
+                                {
+                                    "value": "DEPH_INTERVAL",
+                                    "label": "Depth interval ",
+                                    "status": "editable",
+                                    "children": [
+                                        0,
+                                        10
+                                    ]
+                                }
+                            ]
                         }
                     ]
                 },
@@ -7991,20 +8097,32 @@
                             "area_type": "type_area",
                             "value": "2",
                             "label": "2 - V\u00e4stkustens fjordar",
-                            "indicator": "ptot_winter",
-                            "depth_interval": [
-                                [
-                                    0,
-                                    10
-                                ]
-                            ],
-                            "month_interval": [
-                                [
-                                    12,
-                                    3
-                                ]
-                            ],
-                            "min_no_years": 3
+                            "children": [
+                                {
+                                    "value": "MIN_NR_YEARS",
+                                    "label": "MIN_NR_YEARS",
+                                    "status": "editable",
+                                    "children": 3
+                                },
+                                {
+                                    "value": "MONTH_LIST",
+                                    "label": "Month interval",
+                                    "status": "editable",
+                                    "children": [
+                                        12,
+                                        3
+                                    ]
+                                },
+                                {
+                                    "value": "DEPH_INTERVAL",
+                                    "label": "Depth interval ",
+                                    "status": "editable",
+                                    "children": [
+                                        0,
+                                        10
+                                    ]
+                                }
+                            ]
                         }
                     ]
                 }
@@ -8023,43 +8141,39 @@
                             "area_type": "type_area",
                             "value": "2",
                             "label": "2 - V\u00e4stkustens fjordar",
-                            "indicator": "oxygen",
-                            "depth_interval": [],
-                            "month_interval": [
-                                [
-                                    1,
-                                    12
-                                ]
-                            ],
-                            "min_no_years": 3
+                            "children": [
+                                {
+                                    "value": "MIN_NR_YEARS",
+                                    "label": "MIN_NR_YEARS",
+                                    "status": "editable",
+                                    "children": 3
+                                },
+                                {
+                                    "value": "BOTTOM_WATER",
+                                    "label": "BOTTOM_WATER",
+                                    "status": "editable",
+                                    "children": 10
+                                }
+                            ]
                         },
                         {
                             "area_type": "viss_eu_cd",
                             "value": "SE582000-115270",
                             "label": "Byfjorden",
-                            "indicator": "oxygen",
-                            "depth_interval": [],
-                            "month_interval": [
-                                [
-                                    6,
-                                    12
-                                ]
-                            ],
-                            "min_no_years": 3
-                        },
-                        {
-                            "area_type": "viss_eu_cd",
-                            "value": "SE580688-114860",
-                            "label": "Halsefjorden",
-                            "indicator": "oxygen",
-                            "depth_interval": [],
-                            "month_interval": [
-                                [
-                                    5,
-                                    12
-                                ]
-                            ],
-                            "min_no_years": 3
+                            "children": [
+                                {
+                                    "value": "MIN_NR_YEARS",
+                                    "label": "MIN_NR_YEARS",
+                                    "status": "editable",
+                                    "children": 3
+                                },
+                                {
+                                    "value": "BOTTOM_WATER",
+                                    "label": "BOTTOM_WATER",
+                                    "status": "editable",
+                                    "children": 10
+                                }
+                            ]
                         }
                     ]
                 }

@@ -32,7 +32,7 @@ from .load import Load
 from .load import SaveLoadDelete
 from .logger import add_log, get_log
 
-from .mapping import AttributeDict
+from .mapping import AttributeDict 
 from .mapping import ParameterMapping
 from .mapping import WaterBody 
 from .mapping import RawDataFiles
@@ -41,7 +41,7 @@ from .mapping import UUIDmapping
 from .mapping import Hypsograph
 from .mapping import DataTypeMapping
 from .mapping import IndSetHomPar
-from .mapping import IndSetMatCol
+from .mapping import SimpleList
 
 from .parameters import ParameterSALT_CTD
 from .parameters import ParameterNTRA 

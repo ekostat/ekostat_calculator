@@ -1,4 +1,4 @@
 {
-    "all_ok": true,
-    "message": ""
+    "all_ok": false,
+    "message": "Workspace does not belong to user"
 }

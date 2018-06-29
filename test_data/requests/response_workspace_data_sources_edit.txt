@@ -1,12 +1,6 @@
 {
-    "workspace_uuid": "40e11bb1-49fb-4eb3-bb2b-4d5b9f520b2c",
+    "workspace_uuid": "8178806f-7829-4132-afac-a4ebcbd9ad27",
     "data_sources": [
-        {
-            "status": false,
-            "loaded": false,
-            "filename": "chlorophyll_integrated_2015_2016_row_format.txt",
-            "datatype": "chlorophyll"
-        },
         {
             "status": false,
             "loaded": false,
@@ -26,16 +20,10 @@
             "datatype": "physicalchemicalmodel"
         },
         {
-            "status": false,
-            "loaded": false,
+            "status": true,
+            "loaded": true,
             "filename": "physicalchemical_sharkweb_data_fyskem_wb_2007-2017_20180320.txt",
             "datatype": "physicalchemical"
-        },
-        {
-            "status": false,
-            "loaded": false,
-            "filename": "phytoplankton_2016_row_format.txt",
-            "datatype": "phytoplankton"
         },
         {
             "status": false,
@@ -48,12 +36,6 @@
             "loaded": false,
             "filename": "phytoplankton_sharkweb_data_biovolume_wb_2013-2017_20180320.txt",
             "datatype": "phytoplankton"
-        },
-        {
-            "status": false,
-            "loaded": false,
-            "filename": "zoobenthos_2016_row_format_2.txt",
-            "datatype": "zoobenthos"
         },
         {
             "status": false,

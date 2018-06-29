@@ -1,766 +1,357 @@
-2018-06-11 09:23:12,835	event_handler.py	1831	load_workspace	DEBUG	Workspace "40e11bb1-49fb-4eb3-bb2b-4d5b9f520b2c" with alias "New test workspace" is already loaded. Set reload=True if you want to reload the workspace.
-2018-06-11 09:23:12,857	event_handler.py	1831	load_workspace	DEBUG	Workspace "40e11bb1-49fb-4eb3-bb2b-4d5b9f520b2c" with alias "New test workspace" is already loaded. Set reload=True if you want to reload the workspace.
-2018-06-11 09:23:13,561	event_handler.py	2073	request_subset_get_indicator_settings	DEBUG	Time for excecuting request_subset_get_indicator_settings: 1.4599924087524414
-2018-06-11 09:24:24,348	event_handler.py	76	__init__	DEBUG	Start EventHandler: event_handler
-2018-06-11 09:24:28,625	event_handler.py	2028	request_subset_get_indicator_settings	DEBUG	Start: request_subset_get_indicator_settings
-2018-06-11 09:24:28,635	event_handler.py	1820	load_workspace	DEBUG	Trying to load new workspace "40e11bb1-49fb-4eb3-bb2b-4d5b9f520b2c" with alias "New test workspace"
-2018-06-11 09:24:28,979	event_handler.py	1838	load_workspace	INFO	Workspace "40e11bb1-49fb-4eb3-bb2b-4d5b9f520b2c" with alias "New test workspace loaded."
-2018-06-11 09:24:29,362	event_handler.py	1831	load_workspace	DEBUG	Workspace "40e11bb1-49fb-4eb3-bb2b-4d5b9f520b2c" with alias "New test workspace" is already loaded. Set reload=True if you want to reload the workspace.
-2018-06-11 09:24:29,376	event_handler.py	1831	load_workspace	DEBUG	Workspace "40e11bb1-49fb-4eb3-bb2b-4d5b9f520b2c" with alias "New test workspace" is already loaded. Set reload=True if you want to reload the workspace.
-2018-06-11 09:24:56,350	event_handler.py	76	__init__	DEBUG	Start EventHandler: event_handler
-2018-06-11 09:25:00,750	event_handler.py	2028	request_subset_get_indicator_settings	DEBUG	Start: request_subset_get_indicator_settings
-2018-06-11 09:25:00,760	event_handler.py	1820	load_workspace	DEBUG	Trying to load new workspace "40e11bb1-49fb-4eb3-bb2b-4d5b9f520b2c" with alias "New test workspace"
-2018-06-11 09:25:01,110	event_handler.py	1838	load_workspace	INFO	Workspace "40e11bb1-49fb-4eb3-bb2b-4d5b9f520b2c" with alias "New test workspace loaded."
-2018-06-11 09:25:01,486	event_handler.py	1831	load_workspace	DEBUG	Workspace "40e11bb1-49fb-4eb3-bb2b-4d5b9f520b2c" with alias "New test workspace" is already loaded. Set reload=True if you want to reload the workspace.
-2018-06-11 09:25:01,495	event_handler.py	1831	load_workspace	DEBUG	Workspace "40e11bb1-49fb-4eb3-bb2b-4d5b9f520b2c" with alias "New test workspace" is already loaded. Set reload=True if you want to reload the workspace.
-2018-06-11 09:25:02,133	event_handler.py	2073	request_subset_get_indicator_settings	DEBUG	Time for excecuting request_subset_get_indicator_settings: 1.3829865455627441
-2018-06-11 09:29:12,877	event_handler.py	76	__init__	DEBUG	Start EventHandler: event_handler
-2018-06-11 09:29:17,214	event_handler.py	2028	request_subset_get_indicator_settings	DEBUG	Start: request_subset_get_indicator_settings
-2018-06-11 09:29:17,295	event_handler.py	1820	load_workspace	DEBUG	Trying to load new workspace "40e11bb1-49fb-4eb3-bb2b-4d5b9f520b2c" with alias "New test workspace"
-2018-06-11 09:29:17,586	event_handler.py	1838	load_workspace	INFO	Workspace "40e11bb1-49fb-4eb3-bb2b-4d5b9f520b2c" with alias "New test workspace loaded."
-2018-06-11 09:29:17,947	event_handler.py	1831	load_workspace	DEBUG	Workspace "40e11bb1-49fb-4eb3-bb2b-4d5b9f520b2c" with alias "New test workspace" is already loaded. Set reload=True if you want to reload the workspace.
-2018-06-11 09:29:17,961	event_handler.py	1831	load_workspace	DEBUG	Workspace "40e11bb1-49fb-4eb3-bb2b-4d5b9f520b2c" with alias "New test workspace" is already loaded. Set reload=True if you want to reload the workspace.
-2018-06-11 09:29:18,544	event_handler.py	2073	request_subset_get_indicator_settings	DEBUG	Time for excecuting request_subset_get_indicator_settings: 1.3299927711486816
-2018-06-11 09:34:01,796	event_handler.py	76	__init__	DEBUG	Start EventHandler: event_handler
-2018-06-11 09:34:05,000	event_handler.py	2028	request_subset_get_indicator_settings	DEBUG	Start: request_subset_get_indicator_settings
-2018-06-11 09:34:05,001	event_handler.py	1820	load_workspace	DEBUG	Trying to load new workspace "40e11bb1-49fb-4eb3-bb2b-4d5b9f520b2c" with alias "New test workspace"
-2018-06-11 09:34:05,299	event_handler.py	1838	load_workspace	INFO	Workspace "40e11bb1-49fb-4eb3-bb2b-4d5b9f520b2c" with alias "New test workspace loaded."
-2018-06-11 09:34:05,629	event_handler.py	1831	load_workspace	DEBUG	Workspace "40e11bb1-49fb-4eb3-bb2b-4d5b9f520b2c" with alias "New test workspace" is already loaded. Set reload=True if you want to reload the workspace.
-2018-06-11 09:34:05,633	event_handler.py	1831	load_workspace	DEBUG	Workspace "40e11bb1-49fb-4eb3-bb2b-4d5b9f520b2c" with alias "New test workspace" is already loaded. Set reload=True if you want to reload the workspace.
-2018-06-11 09:34:06,096	event_handler.py	2073	request_subset_get_indicator_settings	DEBUG	Time for excecuting request_subset_get_indicator_settings: 1.0959999561309814
-2018-06-11 09:40:59,468	event_handler.py	76	__init__	DEBUG	Start EventHandler: event_handler
-2018-06-11 09:41:02,934	event_handler.py	2028	request_subset_get_indicator_settings	DEBUG	Start: request_subset_get_indicator_settings
-2018-06-11 09:41:02,935	event_handler.py	1820	load_workspace	DEBUG	Trying to load new workspace "40e11bb1-49fb-4eb3-bb2b-4d5b9f520b2c" with alias "New test workspace"
-2018-06-11 09:41:03,181	event_handler.py	1838	load_workspace	INFO	Workspace "40e11bb1-49fb-4eb3-bb2b-4d5b9f520b2c" with alias "New test workspace loaded."
-2018-06-11 09:41:03,517	event_handler.py	1831	load_workspace	DEBUG	Workspace "40e11bb1-49fb-4eb3-bb2b-4d5b9f520b2c" with alias "New test workspace" is already loaded. Set reload=True if you want to reload the workspace.
-2018-06-11 09:41:03,991	event_handler.py	2073	request_subset_get_indicator_settings	DEBUG	Time for excecuting request_subset_get_indicator_settings: 1.0569844245910645
-2018-06-11 09:41:28,781	logger.py	85	add_log	DEBUG	
-2018-06-11 09:41:28,782	logger.py	86	add_log	DEBUG	========================================================================================================================
-2018-06-11 09:41:28,784	logger.py	87	add_log	DEBUG	### Log added for log_id "event_handler" at locaton: ..\log\main_event_handler.log
-2018-06-11 09:41:28,787	logger.py	88	add_log	DEBUG	------------------------------------------------------------------------------------------------------------------------
-2018-06-11 09:41:28,790	event_handler.py	76	__init__	DEBUG	Start EventHandler: event_handler
-2018-06-11 09:41:32,070	event_handler.py	2028	request_subset_get_indicator_settings	DEBUG	Start: request_subset_get_indicator_settings
-2018-06-11 09:41:32,078	event_handler.py	1820	load_workspace	DEBUG	Trying to load new workspace "40e11bb1-49fb-4eb3-bb2b-4d5b9f520b2c" with alias "New test workspace"
-2018-06-11 09:41:32,407	event_handler.py	1838	load_workspace	INFO	Workspace "40e11bb1-49fb-4eb3-bb2b-4d5b9f520b2c" with alias "New test workspace loaded."
-2018-06-11 09:41:32,777	event_handler.py	1831	load_workspace	DEBUG	Workspace "40e11bb1-49fb-4eb3-bb2b-4d5b9f520b2c" with alias "New test workspace" is already loaded. Set reload=True if you want to reload the workspace.
-2018-06-11 09:41:33,228	event_handler.py	2073	request_subset_get_indicator_settings	DEBUG	Time for excecuting request_subset_get_indicator_settings: 1.1589925289154053
-2018-06-11 09:42:24,311	event_handler.py	76	__init__	DEBUG	Start EventHandler: event_handler
-2018-06-11 09:42:27,551	event_handler.py	2028	request_subset_get_indicator_settings	DEBUG	Start: request_subset_get_indicator_settings
-2018-06-11 09:42:27,552	event_handler.py	1820	load_workspace	DEBUG	Trying to load new workspace "40e11bb1-49fb-4eb3-bb2b-4d5b9f520b2c" with alias "New test workspace"
-2018-06-11 09:42:27,850	event_handler.py	1838	load_workspace	INFO	Workspace "40e11bb1-49fb-4eb3-bb2b-4d5b9f520b2c" with alias "New test workspace loaded."
-2018-06-11 09:42:28,251	event_handler.py	1831	load_workspace	DEBUG	Workspace "40e11bb1-49fb-4eb3-bb2b-4d5b9f520b2c" with alias "New test workspace" is already loaded. Set reload=True if you want to reload the workspace.
-2018-06-11 09:42:28,259	event_handler.py	2076	request_subset_get_indicator_settings	DEBUG	Time for excecuting request_subset_get_indicator_settings: 0.7079999446868896
-2018-06-11 09:42:53,941	event_handler.py	76	__init__	DEBUG	Start EventHandler: event_handler
-2018-06-11 09:42:57,005	event_handler.py	2028	request_subset_get_indicator_settings	DEBUG	Start: request_subset_get_indicator_settings
-2018-06-11 09:42:57,006	event_handler.py	1820	load_workspace	DEBUG	Trying to load new workspace "40e11bb1-49fb-4eb3-bb2b-4d5b9f520b2c" with alias "New test workspace"
-2018-06-11 09:42:57,288	event_handler.py	1838	load_workspace	INFO	Workspace "40e11bb1-49fb-4eb3-bb2b-4d5b9f520b2c" with alias "New test workspace loaded."
-2018-06-11 09:42:57,621	event_handler.py	1831	load_workspace	DEBUG	Workspace "40e11bb1-49fb-4eb3-bb2b-4d5b9f520b2c" with alias "New test workspace" is already loaded. Set reload=True if you want to reload the workspace.
-2018-06-11 09:42:57,621	event_handler.py	2076	request_subset_get_indicator_settings	DEBUG	Time for excecuting request_subset_get_indicator_settings: 0.6159887313842773
-2018-06-11 09:43:44,683	event_handler.py	76	__init__	DEBUG	Start EventHandler: event_handler
-2018-06-11 09:43:47,834	event_handler.py	2028	request_subset_get_indicator_settings	DEBUG	Start: request_subset_get_indicator_settings
-2018-06-11 09:43:47,834	event_handler.py	1820	load_workspace	DEBUG	Trying to load new workspace "40e11bb1-49fb-4eb3-bb2b-4d5b9f520b2c" with alias "New test workspace"
-2018-06-11 09:43:48,090	event_handler.py	1838	load_workspace	INFO	Workspace "40e11bb1-49fb-4eb3-bb2b-4d5b9f520b2c" with alias "New test workspace loaded."
-2018-06-11 09:43:48,417	event_handler.py	1831	load_workspace	DEBUG	Workspace "40e11bb1-49fb-4eb3-bb2b-4d5b9f520b2c" with alias "New test workspace" is already loaded. Set reload=True if you want to reload the workspace.
-2018-06-11 09:43:48,423	event_handler.py	1831	load_workspace	DEBUG	Workspace "40e11bb1-49fb-4eb3-bb2b-4d5b9f520b2c" with alias "New test workspace" is already loaded. Set reload=True if you want to reload the workspace.
-2018-06-11 09:43:48,779	event_handler.py	2076	request_subset_get_indicator_settings	DEBUG	Time for excecuting request_subset_get_indicator_settings: 0.9449853897094727
-2018-06-11 09:44:01,755	event_handler.py	76	__init__	DEBUG	Start EventHandler: event_handler
-2018-06-11 09:44:04,974	event_handler.py	2028	request_subset_get_indicator_settings	DEBUG	Start: request_subset_get_indicator_settings
-2018-06-11 09:44:04,984	event_handler.py	1820	load_workspace	DEBUG	Trying to load new workspace "40e11bb1-49fb-4eb3-bb2b-4d5b9f520b2c" with alias "New test workspace"
-2018-06-11 09:44:05,264	event_handler.py	1838	load_workspace	INFO	Workspace "40e11bb1-49fb-4eb3-bb2b-4d5b9f520b2c" with alias "New test workspace loaded."
-2018-06-11 09:44:05,583	event_handler.py	1831	load_workspace	DEBUG	Workspace "40e11bb1-49fb-4eb3-bb2b-4d5b9f520b2c" with alias "New test workspace" is already loaded. Set reload=True if you want to reload the workspace.
-2018-06-11 09:44:05,588	event_handler.py	1831	load_workspace	DEBUG	Workspace "40e11bb1-49fb-4eb3-bb2b-4d5b9f520b2c" with alias "New test workspace" is already loaded. Set reload=True if you want to reload the workspace.
-2018-06-11 09:44:05,919	event_handler.py	2076	request_subset_get_indicator_settings	DEBUG	Time for excecuting request_subset_get_indicator_settings: 0.9449825286865234
-2018-06-11 09:45:49,115	event_handler.py	76	__init__	DEBUG	Start EventHandler: event_handler
-2018-06-11 09:45:52,557	event_handler.py	2028	request_subset_get_indicator_settings	DEBUG	Start: request_subset_get_indicator_settings
-2018-06-11 09:45:52,558	event_handler.py	1820	load_workspace	DEBUG	Trying to load new workspace "40e11bb1-49fb-4eb3-bb2b-4d5b9f520b2c" with alias "New test workspace"
-2018-06-11 09:45:52,850	event_handler.py	1838	load_workspace	INFO	Workspace "40e11bb1-49fb-4eb3-bb2b-4d5b9f520b2c" with alias "New test workspace loaded."
-2018-06-11 09:45:53,200	event_handler.py	1831	load_workspace	DEBUG	Workspace "40e11bb1-49fb-4eb3-bb2b-4d5b9f520b2c" with alias "New test workspace" is already loaded. Set reload=True if you want to reload the workspace.
-2018-06-11 09:45:53,209	event_handler.py	1831	load_workspace	DEBUG	Workspace "40e11bb1-49fb-4eb3-bb2b-4d5b9f520b2c" with alias "New test workspace" is already loaded. Set reload=True if you want to reload the workspace.
-2018-06-11 09:45:53,534	event_handler.py	2076	request_subset_get_indicator_settings	DEBUG	Time for excecuting request_subset_get_indicator_settings: 0.9769842624664307
-2018-06-11 09:46:48,695	event_handler.py	76	__init__	DEBUG	Start EventHandler: event_handler
-2018-06-11 09:46:51,845	event_handler.py	2028	request_subset_get_indicator_settings	DEBUG	Start: request_subset_get_indicator_settings
-2018-06-11 09:46:51,853	event_handler.py	1820	load_workspace	DEBUG	Trying to load new workspace "40e11bb1-49fb-4eb3-bb2b-4d5b9f520b2c" with alias "New test workspace"
-2018-06-11 09:46:52,254	event_handler.py	1838	load_workspace	INFO	Workspace "40e11bb1-49fb-4eb3-bb2b-4d5b9f520b2c" with alias "New test workspace loaded."
-2018-06-11 09:46:52,618	event_handler.py	1831	load_workspace	DEBUG	Workspace "40e11bb1-49fb-4eb3-bb2b-4d5b9f520b2c" with alias "New test workspace" is already loaded. Set reload=True if you want to reload the workspace.
-2018-06-11 09:46:52,627	event_handler.py	1831	load_workspace	DEBUG	Workspace "40e11bb1-49fb-4eb3-bb2b-4d5b9f520b2c" with alias "New test workspace" is already loaded. Set reload=True if you want to reload the workspace.
-2018-06-11 09:46:53,102	event_handler.py	2076	request_subset_get_indicator_settings	DEBUG	Time for excecuting request_subset_get_indicator_settings: 1.256993055343628
-2018-06-11 09:47:08,480	event_handler.py	76	__init__	DEBUG	Start EventHandler: event_handler
-2018-06-11 09:47:11,678	event_handler.py	2028	request_subset_get_indicator_settings	DEBUG	Start: request_subset_get_indicator_settings
-2018-06-11 09:47:11,678	event_handler.py	1820	load_workspace	DEBUG	Trying to load new workspace "40e11bb1-49fb-4eb3-bb2b-4d5b9f520b2c" with alias "New test workspace"
-2018-06-11 09:47:11,911	event_handler.py	1838	load_workspace	INFO	Workspace "40e11bb1-49fb-4eb3-bb2b-4d5b9f520b2c" with alias "New test workspace loaded."
-2018-06-11 09:47:12,265	event_handler.py	1831	load_workspace	DEBUG	Workspace "40e11bb1-49fb-4eb3-bb2b-4d5b9f520b2c" with alias "New test workspace" is already loaded. Set reload=True if you want to reload the workspace.
-2018-06-11 09:47:12,268	event_handler.py	1831	load_workspace	DEBUG	Workspace "40e11bb1-49fb-4eb3-bb2b-4d5b9f520b2c" with alias "New test workspace" is already loaded. Set reload=True if you want to reload the workspace.
-2018-06-11 09:47:12,804	event_handler.py	2076	request_subset_get_indicator_settings	DEBUG	Time for excecuting request_subset_get_indicator_settings: 1.1259939670562744
-2018-06-11 09:55:04,319	event_handler.py	76	__init__	DEBUG	Start EventHandler: event_handler
-2018-06-11 09:55:07,495	event_handler.py	2028	request_subset_get_indicator_settings	DEBUG	Start: request_subset_get_indicator_settings
-2018-06-11 09:55:07,495	event_handler.py	1820	load_workspace	DEBUG	Trying to load new workspace "40e11bb1-49fb-4eb3-bb2b-4d5b9f520b2c" with alias "New test workspace"
-2018-06-11 09:55:07,838	event_handler.py	1838	load_workspace	INFO	Workspace "40e11bb1-49fb-4eb3-bb2b-4d5b9f520b2c" with alias "New test workspace loaded."
-2018-06-11 09:55:08,194	event_handler.py	1831	load_workspace	DEBUG	Workspace "40e11bb1-49fb-4eb3-bb2b-4d5b9f520b2c" with alias "New test workspace" is already loaded. Set reload=True if you want to reload the workspace.
-2018-06-11 09:55:08,261	event_handler.py	1831	load_workspace	DEBUG	Workspace "40e11bb1-49fb-4eb3-bb2b-4d5b9f520b2c" with alias "New test workspace" is already loaded. Set reload=True if you want to reload the workspace.
-2018-06-11 09:55:08,721	event_handler.py	2076	request_subset_get_indicator_settings	DEBUG	Time for excecuting request_subset_get_indicator_settings: 1.2259998321533203
-2018-06-11 10:02:58,793	event_handler.py	76	__init__	DEBUG	Start EventHandler: event_handler
-2018-06-11 10:03:02,255	event_handler.py	2028	request_subset_get_indicator_settings	DEBUG	Start: request_subset_get_indicator_settings
-2018-06-11 10:03:02,265	event_handler.py	1820	load_workspace	DEBUG	Trying to load new workspace "40e11bb1-49fb-4eb3-bb2b-4d5b9f520b2c" with alias "New test workspace"
-2018-06-11 10:03:02,513	event_handler.py	1838	load_workspace	INFO	Workspace "40e11bb1-49fb-4eb3-bb2b-4d5b9f520b2c" with alias "New test workspace loaded."
-2018-06-11 10:03:02,909	event_handler.py	1831	load_workspace	DEBUG	Workspace "40e11bb1-49fb-4eb3-bb2b-4d5b9f520b2c" with alias "New test workspace" is already loaded. Set reload=True if you want to reload the workspace.
-2018-06-11 10:03:02,950	event_handler.py	1831	load_workspace	DEBUG	Workspace "40e11bb1-49fb-4eb3-bb2b-4d5b9f520b2c" with alias "New test workspace" is already loaded. Set reload=True if you want to reload the workspace.
-2018-06-11 10:03:03,449	event_handler.py	2076	request_subset_get_indicator_settings	DEBUG	Time for excecuting request_subset_get_indicator_settings: 1.1939997673034668
-2018-06-11 10:25:20,625	logger.py	85	add_log	DEBUG	
-2018-06-11 10:25:20,627	logger.py	86	add_log	DEBUG	========================================================================================================================
-2018-06-11 10:25:20,630	logger.py	87	add_log	DEBUG	### Log added for log_id "event_handler" at locaton: ..\log\main_event_handler.log
-2018-06-11 10:25:20,633	logger.py	88	add_log	DEBUG	------------------------------------------------------------------------------------------------------------------------
-2018-06-11 10:25:20,636	event_handler.py	76	__init__	DEBUG	Start EventHandler: event_handler
-2018-06-11 10:25:24,770	event_handler.py	2028	request_subset_get_indicator_settings	DEBUG	Start: request_subset_get_indicator_settings
-2018-06-11 10:25:24,782	event_handler.py	1820	load_workspace	DEBUG	Trying to load new workspace "40e11bb1-49fb-4eb3-bb2b-4d5b9f520b2c" with alias "New test workspace"
-2018-06-11 10:25:25,208	event_handler.py	1838	load_workspace	INFO	Workspace "40e11bb1-49fb-4eb3-bb2b-4d5b9f520b2c" with alias "New test workspace loaded."
-2018-06-11 10:25:25,690	event_handler.py	1831	load_workspace	DEBUG	Workspace "40e11bb1-49fb-4eb3-bb2b-4d5b9f520b2c" with alias "New test workspace" is already loaded. Set reload=True if you want to reload the workspace.
-2018-06-11 10:25:25,736	event_handler.py	1831	load_workspace	DEBUG	Workspace "40e11bb1-49fb-4eb3-bb2b-4d5b9f520b2c" with alias "New test workspace" is already loaded. Set reload=True if you want to reload the workspace.
-2018-06-11 10:25:26,430	event_handler.py	2076	request_subset_get_indicator_settings	DEBUG	Time for excecuting request_subset_get_indicator_settings: 1.6591660976409912
-2018-06-11 11:18:45,548	event_handler.py	76	__init__	DEBUG	Start EventHandler: event_handler
-2018-06-11 11:18:48,846	event_handler.py	2028	request_subset_get_indicator_settings	DEBUG	Start: request_subset_get_indicator_settings
-2018-06-11 11:18:48,855	event_handler.py	1820	load_workspace	DEBUG	Trying to load new workspace "40e11bb1-49fb-4eb3-bb2b-4d5b9f520b2c" with alias "New test workspace"
-2018-06-11 11:18:49,128	event_handler.py	1838	load_workspace	INFO	Workspace "40e11bb1-49fb-4eb3-bb2b-4d5b9f520b2c" with alias "New test workspace loaded."
-2018-06-11 11:18:49,457	event_handler.py	1831	load_workspace	DEBUG	Workspace "40e11bb1-49fb-4eb3-bb2b-4d5b9f520b2c" with alias "New test workspace" is already loaded. Set reload=True if you want to reload the workspace.
-2018-06-11 11:18:49,492	event_handler.py	1831	load_workspace	DEBUG	Workspace "40e11bb1-49fb-4eb3-bb2b-4d5b9f520b2c" with alias "New test workspace" is already loaded. Set reload=True if you want to reload the workspace.
-2018-06-11 11:19:57,387	event_handler.py	76	__init__	DEBUG	Start EventHandler: event_handler
-2018-06-11 11:20:00,676	event_handler.py	2028	request_subset_get_indicator_settings	DEBUG	Start: request_subset_get_indicator_settings
-2018-06-11 11:20:00,686	event_handler.py	1820	load_workspace	DEBUG	Trying to load new workspace "40e11bb1-49fb-4eb3-bb2b-4d5b9f520b2c" with alias "New test workspace"
-2018-06-11 11:20:00,961	event_handler.py	1838	load_workspace	INFO	Workspace "40e11bb1-49fb-4eb3-bb2b-4d5b9f520b2c" with alias "New test workspace loaded."
-2018-06-11 11:20:01,305	event_handler.py	1831	load_workspace	DEBUG	Workspace "40e11bb1-49fb-4eb3-bb2b-4d5b9f520b2c" with alias "New test workspace" is already loaded. Set reload=True if you want to reload the workspace.
-2018-06-11 11:20:01,343	event_handler.py	1831	load_workspace	DEBUG	Workspace "40e11bb1-49fb-4eb3-bb2b-4d5b9f520b2c" with alias "New test workspace" is already loaded. Set reload=True if you want to reload the workspace.
-2018-06-11 11:20:04,190	event_handler.py	2088	request_subset_get_indicator_settings	DEBUG	Time for excecuting request_subset_get_indicator_settings: 3.5143516063690186
-2018-06-11 11:24:14,153	event_handler.py	76	__init__	DEBUG	Start EventHandler: event_handler
-2018-06-11 11:24:17,428	event_handler.py	2033	request_subset_get_indicator_settings	DEBUG	Start: request_subset_get_indicator_settings
-2018-06-11 11:24:17,437	event_handler.py	1825	load_workspace	DEBUG	Trying to load new workspace "40e11bb1-49fb-4eb3-bb2b-4d5b9f520b2c" with alias "New test workspace"
-2018-06-11 11:24:17,740	event_handler.py	1843	load_workspace	INFO	Workspace "40e11bb1-49fb-4eb3-bb2b-4d5b9f520b2c" with alias "New test workspace loaded."
-2018-06-11 11:24:18,079	event_handler.py	1836	load_workspace	DEBUG	Workspace "40e11bb1-49fb-4eb3-bb2b-4d5b9f520b2c" with alias "New test workspace" is already loaded. Set reload=True if you want to reload the workspace.
-2018-06-11 11:24:18,119	event_handler.py	1836	load_workspace	DEBUG	Workspace "40e11bb1-49fb-4eb3-bb2b-4d5b9f520b2c" with alias "New test workspace" is already loaded. Set reload=True if you want to reload the workspace.
-2018-06-11 11:24:20,906	event_handler.py	2094	request_subset_get_indicator_settings	DEBUG	Time for excecuting request_subset_get_indicator_settings: 3.4783477783203125
-2018-06-11 11:26:36,791	event_handler.py	76	__init__	DEBUG	Start EventHandler: event_handler
-2018-06-11 11:26:40,057	event_handler.py	2033	request_subset_get_indicator_settings	DEBUG	Start: request_subset_get_indicator_settings
-2018-06-11 11:26:40,066	event_handler.py	1825	load_workspace	DEBUG	Trying to load new workspace "40e11bb1-49fb-4eb3-bb2b-4d5b9f520b2c" with alias "New test workspace"
-2018-06-11 11:26:40,376	event_handler.py	1843	load_workspace	INFO	Workspace "40e11bb1-49fb-4eb3-bb2b-4d5b9f520b2c" with alias "New test workspace loaded."
-2018-06-11 11:26:40,742	event_handler.py	1836	load_workspace	DEBUG	Workspace "40e11bb1-49fb-4eb3-bb2b-4d5b9f520b2c" with alias "New test workspace" is already loaded. Set reload=True if you want to reload the workspace.
-2018-06-11 11:26:40,782	event_handler.py	1836	load_workspace	DEBUG	Workspace "40e11bb1-49fb-4eb3-bb2b-4d5b9f520b2c" with alias "New test workspace" is already loaded. Set reload=True if you want to reload the workspace.
-2018-06-11 11:26:43,640	event_handler.py	2099	request_subset_get_indicator_settings	DEBUG	Time for excecuting request_subset_get_indicator_settings: 3.582357883453369
-2018-06-11 11:31:47,492	event_handler.py	76	__init__	DEBUG	Start EventHandler: event_handler
-2018-06-11 11:31:52,379	event_handler.py	2033	request_subset_get_indicator_settings	DEBUG	Start: request_subset_get_indicator_settings
-2018-06-11 11:31:52,393	event_handler.py	1825	load_workspace	DEBUG	Trying to load new workspace "40e11bb1-49fb-4eb3-bb2b-4d5b9f520b2c" with alias "New test workspace"
-2018-06-11 11:31:52,808	event_handler.py	1843	load_workspace	INFO	Workspace "40e11bb1-49fb-4eb3-bb2b-4d5b9f520b2c" with alias "New test workspace loaded."
-2018-06-11 11:31:53,251	event_handler.py	1836	load_workspace	DEBUG	Workspace "40e11bb1-49fb-4eb3-bb2b-4d5b9f520b2c" with alias "New test workspace" is already loaded. Set reload=True if you want to reload the workspace.
-2018-06-11 11:31:53,296	event_handler.py	1836	load_workspace	DEBUG	Workspace "40e11bb1-49fb-4eb3-bb2b-4d5b9f520b2c" with alias "New test workspace" is already loaded. Set reload=True if you want to reload the workspace.
-2018-06-11 11:31:56,866	event_handler.py	2094	request_subset_get_indicator_settings	DEBUG	Time for excecuting request_subset_get_indicator_settings: 4.4874489307403564
-2018-06-11 11:35:56,699	logger.py	85	add_log	DEBUG	
-2018-06-11 11:35:56,701	logger.py	86	add_log	DEBUG	========================================================================================================================
-2018-06-11 11:35:56,702	logger.py	87	add_log	DEBUG	### Log added for log_id "event_handler" at locaton: ..\log\main_event_handler.log
-2018-06-11 11:35:56,705	logger.py	88	add_log	DEBUG	------------------------------------------------------------------------------------------------------------------------
-2018-06-11 11:35:56,708	event_handler.py	76	__init__	DEBUG	Start EventHandler: event_handler
-2018-06-11 11:36:01,338	event_handler.py	2033	request_subset_get_indicator_settings_overview	DEBUG	Start: request_subset_get_indicator_settings
-2018-06-11 11:36:01,349	event_handler.py	1825	load_workspace	DEBUG	Trying to load new workspace "40e11bb1-49fb-4eb3-bb2b-4d5b9f520b2c" with alias "New test workspace"
-2018-06-11 11:36:01,772	event_handler.py	1843	load_workspace	INFO	Workspace "40e11bb1-49fb-4eb3-bb2b-4d5b9f520b2c" with alias "New test workspace loaded."
-2018-06-11 11:36:02,243	event_handler.py	1836	load_workspace	DEBUG	Workspace "40e11bb1-49fb-4eb3-bb2b-4d5b9f520b2c" with alias "New test workspace" is already loaded. Set reload=True if you want to reload the workspace.
-2018-06-11 11:36:02,292	event_handler.py	1836	load_workspace	DEBUG	Workspace "40e11bb1-49fb-4eb3-bb2b-4d5b9f520b2c" with alias "New test workspace" is already loaded. Set reload=True if you want to reload the workspace.
-2018-06-11 11:36:05,626	event_handler.py	2094	request_subset_get_indicator_settings_overview	DEBUG	Time for excecuting request_subset_get_indicator_settings: 4.287428855895996
-2018-06-11 12:08:41,630	event_handler.py	76	__init__	DEBUG	Start EventHandler: event_handler
-2018-06-11 12:08:44,746	event_handler.py	2032	request_subset_get_indicator_settings_overview	DEBUG	Start: request_subset_get_indicator_settings_overview
-2018-06-11 12:08:44,755	event_handler.py	1825	load_workspace	DEBUG	Trying to load new workspace "40e11bb1-49fb-4eb3-bb2b-4d5b9f520b2c" with alias "New test workspace"
-2018-06-11 12:08:45,034	event_handler.py	1843	load_workspace	INFO	Workspace "40e11bb1-49fb-4eb3-bb2b-4d5b9f520b2c" with alias "New test workspace loaded."
-2018-06-11 12:08:45,410	event_handler.py	1836	load_workspace	DEBUG	Workspace "40e11bb1-49fb-4eb3-bb2b-4d5b9f520b2c" with alias "New test workspace" is already loaded. Set reload=True if you want to reload the workspace.
-2018-06-11 12:08:45,449	event_handler.py	1836	load_workspace	DEBUG	Workspace "40e11bb1-49fb-4eb3-bb2b-4d5b9f520b2c" with alias "New test workspace" is already loaded. Set reload=True if you want to reload the workspace.
-2018-06-11 12:08:48,796	event_handler.py	2095	request_subset_get_indicator_settings_overview	DEBUG	Time for excecuting request_subset_get_indicator_settings_overview: 4.049999952316284
-2018-06-11 12:13:21,327	event_handler.py	76	__init__	DEBUG	Start EventHandler: event_handler
-2018-06-11 12:13:24,576	event_handler.py	2033	request_subset_get_indicator_settings_overview	DEBUG	Start: request_subset_get_indicator_settings_overview
-2018-06-11 12:13:24,586	event_handler.py	1826	load_workspace	DEBUG	Trying to load new workspace "40e11bb1-49fb-4eb3-bb2b-4d5b9f520b2c" with alias "New test workspace"
-2018-06-11 12:13:24,861	event_handler.py	1844	load_workspace	INFO	Workspace "40e11bb1-49fb-4eb3-bb2b-4d5b9f520b2c" with alias "New test workspace loaded."
-2018-06-11 12:13:25,225	event_handler.py	1837	load_workspace	DEBUG	Workspace "40e11bb1-49fb-4eb3-bb2b-4d5b9f520b2c" with alias "New test workspace" is already loaded. Set reload=True if you want to reload the workspace.
-2018-06-11 12:13:25,260	event_handler.py	1837	load_workspace	DEBUG	Workspace "40e11bb1-49fb-4eb3-bb2b-4d5b9f520b2c" with alias "New test workspace" is already loaded. Set reload=True if you want to reload the workspace.
-2018-06-11 12:13:30,434	event_handler.py	2096	request_subset_get_indicator_settings_overview	DEBUG	Time for excecuting request_subset_get_indicator_settings_overview: 5.858000040054321
-2018-06-11 16:03:07,710	logger.py	85	add_log	DEBUG	
-2018-06-11 16:03:07,710	logger.py	86	add_log	DEBUG	========================================================================================================================
-2018-06-11 16:03:07,710	logger.py	87	add_log	DEBUG	### Log added for log_id "event_handler" at locaton: ..\log\main_event_handler.log
-2018-06-11 16:03:07,710	logger.py	88	add_log	DEBUG	------------------------------------------------------------------------------------------------------------------------
-2018-06-11 16:03:07,711	event_handler.py	76	__init__	DEBUG	Start EventHandler: event_handler
-2018-06-11 16:03:56,531	event_handler.py	76	__init__	DEBUG	Start EventHandler: event_handler
-2018-06-11 16:04:00,210	event_handler.py	1868	load_workspace	WARNING	Could not load workspace "40e11bb1-49fb-4eb3-bb2b-4d5b9f520b2c" with alias "False"
-2018-06-11 16:05:57,323	event_handler.py	76	__init__	DEBUG	Start EventHandler: event_handler
-2018-06-11 16:06:01,309	event_handler.py	1874	load_workspace	DEBUG	Trying to load new workspace "40e11bb1-49fb-4eb3-bb2b-4d5b9f520b2c" with alias "New test workspace"
-2018-06-11 16:06:01,711	event_handler.py	1892	load_workspace	INFO	Workspace "40e11bb1-49fb-4eb3-bb2b-4d5b9f520b2c" with alias "New test workspace loaded."
-2018-06-11 16:07:57,663	logger.py	85	add_log	DEBUG	
-2018-06-11 16:07:57,663	logger.py	86	add_log	DEBUG	========================================================================================================================
-2018-06-11 16:07:57,673	logger.py	87	add_log	DEBUG	### Log added for log_id "event_handler" at locaton: ..\log\main_event_handler.log
-2018-06-11 16:07:57,673	logger.py	88	add_log	DEBUG	------------------------------------------------------------------------------------------------------------------------
-2018-06-11 16:07:57,673	event_handler.py	76	__init__	DEBUG	Start EventHandler: event_handler
-2018-06-11 16:08:01,282	event_handler.py	2081	request_subset_get_indicator_settings_overview	DEBUG	Start: request_subset_get_indicator_settings_overview
-2018-06-11 16:08:01,292	event_handler.py	1874	load_workspace	DEBUG	Trying to load new workspace "40e11bb1-49fb-4eb3-bb2b-4d5b9f520b2c" with alias "New test workspace"
-2018-06-11 16:08:01,925	event_handler.py	1892	load_workspace	INFO	Workspace "40e11bb1-49fb-4eb3-bb2b-4d5b9f520b2c" with alias "New test workspace loaded."
-2018-06-11 16:08:02,373	event_handler.py	1885	load_workspace	DEBUG	Workspace "40e11bb1-49fb-4eb3-bb2b-4d5b9f520b2c" with alias "New test workspace" is already loaded. Set reload=True if you want to reload the workspace.
-2018-06-11 16:09:37,050	logger.py	85	add_log	DEBUG	
-2018-06-11 16:09:37,051	logger.py	86	add_log	DEBUG	========================================================================================================================
-2018-06-11 16:09:37,054	logger.py	87	add_log	DEBUG	### Log added for log_id "event_handler" at locaton: ..\log\main_event_handler.log
-2018-06-11 16:09:37,058	logger.py	88	add_log	DEBUG	------------------------------------------------------------------------------------------------------------------------
-2018-06-11 16:09:37,061	event_handler.py	76	__init__	DEBUG	Start EventHandler: event_handler
-2018-06-11 16:09:40,863	event_handler.py	2081	request_subset_get_indicator_settings_overview	DEBUG	Start: request_subset_get_indicator_settings_overview
-2018-06-11 16:09:40,884	event_handler.py	1874	load_workspace	DEBUG	Trying to load new workspace "40e11bb1-49fb-4eb3-bb2b-4d5b9f520b2c" with alias "New test workspace"
-2018-06-11 16:09:41,318	event_handler.py	1892	load_workspace	INFO	Workspace "40e11bb1-49fb-4eb3-bb2b-4d5b9f520b2c" with alias "New test workspace loaded."
-2018-06-11 16:09:41,705	event_handler.py	1885	load_workspace	DEBUG	Workspace "40e11bb1-49fb-4eb3-bb2b-4d5b9f520b2c" with alias "New test workspace" is already loaded. Set reload=True if you want to reload the workspace.
-2018-06-11 16:10:19,410	event_handler.py	76	__init__	DEBUG	Start EventHandler: event_handler
-2018-06-11 16:10:23,463	event_handler.py	2081	request_subset_get_indicator_settings_overview	DEBUG	Start: request_subset_get_indicator_settings_overview
-2018-06-11 16:10:23,473	event_handler.py	1874	load_workspace	DEBUG	Trying to load new workspace "40e11bb1-49fb-4eb3-bb2b-4d5b9f520b2c" with alias "New test workspace"
-2018-06-11 16:10:23,779	event_handler.py	1892	load_workspace	INFO	Workspace "40e11bb1-49fb-4eb3-bb2b-4d5b9f520b2c" with alias "New test workspace loaded."
-2018-06-11 16:10:24,175	event_handler.py	1885	load_workspace	DEBUG	Workspace "40e11bb1-49fb-4eb3-bb2b-4d5b9f520b2c" with alias "New test workspace" is already loaded. Set reload=True if you want to reload the workspace.
-2018-06-11 16:10:24,204	event_handler.py	1885	load_workspace	DEBUG	Workspace "40e11bb1-49fb-4eb3-bb2b-4d5b9f520b2c" with alias "New test workspace" is already loaded. Set reload=True if you want to reload the workspace.
-2018-06-11 16:10:28,121	event_handler.py	2150	request_subset_get_indicator_settings_overview	DEBUG	Time for excecuting request_subset_get_indicator_settings_overview: 4.65799355506897
-2018-06-11 16:12:19,393	event_handler.py	76	__init__	DEBUG	Start EventHandler: event_handler
-2018-06-11 16:12:23,231	event_handler.py	2081	request_subset_get_indicator_settings_overview	DEBUG	Start: request_subset_get_indicator_settings_overview
-2018-06-11 16:12:23,241	event_handler.py	1874	load_workspace	DEBUG	Trying to load new workspace "40e11bb1-49fb-4eb3-bb2b-4d5b9f520b2c" with alias "New test workspace"
-2018-06-11 16:12:23,552	event_handler.py	1892	load_workspace	INFO	Workspace "40e11bb1-49fb-4eb3-bb2b-4d5b9f520b2c" with alias "New test workspace loaded."
-2018-06-11 16:12:23,952	event_handler.py	1885	load_workspace	DEBUG	Workspace "40e11bb1-49fb-4eb3-bb2b-4d5b9f520b2c" with alias "New test workspace" is already loaded. Set reload=True if you want to reload the workspace.
-2018-06-11 16:12:23,986	event_handler.py	1885	load_workspace	DEBUG	Workspace "40e11bb1-49fb-4eb3-bb2b-4d5b9f520b2c" with alias "New test workspace" is already loaded. Set reload=True if you want to reload the workspace.
-2018-06-11 16:12:25,601	event_handler.py	2152	request_subset_get_indicator_settings_overview	DEBUG	Time for excecuting request_subset_get_indicator_settings_overview: 2.369987964630127
-2018-06-11 16:16:10,296	event_handler.py	76	__init__	DEBUG	Start EventHandler: event_handler
-2018-06-11 16:16:14,004	event_handler.py	2082	request_subset_get_indicator_settings_overview	DEBUG	Start: request_subset_get_indicator_settings_overview
-2018-06-11 16:16:14,015	event_handler.py	1875	load_workspace	DEBUG	Trying to load new workspace "40e11bb1-49fb-4eb3-bb2b-4d5b9f520b2c" with alias "New test workspace"
-2018-06-11 16:16:14,346	event_handler.py	1893	load_workspace	INFO	Workspace "40e11bb1-49fb-4eb3-bb2b-4d5b9f520b2c" with alias "New test workspace loaded."
-2018-06-11 16:16:14,755	event_handler.py	1886	load_workspace	DEBUG	Workspace "40e11bb1-49fb-4eb3-bb2b-4d5b9f520b2c" with alias "New test workspace" is already loaded. Set reload=True if you want to reload the workspace.
-2018-06-11 16:16:14,799	event_handler.py	1886	load_workspace	DEBUG	Workspace "40e11bb1-49fb-4eb3-bb2b-4d5b9f520b2c" with alias "New test workspace" is already loaded. Set reload=True if you want to reload the workspace.
-2018-06-11 16:16:16,438	event_handler.py	2153	request_subset_get_indicator_settings_overview	DEBUG	Time for excecuting request_subset_get_indicator_settings_overview: 2.43399977684021
-2018-06-11 16:24:58,456	event_handler.py	76	__init__	DEBUG	Start EventHandler: event_handler
-2018-06-11 16:25:02,552	event_handler.py	2082	request_subset_get_indicator_settings_overview	DEBUG	Start: request_subset_get_indicator_settings_overview
-2018-06-11 16:25:02,562	event_handler.py	1875	load_workspace	DEBUG	Trying to load new workspace "40e11bb1-49fb-4eb3-bb2b-4d5b9f520b2c" with alias "New test workspace"
-2018-06-11 16:25:02,902	event_handler.py	1893	load_workspace	INFO	Workspace "40e11bb1-49fb-4eb3-bb2b-4d5b9f520b2c" with alias "New test workspace loaded."
-2018-06-11 16:25:03,305	event_handler.py	1886	load_workspace	DEBUG	Workspace "40e11bb1-49fb-4eb3-bb2b-4d5b9f520b2c" with alias "New test workspace" is already loaded. Set reload=True if you want to reload the workspace.
-2018-06-11 16:25:03,342	event_handler.py	1886	load_workspace	DEBUG	Workspace "40e11bb1-49fb-4eb3-bb2b-4d5b9f520b2c" with alias "New test workspace" is already loaded. Set reload=True if you want to reload the workspace.
-2018-06-11 16:25:04,952	event_handler.py	2153	request_subset_get_indicator_settings_overview	DEBUG	Time for excecuting request_subset_get_indicator_settings_overview: 2.3999485969543457
-2018-06-11 16:27:30,674	event_handler.py	76	__init__	DEBUG	Start EventHandler: event_handler
-2018-06-11 16:27:34,439	event_handler.py	2084	request_subset_get_indicator_settings_overview	DEBUG	Start: request_subset_get_indicator_settings_overview
-2018-06-11 16:27:34,452	event_handler.py	1877	load_workspace	DEBUG	Trying to load new workspace "40e11bb1-49fb-4eb3-bb2b-4d5b9f520b2c" with alias "New test workspace"
-2018-06-11 16:27:34,770	event_handler.py	1895	load_workspace	INFO	Workspace "40e11bb1-49fb-4eb3-bb2b-4d5b9f520b2c" with alias "New test workspace loaded."
-2018-06-11 16:27:35,171	event_handler.py	1888	load_workspace	DEBUG	Workspace "40e11bb1-49fb-4eb3-bb2b-4d5b9f520b2c" with alias "New test workspace" is already loaded. Set reload=True if you want to reload the workspace.
-2018-06-11 16:27:35,211	event_handler.py	1888	load_workspace	DEBUG	Workspace "40e11bb1-49fb-4eb3-bb2b-4d5b9f520b2c" with alias "New test workspace" is already loaded. Set reload=True if you want to reload the workspace.
-2018-06-11 16:27:36,884	event_handler.py	2155	request_subset_get_indicator_settings_overview	DEBUG	Time for excecuting request_subset_get_indicator_settings_overview: 2.4459407329559326
-2018-06-11 16:33:58,835	event_handler.py	76	__init__	DEBUG	Start EventHandler: event_handler
-2018-06-11 16:34:02,251	event_handler.py	2085	request_subset_get_indicator_settings_overview	DEBUG	Start: request_subset_get_indicator_settings_overview
-2018-06-11 16:34:02,260	event_handler.py	1878	load_workspace	DEBUG	Trying to load new workspace "40e11bb1-49fb-4eb3-bb2b-4d5b9f520b2c" with alias "New test workspace"
-2018-06-11 16:34:02,535	event_handler.py	1896	load_workspace	INFO	Workspace "40e11bb1-49fb-4eb3-bb2b-4d5b9f520b2c" with alias "New test workspace loaded."
-2018-06-11 16:34:02,904	event_handler.py	1889	load_workspace	DEBUG	Workspace "40e11bb1-49fb-4eb3-bb2b-4d5b9f520b2c" with alias "New test workspace" is already loaded. Set reload=True if you want to reload the workspace.
-2018-06-11 16:34:02,943	event_handler.py	1889	load_workspace	DEBUG	Workspace "40e11bb1-49fb-4eb3-bb2b-4d5b9f520b2c" with alias "New test workspace" is already loaded. Set reload=True if you want to reload the workspace.
-2018-06-11 16:34:04,347	event_handler.py	2156	request_subset_get_indicator_settings_overview	DEBUG	Time for excecuting request_subset_get_indicator_settings_overview: 2.0959999561309814
-2018-06-11 16:35:02,469	event_handler.py	76	__init__	DEBUG	Start EventHandler: event_handler
-2018-06-11 16:35:05,886	event_handler.py	2085	request_subset_get_indicator_settings_overview	DEBUG	Start: request_subset_get_indicator_settings_overview
-2018-06-11 16:35:05,895	event_handler.py	1878	load_workspace	DEBUG	Trying to load new workspace "40e11bb1-49fb-4eb3-bb2b-4d5b9f520b2c" with alias "New test workspace"
-2018-06-11 16:35:06,174	event_handler.py	1896	load_workspace	INFO	Workspace "40e11bb1-49fb-4eb3-bb2b-4d5b9f520b2c" with alias "New test workspace loaded."
-2018-06-11 16:35:06,537	event_handler.py	1889	load_workspace	DEBUG	Workspace "40e11bb1-49fb-4eb3-bb2b-4d5b9f520b2c" with alias "New test workspace" is already loaded. Set reload=True if you want to reload the workspace.
-2018-06-11 16:35:06,576	event_handler.py	1889	load_workspace	DEBUG	Workspace "40e11bb1-49fb-4eb3-bb2b-4d5b9f520b2c" with alias "New test workspace" is already loaded. Set reload=True if you want to reload the workspace.
-2018-06-11 16:35:08,045	event_handler.py	2156	request_subset_get_indicator_settings_overview	DEBUG	Time for excecuting request_subset_get_indicator_settings_overview: 2.1589999198913574
-2018-06-11 18:59:22,310	event_handler.py	76	__init__	DEBUG	Start EventHandler: event_handler
-2018-06-11 18:59:25,590	event_handler.py	2103	request_subset_get_indicator_settings_overview	DEBUG	Start: request_subset_get_indicator_settings_overview
-2018-06-11 18:59:25,607	event_handler.py	1896	load_workspace	DEBUG	Trying to load new workspace "40e11bb1-49fb-4eb3-bb2b-4d5b9f520b2c" with alias "New test workspace"
-2018-06-11 18:59:25,936	event_handler.py	1914	load_workspace	INFO	Workspace "40e11bb1-49fb-4eb3-bb2b-4d5b9f520b2c" with alias "New test workspace loaded."
-2018-06-11 18:59:26,333	event_handler.py	1907	load_workspace	DEBUG	Workspace "40e11bb1-49fb-4eb3-bb2b-4d5b9f520b2c" with alias "New test workspace" is already loaded. Set reload=True if you want to reload the workspace.
-2018-06-11 18:59:26,380	event_handler.py	1907	load_workspace	DEBUG	Workspace "40e11bb1-49fb-4eb3-bb2b-4d5b9f520b2c" with alias "New test workspace" is already loaded. Set reload=True if you want to reload the workspace.
-2018-06-11 19:00:21,622	event_handler.py	76	__init__	DEBUG	Start EventHandler: event_handler
-2018-06-11 19:00:25,140	event_handler.py	2103	request_subset_get_indicator_settings_overview	DEBUG	Start: request_subset_get_indicator_settings_overview
-2018-06-11 19:00:25,150	event_handler.py	1896	load_workspace	DEBUG	Trying to load new workspace "40e11bb1-49fb-4eb3-bb2b-4d5b9f520b2c" with alias "New test workspace"
-2018-06-11 19:00:25,483	event_handler.py	1914	load_workspace	INFO	Workspace "40e11bb1-49fb-4eb3-bb2b-4d5b9f520b2c" with alias "New test workspace loaded."
-2018-06-11 19:00:25,831	event_handler.py	1907	load_workspace	DEBUG	Workspace "40e11bb1-49fb-4eb3-bb2b-4d5b9f520b2c" with alias "New test workspace" is already loaded. Set reload=True if you want to reload the workspace.
-2018-06-11 19:00:25,872	event_handler.py	1907	load_workspace	DEBUG	Workspace "40e11bb1-49fb-4eb3-bb2b-4d5b9f520b2c" with alias "New test workspace" is already loaded. Set reload=True if you want to reload the workspace.
-2018-06-11 19:00:27,268	event_handler.py	2174	request_subset_get_indicator_settings_overview	DEBUG	Time for excecuting request_subset_get_indicator_settings_overview: 2.128000020980835
-2018-06-11 19:04:50,683	event_handler.py	76	__init__	DEBUG	Start EventHandler: event_handler
-2018-06-11 19:04:54,041	event_handler.py	2104	request_subset_get_indicator_settings_overview	DEBUG	Start: request_subset_get_indicator_settings_overview
-2018-06-11 19:04:54,049	event_handler.py	1897	load_workspace	DEBUG	Trying to load new workspace "40e11bb1-49fb-4eb3-bb2b-4d5b9f520b2c" with alias "New test workspace"
-2018-06-11 19:04:54,335	event_handler.py	1915	load_workspace	INFO	Workspace "40e11bb1-49fb-4eb3-bb2b-4d5b9f520b2c" with alias "New test workspace loaded."
-2018-06-11 19:04:54,675	event_handler.py	1908	load_workspace	DEBUG	Workspace "40e11bb1-49fb-4eb3-bb2b-4d5b9f520b2c" with alias "New test workspace" is already loaded. Set reload=True if you want to reload the workspace.
-2018-06-11 19:04:54,714	event_handler.py	1908	load_workspace	DEBUG	Workspace "40e11bb1-49fb-4eb3-bb2b-4d5b9f520b2c" with alias "New test workspace" is already loaded. Set reload=True if you want to reload the workspace.
-2018-06-11 19:04:56,157	event_handler.py	2175	request_subset_get_indicator_settings_overview	DEBUG	Time for excecuting request_subset_get_indicator_settings_overview: 2.115999937057495
-2018-06-11 19:05:43,218	event_handler.py	76	__init__	DEBUG	Start EventHandler: event_handler
-2018-06-11 19:05:46,518	event_handler.py	2105	request_subset_get_indicator_settings_overview	DEBUG	Start: request_subset_get_indicator_settings_overview
-2018-06-11 19:05:46,526	event_handler.py	1898	load_workspace	DEBUG	Trying to load new workspace "40e11bb1-49fb-4eb3-bb2b-4d5b9f520b2c" with alias "New test workspace"
-2018-06-11 19:05:46,794	event_handler.py	1916	load_workspace	INFO	Workspace "40e11bb1-49fb-4eb3-bb2b-4d5b9f520b2c" with alias "New test workspace loaded."
-2018-06-11 19:05:47,129	event_handler.py	1909	load_workspace	DEBUG	Workspace "40e11bb1-49fb-4eb3-bb2b-4d5b9f520b2c" with alias "New test workspace" is already loaded. Set reload=True if you want to reload the workspace.
-2018-06-11 19:05:47,174	event_handler.py	1909	load_workspace	DEBUG	Workspace "40e11bb1-49fb-4eb3-bb2b-4d5b9f520b2c" with alias "New test workspace" is already loaded. Set reload=True if you want to reload the workspace.
-2018-06-11 19:05:48,620	event_handler.py	2176	request_subset_get_indicator_settings_overview	DEBUG	Time for excecuting request_subset_get_indicator_settings_overview: 2.1019999980926514
-2018-06-11 19:08:40,279	event_handler.py	76	__init__	DEBUG	Start EventHandler: event_handler
-2018-06-11 19:08:43,569	event_handler.py	2107	request_subset_get_indicator_settings_overview	DEBUG	Start: request_subset_get_indicator_settings_overview
-2018-06-11 19:08:43,577	event_handler.py	1900	load_workspace	DEBUG	Trying to load new workspace "40e11bb1-49fb-4eb3-bb2b-4d5b9f520b2c" with alias "New test workspace"
-2018-06-11 19:08:43,874	event_handler.py	1918	load_workspace	INFO	Workspace "40e11bb1-49fb-4eb3-bb2b-4d5b9f520b2c" with alias "New test workspace loaded."
-2018-06-11 19:08:44,223	event_handler.py	1911	load_workspace	DEBUG	Workspace "40e11bb1-49fb-4eb3-bb2b-4d5b9f520b2c" with alias "New test workspace" is already loaded. Set reload=True if you want to reload the workspace.
-2018-06-11 19:08:44,266	event_handler.py	1911	load_workspace	DEBUG	Workspace "40e11bb1-49fb-4eb3-bb2b-4d5b9f520b2c" with alias "New test workspace" is already loaded. Set reload=True if you want to reload the workspace.
-2018-06-11 19:08:45,646	event_handler.py	2178	request_subset_get_indicator_settings_overview	DEBUG	Time for excecuting request_subset_get_indicator_settings_overview: 2.0769999027252197
-2018-06-11 19:09:49,931	event_handler.py	76	__init__	DEBUG	Start EventHandler: event_handler
-2018-06-11 19:09:53,231	event_handler.py	2107	request_subset_get_indicator_settings_overview	DEBUG	Start: request_subset_get_indicator_settings_overview
-2018-06-11 19:09:53,243	event_handler.py	1900	load_workspace	DEBUG	Trying to load new workspace "40e11bb1-49fb-4eb3-bb2b-4d5b9f520b2c" with alias "New test workspace"
-2018-06-11 19:09:53,537	event_handler.py	1918	load_workspace	INFO	Workspace "40e11bb1-49fb-4eb3-bb2b-4d5b9f520b2c" with alias "New test workspace loaded."
-2018-06-11 19:09:53,890	event_handler.py	1911	load_workspace	DEBUG	Workspace "40e11bb1-49fb-4eb3-bb2b-4d5b9f520b2c" with alias "New test workspace" is already loaded. Set reload=True if you want to reload the workspace.
-2018-06-11 19:09:53,928	event_handler.py	1911	load_workspace	DEBUG	Workspace "40e11bb1-49fb-4eb3-bb2b-4d5b9f520b2c" with alias "New test workspace" is already loaded. Set reload=True if you want to reload the workspace.
-2018-06-11 19:09:55,665	event_handler.py	2178	request_subset_get_indicator_settings_overview	DEBUG	Time for excecuting request_subset_get_indicator_settings_overview: 2.434000253677368
-2018-06-11 19:11:32,839	logger.py	85	add_log	DEBUG	
-2018-06-11 19:11:32,840	logger.py	86	add_log	DEBUG	========================================================================================================================
-2018-06-11 19:11:32,842	logger.py	87	add_log	DEBUG	### Log added for log_id "event_handler" at locaton: ..\log\main_event_handler.log
-2018-06-11 19:11:32,844	logger.py	88	add_log	DEBUG	------------------------------------------------------------------------------------------------------------------------
-2018-06-11 19:11:32,847	event_handler.py	76	__init__	DEBUG	Start EventHandler: event_handler
-2018-06-11 19:11:36,273	event_handler.py	1900	load_workspace	DEBUG	Trying to load new workspace "40e11bb1-49fb-4eb3-bb2b-4d5b9f520b2c" with alias "New test workspace"
-2018-06-11 19:11:36,583	event_handler.py	1918	load_workspace	INFO	Workspace "40e11bb1-49fb-4eb3-bb2b-4d5b9f520b2c" with alias "New test workspace loaded."
-2018-06-11 19:16:20,309	event_handler.py	76	__init__	DEBUG	Start EventHandler: event_handler
-2018-06-11 19:16:23,580	event_handler.py	2107	request_subset_get_indicator_settings_overview	DEBUG	Start: request_subset_get_indicator_settings_overview
-2018-06-11 19:16:23,587	event_handler.py	1900	load_workspace	DEBUG	Trying to load new workspace "40e11bb1-49fb-4eb3-bb2b-4d5b9f520b2c" with alias "New test workspace"
-2018-06-11 19:16:23,864	event_handler.py	1918	load_workspace	INFO	Workspace "40e11bb1-49fb-4eb3-bb2b-4d5b9f520b2c" with alias "New test workspace loaded."
-2018-06-11 19:16:24,203	event_handler.py	1911	load_workspace	DEBUG	Workspace "40e11bb1-49fb-4eb3-bb2b-4d5b9f520b2c" with alias "New test workspace" is already loaded. Set reload=True if you want to reload the workspace.
-2018-06-11 19:16:24,243	event_handler.py	1911	load_workspace	DEBUG	Workspace "40e11bb1-49fb-4eb3-bb2b-4d5b9f520b2c" with alias "New test workspace" is already loaded. Set reload=True if you want to reload the workspace.
-2018-06-11 19:16:25,703	event_handler.py	2178	request_subset_get_indicator_settings_overview	DEBUG	Time for excecuting request_subset_get_indicator_settings_overview: 2.123424768447876
-2018-06-11 19:27:16,086	event_handler.py	76	__init__	DEBUG	Start EventHandler: event_handler
-2018-06-11 19:27:20,453	event_handler.py	2112	request_subset_get_indicator_settings_overview	DEBUG	Start: request_subset_get_indicator_settings_overview
-2018-06-11 19:27:20,464	event_handler.py	1905	load_workspace	DEBUG	Trying to load new workspace "40e11bb1-49fb-4eb3-bb2b-4d5b9f520b2c" with alias "New test workspace"
-2018-06-11 19:27:20,750	event_handler.py	1923	load_workspace	INFO	Workspace "40e11bb1-49fb-4eb3-bb2b-4d5b9f520b2c" with alias "New test workspace loaded."
-2018-06-11 19:27:21,204	event_handler.py	1916	load_workspace	DEBUG	Workspace "40e11bb1-49fb-4eb3-bb2b-4d5b9f520b2c" with alias "New test workspace" is already loaded. Set reload=True if you want to reload the workspace.
-2018-06-11 19:27:21,250	event_handler.py	1916	load_workspace	DEBUG	Workspace "40e11bb1-49fb-4eb3-bb2b-4d5b9f520b2c" with alias "New test workspace" is already loaded. Set reload=True if you want to reload the workspace.
-2018-06-11 19:28:14,543	event_handler.py	76	__init__	DEBUG	Start EventHandler: event_handler
-2018-06-11 19:28:18,442	event_handler.py	2112	request_subset_get_indicator_settings_overview	DEBUG	Start: request_subset_get_indicator_settings_overview
-2018-06-11 19:28:18,453	event_handler.py	1905	load_workspace	DEBUG	Trying to load new workspace "40e11bb1-49fb-4eb3-bb2b-4d5b9f520b2c" with alias "New test workspace"
-2018-06-11 19:28:18,773	event_handler.py	1923	load_workspace	INFO	Workspace "40e11bb1-49fb-4eb3-bb2b-4d5b9f520b2c" with alias "New test workspace loaded."
-2018-06-11 19:28:19,183	event_handler.py	1916	load_workspace	DEBUG	Workspace "40e11bb1-49fb-4eb3-bb2b-4d5b9f520b2c" with alias "New test workspace" is already loaded. Set reload=True if you want to reload the workspace.
-2018-06-11 19:28:19,229	event_handler.py	1916	load_workspace	DEBUG	Workspace "40e11bb1-49fb-4eb3-bb2b-4d5b9f520b2c" with alias "New test workspace" is already loaded. Set reload=True if you want to reload the workspace.
-2018-06-11 19:28:20,928	event_handler.py	2183	request_subset_get_indicator_settings_overview	DEBUG	Time for excecuting request_subset_get_indicator_settings_overview: 2.486248731613159
-2018-06-11 19:33:00,814	event_handler.py	76	__init__	DEBUG	Start EventHandler: event_handler
-2018-06-11 19:33:04,793	event_handler.py	2114	request_subset_get_indicator_settings_overview	DEBUG	Start: request_subset_get_indicator_settings_overview
-2018-06-11 19:33:04,803	event_handler.py	1907	load_workspace	DEBUG	Trying to load new workspace "40e11bb1-49fb-4eb3-bb2b-4d5b9f520b2c" with alias "New test workspace"
-2018-06-11 19:33:05,131	event_handler.py	1925	load_workspace	INFO	Workspace "40e11bb1-49fb-4eb3-bb2b-4d5b9f520b2c" with alias "New test workspace loaded."
-2018-06-11 19:33:05,518	event_handler.py	1918	load_workspace	DEBUG	Workspace "40e11bb1-49fb-4eb3-bb2b-4d5b9f520b2c" with alias "New test workspace" is already loaded. Set reload=True if you want to reload the workspace.
-2018-06-11 19:33:05,562	event_handler.py	1918	load_workspace	DEBUG	Workspace "40e11bb1-49fb-4eb3-bb2b-4d5b9f520b2c" with alias "New test workspace" is already loaded. Set reload=True if you want to reload the workspace.
-2018-06-11 19:33:07,328	event_handler.py	2185	request_subset_get_indicator_settings_overview	DEBUG	Time for excecuting request_subset_get_indicator_settings_overview: 2.5350000858306885
-2018-06-11 19:36:32,991	logger.py	85	add_log	DEBUG	
-2018-06-11 19:36:32,993	logger.py	86	add_log	DEBUG	========================================================================================================================
-2018-06-11 19:36:32,997	logger.py	87	add_log	DEBUG	### Log added for log_id "event_handler" at locaton: ..\log\main_event_handler.log
-2018-06-11 19:36:32,999	logger.py	88	add_log	DEBUG	------------------------------------------------------------------------------------------------------------------------
-2018-06-11 19:36:33,003	event_handler.py	76	__init__	DEBUG	Start EventHandler: event_handler
-2018-06-11 19:36:36,755	event_handler.py	2114	request_subset_get_indicator_settings	DEBUG	Start: request_subset_get_indicator_settings_overview
-2018-06-11 19:36:36,766	event_handler.py	1907	load_workspace	DEBUG	Trying to load new workspace "40e11bb1-49fb-4eb3-bb2b-4d5b9f520b2c" with alias "New test workspace"
-2018-06-11 19:36:37,191	event_handler.py	1925	load_workspace	INFO	Workspace "40e11bb1-49fb-4eb3-bb2b-4d5b9f520b2c" with alias "New test workspace loaded."
-2018-06-11 19:36:37,628	event_handler.py	1918	load_workspace	DEBUG	Workspace "40e11bb1-49fb-4eb3-bb2b-4d5b9f520b2c" with alias "New test workspace" is already loaded. Set reload=True if you want to reload the workspace.
-2018-06-11 19:36:37,674	event_handler.py	1918	load_workspace	DEBUG	Workspace "40e11bb1-49fb-4eb3-bb2b-4d5b9f520b2c" with alias "New test workspace" is already loaded. Set reload=True if you want to reload the workspace.
-2018-06-11 19:36:39,802	event_handler.py	2185	request_subset_get_indicator_settings	DEBUG	Time for excecuting request_subset_get_indicator_settings_overview: 3.046999931335449
-2018-06-11 19:45:21,427	event_handler.py	76	__init__	DEBUG	Start EventHandler: event_handler
-2018-06-11 19:45:25,035	event_handler.py	2114	request_subset_get_indicator_settings	DEBUG	Start: request_subset_get_indicator_settings
-2018-06-11 19:45:25,045	event_handler.py	1907	load_workspace	DEBUG	Trying to load new workspace "40e11bb1-49fb-4eb3-bb2b-4d5b9f520b2c" with alias "New test workspace"
-2018-06-11 19:45:25,307	event_handler.py	1925	load_workspace	INFO	Workspace "40e11bb1-49fb-4eb3-bb2b-4d5b9f520b2c" with alias "New test workspace loaded."
-2018-06-11 19:45:25,710	event_handler.py	1918	load_workspace	DEBUG	Workspace "40e11bb1-49fb-4eb3-bb2b-4d5b9f520b2c" with alias "New test workspace" is already loaded. Set reload=True if you want to reload the workspace.
-2018-06-11 19:45:25,754	event_handler.py	1918	load_workspace	DEBUG	Workspace "40e11bb1-49fb-4eb3-bb2b-4d5b9f520b2c" with alias "New test workspace" is already loaded. Set reload=True if you want to reload the workspace.
-2018-06-11 19:45:27,431	event_handler.py	2175	request_subset_get_indicator_settings	DEBUG	Time for excecuting request_subset_get_indicator_settings: 2.3959999084472656
-2018-06-11 19:48:53,751	event_handler.py	76	__init__	DEBUG	Start EventHandler: event_handler
-2018-06-11 19:48:57,114	event_handler.py	2115	request_subset_get_indicator_settings	DEBUG	Start: request_subset_get_indicator_settings
-2018-06-11 19:48:57,122	event_handler.py	1908	load_workspace	DEBUG	Trying to load new workspace "40e11bb1-49fb-4eb3-bb2b-4d5b9f520b2c" with alias "New test workspace"
-2018-06-11 19:48:57,428	event_handler.py	1926	load_workspace	INFO	Workspace "40e11bb1-49fb-4eb3-bb2b-4d5b9f520b2c" with alias "New test workspace loaded."
-2018-06-11 19:48:57,811	event_handler.py	1919	load_workspace	DEBUG	Workspace "40e11bb1-49fb-4eb3-bb2b-4d5b9f520b2c" with alias "New test workspace" is already loaded. Set reload=True if you want to reload the workspace.
-2018-06-11 19:48:57,867	event_handler.py	1919	load_workspace	DEBUG	Workspace "40e11bb1-49fb-4eb3-bb2b-4d5b9f520b2c" with alias "New test workspace" is already loaded. Set reload=True if you want to reload the workspace.
-2018-06-11 19:48:59,702	event_handler.py	2176	request_subset_get_indicator_settings	DEBUG	Time for excecuting request_subset_get_indicator_settings: 2.5880000591278076
-2018-06-11 20:32:32,526	event_handler.py	76	__init__	DEBUG	Start EventHandler: event_handler
-2018-06-11 20:32:36,733	event_handler.py	2128	request_subset_get_indicator_settings	DEBUG	Start: request_subset_get_indicator_settings
-2018-06-11 20:32:36,749	event_handler.py	1921	load_workspace	DEBUG	Trying to load new workspace "40e11bb1-49fb-4eb3-bb2b-4d5b9f520b2c" with alias "New test workspace"
-2018-06-11 20:32:37,161	event_handler.py	1939	load_workspace	INFO	Workspace "40e11bb1-49fb-4eb3-bb2b-4d5b9f520b2c" with alias "New test workspace loaded."
-2018-06-11 20:32:37,649	event_handler.py	1932	load_workspace	DEBUG	Workspace "40e11bb1-49fb-4eb3-bb2b-4d5b9f520b2c" with alias "New test workspace" is already loaded. Set reload=True if you want to reload the workspace.
-2018-06-11 20:32:37,707	event_handler.py	1932	load_workspace	DEBUG	Workspace "40e11bb1-49fb-4eb3-bb2b-4d5b9f520b2c" with alias "New test workspace" is already loaded. Set reload=True if you want to reload the workspace.
-2018-06-11 20:32:39,436	event_handler.py	2189	request_subset_get_indicator_settings	DEBUG	Time for excecuting request_subset_get_indicator_settings: 2.702270030975342
-2018-06-12 11:28:33,357	logger.py	85	add_log	DEBUG	
-2018-06-12 11:28:33,359	logger.py	86	add_log	DEBUG	========================================================================================================================
-2018-06-12 11:28:33,361	logger.py	87	add_log	DEBUG	### Log added for log_id "event_handler" at locaton: ..\log\main_event_handler.log
-2018-06-12 11:28:33,363	logger.py	88	add_log	DEBUG	------------------------------------------------------------------------------------------------------------------------
-2018-06-12 11:28:33,365	event_handler.py	76	__init__	DEBUG	Start EventHandler: event_handler
-2018-06-12 11:28:38,041	event_handler.py	1942	load_workspace	DEBUG	Trying to load new workspace "40e11bb1-49fb-4eb3-bb2b-4d5b9f520b2c" with alias "New test workspace"
-2018-06-12 11:28:38,490	event_handler.py	1960	load_workspace	INFO	Workspace "40e11bb1-49fb-4eb3-bb2b-4d5b9f520b2c" with alias "New test workspace loaded."
-2018-06-12 16:37:54,712	event_handler.py	76	__init__	DEBUG	Start EventHandler: event_handler
-2018-06-12 16:37:57,799	event_handler.py	1946	load_workspace	DEBUG	Trying to load new workspace "40e11bb1-49fb-4eb3-bb2b-4d5b9f520b2c" with alias "New test workspace"
-2018-06-12 16:37:58,064	event_handler.py	1964	load_workspace	INFO	Workspace "40e11bb1-49fb-4eb3-bb2b-4d5b9f520b2c" with alias "New test workspace loaded."
-2018-06-12 16:46:28,301	event_handler.py	76	__init__	DEBUG	Start EventHandler: event_handler
-2018-06-12 16:46:31,509	event_handler.py	1946	load_workspace	DEBUG	Trying to load new workspace "40e11bb1-49fb-4eb3-bb2b-4d5b9f520b2c" with alias "New test workspace"
-2018-06-12 16:46:31,739	event_handler.py	1964	load_workspace	INFO	Workspace "40e11bb1-49fb-4eb3-bb2b-4d5b9f520b2c" with alias "New test workspace loaded."
-2018-06-12 16:47:56,647	event_handler.py	76	__init__	DEBUG	Start EventHandler: event_handler
-2018-06-12 16:47:59,785	event_handler.py	1946	load_workspace	DEBUG	Trying to load new workspace "40e11bb1-49fb-4eb3-bb2b-4d5b9f520b2c" with alias "New test workspace"
-2018-06-12 16:48:00,062	event_handler.py	1964	load_workspace	INFO	Workspace "40e11bb1-49fb-4eb3-bb2b-4d5b9f520b2c" with alias "New test workspace loaded."
-2018-06-12 16:50:31,880	event_handler.py	76	__init__	DEBUG	Start EventHandler: event_handler
-2018-06-12 16:50:35,006	event_handler.py	1946	load_workspace	DEBUG	Trying to load new workspace "40e11bb1-49fb-4eb3-bb2b-4d5b9f520b2c" with alias "New test workspace"
-2018-06-12 16:50:35,238	event_handler.py	1964	load_workspace	INFO	Workspace "40e11bb1-49fb-4eb3-bb2b-4d5b9f520b2c" with alias "New test workspace loaded."
-2018-06-12 16:53:42,527	event_handler.py	76	__init__	DEBUG	Start EventHandler: event_handler
-2018-06-12 16:53:46,365	event_handler.py	1946	load_workspace	DEBUG	Trying to load new workspace "40e11bb1-49fb-4eb3-bb2b-4d5b9f520b2c" with alias "New test workspace"
-2018-06-12 16:53:46,628	event_handler.py	1964	load_workspace	INFO	Workspace "40e11bb1-49fb-4eb3-bb2b-4d5b9f520b2c" with alias "New test workspace loaded."
-2018-06-12 17:02:14,109	event_handler.py	76	__init__	DEBUG	Start EventHandler: event_handler
-2018-06-12 17:02:17,300	event_handler.py	1946	load_workspace	DEBUG	Trying to load new workspace "40e11bb1-49fb-4eb3-bb2b-4d5b9f520b2c" with alias "New test workspace"
-2018-06-12 17:02:17,555	event_handler.py	1964	load_workspace	INFO	Workspace "40e11bb1-49fb-4eb3-bb2b-4d5b9f520b2c" with alias "New test workspace loaded."
-2018-06-13 09:15:52,029	event_handler.py	76	__init__	DEBUG	Start EventHandler: event_handler
-2018-06-13 09:15:58,515	event_handler.py	1946	load_workspace	DEBUG	Trying to load new workspace "40e11bb1-49fb-4eb3-bb2b-4d5b9f520b2c" with alias "New test workspace"
-2018-06-13 09:15:59,028	event_handler.py	1964	load_workspace	INFO	Workspace "40e11bb1-49fb-4eb3-bb2b-4d5b9f520b2c" with alias "New test workspace loaded."
-2018-06-15 08:47:34,953	logger.py	85	add_log	DEBUG	
-2018-06-15 08:47:34,956	logger.py	86	add_log	DEBUG	========================================================================================================================
-2018-06-15 08:47:34,960	logger.py	87	add_log	DEBUG	### Log added for log_id "event_handler" at locaton: ..\log\main_event_handler.log
-2018-06-15 08:47:34,962	logger.py	88	add_log	DEBUG	------------------------------------------------------------------------------------------------------------------------
-2018-06-15 08:47:34,964	event_handler.py	76	__init__	DEBUG	Start EventHandler: event_handler
-2018-06-15 08:47:41,441	event_handler.py	2153	request_subset_get_indicator_settings	DEBUG	Start: request_subset_get_indicator_settings
-2018-06-15 08:47:41,453	event_handler.py	1946	load_workspace	DEBUG	Trying to load new workspace "40e11bb1-49fb-4eb3-bb2b-4d5b9f520b2c" with alias "New test workspace"
-2018-06-15 08:47:42,165	event_handler.py	1964	load_workspace	INFO	Workspace "40e11bb1-49fb-4eb3-bb2b-4d5b9f520b2c" with alias "New test workspace loaded."
-2018-06-15 08:47:42,837	event_handler.py	1957	load_workspace	DEBUG	Workspace "40e11bb1-49fb-4eb3-bb2b-4d5b9f520b2c" with alias "New test workspace" is already loaded. Set reload=True if you want to reload the workspace.
-2018-06-15 08:47:43,089	event_handler.py	1957	load_workspace	DEBUG	Workspace "40e11bb1-49fb-4eb3-bb2b-4d5b9f520b2c" with alias "New test workspace" is already loaded. Set reload=True if you want to reload the workspace.
-2018-06-15 08:47:45,812	event_handler.py	2214	request_subset_get_indicator_settings	DEBUG	Time for excecuting request_subset_get_indicator_settings: 4.371000051498413
-2018-06-15 08:53:31,121	event_handler.py	76	__init__	DEBUG	Start EventHandler: event_handler
-2018-06-15 08:53:35,726	event_handler.py	2153	request_subset_get_indicator_settings	DEBUG	Start: request_subset_get_indicator_settings
-2018-06-15 08:53:35,727	event_handler.py	1946	load_workspace	DEBUG	Trying to load new workspace "40e11bb1-49fb-4eb3-bb2b-4d5b9f520b2c" with alias "New test workspace"
-2018-06-15 08:53:36,091	event_handler.py	1964	load_workspace	INFO	Workspace "40e11bb1-49fb-4eb3-bb2b-4d5b9f520b2c" with alias "New test workspace loaded."
-2018-06-15 08:53:36,540	event_handler.py	1957	load_workspace	DEBUG	Workspace "40e11bb1-49fb-4eb3-bb2b-4d5b9f520b2c" with alias "New test workspace" is already loaded. Set reload=True if you want to reload the workspace.
-2018-06-15 08:53:36,661	event_handler.py	1957	load_workspace	DEBUG	Workspace "40e11bb1-49fb-4eb3-bb2b-4d5b9f520b2c" with alias "New test workspace" is already loaded. Set reload=True if you want to reload the workspace.
-2018-06-15 08:53:38,437	event_handler.py	2214	request_subset_get_indicator_settings	DEBUG	Time for excecuting request_subset_get_indicator_settings: 2.7109999656677246
-2018-06-15 09:04:33,669	event_handler.py	76	__init__	DEBUG	Start EventHandler: event_handler
-2018-06-15 09:04:40,010	event_handler.py	2153	request_subset_get_indicator_settings	DEBUG	Start: request_subset_get_indicator_settings
-2018-06-15 09:04:40,029	event_handler.py	1946	load_workspace	DEBUG	Trying to load new workspace "40e11bb1-49fb-4eb3-bb2b-4d5b9f520b2c" with alias "New test workspace"
-2018-06-15 09:04:40,530	event_handler.py	1964	load_workspace	INFO	Workspace "40e11bb1-49fb-4eb3-bb2b-4d5b9f520b2c" with alias "New test workspace loaded."
-2018-06-15 09:08:09,633	event_handler.py	76	__init__	DEBUG	Start EventHandler: event_handler
-2018-06-15 09:08:15,564	event_handler.py	2153	request_subset_get_indicator_settings	DEBUG	Start: request_subset_get_indicator_settings
-2018-06-15 09:08:15,582	event_handler.py	1946	load_workspace	DEBUG	Trying to load new workspace "40e11bb1-49fb-4eb3-bb2b-4d5b9f520b2c" with alias "New test workspace"
-2018-06-15 09:08:16,052	event_handler.py	1964	load_workspace	INFO	Workspace "40e11bb1-49fb-4eb3-bb2b-4d5b9f520b2c" with alias "New test workspace loaded."
-2018-06-15 09:08:16,708	event_handler.py	1957	load_workspace	DEBUG	Workspace "40e11bb1-49fb-4eb3-bb2b-4d5b9f520b2c" with alias "New test workspace" is already loaded. Set reload=True if you want to reload the workspace.
-2018-06-15 09:08:16,855	event_handler.py	1957	load_workspace	DEBUG	Workspace "40e11bb1-49fb-4eb3-bb2b-4d5b9f520b2c" with alias "New test workspace" is already loaded. Set reload=True if you want to reload the workspace.
-2018-06-15 09:11:27,779	event_handler.py	76	__init__	DEBUG	Start EventHandler: event_handler
-2018-06-15 09:11:33,924	event_handler.py	2153	request_subset_get_indicator_settings	DEBUG	Start: request_subset_get_indicator_settings
-2018-06-15 09:11:33,935	event_handler.py	1946	load_workspace	DEBUG	Trying to load new workspace "40e11bb1-49fb-4eb3-bb2b-4d5b9f520b2c" with alias "New test workspace"
-2018-06-15 09:11:34,408	event_handler.py	1964	load_workspace	INFO	Workspace "40e11bb1-49fb-4eb3-bb2b-4d5b9f520b2c" with alias "New test workspace loaded."
-2018-06-15 09:11:34,585	event_handler.py	1957	load_workspace	DEBUG	Workspace "40e11bb1-49fb-4eb3-bb2b-4d5b9f520b2c" with alias "New test workspace" is already loaded. Set reload=True if you want to reload the workspace.
-2018-06-15 09:11:34,739	event_handler.py	1957	load_workspace	DEBUG	Workspace "40e11bb1-49fb-4eb3-bb2b-4d5b9f520b2c" with alias "New test workspace" is already loaded. Set reload=True if you want to reload the workspace.
-2018-06-15 09:11:59,297	event_handler.py	76	__init__	DEBUG	Start EventHandler: event_handler
-2018-06-15 09:12:05,543	event_handler.py	2153	request_subset_get_indicator_settings	DEBUG	Start: request_subset_get_indicator_settings
-2018-06-15 09:12:05,554	event_handler.py	1946	load_workspace	DEBUG	Trying to load new workspace "40e11bb1-49fb-4eb3-bb2b-4d5b9f520b2c" with alias "New test workspace"
-2018-06-15 09:12:06,041	event_handler.py	1964	load_workspace	INFO	Workspace "40e11bb1-49fb-4eb3-bb2b-4d5b9f520b2c" with alias "New test workspace loaded."
-2018-06-15 09:12:38,897	event_handler.py	1957	load_workspace	DEBUG	Workspace "40e11bb1-49fb-4eb3-bb2b-4d5b9f520b2c" with alias "New test workspace" is already loaded. Set reload=True if you want to reload the workspace.
-2018-06-15 09:12:39,057	event_handler.py	1957	load_workspace	DEBUG	Workspace "40e11bb1-49fb-4eb3-bb2b-4d5b9f520b2c" with alias "New test workspace" is already loaded. Set reload=True if you want to reload the workspace.
-2018-06-15 09:12:41,491	event_handler.py	2214	request_subset_get_indicator_settings	DEBUG	Time for excecuting request_subset_get_indicator_settings: 35.94800019264221
-2018-06-15 09:18:41,277	event_handler.py	76	__init__	DEBUG	Start EventHandler: event_handler
-2018-06-15 09:18:46,374	event_handler.py	2153	request_subset_get_indicator_settings	DEBUG	Start: request_subset_get_indicator_settings
-2018-06-15 09:18:46,388	event_handler.py	1946	load_workspace	DEBUG	Trying to load new workspace "40e11bb1-49fb-4eb3-bb2b-4d5b9f520b2c" with alias "New test workspace"
-2018-06-15 09:18:46,790	event_handler.py	1964	load_workspace	INFO	Workspace "40e11bb1-49fb-4eb3-bb2b-4d5b9f520b2c" with alias "New test workspace loaded."
-2018-06-15 09:18:47,385	event_handler.py	1957	load_workspace	DEBUG	Workspace "40e11bb1-49fb-4eb3-bb2b-4d5b9f520b2c" with alias "New test workspace" is already loaded. Set reload=True if you want to reload the workspace.
-2018-06-15 09:18:47,546	event_handler.py	1957	load_workspace	DEBUG	Workspace "40e11bb1-49fb-4eb3-bb2b-4d5b9f520b2c" with alias "New test workspace" is already loaded. Set reload=True if you want to reload the workspace.
-2018-06-15 09:18:49,764	event_handler.py	2214	request_subset_get_indicator_settings	DEBUG	Time for excecuting request_subset_get_indicator_settings: 3.3899998664855957
-2018-06-15 09:20:47,623	event_handler.py	76	__init__	DEBUG	Start EventHandler: event_handler
-2018-06-15 09:20:52,946	event_handler.py	2153	request_subset_get_indicator_settings	DEBUG	Start: request_subset_get_indicator_settings
-2018-06-15 09:20:52,959	event_handler.py	1946	load_workspace	DEBUG	Trying to load new workspace "40e11bb1-49fb-4eb3-bb2b-4d5b9f520b2c" with alias "New test workspace"
-2018-06-15 09:20:53,387	event_handler.py	1964	load_workspace	INFO	Workspace "40e11bb1-49fb-4eb3-bb2b-4d5b9f520b2c" with alias "New test workspace loaded."
-2018-06-15 09:20:53,914	event_handler.py	1957	load_workspace	DEBUG	Workspace "40e11bb1-49fb-4eb3-bb2b-4d5b9f520b2c" with alias "New test workspace" is already loaded. Set reload=True if you want to reload the workspace.
-2018-06-15 09:20:54,073	event_handler.py	1957	load_workspace	DEBUG	Workspace "40e11bb1-49fb-4eb3-bb2b-4d5b9f520b2c" with alias "New test workspace" is already loaded. Set reload=True if you want to reload the workspace.
-2018-06-15 09:21:55,585	event_handler.py	76	__init__	DEBUG	Start EventHandler: event_handler
-2018-06-15 09:22:00,834	event_handler.py	2153	request_subset_get_indicator_settings	DEBUG	Start: request_subset_get_indicator_settings
-2018-06-15 09:22:00,848	event_handler.py	1946	load_workspace	DEBUG	Trying to load new workspace "40e11bb1-49fb-4eb3-bb2b-4d5b9f520b2c" with alias "New test workspace"
-2018-06-15 09:22:01,201	event_handler.py	1964	load_workspace	INFO	Workspace "40e11bb1-49fb-4eb3-bb2b-4d5b9f520b2c" with alias "New test workspace loaded."
-2018-06-15 09:22:01,655	event_handler.py	1957	load_workspace	DEBUG	Workspace "40e11bb1-49fb-4eb3-bb2b-4d5b9f520b2c" with alias "New test workspace" is already loaded. Set reload=True if you want to reload the workspace.
-2018-06-15 09:22:01,826	event_handler.py	1957	load_workspace	DEBUG	Workspace "40e11bb1-49fb-4eb3-bb2b-4d5b9f520b2c" with alias "New test workspace" is already loaded. Set reload=True if you want to reload the workspace.
-2018-06-15 09:22:04,079	event_handler.py	2214	request_subset_get_indicator_settings	DEBUG	Time for excecuting request_subset_get_indicator_settings: 3.244999885559082
-2018-06-15 09:22:50,833	event_handler.py	76	__init__	DEBUG	Start EventHandler: event_handler
-2018-06-15 09:22:55,840	event_handler.py	2153	request_subset_get_indicator_settings	DEBUG	Start: request_subset_get_indicator_settings
-2018-06-15 09:22:55,858	event_handler.py	1946	load_workspace	DEBUG	Trying to load new workspace "40e11bb1-49fb-4eb3-bb2b-4d5b9f520b2c" with alias "New test workspace"
-2018-06-15 09:22:56,294	event_handler.py	1964	load_workspace	INFO	Workspace "40e11bb1-49fb-4eb3-bb2b-4d5b9f520b2c" with alias "New test workspace loaded."
-2018-06-15 09:22:56,768	event_handler.py	1957	load_workspace	DEBUG	Workspace "40e11bb1-49fb-4eb3-bb2b-4d5b9f520b2c" with alias "New test workspace" is already loaded. Set reload=True if you want to reload the workspace.
-2018-06-15 09:22:56,921	event_handler.py	1957	load_workspace	DEBUG	Workspace "40e11bb1-49fb-4eb3-bb2b-4d5b9f520b2c" with alias "New test workspace" is already loaded. Set reload=True if you want to reload the workspace.
-2018-06-15 09:22:59,255	event_handler.py	2214	request_subset_get_indicator_settings	DEBUG	Time for excecuting request_subset_get_indicator_settings: 3.4150002002716064
-2018-06-15 09:35:35,979	event_handler.py	76	__init__	DEBUG	Start EventHandler: event_handler
-2018-06-15 09:35:40,862	event_handler.py	2153	request_subset_get_indicator_settings	DEBUG	Start: request_subset_get_indicator_settings
-2018-06-15 09:35:40,880	event_handler.py	1946	load_workspace	DEBUG	Trying to load new workspace "40e11bb1-49fb-4eb3-bb2b-4d5b9f520b2c" with alias "New test workspace"
-2018-06-15 09:35:41,335	event_handler.py	1964	load_workspace	INFO	Workspace "40e11bb1-49fb-4eb3-bb2b-4d5b9f520b2c" with alias "New test workspace loaded."
-2018-06-15 09:35:41,828	event_handler.py	1957	load_workspace	DEBUG	Workspace "40e11bb1-49fb-4eb3-bb2b-4d5b9f520b2c" with alias "New test workspace" is already loaded. Set reload=True if you want to reload the workspace.
-2018-06-15 09:35:41,973	event_handler.py	1957	load_workspace	DEBUG	Workspace "40e11bb1-49fb-4eb3-bb2b-4d5b9f520b2c" with alias "New test workspace" is already loaded. Set reload=True if you want to reload the workspace.
-2018-06-15 09:35:44,434	event_handler.py	2214	request_subset_get_indicator_settings	DEBUG	Time for excecuting request_subset_get_indicator_settings: 3.572000026702881
-2018-06-15 09:43:02,123	event_handler.py	76	__init__	DEBUG	Start EventHandler: event_handler
-2018-06-15 09:43:06,889	event_handler.py	2154	request_subset_get_indicator_settings	DEBUG	Start: request_subset_get_indicator_settings
-2018-06-15 09:43:06,908	event_handler.py	1947	load_workspace	DEBUG	Trying to load new workspace "40e11bb1-49fb-4eb3-bb2b-4d5b9f520b2c" with alias "New test workspace"
-2018-06-15 09:43:07,479	event_handler.py	1965	load_workspace	INFO	Workspace "40e11bb1-49fb-4eb3-bb2b-4d5b9f520b2c" with alias "New test workspace loaded."
-2018-06-15 09:43:07,943	event_handler.py	1958	load_workspace	DEBUG	Workspace "40e11bb1-49fb-4eb3-bb2b-4d5b9f520b2c" with alias "New test workspace" is already loaded. Set reload=True if you want to reload the workspace.
-2018-06-15 09:43:08,083	event_handler.py	1958	load_workspace	DEBUG	Workspace "40e11bb1-49fb-4eb3-bb2b-4d5b9f520b2c" with alias "New test workspace" is already loaded. Set reload=True if you want to reload the workspace.
-2018-06-15 09:45:03,769	logger.py	85	add_log	DEBUG	
-2018-06-15 09:45:03,772	logger.py	86	add_log	DEBUG	========================================================================================================================
-2018-06-15 09:45:03,774	logger.py	87	add_log	DEBUG	### Log added for log_id "event_handler" at locaton: ..\log\main_event_handler.log
-2018-06-15 09:45:03,775	logger.py	88	add_log	DEBUG	------------------------------------------------------------------------------------------------------------------------
-2018-06-15 09:45:03,778	event_handler.py	76	__init__	DEBUG	Start EventHandler: event_handler
-2018-06-15 09:45:08,799	event_handler.py	2154	request_subset_get_indicator_settings	DEBUG	Start: request_subset_get_indicator_settings
-2018-06-15 09:45:08,813	event_handler.py	1947	load_workspace	DEBUG	Trying to load new workspace "40e11bb1-49fb-4eb3-bb2b-4d5b9f520b2c" with alias "New test workspace"
-2018-06-15 09:45:09,281	event_handler.py	1965	load_workspace	INFO	Workspace "40e11bb1-49fb-4eb3-bb2b-4d5b9f520b2c" with alias "New test workspace loaded."
-2018-06-15 09:45:09,784	event_handler.py	1958	load_workspace	DEBUG	Workspace "40e11bb1-49fb-4eb3-bb2b-4d5b9f520b2c" with alias "New test workspace" is already loaded. Set reload=True if you want to reload the workspace.
-2018-06-15 09:45:09,914	event_handler.py	1958	load_workspace	DEBUG	Workspace "40e11bb1-49fb-4eb3-bb2b-4d5b9f520b2c" with alias "New test workspace" is already loaded. Set reload=True if you want to reload the workspace.
-2018-06-15 09:47:26,958	logger.py	85	add_log	DEBUG	
-2018-06-15 09:47:26,960	logger.py	86	add_log	DEBUG	========================================================================================================================
-2018-06-15 09:47:26,962	logger.py	87	add_log	DEBUG	### Log added for log_id "event_handler" at locaton: ..\log\main_event_handler.log
-2018-06-15 09:47:26,968	logger.py	88	add_log	DEBUG	------------------------------------------------------------------------------------------------------------------------
-2018-06-15 09:47:26,972	event_handler.py	76	__init__	DEBUG	Start EventHandler: event_handler
-2018-06-15 09:47:31,668	event_handler.py	2154	request_subset_get_indicator_settings	DEBUG	Start: request_subset_get_indicator_settings
-2018-06-15 09:47:31,683	event_handler.py	1947	load_workspace	DEBUG	Trying to load new workspace "40e11bb1-49fb-4eb3-bb2b-4d5b9f520b2c" with alias "New test workspace"
-2018-06-15 09:47:32,187	event_handler.py	1965	load_workspace	INFO	Workspace "40e11bb1-49fb-4eb3-bb2b-4d5b9f520b2c" with alias "New test workspace loaded."
-2018-06-15 09:47:32,697	event_handler.py	1958	load_workspace	DEBUG	Workspace "40e11bb1-49fb-4eb3-bb2b-4d5b9f520b2c" with alias "New test workspace" is already loaded. Set reload=True if you want to reload the workspace.
-2018-06-15 09:47:32,825	event_handler.py	1958	load_workspace	DEBUG	Workspace "40e11bb1-49fb-4eb3-bb2b-4d5b9f520b2c" with alias "New test workspace" is already loaded. Set reload=True if you want to reload the workspace.
-2018-06-15 09:47:35,068	event_handler.py	2215	request_subset_get_indicator_settings	DEBUG	Time for excecuting request_subset_get_indicator_settings: 3.4000000953674316
-2018-06-15 09:55:34,505	event_handler.py	76	__init__	DEBUG	Start EventHandler: event_handler
-2018-06-15 09:55:38,978	event_handler.py	2154	request_subset_get_indicator_settings	DEBUG	Start: request_subset_get_indicator_settings
-2018-06-15 09:55:38,994	event_handler.py	1947	load_workspace	DEBUG	Trying to load new workspace "40e11bb1-49fb-4eb3-bb2b-4d5b9f520b2c" with alias "New test workspace"
-2018-06-15 09:55:39,331	event_handler.py	1965	load_workspace	INFO	Workspace "40e11bb1-49fb-4eb3-bb2b-4d5b9f520b2c" with alias "New test workspace loaded."
-2018-06-15 09:55:39,770	event_handler.py	1958	load_workspace	DEBUG	Workspace "40e11bb1-49fb-4eb3-bb2b-4d5b9f520b2c" with alias "New test workspace" is already loaded. Set reload=True if you want to reload the workspace.
-2018-06-15 09:55:39,899	event_handler.py	1958	load_workspace	DEBUG	Workspace "40e11bb1-49fb-4eb3-bb2b-4d5b9f520b2c" with alias "New test workspace" is already loaded. Set reload=True if you want to reload the workspace.
-2018-06-15 09:55:42,439	event_handler.py	2215	request_subset_get_indicator_settings	DEBUG	Time for excecuting request_subset_get_indicator_settings: 3.4609999656677246
-2018-06-15 10:06:42,621	event_handler.py	76	__init__	DEBUG	Start EventHandler: event_handler
-2018-06-15 10:06:47,817	event_handler.py	2154	request_subset_get_indicator_settings	DEBUG	Start: request_subset_get_indicator_settings
-2018-06-15 10:06:47,831	event_handler.py	1947	load_workspace	DEBUG	Trying to load new workspace "40e11bb1-49fb-4eb3-bb2b-4d5b9f520b2c" with alias "New test workspace"
-2018-06-15 10:06:48,218	event_handler.py	1965	load_workspace	INFO	Workspace "40e11bb1-49fb-4eb3-bb2b-4d5b9f520b2c" with alias "New test workspace loaded."
-2018-06-15 10:06:48,673	event_handler.py	1958	load_workspace	DEBUG	Workspace "40e11bb1-49fb-4eb3-bb2b-4d5b9f520b2c" with alias "New test workspace" is already loaded. Set reload=True if you want to reload the workspace.
-2018-06-15 10:06:48,814	event_handler.py	1958	load_workspace	DEBUG	Workspace "40e11bb1-49fb-4eb3-bb2b-4d5b9f520b2c" with alias "New test workspace" is already loaded. Set reload=True if you want to reload the workspace.
-2018-06-15 10:06:51,116	event_handler.py	2215	request_subset_get_indicator_settings	DEBUG	Time for excecuting request_subset_get_indicator_settings: 3.2990000247955322
-2018-06-15 10:07:29,485	event_handler.py	76	__init__	DEBUG	Start EventHandler: event_handler
-2018-06-15 10:07:33,974	event_handler.py	2235	request_subset_set_indicator_settings	DEBUG	Start: request_subset_set_indicator_settings
-2018-06-15 10:07:33,986	event_handler.py	1947	load_workspace	DEBUG	Trying to load new workspace "40e11bb1-49fb-4eb3-bb2b-4d5b9f520b2c" with alias "New test workspace"
-2018-06-15 10:07:34,324	event_handler.py	1965	load_workspace	INFO	Workspace "40e11bb1-49fb-4eb3-bb2b-4d5b9f520b2c" with alias "New test workspace loaded."
-2018-06-15 10:10:14,931	event_handler.py	76	__init__	DEBUG	Start EventHandler: event_handler
-2018-06-15 10:10:19,767	event_handler.py	2235	request_subset_set_indicator_settings	DEBUG	Start: request_subset_set_indicator_settings
-2018-06-15 10:10:19,783	event_handler.py	1947	load_workspace	DEBUG	Trying to load new workspace "40e11bb1-49fb-4eb3-bb2b-4d5b9f520b2c" with alias "New test workspace"
-2018-06-15 10:10:20,103	event_handler.py	1965	load_workspace	INFO	Workspace "40e11bb1-49fb-4eb3-bb2b-4d5b9f520b2c" with alias "New test workspace loaded."
-2018-06-15 10:12:43,161	event_handler.py	76	__init__	DEBUG	Start EventHandler: event_handler
-2018-06-15 10:12:47,870	event_handler.py	2235	request_subset_set_indicator_settings	DEBUG	Start: request_subset_set_indicator_settings
-2018-06-15 10:12:47,882	event_handler.py	1947	load_workspace	DEBUG	Trying to load new workspace "40e11bb1-49fb-4eb3-bb2b-4d5b9f520b2c" with alias "New test workspace"
-2018-06-15 10:12:48,230	event_handler.py	1965	load_workspace	INFO	Workspace "40e11bb1-49fb-4eb3-bb2b-4d5b9f520b2c" with alias "New test workspace loaded."
-2018-06-15 10:13:39,486	event_handler.py	76	__init__	DEBUG	Start EventHandler: event_handler
-2018-06-15 10:13:44,252	event_handler.py	2235	request_subset_set_indicator_settings	DEBUG	Start: request_subset_set_indicator_settings
-2018-06-15 10:13:44,263	event_handler.py	1947	load_workspace	DEBUG	Trying to load new workspace "40e11bb1-49fb-4eb3-bb2b-4d5b9f520b2c" with alias "New test workspace"
-2018-06-15 10:13:44,605	event_handler.py	1965	load_workspace	INFO	Workspace "40e11bb1-49fb-4eb3-bb2b-4d5b9f520b2c" with alias "New test workspace loaded."
-2018-06-15 10:27:16,433	event_handler.py	1146	get_workspace	DEBUG	Getting workspace "40e11bb1-49fb-4eb3-bb2b-4d5b9f520b2c" with alias "New test workspace"
-2018-06-15 10:28:08,523	event_handler.py	1146	get_workspace	DEBUG	Getting workspace "40e11bb1-49fb-4eb3-bb2b-4d5b9f520b2c" with alias "New test workspace"
-2018-06-15 10:28:38,192	event_handler.py	1146	get_workspace	DEBUG	Getting workspace "40e11bb1-49fb-4eb3-bb2b-4d5b9f520b2c" with alias "New test workspace"
-2018-06-15 10:31:34,005	event_handler.py	1146	get_workspace	DEBUG	Getting workspace "40e11bb1-49fb-4eb3-bb2b-4d5b9f520b2c" with alias "New test workspace"
-2018-06-15 10:34:46,104	event_handler.py	76	__init__	DEBUG	Start EventHandler: event_handler
-2018-06-15 10:34:51,484	event_handler.py	2235	request_subset_set_indicator_settings	DEBUG	Start: request_subset_set_indicator_settings
-2018-06-15 10:34:51,507	event_handler.py	1947	load_workspace	DEBUG	Trying to load new workspace "40e11bb1-49fb-4eb3-bb2b-4d5b9f520b2c" with alias "New test workspace"
-2018-06-15 10:34:52,024	event_handler.py	1965	load_workspace	INFO	Workspace "40e11bb1-49fb-4eb3-bb2b-4d5b9f520b2c" with alias "New test workspace loaded."
-2018-06-15 10:35:11,473	event_handler.py	76	__init__	DEBUG	Start EventHandler: event_handler
-2018-06-15 10:35:15,970	event_handler.py	2235	request_subset_set_indicator_settings	DEBUG	Start: request_subset_set_indicator_settings
-2018-06-15 10:35:15,982	event_handler.py	1947	load_workspace	DEBUG	Trying to load new workspace "40e11bb1-49fb-4eb3-bb2b-4d5b9f520b2c" with alias "New test workspace"
-2018-06-15 10:35:16,371	event_handler.py	1965	load_workspace	INFO	Workspace "40e11bb1-49fb-4eb3-bb2b-4d5b9f520b2c" with alias "New test workspace loaded."
-2018-06-15 10:35:18,166	event_handler.py	1958	load_workspace	DEBUG	Workspace "40e11bb1-49fb-4eb3-bb2b-4d5b9f520b2c" with alias "New test workspace" is already loaded. Set reload=True if you want to reload the workspace.
-2018-06-15 10:35:18,590	event_handler.py	2290	request_subset_set_indicator_settings	DEBUG	Time for excecuting request_subset_set_indicator_settings: 2.619999885559082
-2018-06-15 10:38:44,552	event_handler.py	76	__init__	DEBUG	Start EventHandler: event_handler
-2018-06-15 10:38:48,913	event_handler.py	2154	request_subset_get_indicator_settings	DEBUG	Start: request_subset_get_indicator_settings
-2018-06-15 10:38:48,927	event_handler.py	1947	load_workspace	DEBUG	Trying to load new workspace "40e11bb1-49fb-4eb3-bb2b-4d5b9f520b2c" with alias "New test workspace"
-2018-06-15 10:38:49,278	event_handler.py	1965	load_workspace	INFO	Workspace "40e11bb1-49fb-4eb3-bb2b-4d5b9f520b2c" with alias "New test workspace loaded."
-2018-06-15 10:38:49,699	event_handler.py	1958	load_workspace	DEBUG	Workspace "40e11bb1-49fb-4eb3-bb2b-4d5b9f520b2c" with alias "New test workspace" is already loaded. Set reload=True if you want to reload the workspace.
-2018-06-15 10:38:49,813	event_handler.py	1958	load_workspace	DEBUG	Workspace "40e11bb1-49fb-4eb3-bb2b-4d5b9f520b2c" with alias "New test workspace" is already loaded. Set reload=True if you want to reload the workspace.
-2018-06-15 10:38:51,825	event_handler.py	2215	request_subset_get_indicator_settings	DEBUG	Time for excecuting request_subset_get_indicator_settings: 2.9116179943084717
-2018-06-15 10:38:54,706	event_handler.py	76	__init__	DEBUG	Start EventHandler: event_handler
-2018-06-15 10:38:59,592	event_handler.py	2235	request_subset_set_indicator_settings	DEBUG	Start: request_subset_set_indicator_settings
-2018-06-15 10:38:59,604	event_handler.py	1947	load_workspace	DEBUG	Trying to load new workspace "40e11bb1-49fb-4eb3-bb2b-4d5b9f520b2c" with alias "New test workspace"
-2018-06-15 10:39:00,020	event_handler.py	1965	load_workspace	INFO	Workspace "40e11bb1-49fb-4eb3-bb2b-4d5b9f520b2c" with alias "New test workspace loaded."
-2018-06-15 10:39:02,122	event_handler.py	1958	load_workspace	DEBUG	Workspace "40e11bb1-49fb-4eb3-bb2b-4d5b9f520b2c" with alias "New test workspace" is already loaded. Set reload=True if you want to reload the workspace.
-2018-06-15 10:39:02,600	event_handler.py	2290	request_subset_set_indicator_settings	DEBUG	Time for excecuting request_subset_set_indicator_settings: 3.007704496383667
-2018-06-15 10:41:46,845	event_handler.py	76	__init__	DEBUG	Start EventHandler: event_handler
-2018-06-15 10:41:51,396	event_handler.py	2235	request_subset_set_indicator_settings	DEBUG	Start: request_subset_set_indicator_settings
-2018-06-15 10:41:51,410	event_handler.py	1947	load_workspace	DEBUG	Trying to load new workspace "40e11bb1-49fb-4eb3-bb2b-4d5b9f520b2c" with alias "New test workspace"
-2018-06-15 10:41:51,748	event_handler.py	1965	load_workspace	INFO	Workspace "40e11bb1-49fb-4eb3-bb2b-4d5b9f520b2c" with alias "New test workspace loaded."
-2018-06-15 10:41:53,496	event_handler.py	1958	load_workspace	DEBUG	Workspace "40e11bb1-49fb-4eb3-bb2b-4d5b9f520b2c" with alias "New test workspace" is already loaded. Set reload=True if you want to reload the workspace.
-2018-06-15 10:41:53,928	event_handler.py	2290	request_subset_set_indicator_settings	DEBUG	Time for excecuting request_subset_set_indicator_settings: 2.5320122241973877
-2018-06-15 10:43:01,553	event_handler.py	76	__init__	DEBUG	Start EventHandler: event_handler
-2018-06-15 10:43:05,955	event_handler.py	2235	request_subset_set_indicator_settings	DEBUG	Start: request_subset_set_indicator_settings
-2018-06-15 10:43:05,971	event_handler.py	1947	load_workspace	DEBUG	Trying to load new workspace "40e11bb1-49fb-4eb3-bb2b-4d5b9f520b2c" with alias "New test workspace"
-2018-06-15 10:43:06,332	event_handler.py	1965	load_workspace	INFO	Workspace "40e11bb1-49fb-4eb3-bb2b-4d5b9f520b2c" with alias "New test workspace loaded."
-2018-06-15 10:43:08,167	event_handler.py	1958	load_workspace	DEBUG	Workspace "40e11bb1-49fb-4eb3-bb2b-4d5b9f520b2c" with alias "New test workspace" is already loaded. Set reload=True if you want to reload the workspace.
-2018-06-15 10:43:08,578	event_handler.py	2290	request_subset_set_indicator_settings	DEBUG	Time for excecuting request_subset_set_indicator_settings: 2.623049020767212
-2018-06-15 10:45:34,042	event_handler.py	76	__init__	DEBUG	Start EventHandler: event_handler
-2018-06-15 10:45:38,647	event_handler.py	2235	request_subset_set_indicator_settings	DEBUG	Start: request_subset_set_indicator_settings
-2018-06-15 10:45:38,662	event_handler.py	1947	load_workspace	DEBUG	Trying to load new workspace "40e11bb1-49fb-4eb3-bb2b-4d5b9f520b2c" with alias "New test workspace"
-2018-06-15 10:45:39,037	event_handler.py	1965	load_workspace	INFO	Workspace "40e11bb1-49fb-4eb3-bb2b-4d5b9f520b2c" with alias "New test workspace loaded."
-2018-06-15 10:45:41,230	event_handler.py	1958	load_workspace	DEBUG	Workspace "40e11bb1-49fb-4eb3-bb2b-4d5b9f520b2c" with alias "New test workspace" is already loaded. Set reload=True if you want to reload the workspace.
-2018-06-15 10:45:41,720	event_handler.py	2290	request_subset_set_indicator_settings	DEBUG	Time for excecuting request_subset_set_indicator_settings: 3.0726144313812256
-2018-06-15 11:05:18,958	event_handler.py	76	__init__	DEBUG	Start EventHandler: event_handler
-2018-06-15 11:05:23,716	event_handler.py	2235	request_subset_set_indicator_settings	DEBUG	Start: request_subset_set_indicator_settings
-2018-06-15 11:05:23,733	event_handler.py	1947	load_workspace	DEBUG	Trying to load new workspace "40e11bb1-49fb-4eb3-bb2b-4d5b9f520b2c" with alias "New test workspace"
-2018-06-15 11:05:24,136	event_handler.py	1965	load_workspace	INFO	Workspace "40e11bb1-49fb-4eb3-bb2b-4d5b9f520b2c" with alias "New test workspace loaded."
-2018-06-15 11:05:26,256	event_handler.py	1958	load_workspace	DEBUG	Workspace "40e11bb1-49fb-4eb3-bb2b-4d5b9f520b2c" with alias "New test workspace" is already loaded. Set reload=True if you want to reload the workspace.
-2018-06-15 11:05:26,690	event_handler.py	2290	request_subset_set_indicator_settings	DEBUG	Time for excecuting request_subset_set_indicator_settings: 2.974297523498535
-2018-06-15 11:14:57,182	event_handler.py	76	__init__	DEBUG	Start EventHandler: event_handler
-2018-06-15 11:15:01,754	event_handler.py	2237	request_subset_set_indicator_settings	DEBUG	Start: request_subset_set_indicator_settings
-2018-06-15 11:15:01,773	event_handler.py	1949	load_workspace	DEBUG	Trying to load new workspace "40e11bb1-49fb-4eb3-bb2b-4d5b9f520b2c" with alias "New test workspace"
-2018-06-15 11:15:02,141	event_handler.py	1967	load_workspace	INFO	Workspace "40e11bb1-49fb-4eb3-bb2b-4d5b9f520b2c" with alias "New test workspace loaded."
-2018-06-15 11:15:03,969	event_handler.py	1960	load_workspace	DEBUG	Workspace "40e11bb1-49fb-4eb3-bb2b-4d5b9f520b2c" with alias "New test workspace" is already loaded. Set reload=True if you want to reload the workspace.
-2018-06-15 11:15:04,400	event_handler.py	2292	request_subset_set_indicator_settings	DEBUG	Time for excecuting request_subset_set_indicator_settings: 2.6449999809265137
-2018-06-15 11:15:36,703	event_handler.py	76	__init__	DEBUG	Start EventHandler: event_handler
-2018-06-15 11:15:41,455	event_handler.py	2238	request_subset_set_indicator_settings	DEBUG	Start: request_subset_set_indicator_settings
-2018-06-15 11:15:41,469	event_handler.py	1950	load_workspace	DEBUG	Trying to load new workspace "40e11bb1-49fb-4eb3-bb2b-4d5b9f520b2c" with alias "New test workspace"
-2018-06-15 11:15:41,997	event_handler.py	1968	load_workspace	INFO	Workspace "40e11bb1-49fb-4eb3-bb2b-4d5b9f520b2c" with alias "New test workspace loaded."
-2018-06-15 11:15:43,951	event_handler.py	1961	load_workspace	DEBUG	Workspace "40e11bb1-49fb-4eb3-bb2b-4d5b9f520b2c" with alias "New test workspace" is already loaded. Set reload=True if you want to reload the workspace.
-2018-06-15 11:15:44,383	event_handler.py	2293	request_subset_set_indicator_settings	DEBUG	Time for excecuting request_subset_set_indicator_settings: 2.927999973297119
-2018-06-15 11:23:25,805	event_handler.py	76	__init__	DEBUG	Start EventHandler: event_handler
-2018-06-15 11:23:30,243	event_handler.py	2251	request_subset_set_indicator_settings	DEBUG	Start: request_subset_set_indicator_settings
-2018-06-15 11:23:30,257	event_handler.py	1963	load_workspace	DEBUG	Trying to load new workspace "40e11bb1-49fb-4eb3-bb2b-4d5b9f520b2c" with alias "New test workspace"
-2018-06-15 11:23:30,566	event_handler.py	1981	load_workspace	INFO	Workspace "40e11bb1-49fb-4eb3-bb2b-4d5b9f520b2c" with alias "New test workspace loaded."
-2018-06-15 11:23:32,678	event_handler.py	1974	load_workspace	DEBUG	Workspace "40e11bb1-49fb-4eb3-bb2b-4d5b9f520b2c" with alias "New test workspace" is already loaded. Set reload=True if you want to reload the workspace.
-2018-06-15 11:23:33,151	event_handler.py	2306	request_subset_set_indicator_settings	DEBUG	Time for excecuting request_subset_set_indicator_settings: 2.9079999923706055
-2018-06-15 11:23:52,857	event_handler.py	76	__init__	DEBUG	Start EventHandler: event_handler
-2018-06-15 11:23:57,462	event_handler.py	2251	request_subset_set_indicator_settings	DEBUG	Start: request_subset_set_indicator_settings
-2018-06-15 11:23:57,473	event_handler.py	1963	load_workspace	DEBUG	Trying to load new workspace "40e11bb1-49fb-4eb3-bb2b-4d5b9f520b2c" with alias "New test workspace"
-2018-06-15 11:23:57,828	event_handler.py	1981	load_workspace	INFO	Workspace "40e11bb1-49fb-4eb3-bb2b-4d5b9f520b2c" with alias "New test workspace loaded."
-2018-06-15 11:23:59,838	event_handler.py	1974	load_workspace	DEBUG	Workspace "40e11bb1-49fb-4eb3-bb2b-4d5b9f520b2c" with alias "New test workspace" is already loaded. Set reload=True if you want to reload the workspace.
-2018-06-15 11:24:00,260	event_handler.py	2306	request_subset_set_indicator_settings	DEBUG	Time for excecuting request_subset_set_indicator_settings: 2.7980000972747803
-2018-06-15 13:04:44,622	event_handler.py	76	__init__	DEBUG	Start EventHandler: event_handler
-2018-06-15 13:04:49,505	event_handler.py	2252	request_subset_set_indicator_settings	DEBUG	Start: request_subset_set_indicator_settings
-2018-06-15 13:04:49,524	event_handler.py	1964	load_workspace	DEBUG	Trying to load new workspace "40e11bb1-49fb-4eb3-bb2b-4d5b9f520b2c" with alias "New test workspace"
-2018-06-15 13:04:49,978	event_handler.py	1982	load_workspace	INFO	Workspace "40e11bb1-49fb-4eb3-bb2b-4d5b9f520b2c" with alias "New test workspace loaded."
-2018-06-15 13:04:52,409	event_handler.py	1975	load_workspace	DEBUG	Workspace "40e11bb1-49fb-4eb3-bb2b-4d5b9f520b2c" with alias "New test workspace" is already loaded. Set reload=True if you want to reload the workspace.
-2018-06-15 13:04:52,953	event_handler.py	2307	request_subset_set_indicator_settings	DEBUG	Time for excecuting request_subset_set_indicator_settings: 3.447000026702881
-2018-06-15 13:13:56,945	event_handler.py	76	__init__	DEBUG	Start EventHandler: event_handler
-2018-06-15 13:14:04,213	event_handler.py	2252	request_subset_set_indicator_settings	DEBUG	Start: request_subset_set_indicator_settings
-2018-06-15 13:14:04,232	event_handler.py	1964	load_workspace	DEBUG	Trying to load new workspace "40e11bb1-49fb-4eb3-bb2b-4d5b9f520b2c" with alias "New test workspace"
-2018-06-15 13:14:04,826	event_handler.py	1982	load_workspace	INFO	Workspace "40e11bb1-49fb-4eb3-bb2b-4d5b9f520b2c" with alias "New test workspace loaded."
-2018-06-15 13:14:07,825	event_handler.py	1975	load_workspace	DEBUG	Workspace "40e11bb1-49fb-4eb3-bb2b-4d5b9f520b2c" with alias "New test workspace" is already loaded. Set reload=True if you want to reload the workspace.
-2018-06-15 13:14:08,412	event_handler.py	2307	request_subset_set_indicator_settings	DEBUG	Time for excecuting request_subset_set_indicator_settings: 4.199000120162964
-2018-06-15 13:16:18,706	event_handler.py	76	__init__	DEBUG	Start EventHandler: event_handler
-2018-06-15 13:16:25,781	event_handler.py	2253	request_subset_set_indicator_settings	DEBUG	Start: request_subset_set_indicator_settings
-2018-06-15 13:16:25,797	event_handler.py	1965	load_workspace	DEBUG	Trying to load new workspace "40e11bb1-49fb-4eb3-bb2b-4d5b9f520b2c" with alias "New test workspace"
-2018-06-15 13:16:26,732	event_handler.py	1983	load_workspace	INFO	Workspace "40e11bb1-49fb-4eb3-bb2b-4d5b9f520b2c" with alias "New test workspace loaded."
-2018-06-15 13:16:30,079	event_handler.py	1976	load_workspace	DEBUG	Workspace "40e11bb1-49fb-4eb3-bb2b-4d5b9f520b2c" with alias "New test workspace" is already loaded. Set reload=True if you want to reload the workspace.
-2018-06-15 13:16:30,702	event_handler.py	2308	request_subset_set_indicator_settings	DEBUG	Time for excecuting request_subset_set_indicator_settings: 4.921000003814697
-2018-06-15 13:28:51,563	event_handler.py	76	__init__	DEBUG	Start EventHandler: event_handler
-2018-06-15 13:28:55,863	event_handler.py	2691	request_workspace_list	DEBUG	Start: request_workspace_list
-2018-06-15 13:30:42,971	event_handler.py	76	__init__	DEBUG	Start EventHandler: event_handler
-2018-06-15 13:30:47,667	event_handler.py	2691	request_workspace_list	DEBUG	Start: request_workspace_list
-2018-06-15 13:31:32,203	event_handler.py	76	__init__	DEBUG	Start EventHandler: event_handler
-2018-06-15 13:31:36,585	event_handler.py	2691	request_workspace_list	DEBUG	Start: request_workspace_list
-2018-06-15 13:32:41,784	event_handler.py	76	__init__	DEBUG	Start EventHandler: event_handler
-2018-06-15 13:32:46,161	event_handler.py	2691	request_workspace_list	DEBUG	Start: request_workspace_list
-2018-06-15 13:32:46,213	event_handler.py	2696	request_workspace_list	DEBUG	Time for excecuting request_workspace_list: 0.05200004577636719
-2018-06-15 13:35:53,331	logger.py	85	add_log	DEBUG	
-2018-06-15 13:35:53,334	logger.py	86	add_log	DEBUG	========================================================================================================================
-2018-06-15 13:35:53,335	logger.py	87	add_log	DEBUG	### Log added for log_id "event_handler" at locaton: ..\log\main_event_handler.log
-2018-06-15 13:35:53,337	logger.py	88	add_log	DEBUG	------------------------------------------------------------------------------------------------------------------------
-2018-06-15 13:35:53,339	event_handler.py	76	__init__	DEBUG	Start EventHandler: event_handler
-2018-06-15 13:35:57,697	event_handler.py	2691	request_workspace_list	DEBUG	Start: request_workspace_list
-2018-06-15 13:35:57,728	event_handler.py	2696	request_workspace_list	DEBUG	Time for excecuting request_workspace_list: 0.031000137329101562
-2018-06-15 13:50:31,928	event_handler.py	76	__init__	DEBUG	Start EventHandler: event_handler
-2018-06-15 13:50:36,359	event_handler.py	2609	request_workspace_delete	DEBUG	Start: request_workspace_delete
-2018-06-15 13:51:54,653	event_handler.py	76	__init__	DEBUG	Start EventHandler: event_handler
-2018-06-15 13:51:58,921	event_handler.py	2609	request_workspace_delete	DEBUG	Start: request_workspace_delete
-2018-06-15 13:51:58,940	event_handler.py	340	delete_workspace	WARNING	Removing workspace "6ce61c5f-468c-4d5f-83d8-96c50a4b1d3c" with alias "Another test workspace".
-2018-06-15 13:56:44,805	logger.py	85	add_log	DEBUG	
-2018-06-15 13:56:44,807	logger.py	86	add_log	DEBUG	========================================================================================================================
-2018-06-15 13:56:44,808	logger.py	87	add_log	DEBUG	### Log added for log_id "event_handler" at locaton: ..\log\main_event_handler.log
-2018-06-15 13:56:44,811	logger.py	88	add_log	DEBUG	------------------------------------------------------------------------------------------------------------------------
-2018-06-15 13:56:44,819	event_handler.py	76	__init__	DEBUG	Start EventHandler: event_handler
-2018-06-15 13:57:38,967	event_handler.py	237	copy_workspace	DEBUG	Could not add workspace with alias "Another test workspace". Workspace already exists!
-2018-06-15 13:57:54,084	event_handler.py	248	copy_workspace	DEBUG	Trying to copy workspace "default_workspace". Copy has alias "Another test workspace_ 2"
-2018-06-15 13:58:10,667	event_handler.py	237	copy_workspace	DEBUG	Could not add workspace with alias "Another test workspace_ 2". Workspace already exists!
-2018-06-15 14:16:26,756	event_handler.py	76	__init__	DEBUG	Start EventHandler: event_handler
-2018-06-15 14:16:30,815	event_handler.py	2542	request_subset_list	DEBUG	Start: request_subset_list
-2018-06-15 14:16:30,830	event_handler.py	1965	load_workspace	DEBUG	Trying to load new workspace "40e11bb1-49fb-4eb3-bb2b-4d5b9f520b2c" with alias "New test workspace"
-2018-06-15 14:16:31,291	event_handler.py	1983	load_workspace	INFO	Workspace "40e11bb1-49fb-4eb3-bb2b-4d5b9f520b2c" with alias "New test workspace loaded."
-2018-06-15 14:16:40,264	event_handler.py	76	__init__	DEBUG	Start EventHandler: event_handler
-2018-06-15 14:16:45,447	event_handler.py	2542	request_subset_list	DEBUG	Start: request_subset_list
-2018-06-15 14:16:45,458	event_handler.py	1965	load_workspace	DEBUG	Trying to load new workspace "40e11bb1-49fb-4eb3-bb2b-4d5b9f520b2c" with alias "New test workspace"
-2018-06-15 14:16:45,867	event_handler.py	1983	load_workspace	INFO	Workspace "40e11bb1-49fb-4eb3-bb2b-4d5b9f520b2c" with alias "New test workspace loaded."
-2018-06-15 14:19:52,353	event_handler.py	76	__init__	DEBUG	Start EventHandler: event_handler
-2018-06-15 14:19:56,661	event_handler.py	2542	request_subset_list	DEBUG	Start: request_subset_list
-2018-06-15 14:19:56,673	event_handler.py	1965	load_workspace	DEBUG	Trying to load new workspace "40e11bb1-49fb-4eb3-bb2b-4d5b9f520b2c" with alias "New test workspace"
-2018-06-15 14:19:57,112	event_handler.py	1983	load_workspace	INFO	Workspace "40e11bb1-49fb-4eb3-bb2b-4d5b9f520b2c" with alias "New test workspace loaded."
-2018-06-15 14:44:20,155	event_handler.py	76	__init__	DEBUG	Start EventHandler: event_handler
-2018-06-15 14:44:24,322	event_handler.py	2411	request_subset_info	DEBUG	Start: request_subset_info
-2018-06-15 14:44:24,337	event_handler.py	1965	load_workspace	DEBUG	Trying to load new workspace "40e11bb1-49fb-4eb3-bb2b-4d5b9f520b2c" with alias "New test workspace"
-2018-06-15 14:44:24,681	event_handler.py	1983	load_workspace	INFO	Workspace "40e11bb1-49fb-4eb3-bb2b-4d5b9f520b2c" with alias "New test workspace loaded."
-2018-06-15 14:44:25,102	event_handler.py	2426	request_subset_info	DEBUG	Time for excecuting request_subset_info: 0.7799999713897705
-2018-06-15 14:48:38,452	event_handler.py	76	__init__	DEBUG	Start EventHandler: event_handler
-2018-06-15 14:48:42,748	event_handler.py	2411	request_subset_info	DEBUG	Start: request_subset_info
-2018-06-15 14:48:42,763	event_handler.py	1965	load_workspace	DEBUG	Trying to load new workspace "40e11bb1-49fb-4eb3-bb2b-4d5b9f520b2c" with alias "New test workspace"
-2018-06-15 14:48:43,104	event_handler.py	1983	load_workspace	INFO	Workspace "40e11bb1-49fb-4eb3-bb2b-4d5b9f520b2c" with alias "New test workspace loaded."
-2018-06-15 14:57:48,569	event_handler.py	76	__init__	DEBUG	Start EventHandler: event_handler
-2018-06-15 14:57:53,272	event_handler.py	2129	request_subset_get_data_filter	DEBUG	Start: request_subset_get_data_filter
-2018-06-15 14:57:53,288	event_handler.py	1965	load_workspace	DEBUG	Trying to load new workspace "40e11bb1-49fb-4eb3-bb2b-4d5b9f520b2c" with alias "New test workspace"
-2018-06-15 14:57:53,727	event_handler.py	1983	load_workspace	INFO	Workspace "40e11bb1-49fb-4eb3-bb2b-4d5b9f520b2c" with alias "New test workspace loaded."
-2018-06-15 14:57:53,740	event_handler.py	2146	request_subset_get_data_filter	DEBUG	Time for excecuting request_subset_get_data_filter: 0.4679999351501465
-2018-06-15 15:01:54,273	event_handler.py	76	__init__	DEBUG	Start EventHandler: event_handler
-2018-06-15 15:01:58,714	event_handler.py	2089	request_subset_add	DEBUG	Start: request_subset_add
-2018-06-15 15:01:58,733	event_handler.py	1965	load_workspace	DEBUG	Trying to load new workspace "40e11bb1-49fb-4eb3-bb2b-4d5b9f520b2c" with alias "New test workspace"
-2018-06-15 15:01:59,102	event_handler.py	1983	load_workspace	INFO	Workspace "40e11bb1-49fb-4eb3-bb2b-4d5b9f520b2c" with alias "New test workspace loaded."
-2018-06-15 15:01:59,104	event_handler.py	216	copy_subset	DEBUG	Trying to copy subset "default_subset"
-2018-06-15 15:01:59,295	event_handler.py	2111	request_subset_add	DEBUG	Time for excecuting request_subset_add: 0.5809998512268066
-2018-06-15 15:04:22,307	event_handler.py	76	__init__	DEBUG	Start EventHandler: event_handler
-2018-06-15 15:04:27,334	event_handler.py	2129	request_subset_get_data_filter	DEBUG	Start: request_subset_get_data_filter
-2018-06-15 15:04:27,347	event_handler.py	1965	load_workspace	DEBUG	Trying to load new workspace "40e11bb1-49fb-4eb3-bb2b-4d5b9f520b2c" with alias "New test workspace"
-2018-06-15 15:04:27,808	event_handler.py	1983	load_workspace	INFO	Workspace "40e11bb1-49fb-4eb3-bb2b-4d5b9f520b2c" with alias "New test workspace loaded."
-2018-06-15 15:04:27,838	event_handler.py	2146	request_subset_get_data_filter	DEBUG	Time for excecuting request_subset_get_data_filter: 0.504000186920166
-2018-06-15 15:05:50,052	event_handler.py	76	__init__	DEBUG	Start EventHandler: event_handler
-2018-06-15 15:05:54,481	event_handler.py	2089	request_subset_add	DEBUG	Start: request_subset_add
-2018-06-15 15:05:54,498	event_handler.py	1965	load_workspace	DEBUG	Trying to load new workspace "40e11bb1-49fb-4eb3-bb2b-4d5b9f520b2c" with alias "New test workspace"
-2018-06-15 15:05:54,950	event_handler.py	1983	load_workspace	INFO	Workspace "40e11bb1-49fb-4eb3-bb2b-4d5b9f520b2c" with alias "New test workspace loaded."
-2018-06-15 15:05:54,952	event_handler.py	216	copy_subset	DEBUG	Trying to copy subset "default_subset"
-2018-06-15 15:06:05,938	event_handler.py	76	__init__	DEBUG	Start EventHandler: event_handler
-2018-06-15 15:06:11,809	event_handler.py	2129	request_subset_get_data_filter	DEBUG	Start: request_subset_get_data_filter
-2018-06-15 15:06:11,824	event_handler.py	1965	load_workspace	DEBUG	Trying to load new workspace "40e11bb1-49fb-4eb3-bb2b-4d5b9f520b2c" with alias "New test workspace"
-2018-06-15 15:06:12,231	event_handler.py	1983	load_workspace	INFO	Workspace "40e11bb1-49fb-4eb3-bb2b-4d5b9f520b2c" with alias "New test workspace loaded."
-2018-06-15 15:07:31,470	event_handler.py	76	__init__	DEBUG	Start EventHandler: event_handler
-2018-06-15 15:07:36,134	event_handler.py	2129	request_subset_get_data_filter	DEBUG	Start: request_subset_get_data_filter
-2018-06-15 15:07:36,145	event_handler.py	1965	load_workspace	DEBUG	Trying to load new workspace "40e11bb1-49fb-4eb3-bb2b-4d5b9f520b2c" with alias "New test workspace"
-2018-06-15 15:07:36,526	event_handler.py	1983	load_workspace	INFO	Workspace "40e11bb1-49fb-4eb3-bb2b-4d5b9f520b2c" with alias "New test workspace loaded."
-2018-06-15 15:07:37,995	event_handler.py	2148	request_subset_get_data_filter	DEBUG	Time for excecuting request_subset_get_data_filter: 1.8609998226165771
-2018-06-15 15:24:19,273	event_handler.py	76	__init__	DEBUG	Start EventHandler: event_handler
-2018-06-15 15:24:23,803	event_handler.py	2174	request_subset_get_indicator_settings	DEBUG	Start: request_subset_get_indicator_settings
-2018-06-15 15:24:23,819	event_handler.py	1965	load_workspace	DEBUG	Trying to load new workspace "40e11bb1-49fb-4eb3-bb2b-4d5b9f520b2c" with alias "New test workspace"
-2018-06-15 15:24:24,229	event_handler.py	1983	load_workspace	INFO	Workspace "40e11bb1-49fb-4eb3-bb2b-4d5b9f520b2c" with alias "New test workspace loaded."
-2018-06-15 15:24:24,645	event_handler.py	1976	load_workspace	DEBUG	Workspace "40e11bb1-49fb-4eb3-bb2b-4d5b9f520b2c" with alias "New test workspace" is already loaded. Set reload=True if you want to reload the workspace.
-2018-06-15 15:24:24,760	event_handler.py	1976	load_workspace	DEBUG	Workspace "40e11bb1-49fb-4eb3-bb2b-4d5b9f520b2c" with alias "New test workspace" is already loaded. Set reload=True if you want to reload the workspace.
-2018-06-15 15:24:26,573	event_handler.py	2235	request_subset_get_indicator_settings	DEBUG	Time for excecuting request_subset_get_indicator_settings: 2.7702770233154297
-2018-06-15 16:30:59,723	event_handler.py	77	__init__	DEBUG	Start EventHandler: event_handler
-2018-06-15 16:31:03,691	event_handler.py	2778	request_workspace_data_sources_list	DEBUG	Start: request_workspace_data_sources_list
-2018-06-15 16:31:03,707	event_handler.py	1967	load_workspace	DEBUG	Trying to load new workspace "40e11bb1-49fb-4eb3-bb2b-4d5b9f520b2c" with alias "New test workspace"
-2018-06-15 16:31:04,078	event_handler.py	1985	load_workspace	INFO	Workspace "40e11bb1-49fb-4eb3-bb2b-4d5b9f520b2c" with alias "New test workspace loaded."
-2018-06-15 16:31:04,090	event_handler.py	2787	request_workspace_data_sources_list	DEBUG	Time for excecuting request_workspace_data_sources_list: 0.39903998374938965
-2018-06-15 16:32:15,610	event_handler.py	77	__init__	DEBUG	Start EventHandler: event_handler
-2018-06-15 16:32:19,095	event_handler.py	2738	request_workspace_data_sources_edit	DEBUG	Start: request_workspace_data_sources_list
-2018-06-15 16:39:08,748	event_handler.py	77	__init__	DEBUG	Start EventHandler: event_handler
-2018-06-15 16:39:11,993	event_handler.py	2738	request_workspace_data_sources_edit	DEBUG	Start: request_workspace_data_sources_list
-2018-06-15 16:39:12,006	event_handler.py	1967	load_workspace	DEBUG	Trying to load new workspace "40e11bb1-49fb-4eb3-bb2b-4d5b9f520b2c" with alias "New test workspace"
-2018-06-15 16:39:12,318	event_handler.py	1985	load_workspace	INFO	Workspace "40e11bb1-49fb-4eb3-bb2b-4d5b9f520b2c" with alias "New test workspace loaded."
-2018-06-15 16:39:12,535	event_handler.py	2750	request_workspace_data_sources_edit	DEBUG	Time for excecuting request_workspace_data_sources_edit: 0.5420544147491455
-2018-06-15 16:40:08,788	event_handler.py	77	__init__	DEBUG	Start EventHandler: event_handler
-2018-06-15 16:40:12,471	event_handler.py	2738	request_workspace_data_sources_edit	DEBUG	Start: request_workspace_data_sources_list
-2018-06-15 16:40:12,481	event_handler.py	1967	load_workspace	DEBUG	Trying to load new workspace "40e11bb1-49fb-4eb3-bb2b-4d5b9f520b2c" with alias "New test workspace"
-2018-06-15 16:40:12,792	event_handler.py	1985	load_workspace	INFO	Workspace "40e11bb1-49fb-4eb3-bb2b-4d5b9f520b2c" with alias "New test workspace loaded."
-2018-06-15 16:40:13,006	event_handler.py	2750	request_workspace_data_sources_edit	DEBUG	Time for excecuting request_workspace_data_sources_edit: 0.5350537300109863
-2018-06-15 16:41:02,794	event_handler.py	77	__init__	DEBUG	Start EventHandler: event_handler
-2018-06-15 16:41:05,993	event_handler.py	2738	request_workspace_data_sources_edit	DEBUG	Start: request_workspace_data_sources_list
-2018-06-15 16:41:06,002	event_handler.py	1967	load_workspace	DEBUG	Trying to load new workspace "40e11bb1-49fb-4eb3-bb2b-4d5b9f520b2c" with alias "New test workspace"
-2018-06-15 16:41:06,317	event_handler.py	1985	load_workspace	INFO	Workspace "40e11bb1-49fb-4eb3-bb2b-4d5b9f520b2c" with alias "New test workspace loaded."
-2018-06-15 16:41:06,509	event_handler.py	2750	request_workspace_data_sources_edit	DEBUG	Time for excecuting request_workspace_data_sources_edit: 0.5160515308380127
-2018-06-15 16:41:38,559	event_handler.py	77	__init__	DEBUG	Start EventHandler: event_handler
-2018-06-15 16:41:41,808	event_handler.py	2738	request_workspace_data_sources_edit	DEBUG	Start: request_workspace_data_sources_list
-2018-06-15 16:41:41,819	event_handler.py	1967	load_workspace	DEBUG	Trying to load new workspace "40e11bb1-49fb-4eb3-bb2b-4d5b9f520b2c" with alias "New test workspace"
-2018-06-15 16:41:42,125	event_handler.py	1985	load_workspace	INFO	Workspace "40e11bb1-49fb-4eb3-bb2b-4d5b9f520b2c" with alias "New test workspace loaded."
-2018-06-15 16:42:02,267	event_handler.py	2750	request_workspace_data_sources_edit	DEBUG	Time for excecuting request_workspace_data_sources_edit: 20.45904564857483
-2018-06-15 16:43:06,602	event_handler.py	77	__init__	DEBUG	Start EventHandler: event_handler
-2018-06-15 16:43:09,881	event_handler.py	2740	request_workspace_data_sources_edit	DEBUG	Start: request_workspace_data_sources_list
-2018-06-15 16:43:09,891	event_handler.py	1969	load_workspace	DEBUG	Trying to load new workspace "40e11bb1-49fb-4eb3-bb2b-4d5b9f520b2c" with alias "New test workspace"
-2018-06-15 16:43:10,208	event_handler.py	1987	load_workspace	INFO	Workspace "40e11bb1-49fb-4eb3-bb2b-4d5b9f520b2c" with alias "New test workspace loaded."
-2018-06-15 16:43:10,422	event_handler.py	2752	request_workspace_data_sources_edit	DEBUG	Time for excecuting request_workspace_data_sources_edit: 0.5410542488098145
-2018-06-15 16:43:28,131	event_handler.py	77	__init__	DEBUG	Start EventHandler: event_handler
-2018-06-15 16:43:31,415	event_handler.py	2740	request_workspace_data_sources_edit	DEBUG	Start: request_workspace_data_sources_list
-2018-06-15 16:43:31,424	event_handler.py	1969	load_workspace	DEBUG	Trying to load new workspace "40e11bb1-49fb-4eb3-bb2b-4d5b9f520b2c" with alias "New test workspace"
-2018-06-15 16:43:31,748	event_handler.py	1987	load_workspace	INFO	Workspace "40e11bb1-49fb-4eb3-bb2b-4d5b9f520b2c" with alias "New test workspace loaded."
-2018-06-15 16:43:51,511	event_handler.py	2752	request_workspace_data_sources_edit	DEBUG	Time for excecuting request_workspace_data_sources_edit: 20.096009492874146
-2018-06-15 16:45:38,087	event_handler.py	77	__init__	DEBUG	Start EventHandler: event_handler
-2018-06-15 16:45:41,481	event_handler.py	2738	request_workspace_data_sources_edit	DEBUG	Start: request_workspace_data_sources_list
-2018-06-15 16:45:41,491	event_handler.py	1967	load_workspace	DEBUG	Trying to load new workspace "40e11bb1-49fb-4eb3-bb2b-4d5b9f520b2c" with alias "New test workspace"
-2018-06-15 16:45:41,973	event_handler.py	1985	load_workspace	INFO	Workspace "40e11bb1-49fb-4eb3-bb2b-4d5b9f520b2c" with alias "New test workspace loaded."
-2018-06-15 16:45:42,203	event_handler.py	2750	request_workspace_data_sources_edit	DEBUG	Time for excecuting request_workspace_data_sources_edit: 0.7220723628997803
-2018-06-15 16:46:48,230	event_handler.py	77	__init__	DEBUG	Start EventHandler: event_handler
-2018-06-15 16:46:52,674	event_handler.py	2738	request_workspace_data_sources_edit	DEBUG	Start: request_workspace_data_sources_list
-2018-06-15 16:46:52,686	event_handler.py	1967	load_workspace	DEBUG	Trying to load new workspace "40e11bb1-49fb-4eb3-bb2b-4d5b9f520b2c" with alias "New test workspace"
-2018-06-15 16:46:53,028	event_handler.py	1985	load_workspace	INFO	Workspace "40e11bb1-49fb-4eb3-bb2b-4d5b9f520b2c" with alias "New test workspace loaded."
-2018-06-15 16:46:53,270	event_handler.py	2750	request_workspace_data_sources_edit	DEBUG	Time for excecuting request_workspace_data_sources_edit: 0.5960593223571777
-2018-06-15 16:47:23,485	event_handler.py	77	__init__	DEBUG	Start EventHandler: event_handler
-2018-06-15 16:47:27,305	event_handler.py	2738	request_workspace_data_sources_edit	DEBUG	Start: request_workspace_data_sources_list
-2018-06-15 16:47:27,316	event_handler.py	1967	load_workspace	DEBUG	Trying to load new workspace "40e11bb1-49fb-4eb3-bb2b-4d5b9f520b2c" with alias "New test workspace"
-2018-06-15 16:47:27,692	event_handler.py	1985	load_workspace	INFO	Workspace "40e11bb1-49fb-4eb3-bb2b-4d5b9f520b2c" with alias "New test workspace loaded."
-2018-06-15 16:47:50,660	event_handler.py	2750	request_workspace_data_sources_edit	DEBUG	Time for excecuting request_workspace_data_sources_edit: 23.35433530807495
-2018-06-15 16:49:10,096	event_handler.py	77	__init__	DEBUG	Start EventHandler: event_handler
-2018-06-15 16:49:13,419	event_handler.py	2739	request_workspace_data_sources_edit	DEBUG	Start: request_workspace_data_sources_list
-2018-06-15 16:49:13,433	event_handler.py	1968	load_workspace	DEBUG	Trying to load new workspace "40e11bb1-49fb-4eb3-bb2b-4d5b9f520b2c" with alias "New test workspace"
-2018-06-15 16:49:13,760	event_handler.py	1986	load_workspace	INFO	Workspace "40e11bb1-49fb-4eb3-bb2b-4d5b9f520b2c" with alias "New test workspace loaded."
-2018-06-15 16:49:14,191	event_handler.py	2751	request_workspace_data_sources_edit	DEBUG	Time for excecuting request_workspace_data_sources_edit: 0.7720773220062256
-2018-06-15 16:54:32,327	event_handler.py	77	__init__	DEBUG	Start EventHandler: event_handler
-2018-06-15 16:54:35,834	event_handler.py	2739	request_workspace_data_sources_edit	DEBUG	Start: request_workspace_data_sources_list
-2018-06-15 16:54:35,843	event_handler.py	1968	load_workspace	DEBUG	Trying to load new workspace "40e11bb1-49fb-4eb3-bb2b-4d5b9f520b2c" with alias "New test workspace"
-2018-06-15 16:54:36,169	event_handler.py	1986	load_workspace	INFO	Workspace "40e11bb1-49fb-4eb3-bb2b-4d5b9f520b2c" with alias "New test workspace loaded."
-2018-06-15 16:54:36,408	event_handler.py	2782	request_workspace_data_sources_list	DEBUG	Start: request_workspace_data_sources_list
-2018-06-15 16:54:36,418	event_handler.py	1979	load_workspace	DEBUG	Workspace "40e11bb1-49fb-4eb3-bb2b-4d5b9f520b2c" with alias "New test workspace" is already loaded. Set reload=True if you want to reload the workspace.
-2018-06-15 16:54:36,430	event_handler.py	2791	request_workspace_data_sources_list	DEBUG	Time for excecuting request_workspace_data_sources_list: 0.022002220153808594
-2018-06-15 16:54:36,431	event_handler.py	2754	request_workspace_data_sources_edit	DEBUG	Time for excecuting request_workspace_data_sources_edit: 0.597059965133667
+2018-06-19 14:48:50,927	logger.py	85	add_log	DEBUG	
+2018-06-19 14:48:50,928	logger.py	86	add_log	DEBUG	========================================================================================================================
+2018-06-19 14:48:50,930	logger.py	87	add_log	DEBUG	### Log added for log_id "event_handler" at locaton: ..\log\main_event_handler.log
+2018-06-19 14:48:50,936	logger.py	88	add_log	DEBUG	------------------------------------------------------------------------------------------------------------------------
+2018-06-19 14:48:50,939	event_handler.py	77	__init__	DEBUG	Start EventHandler: event_handler
+2018-06-19 14:48:55,143	event_handler.py	2488	request_subset_get_indicator_settings	DEBUG	Start: request_subset_get_indicator_settings
+2018-06-19 14:48:55,144	event_handler.py	2279	load_workspace	DEBUG	Trying to load new workspace "40e11bb1-49fb-4eb3-bb2b-4d5b9f520b2c" with alias "New test workspace"
+2018-06-19 14:48:55,658	event_handler.py	2297	load_workspace	INFO	Workspace "40e11bb1-49fb-4eb3-bb2b-4d5b9f520b2c" with alias "New test workspace loaded."
+2018-06-19 14:48:56,132	event_handler.py	2290	load_workspace	DEBUG	Workspace "40e11bb1-49fb-4eb3-bb2b-4d5b9f520b2c" with alias "New test workspace" is already loaded. Set reload=True if you want to reload the workspace.
+2018-06-19 14:48:56,248	event_handler.py	2290	load_workspace	DEBUG	Workspace "40e11bb1-49fb-4eb3-bb2b-4d5b9f520b2c" with alias "New test workspace" is already loaded. Set reload=True if you want to reload the workspace.
+2018-06-19 14:48:58,233	event_handler.py	2549	request_subset_get_indicator_settings	DEBUG	Time for excecuting request_subset_get_indicator_settings: 3.0902082920074463
+2018-06-19 14:50:54,699	event_handler.py	77	__init__	DEBUG	Start EventHandler: event_handler
+2018-06-19 14:50:58,775	event_handler.py	2488	request_subset_get_indicator_settings	DEBUG	Start: request_subset_get_indicator_settings
+2018-06-19 14:50:58,790	event_handler.py	2279	load_workspace	DEBUG	Trying to load new workspace "40e11bb1-49fb-4eb3-bb2b-4d5b9f520b2c" with alias "New test workspace"
+2018-06-19 14:50:59,240	event_handler.py	2297	load_workspace	INFO	Workspace "40e11bb1-49fb-4eb3-bb2b-4d5b9f520b2c" with alias "New test workspace loaded."
+2018-06-19 14:50:59,702	event_handler.py	2290	load_workspace	DEBUG	Workspace "40e11bb1-49fb-4eb3-bb2b-4d5b9f520b2c" with alias "New test workspace" is already loaded. Set reload=True if you want to reload the workspace.
+2018-06-19 14:50:59,787	event_handler.py	2290	load_workspace	DEBUG	Workspace "40e11bb1-49fb-4eb3-bb2b-4d5b9f520b2c" with alias "New test workspace" is already loaded. Set reload=True if you want to reload the workspace.
+2018-06-19 14:51:01,804	event_handler.py	2549	request_subset_get_indicator_settings	DEBUG	Time for excecuting request_subset_get_indicator_settings: 3.0291924476623535
+2018-06-19 16:05:34,367	event_handler.py	77	__init__	DEBUG	Start EventHandler: event_handler
+2018-06-19 16:05:37,789	event_handler.py	2488	request_subset_get_indicator_settings	DEBUG	Start: request_subset_get_indicator_settings
+2018-06-19 16:05:37,801	event_handler.py	2279	load_workspace	DEBUG	Trying to load new workspace "40e11bb1-49fb-4eb3-bb2b-4d5b9f520b2c" with alias "New test workspace"
+2018-06-19 16:05:38,173	event_handler.py	2297	load_workspace	INFO	Workspace "40e11bb1-49fb-4eb3-bb2b-4d5b9f520b2c" with alias "New test workspace loaded."
+2018-06-19 16:05:38,565	event_handler.py	2290	load_workspace	DEBUG	Workspace "40e11bb1-49fb-4eb3-bb2b-4d5b9f520b2c" with alias "New test workspace" is already loaded. Set reload=True if you want to reload the workspace.
+2018-06-19 16:05:38,653	event_handler.py	2290	load_workspace	DEBUG	Workspace "40e11bb1-49fb-4eb3-bb2b-4d5b9f520b2c" with alias "New test workspace" is already loaded. Set reload=True if you want to reload the workspace.
+2018-06-19 16:05:40,374	event_handler.py	2549	request_subset_get_indicator_settings	DEBUG	Time for excecuting request_subset_get_indicator_settings: 2.5849997997283936
+2018-06-19 16:07:43,512	event_handler.py	77	__init__	DEBUG	Start EventHandler: event_handler
+2018-06-19 16:07:47,204	event_handler.py	2488	request_subset_get_indicator_settings	DEBUG	Start: request_subset_get_indicator_settings
+2018-06-19 16:07:47,215	event_handler.py	2279	load_workspace	DEBUG	Trying to load new workspace "40e11bb1-49fb-4eb3-bb2b-4d5b9f520b2c" with alias "New test workspace"
+2018-06-19 16:07:47,535	event_handler.py	2297	load_workspace	INFO	Workspace "40e11bb1-49fb-4eb3-bb2b-4d5b9f520b2c" with alias "New test workspace loaded."
+2018-06-19 16:07:47,899	event_handler.py	2290	load_workspace	DEBUG	Workspace "40e11bb1-49fb-4eb3-bb2b-4d5b9f520b2c" with alias "New test workspace" is already loaded. Set reload=True if you want to reload the workspace.
+2018-06-19 16:07:47,984	event_handler.py	2290	load_workspace	DEBUG	Workspace "40e11bb1-49fb-4eb3-bb2b-4d5b9f520b2c" with alias "New test workspace" is already loaded. Set reload=True if you want to reload the workspace.
+2018-06-19 16:07:49,630	event_handler.py	2549	request_subset_get_indicator_settings	DEBUG	Time for excecuting request_subset_get_indicator_settings: 2.4260001182556152
+2018-06-20 10:55:10,323	event_handler.py	77	__init__	DEBUG	Start EventHandler: event_handler
+2018-06-20 10:55:13,795	event_handler.py	2493	request_subset_get_indicator_settings	DEBUG	Start: request_subset_get_indicator_settings
+2018-06-20 10:55:13,814	event_handler.py	2284	load_workspace	DEBUG	Trying to load new workspace "40e11bb1-49fb-4eb3-bb2b-4d5b9f520b2c" with alias "New test workspace"
+2018-06-20 10:55:14,189	event_handler.py	2302	load_workspace	INFO	Workspace "40e11bb1-49fb-4eb3-bb2b-4d5b9f520b2c" with alias "New test workspace loaded."
+2018-06-20 10:55:14,550	event_handler.py	2295	load_workspace	DEBUG	Workspace "40e11bb1-49fb-4eb3-bb2b-4d5b9f520b2c" with alias "New test workspace" is already loaded. Set reload=True if you want to reload the workspace.
+2018-06-20 10:55:14,641	event_handler.py	2295	load_workspace	DEBUG	Workspace "40e11bb1-49fb-4eb3-bb2b-4d5b9f520b2c" with alias "New test workspace" is already loaded. Set reload=True if you want to reload the workspace.
+2018-06-20 10:55:16,440	event_handler.py	2554	request_subset_get_indicator_settings	DEBUG	Time for excecuting request_subset_get_indicator_settings: 2.6449999809265137
+2018-06-20 10:57:41,963	event_handler.py	77	__init__	DEBUG	Start EventHandler: event_handler
+2018-06-20 10:57:45,529	event_handler.py	2493	request_subset_get_indicator_settings	DEBUG	Start: request_subset_get_indicator_settings
+2018-06-20 10:57:45,537	event_handler.py	2284	load_workspace	DEBUG	Trying to load new workspace "40e11bb1-49fb-4eb3-bb2b-4d5b9f520b2c" with alias "New test workspace"
+2018-06-20 10:57:45,845	event_handler.py	2302	load_workspace	INFO	Workspace "40e11bb1-49fb-4eb3-bb2b-4d5b9f520b2c" with alias "New test workspace loaded."
+2018-06-20 10:57:46,211	event_handler.py	2295	load_workspace	DEBUG	Workspace "40e11bb1-49fb-4eb3-bb2b-4d5b9f520b2c" with alias "New test workspace" is already loaded. Set reload=True if you want to reload the workspace.
+2018-06-20 10:57:46,297	event_handler.py	2295	load_workspace	DEBUG	Workspace "40e11bb1-49fb-4eb3-bb2b-4d5b9f520b2c" with alias "New test workspace" is already loaded. Set reload=True if you want to reload the workspace.
+2018-06-20 10:57:48,036	event_handler.py	2554	request_subset_get_indicator_settings	DEBUG	Time for excecuting request_subset_get_indicator_settings: 2.506999969482422
+2018-06-20 10:58:41,029	event_handler.py	77	__init__	DEBUG	Start EventHandler: event_handler
+2018-06-20 10:58:44,320	event_handler.py	2492	request_subset_get_indicator_settings	DEBUG	Start: request_subset_get_indicator_settings
+2018-06-20 10:58:44,332	event_handler.py	2283	load_workspace	DEBUG	Trying to load new workspace "40e11bb1-49fb-4eb3-bb2b-4d5b9f520b2c" with alias "New test workspace"
+2018-06-20 10:58:44,653	event_handler.py	2301	load_workspace	INFO	Workspace "40e11bb1-49fb-4eb3-bb2b-4d5b9f520b2c" with alias "New test workspace loaded."
+2018-06-20 10:58:45,057	event_handler.py	2294	load_workspace	DEBUG	Workspace "40e11bb1-49fb-4eb3-bb2b-4d5b9f520b2c" with alias "New test workspace" is already loaded. Set reload=True if you want to reload the workspace.
+2018-06-20 10:58:45,184	event_handler.py	2294	load_workspace	DEBUG	Workspace "40e11bb1-49fb-4eb3-bb2b-4d5b9f520b2c" with alias "New test workspace" is already loaded. Set reload=True if you want to reload the workspace.
+2018-06-20 10:58:46,937	event_handler.py	2553	request_subset_get_indicator_settings	DEBUG	Time for excecuting request_subset_get_indicator_settings: 2.616999864578247
+2018-06-20 10:59:23,746	event_handler.py	77	__init__	DEBUG	Start EventHandler: event_handler
+2018-06-20 10:59:27,290	event_handler.py	2492	request_subset_get_indicator_settings	DEBUG	Start: request_subset_get_indicator_settings
+2018-06-20 10:59:27,300	event_handler.py	2283	load_workspace	DEBUG	Trying to load new workspace "40e11bb1-49fb-4eb3-bb2b-4d5b9f520b2c" with alias "New test workspace"
+2018-06-20 10:59:27,666	event_handler.py	2301	load_workspace	INFO	Workspace "40e11bb1-49fb-4eb3-bb2b-4d5b9f520b2c" with alias "New test workspace loaded."
+2018-06-20 10:59:28,026	event_handler.py	2294	load_workspace	DEBUG	Workspace "40e11bb1-49fb-4eb3-bb2b-4d5b9f520b2c" with alias "New test workspace" is already loaded. Set reload=True if you want to reload the workspace.
+2018-06-20 10:59:28,118	event_handler.py	2294	load_workspace	DEBUG	Workspace "40e11bb1-49fb-4eb3-bb2b-4d5b9f520b2c" with alias "New test workspace" is already loaded. Set reload=True if you want to reload the workspace.
+2018-06-20 10:59:29,888	event_handler.py	2553	request_subset_get_indicator_settings	DEBUG	Time for excecuting request_subset_get_indicator_settings: 2.5980000495910645
+2018-06-20 11:39:04,761	logger.py	85	add_log	DEBUG	
+2018-06-20 11:39:04,763	logger.py	86	add_log	DEBUG	========================================================================================================================
+2018-06-20 11:39:04,764	logger.py	87	add_log	DEBUG	### Log added for log_id "event_handler" at locaton: ..\log\main_event_handler.log
+2018-06-20 11:39:04,767	logger.py	88	add_log	DEBUG	------------------------------------------------------------------------------------------------------------------------
+2018-06-20 11:39:04,772	event_handler.py	77	__init__	DEBUG	Start EventHandler: event_handler
+2018-06-20 11:39:51,004	event_handler.py	77	__init__	DEBUG	Start EventHandler: event_handler
+2018-06-20 11:39:57,319	event_handler.py	2289	load_workspace	DEBUG	Trying to load new workspace "40e11bb1-49fb-4eb3-bb2b-4d5b9f520b2c" with alias "New test workspace"
+2018-06-20 11:39:58,177	event_handler.py	2307	load_workspace	INFO	Workspace "40e11bb1-49fb-4eb3-bb2b-4d5b9f520b2c" with alias "New test workspace loaded."
+2018-06-20 11:42:16,808	event_handler.py	77	__init__	DEBUG	Start EventHandler: event_handler
+2018-06-20 11:42:21,522	event_handler.py	2289	load_workspace	DEBUG	Trying to load new workspace "40e11bb1-49fb-4eb3-bb2b-4d5b9f520b2c" with alias "New test workspace"
+2018-06-20 11:42:21,861	event_handler.py	2307	load_workspace	INFO	Workspace "40e11bb1-49fb-4eb3-bb2b-4d5b9f520b2c" with alias "New test workspace loaded."
+2018-06-20 11:43:40,289	event_handler.py	77	__init__	DEBUG	Start EventHandler: event_handler
+2018-06-20 11:43:44,583	event_handler.py	2289	load_workspace	DEBUG	Trying to load new workspace "40e11bb1-49fb-4eb3-bb2b-4d5b9f520b2c" with alias "New test workspace"
+2018-06-20 11:43:44,989	event_handler.py	2307	load_workspace	INFO	Workspace "40e11bb1-49fb-4eb3-bb2b-4d5b9f520b2c" with alias "New test workspace loaded."
+2018-06-20 11:44:18,729	event_handler.py	77	__init__	DEBUG	Start EventHandler: event_handler
+2018-06-20 11:44:23,277	event_handler.py	2289	load_workspace	DEBUG	Trying to load new workspace "40e11bb1-49fb-4eb3-bb2b-4d5b9f520b2c" with alias "New test workspace"
+2018-06-20 11:44:23,680	event_handler.py	2307	load_workspace	INFO	Workspace "40e11bb1-49fb-4eb3-bb2b-4d5b9f520b2c" with alias "New test workspace loaded."
+2018-06-20 11:44:57,977	event_handler.py	77	__init__	DEBUG	Start EventHandler: event_handler
+2018-06-20 11:45:02,223	event_handler.py	2289	load_workspace	DEBUG	Trying to load new workspace "40e11bb1-49fb-4eb3-bb2b-4d5b9f520b2c" with alias "New test workspace"
+2018-06-20 11:45:02,687	event_handler.py	2307	load_workspace	INFO	Workspace "40e11bb1-49fb-4eb3-bb2b-4d5b9f520b2c" with alias "New test workspace loaded."
+2018-06-20 11:45:30,167	event_handler.py	77	__init__	DEBUG	Start EventHandler: event_handler
+2018-06-20 11:45:35,226	event_handler.py	2290	load_workspace	DEBUG	Trying to load new workspace "40e11bb1-49fb-4eb3-bb2b-4d5b9f520b2c" with alias "New test workspace"
+2018-06-20 11:45:35,605	event_handler.py	2308	load_workspace	INFO	Workspace "40e11bb1-49fb-4eb3-bb2b-4d5b9f520b2c" with alias "New test workspace loaded."
+2018-06-20 11:46:54,831	event_handler.py	77	__init__	DEBUG	Start EventHandler: event_handler
+2018-06-20 11:46:59,587	event_handler.py	2290	load_workspace	DEBUG	Trying to load new workspace "40e11bb1-49fb-4eb3-bb2b-4d5b9f520b2c" with alias "New test workspace"
+2018-06-20 11:47:00,090	event_handler.py	2308	load_workspace	INFO	Workspace "40e11bb1-49fb-4eb3-bb2b-4d5b9f520b2c" with alias "New test workspace loaded."
+2018-06-20 11:47:33,703	event_handler.py	77	__init__	DEBUG	Start EventHandler: event_handler
+2018-06-20 11:47:38,511	event_handler.py	2290	load_workspace	DEBUG	Trying to load new workspace "40e11bb1-49fb-4eb3-bb2b-4d5b9f520b2c" with alias "New test workspace"
+2018-06-20 11:47:38,875	event_handler.py	2308	load_workspace	INFO	Workspace "40e11bb1-49fb-4eb3-bb2b-4d5b9f520b2c" with alias "New test workspace loaded."
+2018-06-20 11:48:15,000	event_handler.py	77	__init__	DEBUG	Start EventHandler: event_handler
+2018-06-20 11:48:19,758	event_handler.py	2290	load_workspace	DEBUG	Trying to load new workspace "40e11bb1-49fb-4eb3-bb2b-4d5b9f520b2c" with alias "New test workspace"
+2018-06-20 11:48:20,119	event_handler.py	2308	load_workspace	INFO	Workspace "40e11bb1-49fb-4eb3-bb2b-4d5b9f520b2c" with alias "New test workspace loaded."
+2018-06-20 11:49:30,607	event_handler.py	77	__init__	DEBUG	Start EventHandler: event_handler
+2018-06-20 11:49:34,990	event_handler.py	2290	load_workspace	DEBUG	Trying to load new workspace "40e11bb1-49fb-4eb3-bb2b-4d5b9f520b2c" with alias "New test workspace"
+2018-06-20 11:49:35,335	event_handler.py	2308	load_workspace	INFO	Workspace "40e11bb1-49fb-4eb3-bb2b-4d5b9f520b2c" with alias "New test workspace loaded."
+2018-06-20 11:50:14,056	event_handler.py	77	__init__	DEBUG	Start EventHandler: event_handler
+2018-06-20 11:50:18,432	event_handler.py	2290	load_workspace	DEBUG	Trying to load new workspace "40e11bb1-49fb-4eb3-bb2b-4d5b9f520b2c" with alias "New test workspace"
+2018-06-20 11:50:18,761	event_handler.py	2308	load_workspace	INFO	Workspace "40e11bb1-49fb-4eb3-bb2b-4d5b9f520b2c" with alias "New test workspace loaded."
+2018-06-20 11:51:16,598	event_handler.py	77	__init__	DEBUG	Start EventHandler: event_handler
+2018-06-20 11:51:21,191	event_handler.py	2290	load_workspace	DEBUG	Trying to load new workspace "40e11bb1-49fb-4eb3-bb2b-4d5b9f520b2c" with alias "New test workspace"
+2018-06-20 11:51:21,565	event_handler.py	2308	load_workspace	INFO	Workspace "40e11bb1-49fb-4eb3-bb2b-4d5b9f520b2c" with alias "New test workspace loaded."
+2018-06-20 13:07:24,210	event_handler.py	77	__init__	DEBUG	Start EventHandler: event_handler
+2018-06-20 13:07:28,747	event_handler.py	2290	load_workspace	DEBUG	Trying to load new workspace "40e11bb1-49fb-4eb3-bb2b-4d5b9f520b2c" with alias "New test workspace"
+2018-06-20 13:07:29,133	event_handler.py	2308	load_workspace	INFO	Workspace "40e11bb1-49fb-4eb3-bb2b-4d5b9f520b2c" with alias "New test workspace loaded."
+2018-06-20 13:09:05,605	event_handler.py	77	__init__	DEBUG	Start EventHandler: event_handler
+2018-06-20 13:09:10,312	event_handler.py	2290	load_workspace	DEBUG	Trying to load new workspace "40e11bb1-49fb-4eb3-bb2b-4d5b9f520b2c" with alias "New test workspace"
+2018-06-20 13:09:10,743	event_handler.py	2308	load_workspace	INFO	Workspace "40e11bb1-49fb-4eb3-bb2b-4d5b9f520b2c" with alias "New test workspace loaded."
+2018-06-20 13:09:20,745	event_handler.py	77	__init__	DEBUG	Start EventHandler: event_handler
+2018-06-20 13:09:25,349	event_handler.py	2290	load_workspace	DEBUG	Trying to load new workspace "40e11bb1-49fb-4eb3-bb2b-4d5b9f520b2c" with alias "New test workspace"
+2018-06-20 13:09:25,695	event_handler.py	2308	load_workspace	INFO	Workspace "40e11bb1-49fb-4eb3-bb2b-4d5b9f520b2c" with alias "New test workspace loaded."
+2018-06-20 13:12:28,298	event_handler.py	77	__init__	DEBUG	Start EventHandler: event_handler
+2018-06-20 13:12:33,148	event_handler.py	2500	request_subset_get_indicator_settings	DEBUG	Start: request_subset_get_indicator_settings
+2018-06-20 13:12:33,160	event_handler.py	2291	load_workspace	DEBUG	Trying to load new workspace "40e11bb1-49fb-4eb3-bb2b-4d5b9f520b2c" with alias "New test workspace"
+2018-06-20 13:12:33,724	event_handler.py	2309	load_workspace	INFO	Workspace "40e11bb1-49fb-4eb3-bb2b-4d5b9f520b2c" with alias "New test workspace loaded."
+2018-06-20 13:12:34,142	event_handler.py	2302	load_workspace	DEBUG	Workspace "40e11bb1-49fb-4eb3-bb2b-4d5b9f520b2c" with alias "New test workspace" is already loaded. Set reload=True if you want to reload the workspace.
+2018-06-20 13:12:34,302	event_handler.py	2302	load_workspace	DEBUG	Workspace "40e11bb1-49fb-4eb3-bb2b-4d5b9f520b2c" with alias "New test workspace" is already loaded. Set reload=True if you want to reload the workspace.
+2018-06-20 13:12:36,330	event_handler.py	2561	request_subset_get_indicator_settings	DEBUG	Time for excecuting request_subset_get_indicator_settings: 3.181999921798706
+2018-06-20 13:15:21,780	event_handler.py	77	__init__	DEBUG	Start EventHandler: event_handler
+2018-06-20 13:15:26,880	event_handler.py	2500	request_subset_get_indicator_settings	DEBUG	Start: request_subset_get_indicator_settings
+2018-06-20 13:15:26,904	event_handler.py	2291	load_workspace	DEBUG	Trying to load new workspace "40e11bb1-49fb-4eb3-bb2b-4d5b9f520b2c" with alias "New test workspace"
+2018-06-20 13:15:27,455	event_handler.py	2309	load_workspace	INFO	Workspace "40e11bb1-49fb-4eb3-bb2b-4d5b9f520b2c" with alias "New test workspace loaded."
+2018-06-20 13:15:28,014	event_handler.py	2302	load_workspace	DEBUG	Workspace "40e11bb1-49fb-4eb3-bb2b-4d5b9f520b2c" with alias "New test workspace" is already loaded. Set reload=True if you want to reload the workspace.
+2018-06-20 13:15:28,149	event_handler.py	2302	load_workspace	DEBUG	Workspace "40e11bb1-49fb-4eb3-bb2b-4d5b9f520b2c" with alias "New test workspace" is already loaded. Set reload=True if you want to reload the workspace.
+2018-06-20 13:15:30,313	event_handler.py	2561	request_subset_get_indicator_settings	DEBUG	Time for excecuting request_subset_get_indicator_settings: 3.433000087738037
+2018-06-20 13:32:37,076	event_handler.py	77	__init__	DEBUG	Start EventHandler: event_handler
+2018-06-20 13:32:41,388	event_handler.py	2508	request_subset_get_indicator_settings	DEBUG	Start: request_subset_get_indicator_settings
+2018-06-20 13:32:41,402	event_handler.py	2299	load_workspace	DEBUG	Trying to load new workspace "40e11bb1-49fb-4eb3-bb2b-4d5b9f520b2c" with alias "New test workspace"
+2018-06-20 13:32:41,750	event_handler.py	2317	load_workspace	INFO	Workspace "40e11bb1-49fb-4eb3-bb2b-4d5b9f520b2c" with alias "New test workspace loaded."
+2018-06-20 13:32:42,164	event_handler.py	2310	load_workspace	DEBUG	Workspace "40e11bb1-49fb-4eb3-bb2b-4d5b9f520b2c" with alias "New test workspace" is already loaded. Set reload=True if you want to reload the workspace.
+2018-06-20 13:32:42,286	event_handler.py	2310	load_workspace	DEBUG	Workspace "40e11bb1-49fb-4eb3-bb2b-4d5b9f520b2c" with alias "New test workspace" is already loaded. Set reload=True if you want to reload the workspace.
+2018-06-20 13:32:44,399	event_handler.py	2569	request_subset_get_indicator_settings	DEBUG	Time for excecuting request_subset_get_indicator_settings: 3.0109996795654297
+2018-06-20 13:42:24,495	event_handler.py	77	__init__	DEBUG	Start EventHandler: event_handler
+2018-06-20 13:42:29,226	event_handler.py	2509	request_subset_get_indicator_settings	DEBUG	Start: request_subset_get_indicator_settings
+2018-06-20 13:42:29,244	event_handler.py	2300	load_workspace	DEBUG	Trying to load new workspace "40e11bb1-49fb-4eb3-bb2b-4d5b9f520b2c" with alias "New test workspace"
+2018-06-20 13:42:29,689	event_handler.py	2318	load_workspace	INFO	Workspace "40e11bb1-49fb-4eb3-bb2b-4d5b9f520b2c" with alias "New test workspace loaded."
+2018-06-20 13:42:30,163	event_handler.py	2311	load_workspace	DEBUG	Workspace "40e11bb1-49fb-4eb3-bb2b-4d5b9f520b2c" with alias "New test workspace" is already loaded. Set reload=True if you want to reload the workspace.
+2018-06-20 13:42:30,331	event_handler.py	2311	load_workspace	DEBUG	Workspace "40e11bb1-49fb-4eb3-bb2b-4d5b9f520b2c" with alias "New test workspace" is already loaded. Set reload=True if you want to reload the workspace.
+2018-06-20 13:42:32,993	event_handler.py	2570	request_subset_get_indicator_settings	DEBUG	Time for excecuting request_subset_get_indicator_settings: 3.767000198364258
+2018-06-20 13:58:17,546	event_handler.py	77	__init__	DEBUG	Start EventHandler: event_handler
+2018-06-20 13:58:22,250	event_handler.py	2514	request_subset_get_indicator_settings	DEBUG	Start: request_subset_get_indicator_settings
+2018-06-20 13:58:22,266	event_handler.py	2305	load_workspace	DEBUG	Trying to load new workspace "40e11bb1-49fb-4eb3-bb2b-4d5b9f520b2c" with alias "New test workspace"
+2018-06-20 13:58:22,734	event_handler.py	2323	load_workspace	INFO	Workspace "40e11bb1-49fb-4eb3-bb2b-4d5b9f520b2c" with alias "New test workspace loaded."
+2018-06-20 13:58:23,148	event_handler.py	2316	load_workspace	DEBUG	Workspace "40e11bb1-49fb-4eb3-bb2b-4d5b9f520b2c" with alias "New test workspace" is already loaded. Set reload=True if you want to reload the workspace.
+2018-06-20 13:58:23,271	event_handler.py	2316	load_workspace	DEBUG	Workspace "40e11bb1-49fb-4eb3-bb2b-4d5b9f520b2c" with alias "New test workspace" is already loaded. Set reload=True if you want to reload the workspace.
+2018-06-20 13:58:25,292	event_handler.py	2575	request_subset_get_indicator_settings	DEBUG	Time for excecuting request_subset_get_indicator_settings: 3.0420002937316895
+2018-06-20 14:49:10,192	logger.py	85	add_log	DEBUG	
+2018-06-20 14:49:10,197	logger.py	86	add_log	DEBUG	========================================================================================================================
+2018-06-20 14:49:10,200	logger.py	87	add_log	DEBUG	### Log added for log_id "event_handler" at locaton: ..\log\main_event_handler.log
+2018-06-20 14:49:10,202	logger.py	88	add_log	DEBUG	------------------------------------------------------------------------------------------------------------------------
+2018-06-20 14:49:10,204	event_handler.py	77	__init__	DEBUG	Start EventHandler: event_handler
+2018-06-20 14:49:24,733	event_handler.py	77	__init__	DEBUG	Start EventHandler: event_handler
+2018-06-20 14:49:29,476	event_handler.py	2928	request_workspace_add	DEBUG	Start: request_workspace_add
+2018-06-20 14:49:29,497	event_handler.py	253	copy_workspace	DEBUG	Trying to copy workspace "default_workspace". Copy has alias "New test workspace"
+2018-06-20 14:49:29,743	event_handler.py	2928	request_workspace_add	DEBUG	Start: request_workspace_add
+2018-06-20 14:49:29,770	event_handler.py	253	copy_workspace	DEBUG	Trying to copy workspace "default_workspace". Copy has alias "Another test workspace"
+2018-06-20 14:49:58,656	event_handler.py	77	__init__	DEBUG	Start EventHandler: event_handler
+2018-06-20 14:50:03,012	event_handler.py	2888	request_subset_list	DEBUG	Start: request_subset_list
+2018-06-20 14:50:03,024	event_handler.py	2299	load_workspace	WARNING	Could not load workspace "40e11bb1-49fb-4eb3-bb2b-4d5b9f520b2c" with alias "False"
+2018-06-20 14:50:03,026	event_handler.py	2365	action_load_workspace	WARNING	Could not load workspace with uuid: 40e11bb1-49fb-4eb3-bb2b-4d5b9f520b2c
+2018-06-20 14:50:03,051	event_handler.py	2299	load_workspace	WARNING	Could not load workspace "40e11bb1-49fb-4eb3-bb2b-4d5b9f520b2c" with alias "False"
+2018-06-20 14:50:22,982	event_handler.py	77	__init__	DEBUG	Start EventHandler: event_handler
+2018-06-20 14:50:45,863	event_handler.py	77	__init__	DEBUG	Start EventHandler: event_handler
+2018-06-20 14:50:50,300	event_handler.py	2888	request_subset_list	DEBUG	Start: request_subset_list
+2018-06-20 14:50:50,312	event_handler.py	2299	load_workspace	WARNING	Could not load workspace "40e11bb1-49fb-4eb3-bb2b-4d5b9f520b2c" with alias "False"
+2018-06-20 14:50:50,314	event_handler.py	2365	action_load_workspace	WARNING	Could not load workspace with uuid: 40e11bb1-49fb-4eb3-bb2b-4d5b9f520b2c
+2018-06-20 14:50:50,341	event_handler.py	2299	load_workspace	WARNING	Could not load workspace "40e11bb1-49fb-4eb3-bb2b-4d5b9f520b2c" with alias "False"
+2018-06-20 14:51:14,430	event_handler.py	77	__init__	DEBUG	Start EventHandler: event_handler
+2018-06-20 14:51:18,911	event_handler.py	3149	request_workspace_load_default_data	DEBUG	Start: request_workspace_load_default_data
+2018-06-20 14:54:37,964	event_handler.py	77	__init__	DEBUG	Start EventHandler: event_handler
+2018-06-20 14:57:27,421	event_handler.py	77	__init__	DEBUG	Start EventHandler: event_handler
+2018-06-20 14:57:58,282	event_handler.py	77	__init__	DEBUG	Start EventHandler: event_handler
+2018-06-20 14:58:23,176	event_handler.py	77	__init__	DEBUG	Start EventHandler: event_handler
+2018-06-20 14:58:27,746	event_handler.py	2888	request_subset_list	DEBUG	Start: request_subset_list
+2018-06-20 14:58:27,763	event_handler.py	2305	load_workspace	DEBUG	Trying to load new workspace "8178806f-7829-4132-afac-a4ebcbd9ad27" with alias "New test workspace"
+2018-06-20 14:58:28,110	event_handler.py	2323	load_workspace	INFO	Workspace "8178806f-7829-4132-afac-a4ebcbd9ad27" with alias "New test workspace loaded."
+2018-06-20 14:58:43,200	event_handler.py	77	__init__	DEBUG	Start EventHandler: event_handler
+2018-06-20 14:58:48,712	event_handler.py	2429	request_subset_add	DEBUG	Start: request_subset_add
+2018-06-20 14:58:48,726	event_handler.py	2305	load_workspace	DEBUG	Trying to load new workspace "8178806f-7829-4132-afac-a4ebcbd9ad27" with alias "New test workspace"
+2018-06-20 14:58:49,022	event_handler.py	2323	load_workspace	INFO	Workspace "8178806f-7829-4132-afac-a4ebcbd9ad27" with alias "New test workspace loaded."
+2018-06-20 14:58:49,024	event_handler.py	221	copy_subset	DEBUG	Trying to copy subset "default_subset"
+2018-06-20 14:58:49,204	event_handler.py	2451	request_subset_add	DEBUG	Time for excecuting request_subset_add: 0.49200010299682617
+2018-06-20 14:59:29,140	logger.py	85	add_log	DEBUG	
+2018-06-20 14:59:29,141	logger.py	86	add_log	DEBUG	========================================================================================================================
+2018-06-20 14:59:29,143	logger.py	87	add_log	DEBUG	### Log added for log_id "event_handler" at locaton: ..\log\main_event_handler.log
+2018-06-20 14:59:29,145	logger.py	88	add_log	DEBUG	------------------------------------------------------------------------------------------------------------------------
+2018-06-20 14:59:29,148	event_handler.py	77	__init__	DEBUG	Start EventHandler: event_handler
+2018-06-20 14:59:33,673	event_handler.py	2305	load_workspace	DEBUG	Trying to load new workspace "8178806f-7829-4132-afac-a4ebcbd9ad27" with alias "New test workspace"
+2018-06-20 14:59:34,038	event_handler.py	2323	load_workspace	INFO	Workspace "8178806f-7829-4132-afac-a4ebcbd9ad27" with alias "New test workspace loaded."
+2018-06-20 15:00:26,906	event_handler.py	77	__init__	DEBUG	Start EventHandler: event_handler
+2018-06-20 15:00:31,491	event_handler.py	1538	import_default_data	DEBUG	Trying to load default data in workspace "False" with alias "8178806f-7829-4132-afac-a4ebcbd9ad27"
+2018-06-20 15:00:48,811	event_handler.py	77	__init__	DEBUG	Start EventHandler: event_handler
+2018-06-20 15:00:53,179	event_handler.py	2305	load_workspace	DEBUG	Trying to load new workspace "8178806f-7829-4132-afac-a4ebcbd9ad27" with alias "New test workspace"
+2018-06-20 15:00:53,552	event_handler.py	2323	load_workspace	INFO	Workspace "8178806f-7829-4132-afac-a4ebcbd9ad27" with alias "New test workspace loaded."
+2018-06-20 15:01:27,145	event_handler.py	77	__init__	DEBUG	Start EventHandler: event_handler
+2018-06-20 15:01:31,746	event_handler.py	2305	load_workspace	DEBUG	Trying to load new workspace "8178806f-7829-4132-afac-a4ebcbd9ad27" with alias "New test workspace"
+2018-06-20 15:01:32,012	event_handler.py	2323	load_workspace	INFO	Workspace "8178806f-7829-4132-afac-a4ebcbd9ad27" with alias "New test workspace loaded."
+2018-06-20 15:15:41,181	event_handler.py	77	__init__	DEBUG	Start EventHandler: event_handler
+2018-06-20 15:15:45,727	event_handler.py	2514	request_subset_get_indicator_settings	DEBUG	Start: request_subset_get_indicator_settings
+2018-06-20 15:15:45,749	event_handler.py	2305	load_workspace	DEBUG	Trying to load new workspace "8178806f-7829-4132-afac-a4ebcbd9ad27" with alias "New test workspace"
+2018-06-20 15:15:46,085	event_handler.py	2323	load_workspace	INFO	Workspace "8178806f-7829-4132-afac-a4ebcbd9ad27" with alias "New test workspace loaded."
+2018-06-20 15:15:46,623	event_handler.py	2316	load_workspace	DEBUG	Workspace "8178806f-7829-4132-afac-a4ebcbd9ad27" with alias "New test workspace" is already loaded. Set reload=True if you want to reload the workspace.
+2018-06-20 15:17:26,538	event_handler.py	77	__init__	DEBUG	Start EventHandler: event_handler
+2018-06-20 15:17:31,177	event_handler.py	2514	request_subset_get_indicator_settings	DEBUG	Start: request_subset_get_indicator_settings
+2018-06-20 15:17:31,190	event_handler.py	2305	load_workspace	DEBUG	Trying to load new workspace "8178806f-7829-4132-afac-a4ebcbd9ad27" with alias "New test workspace"
+2018-06-20 15:17:31,673	event_handler.py	2323	load_workspace	INFO	Workspace "8178806f-7829-4132-afac-a4ebcbd9ad27" with alias "New test workspace loaded."
+2018-06-20 15:17:32,148	event_handler.py	2316	load_workspace	DEBUG	Workspace "8178806f-7829-4132-afac-a4ebcbd9ad27" with alias "New test workspace" is already loaded. Set reload=True if you want to reload the workspace.
+2018-06-20 15:17:32,184	event_handler.py	2316	load_workspace	DEBUG	Workspace "8178806f-7829-4132-afac-a4ebcbd9ad27" with alias "New test workspace" is already loaded. Set reload=True if you want to reload the workspace.
+2018-06-20 15:17:34,214	event_handler.py	2575	request_subset_get_indicator_settings	DEBUG	Time for excecuting request_subset_get_indicator_settings: 3.0369999408721924
+2018-06-20 16:11:13,667	event_handler.py	77	__init__	DEBUG	Start EventHandler: event_handler
+2018-06-20 16:11:18,574	event_handler.py	2518	request_subset_get_indicator_settings	DEBUG	Start: request_subset_get_indicator_settings
+2018-06-20 16:11:18,590	event_handler.py	2309	load_workspace	DEBUG	Trying to load new workspace "8178806f-7829-4132-afac-a4ebcbd9ad27" with alias "New test workspace"
+2018-06-20 16:11:18,951	event_handler.py	2327	load_workspace	INFO	Workspace "8178806f-7829-4132-afac-a4ebcbd9ad27" with alias "New test workspace loaded."
+2018-06-20 16:11:19,577	event_handler.py	2320	load_workspace	DEBUG	Workspace "8178806f-7829-4132-afac-a4ebcbd9ad27" with alias "New test workspace" is already loaded. Set reload=True if you want to reload the workspace.
+2018-06-20 16:11:19,638	event_handler.py	2320	load_workspace	DEBUG	Workspace "8178806f-7829-4132-afac-a4ebcbd9ad27" with alias "New test workspace" is already loaded. Set reload=True if you want to reload the workspace.
+2018-06-20 16:11:21,892	event_handler.py	2579	request_subset_get_indicator_settings	DEBUG	Time for excecuting request_subset_get_indicator_settings: 3.3173317909240723
+2018-06-20 16:31:30,474	event_handler.py	77	__init__	DEBUG	Start EventHandler: event_handler
+2018-06-20 16:31:35,619	event_handler.py	2518	request_subset_get_indicator_settings	DEBUG	Start: request_subset_get_indicator_settings
+2018-06-20 16:31:35,633	event_handler.py	2309	load_workspace	DEBUG	Trying to load new workspace "8178806f-7829-4132-afac-a4ebcbd9ad27" with alias "New test workspace"
+2018-06-20 16:31:35,936	event_handler.py	2327	load_workspace	INFO	Workspace "8178806f-7829-4132-afac-a4ebcbd9ad27" with alias "New test workspace loaded."
+2018-06-20 16:31:36,430	event_handler.py	2320	load_workspace	DEBUG	Workspace "8178806f-7829-4132-afac-a4ebcbd9ad27" with alias "New test workspace" is already loaded. Set reload=True if you want to reload the workspace.
+2018-06-20 16:31:36,466	event_handler.py	2320	load_workspace	DEBUG	Workspace "8178806f-7829-4132-afac-a4ebcbd9ad27" with alias "New test workspace" is already loaded. Set reload=True if you want to reload the workspace.
+2018-06-20 16:31:38,807	event_handler.py	2579	request_subset_get_indicator_settings	DEBUG	Time for excecuting request_subset_get_indicator_settings: 3.1883187294006348
+2018-06-20 16:39:54,065	event_handler.py	77	__init__	DEBUG	Start EventHandler: event_handler
+2018-06-20 16:39:59,541	event_handler.py	2521	request_subset_get_indicator_settings	DEBUG	Start: request_subset_get_indicator_settings
+2018-06-20 16:39:59,560	event_handler.py	2312	load_workspace	DEBUG	Trying to load new workspace "8178806f-7829-4132-afac-a4ebcbd9ad27" with alias "New test workspace"
+2018-06-20 16:39:59,914	event_handler.py	2330	load_workspace	INFO	Workspace "8178806f-7829-4132-afac-a4ebcbd9ad27" with alias "New test workspace loaded."
+2018-06-20 16:40:00,595	event_handler.py	2323	load_workspace	DEBUG	Workspace "8178806f-7829-4132-afac-a4ebcbd9ad27" with alias "New test workspace" is already loaded. Set reload=True if you want to reload the workspace.
+2018-06-20 16:40:00,650	event_handler.py	2323	load_workspace	DEBUG	Workspace "8178806f-7829-4132-afac-a4ebcbd9ad27" with alias "New test workspace" is already loaded. Set reload=True if you want to reload the workspace.
+2018-06-20 16:40:02,850	event_handler.py	2582	request_subset_get_indicator_settings	DEBUG	Time for excecuting request_subset_get_indicator_settings: 3.308330774307251
+2018-06-20 16:51:16,999	event_handler.py	77	__init__	DEBUG	Start EventHandler: event_handler
+2018-06-20 16:51:21,714	event_handler.py	2602	request_subset_set_indicator_settings	DEBUG	Start: request_subset_set_indicator_settings
+2018-06-20 16:51:21,749	event_handler.py	2312	load_workspace	DEBUG	Trying to load new workspace "8178806f-7829-4132-afac-a4ebcbd9ad27" with alias "New test workspace"
+2018-06-20 16:51:22,327	event_handler.py	2330	load_workspace	INFO	Workspace "8178806f-7829-4132-afac-a4ebcbd9ad27" with alias "New test workspace loaded."
+2018-06-20 16:51:24,825	event_handler.py	2323	load_workspace	DEBUG	Workspace "8178806f-7829-4132-afac-a4ebcbd9ad27" with alias "New test workspace" is already loaded. Set reload=True if you want to reload the workspace.
+2018-06-20 16:51:25,288	event_handler.py	2657	request_subset_set_indicator_settings	DEBUG	Time for excecuting request_subset_set_indicator_settings: 3.574357271194458
+2018-06-20 16:52:20,337	event_handler.py	77	__init__	DEBUG	Start EventHandler: event_handler
+2018-06-20 16:52:25,131	event_handler.py	2603	request_subset_set_indicator_settings	DEBUG	Start: request_subset_set_indicator_settings
+2018-06-20 16:52:25,147	event_handler.py	2313	load_workspace	DEBUG	Trying to load new workspace "8178806f-7829-4132-afac-a4ebcbd9ad27" with alias "New test workspace"
+2018-06-20 16:52:25,495	event_handler.py	2331	load_workspace	INFO	Workspace "8178806f-7829-4132-afac-a4ebcbd9ad27" with alias "New test workspace loaded."
+2018-06-20 16:52:27,734	event_handler.py	2324	load_workspace	DEBUG	Workspace "8178806f-7829-4132-afac-a4ebcbd9ad27" with alias "New test workspace" is already loaded. Set reload=True if you want to reload the workspace.
+2018-06-20 16:52:28,193	event_handler.py	2658	request_subset_set_indicator_settings	DEBUG	Time for excecuting request_subset_set_indicator_settings: 3.0623061656951904
+2018-06-20 16:53:07,546	event_handler.py	77	__init__	DEBUG	Start EventHandler: event_handler
+2018-06-20 16:53:12,148	event_handler.py	2604	request_subset_set_indicator_settings	DEBUG	Start: request_subset_set_indicator_settings
+2018-06-20 16:53:12,161	event_handler.py	2314	load_workspace	DEBUG	Trying to load new workspace "8178806f-7829-4132-afac-a4ebcbd9ad27" with alias "New test workspace"
+2018-06-20 16:53:12,491	event_handler.py	2332	load_workspace	INFO	Workspace "8178806f-7829-4132-afac-a4ebcbd9ad27" with alias "New test workspace loaded."
+2018-06-20 16:53:14,676	event_handler.py	2325	load_workspace	DEBUG	Workspace "8178806f-7829-4132-afac-a4ebcbd9ad27" with alias "New test workspace" is already loaded. Set reload=True if you want to reload the workspace.
+2018-06-20 16:53:15,132	event_handler.py	2659	request_subset_set_indicator_settings	DEBUG	Time for excecuting request_subset_set_indicator_settings: 2.9842984676361084
+2018-06-20 16:54:50,500	event_handler.py	77	__init__	DEBUG	Start EventHandler: event_handler
+2018-06-20 16:54:56,129	event_handler.py	2604	request_subset_set_indicator_settings	DEBUG	Start: request_subset_set_indicator_settings
+2018-06-20 16:54:56,228	event_handler.py	2314	load_workspace	DEBUG	Trying to load new workspace "8178806f-7829-4132-afac-a4ebcbd9ad27" with alias "New test workspace"
+2018-06-20 16:54:56,564	event_handler.py	2332	load_workspace	INFO	Workspace "8178806f-7829-4132-afac-a4ebcbd9ad27" with alias "New test workspace loaded."
+2018-06-20 16:54:59,039	event_handler.py	2325	load_workspace	DEBUG	Workspace "8178806f-7829-4132-afac-a4ebcbd9ad27" with alias "New test workspace" is already loaded. Set reload=True if you want to reload the workspace.
+2018-06-20 16:54:59,746	event_handler.py	2659	request_subset_set_indicator_settings	DEBUG	Time for excecuting request_subset_set_indicator_settings: 3.617361545562744
+2018-06-20 16:55:00,016	event_handler.py	77	__init__	DEBUG	Start EventHandler: event_handler
+2018-06-20 16:55:04,745	event_handler.py	2605	request_subset_set_indicator_settings	DEBUG	Start: request_subset_set_indicator_settings
+2018-06-20 16:55:04,759	event_handler.py	2315	load_workspace	DEBUG	Trying to load new workspace "8178806f-7829-4132-afac-a4ebcbd9ad27" with alias "New test workspace"
+2018-06-20 16:55:05,145	event_handler.py	2333	load_workspace	INFO	Workspace "8178806f-7829-4132-afac-a4ebcbd9ad27" with alias "New test workspace loaded."
+2018-06-20 16:55:07,725	event_handler.py	2326	load_workspace	DEBUG	Workspace "8178806f-7829-4132-afac-a4ebcbd9ad27" with alias "New test workspace" is already loaded. Set reload=True if you want to reload the workspace.
+2018-06-20 16:55:08,207	event_handler.py	2660	request_subset_set_indicator_settings	DEBUG	Time for excecuting request_subset_set_indicator_settings: 3.462346076965332
+2018-06-20 16:55:39,052	event_handler.py	77	__init__	DEBUG	Start EventHandler: event_handler
+2018-06-20 16:55:43,825	event_handler.py	2606	request_subset_set_indicator_settings	DEBUG	Start: request_subset_set_indicator_settings
+2018-06-20 16:55:43,838	event_handler.py	2316	load_workspace	DEBUG	Trying to load new workspace "8178806f-7829-4132-afac-a4ebcbd9ad27" with alias "New test workspace"
+2018-06-20 16:55:44,304	event_handler.py	2334	load_workspace	INFO	Workspace "8178806f-7829-4132-afac-a4ebcbd9ad27" with alias "New test workspace loaded."
+2018-06-20 16:55:46,884	event_handler.py	2327	load_workspace	DEBUG	Workspace "8178806f-7829-4132-afac-a4ebcbd9ad27" with alias "New test workspace" is already loaded. Set reload=True if you want to reload the workspace.
+2018-06-20 16:55:47,400	event_handler.py	2661	request_subset_set_indicator_settings	DEBUG	Time for excecuting request_subset_set_indicator_settings: 3.575357437133789
+2018-06-20 16:56:50,482	event_handler.py	77	__init__	DEBUG	Start EventHandler: event_handler
+2018-06-20 16:56:55,139	event_handler.py	2608	request_subset_set_indicator_settings	DEBUG	Start: request_subset_set_indicator_settings
+2018-06-20 16:56:55,155	event_handler.py	2318	load_workspace	DEBUG	Trying to load new workspace "8178806f-7829-4132-afac-a4ebcbd9ad27" with alias "New test workspace"
+2018-06-20 16:56:55,519	event_handler.py	2336	load_workspace	INFO	Workspace "8178806f-7829-4132-afac-a4ebcbd9ad27" with alias "New test workspace loaded."
+2018-06-20 16:56:57,811	event_handler.py	2329	load_workspace	DEBUG	Workspace "8178806f-7829-4132-afac-a4ebcbd9ad27" with alias "New test workspace" is already loaded. Set reload=True if you want to reload the workspace.
+2018-06-20 16:56:58,249	event_handler.py	2663	request_subset_set_indicator_settings	DEBUG	Time for excecuting request_subset_set_indicator_settings: 3.1103107929229736
+2018-06-20 16:58:23,509	event_handler.py	77	__init__	DEBUG	Start EventHandler: event_handler
+2018-06-20 16:58:28,363	event_handler.py	2606	request_subset_set_indicator_settings	DEBUG	Start: request_subset_set_indicator_settings
+2018-06-20 16:58:28,376	event_handler.py	2316	load_workspace	DEBUG	Trying to load new workspace "8178806f-7829-4132-afac-a4ebcbd9ad27" with alias "New test workspace"
+2018-06-20 16:58:28,696	event_handler.py	2334	load_workspace	INFO	Workspace "8178806f-7829-4132-afac-a4ebcbd9ad27" with alias "New test workspace loaded."
+2018-06-20 17:01:15,691	event_handler.py	77	__init__	DEBUG	Start EventHandler: event_handler
+2018-06-20 17:01:20,074	event_handler.py	2606	request_subset_set_indicator_settings	DEBUG	Start: request_subset_set_indicator_settings
+2018-06-20 17:01:20,087	event_handler.py	2316	load_workspace	DEBUG	Trying to load new workspace "8178806f-7829-4132-afac-a4ebcbd9ad27" with alias "New test workspace"
+2018-06-20 17:01:20,497	event_handler.py	2334	load_workspace	INFO	Workspace "8178806f-7829-4132-afac-a4ebcbd9ad27" with alias "New test workspace loaded."
+2018-06-20 17:03:11,860	event_handler.py	77	__init__	DEBUG	Start EventHandler: event_handler
+2018-06-20 17:03:16,313	event_handler.py	2607	request_subset_set_indicator_settings	DEBUG	Start: request_subset_set_indicator_settings
+2018-06-20 17:03:16,327	event_handler.py	2317	load_workspace	DEBUG	Trying to load new workspace "8178806f-7829-4132-afac-a4ebcbd9ad27" with alias "New test workspace"
+2018-06-20 17:03:16,635	event_handler.py	2335	load_workspace	INFO	Workspace "8178806f-7829-4132-afac-a4ebcbd9ad27" with alias "New test workspace loaded."
+2018-06-20 17:06:13,657	event_handler.py	77	__init__	DEBUG	Start EventHandler: event_handler
+2018-06-20 17:06:18,782	event_handler.py	2609	request_subset_set_indicator_settings	DEBUG	Start: request_subset_set_indicator_settings
+2018-06-20 17:06:18,795	event_handler.py	2319	load_workspace	DEBUG	Trying to load new workspace "8178806f-7829-4132-afac-a4ebcbd9ad27" with alias "New test workspace"
+2018-06-20 17:06:19,154	event_handler.py	2337	load_workspace	INFO	Workspace "8178806f-7829-4132-afac-a4ebcbd9ad27" with alias "New test workspace loaded."
+2018-06-20 17:07:32,593	event_handler.py	77	__init__	DEBUG	Start EventHandler: event_handler
+2018-06-20 17:07:37,187	event_handler.py	2609	request_subset_set_indicator_settings	DEBUG	Start: request_subset_set_indicator_settings
+2018-06-20 17:07:37,196	event_handler.py	2319	load_workspace	DEBUG	Trying to load new workspace "8178806f-7829-4132-afac-a4ebcbd9ad27" with alias "New test workspace"
+2018-06-20 17:07:37,433	event_handler.py	2337	load_workspace	INFO	Workspace "8178806f-7829-4132-afac-a4ebcbd9ad27" with alias "New test workspace loaded."
+2018-06-20 17:07:41,480	event_handler.py	77	__init__	DEBUG	Start EventHandler: event_handler
+2018-06-20 17:07:46,013	event_handler.py	2609	request_subset_set_indicator_settings	DEBUG	Start: request_subset_set_indicator_settings
+2018-06-20 17:07:46,025	event_handler.py	2319	load_workspace	DEBUG	Trying to load new workspace "8178806f-7829-4132-afac-a4ebcbd9ad27" with alias "New test workspace"
+2018-06-20 17:07:46,335	event_handler.py	2337	load_workspace	INFO	Workspace "8178806f-7829-4132-afac-a4ebcbd9ad27" with alias "New test workspace loaded."
+2018-06-20 17:10:03,143	event_handler.py	77	__init__	DEBUG	Start EventHandler: event_handler
+2018-06-20 17:10:07,363	event_handler.py	2612	request_subset_set_indicator_settings	DEBUG	Start: request_subset_set_indicator_settings
+2018-06-20 17:10:07,373	event_handler.py	2322	load_workspace	DEBUG	Trying to load new workspace "8178806f-7829-4132-afac-a4ebcbd9ad27" with alias "New test workspace"
+2018-06-20 17:10:07,748	event_handler.py	2340	load_workspace	INFO	Workspace "8178806f-7829-4132-afac-a4ebcbd9ad27" with alias "New test workspace loaded."
+2018-06-20 17:10:54,625	event_handler.py	77	__init__	DEBUG	Start EventHandler: event_handler
+2018-06-20 17:10:58,956	event_handler.py	2612	request_subset_set_indicator_settings	DEBUG	Start: request_subset_set_indicator_settings
+2018-06-20 17:10:58,967	event_handler.py	2322	load_workspace	DEBUG	Trying to load new workspace "8178806f-7829-4132-afac-a4ebcbd9ad27" with alias "New test workspace"
+2018-06-20 17:10:59,271	event_handler.py	2340	load_workspace	INFO	Workspace "8178806f-7829-4132-afac-a4ebcbd9ad27" with alias "New test workspace loaded."
+2018-06-20 17:18:02,059	event_handler.py	77	__init__	DEBUG	Start EventHandler: event_handler
+2018-06-20 17:18:06,600	event_handler.py	2612	request_subset_set_indicator_settings	DEBUG	Start: request_subset_set_indicator_settings
+2018-06-20 17:18:06,612	event_handler.py	2322	load_workspace	DEBUG	Trying to load new workspace "8178806f-7829-4132-afac-a4ebcbd9ad27" with alias "New test workspace"
+2018-06-20 17:18:06,913	event_handler.py	2340	load_workspace	INFO	Workspace "8178806f-7829-4132-afac-a4ebcbd9ad27" with alias "New test workspace loaded."
+2018-06-20 17:18:28,895	logger.py	85	add_log	DEBUG	
+2018-06-20 17:18:28,897	logger.py	86	add_log	DEBUG	========================================================================================================================
+2018-06-20 17:18:28,899	logger.py	87	add_log	DEBUG	### Log added for log_id "event_handler" at locaton: ..\log\main_event_handler.log
+2018-06-20 17:18:28,902	logger.py	88	add_log	DEBUG	------------------------------------------------------------------------------------------------------------------------
+2018-06-20 17:18:28,905	event_handler.py	77	__init__	DEBUG	Start EventHandler: event_handler
+2018-06-20 17:18:33,829	event_handler.py	2612	request_subset_set_indicator_settings	DEBUG	Start: request_subset_set_indicator_settings
+2018-06-20 17:18:33,842	event_handler.py	2322	load_workspace	DEBUG	Trying to load new workspace "8178806f-7829-4132-afac-a4ebcbd9ad27" with alias "New test workspace"
+2018-06-20 17:18:34,220	event_handler.py	2340	load_workspace	INFO	Workspace "8178806f-7829-4132-afac-a4ebcbd9ad27" with alias "New test workspace loaded."
+2018-06-20 17:19:03,410	event_handler.py	77	__init__	DEBUG	Start EventHandler: event_handler
+2018-06-20 17:19:07,849	event_handler.py	2612	request_subset_set_indicator_settings	DEBUG	Start: request_subset_set_indicator_settings
+2018-06-20 17:19:07,868	event_handler.py	2322	load_workspace	DEBUG	Trying to load new workspace "8178806f-7829-4132-afac-a4ebcbd9ad27" with alias "New test workspace"
+2018-06-20 17:19:08,174	event_handler.py	2340	load_workspace	INFO	Workspace "8178806f-7829-4132-afac-a4ebcbd9ad27" with alias "New test workspace loaded."
+2018-06-20 17:37:03,079	event_handler.py	77	__init__	DEBUG	Start EventHandler: event_handler
+2018-06-20 17:37:06,612	event_handler.py	2612	request_subset_set_indicator_settings	DEBUG	Start: request_subset_set_indicator_settings
+2018-06-20 17:37:06,625	event_handler.py	2322	load_workspace	DEBUG	Trying to load new workspace "8178806f-7829-4132-afac-a4ebcbd9ad27" with alias "New test workspace"
+2018-06-20 17:37:06,885	event_handler.py	2340	load_workspace	INFO	Workspace "8178806f-7829-4132-afac-a4ebcbd9ad27" with alias "New test workspace loaded."
+2018-06-20 17:38:25,602	event_handler.py	77	__init__	DEBUG	Start EventHandler: event_handler
+2018-06-20 17:38:29,190	event_handler.py	2612	request_subset_set_indicator_settings	DEBUG	Start: request_subset_set_indicator_settings
+2018-06-20 17:38:29,199	event_handler.py	2322	load_workspace	DEBUG	Trying to load new workspace "8178806f-7829-4132-afac-a4ebcbd9ad27" with alias "New test workspace"
+2018-06-20 17:38:29,462	event_handler.py	2340	load_workspace	INFO	Workspace "8178806f-7829-4132-afac-a4ebcbd9ad27" with alias "New test workspace loaded."
+2018-06-20 17:38:32,387	event_handler.py	77	__init__	DEBUG	Start EventHandler: event_handler
+2018-06-20 17:38:35,891	event_handler.py	2612	request_subset_set_indicator_settings	DEBUG	Start: request_subset_set_indicator_settings
+2018-06-20 17:38:35,903	event_handler.py	2322	load_workspace	DEBUG	Trying to load new workspace "8178806f-7829-4132-afac-a4ebcbd9ad27" with alias "New test workspace"
+2018-06-20 17:38:36,141	event_handler.py	2340	load_workspace	INFO	Workspace "8178806f-7829-4132-afac-a4ebcbd9ad27" with alias "New test workspace loaded."
+2018-06-20 17:39:38,777	event_handler.py	77	__init__	DEBUG	Start EventHandler: event_handler
+2018-06-20 17:39:42,477	event_handler.py	2612	request_subset_set_indicator_settings	DEBUG	Start: request_subset_set_indicator_settings
+2018-06-20 17:39:42,488	event_handler.py	2322	load_workspace	DEBUG	Trying to load new workspace "8178806f-7829-4132-afac-a4ebcbd9ad27" with alias "New test workspace"
+2018-06-20 17:39:42,740	event_handler.py	2340	load_workspace	INFO	Workspace "8178806f-7829-4132-afac-a4ebcbd9ad27" with alias "New test workspace loaded."
+2018-06-21 09:25:42,824	event_handler.py	77	__init__	DEBUG	Start EventHandler: event_handler
+2018-06-21 09:25:47,395	event_handler.py	2322	load_workspace	DEBUG	Trying to load new workspace "8178806f-7829-4132-afac-a4ebcbd9ad27" with alias "New test workspace"
+2018-06-21 09:25:47,777	event_handler.py	2340	load_workspace	INFO	Workspace "8178806f-7829-4132-afac-a4ebcbd9ad27" with alias "New test workspace loaded."
+2018-06-29 13:18:38,635	logger.py	85	add_log	DEBUG	
+2018-06-29 13:18:38,637	logger.py	86	add_log	DEBUG	========================================================================================================================
+2018-06-29 13:18:38,639	logger.py	87	add_log	DEBUG	### Log added for log_id "event_handler" at locaton: ..\log\main_event_handler.log
+2018-06-29 13:18:38,641	logger.py	88	add_log	DEBUG	------------------------------------------------------------------------------------------------------------------------
+2018-06-29 13:18:38,643	event_handler.py	77	__init__	DEBUG	Start EventHandler: event_handler
+2018-06-29 13:18:41,807	event_handler.py	3136	request_workspace_data_sources_list	DEBUG	Start: request_workspace_data_sources_list
+2018-06-29 13:18:41,808	event_handler.py	2322	load_workspace	DEBUG	Trying to load new workspace "8178806f-7829-4132-afac-a4ebcbd9ad27" with alias "New test workspace"
+2018-06-29 13:18:42,143	event_handler.py	2340	load_workspace	INFO	Workspace "8178806f-7829-4132-afac-a4ebcbd9ad27" with alias "New test workspace loaded."
+2018-06-29 13:18:42,154	event_handler.py	3145	request_workspace_data_sources_list	DEBUG	Time for excecuting request_workspace_data_sources_list: 0.3469998836517334
+2018-06-29 13:18:47,876	event_handler.py	77	__init__	DEBUG	Start EventHandler: event_handler
+2018-06-29 13:18:51,028	event_handler.py	3093	request_workspace_data_sources_edit	DEBUG	Start: request_workspace_data_sources_list
+2018-06-29 13:18:51,029	event_handler.py	2322	load_workspace	DEBUG	Trying to load new workspace "8178806f-7829-4132-afac-a4ebcbd9ad27" with alias "New test workspace"
+2018-06-29 13:18:51,290	event_handler.py	2340	load_workspace	INFO	Workspace "8178806f-7829-4132-afac-a4ebcbd9ad27" with alias "New test workspace loaded."
+2018-06-29 13:18:51,770	event_handler.py	3136	request_workspace_data_sources_list	DEBUG	Start: request_workspace_data_sources_list
+2018-06-29 13:18:51,771	event_handler.py	2333	load_workspace	DEBUG	Workspace "8178806f-7829-4132-afac-a4ebcbd9ad27" with alias "New test workspace" is already loaded. Set reload=True if you want to reload the workspace.
+2018-06-29 13:18:51,773	event_handler.py	3145	request_workspace_data_sources_list	DEBUG	Time for excecuting request_workspace_data_sources_list: 0.0030002593994140625
+2018-06-29 13:18:51,774	event_handler.py	3108	request_workspace_data_sources_edit	DEBUG	Time for excecuting request_workspace_data_sources_edit: 0.745995283126831
+2018-06-29 13:21:27,060	event_handler.py	77	__init__	DEBUG	Start EventHandler: event_handler
+2018-06-29 13:21:30,332	event_handler.py	3093	request_workspace_data_sources_edit	DEBUG	Start: request_workspace_data_sources_list

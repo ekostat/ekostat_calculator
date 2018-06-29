@@ -894,6 +894,7 @@ class DataHandler(object):
         self.parameter_mapping = core.ParameterMapping()
         self.parameter_mapping.load_mapping_settings(file_path=file_path)
 
+
     #==========================================================================
     def add_df(self, pd_df, data_type, add_columns=False):
         """
@@ -909,6 +910,7 @@ class DataHandler(object):
             self.row_data = self.row_data.append(pd_df, ignore_index=True).fillna('')
 #        print(self.data_phys_chem.head())
     
+
     #==========================================================================
 #    def add_txt_file(self, file_path, data_type): 
     def add_txt_file(self, file_path, data_type, map_object=None): 
@@ -920,6 +922,7 @@ class DataHandler(object):
 
         self.add_df(data, data_type)
         # TODO: Check if all is ok
+        
         
 #    #==========================================================================
 #    def filter_data(self, data_filter_object, filter_id=''):

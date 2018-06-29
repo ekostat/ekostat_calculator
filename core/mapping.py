@@ -44,9 +44,9 @@ class IndSetHomPar(dict):
 #==============================================================================
 #==============================================================================
 """ 
-class IndSetMatCol(list):
+class SimpleList(list):
     """
-    Created     20180612    by Magnus Wenzer
+    Created     20180616    by Magnus Wenzer
     
     """ 
     def __init__(self, file_path): 
@@ -131,15 +131,18 @@ class AttributeDict(dict):
         for i, value in enumerate(df[first_key].values):
             setattr(self, value.strip(), {key: df[key][i] for key in key_list})
                     
+            
     #==========================================================================
     def keys(self):
         return list(self.__dict__.keys())
         
+    
     #==========================================================================
     def get(self, key):
         """
         Updated     20180319    by Magnus Wenzer
         """ 
+#        print('KEY', '={}='.format(key))
         try:
             return getattr(self, key.lower())
         except: 
@@ -148,6 +151,7 @@ class AttributeDict(dict):
             except:
                 return getattr(self, 'SE' + key)
     
+    
     #==========================================================================
     def _get_array_from_df(self, df=None, key_a=u'', key_b=u'', match=None):
 #        print(type(df[key_a]), type(df[key_a][0]))
@@ -155,17 +159,21 @@ class AttributeDict(dict):
         return [x.strip() for x in df[key_a].loc[df[key_b].isin([match])].values]
 #        return [x.strip() for x in df[key_a].iloc[np.where(df[key_b]==match)].values]
         
+
     #==========================================================================
     def get_list(self, key_list):
         return list(self.get(key) for key in key_list)
+    
         
     #==========================================================================
     def get_mapping_dict(self, key_list):
         return dict(list((key, self.get(key)) for key in key_list))
         
+    
     #==========================================================================
     def __getitem__(self, key):
         return getattr(self, key)
+    
     
     #==========================================================================
 
@@ -1086,7 +1094,8 @@ class UUIDmapping():
         """
         if not status:
             status = self.all_status
-            
+        
+        dfjsd
         if 'default_' in unique_id:
             return unique_id
         

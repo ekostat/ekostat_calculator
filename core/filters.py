@@ -604,7 +604,8 @@ class SettingsFile(object):
                 return False
         num, suf = get_type_area_parts(type_area)
         
-        var = variable
+        var = variable 
+        self.var = var
         if variable is None:
             var = self.df.columns
         if variable not in self.df.columns:
@@ -633,9 +634,10 @@ class SettingsFile(object):
                                            (self.df['TYPE_AREA_SUFFIX']==suf) & \
                                            (self.df['VISS_EU_CD'] == 'unspecified'), var]
             else:
-                value_series = self.df.loc[(self.df['TYPE_AREA_NUMBER']==num) % \
+                value_series = self.df.loc[(self.df['TYPE_AREA_NUMBER']==num) & \
                                            (self.df['VISS_EU_CD'] == 'unspecified'), var]
-        
+        self.suf = suf
+        self.num = num
 #        print('----')
 #        print('water_body {}, type_area {}, variable {}'.format(water_body, type_area, variable))
 #        print('num {}, suf {}, suf? {}'.format(num, suf, self.df.loc[self.df['TYPE_AREA_NUMBER']==num, 'TYPE_AREA_SUFFIX'].values))
@@ -649,7 +651,8 @@ class SettingsFile(object):
         if variable not in self.df.columns:
             return value_series
         # Try to return single value, list or interval
-        return_value = []
+        return_value = [] 
+        self.value_series = value_series
         for value in value_series.values:              
             if variable in self.list_columns: 
                 value = self._get_list_from_string(value, variable)
@@ -666,7 +669,7 @@ class SettingsFile(object):
             return_value.append(value)
             # TODO: return dataframe?
         # if only one row for given type_area or water_body, return as single value, else return as pandas series
-#        print(return_value)
+        print('return_value', return_value)
         if len(return_value) == 1:
             return return_value[0]
         elif len(return_value) > 1 and all(x == return_value[0] for x in return_value):
@@ -694,19 +697,28 @@ class SettingsFile(object):
     #==========================================================================
     def set_value(self, type_area=None, variable=None, value=None, viss_eu_cd=None): 
         """
-        Updated     20180612   by Magnus Wenzer
+        Updated     20180621   by Magnus Wenzer
         
         20180612: MW added viss_eu_cd
+        20180621: MW added the posibility to add new viss_eu_cd 
+        
+        value can be int/float/str och list. 
+        If list len(value) must be equal to the number of rows for the "match" 
+        on type_area or viss_eu_cd. 
+        
         """
         if not all([variable, value]):
             return False
         if not any([type_area, viss_eu_cd]):
             return False
         
+        if type(value) != list:
+            value = [value]
+        
         new_value = []
         for val in value:
             if variable in self.list_columns: 
-                print('List column')
+                print('List column', val)
                 val = self._get_string_from_list(val, variable)
             elif variable in self.interval_columns: 
                 print('Interval column')
@@ -729,6 +741,8 @@ class SettingsFile(object):
                 self.df.loc[self.df['TYPE_AREA_NUMBER']==num, variable] = new_value
             
         elif viss_eu_cd: 
+            if viss_eu_cd not in self.df['VISS_EU_CD'].values:
+                self._add_new_rows_for_viss_eu_cd(viss_eu_cd=viss_eu_cd)
             print('Value to set for water body (viss_eu_cd) "{}" and variable "{}": {}'.format(viss_eu_cd, variable, new_value))
             self.df.loc[self.df['VISS_EU_CD']==viss_eu_cd, variable] = new_value
         
@@ -736,17 +750,28 @@ class SettingsFile(object):
         
     
     #==========================================================================
-    def old_set_value(self, type_area=None, variable=None, value=None): 
+    def old_set_value(self, type_area=None, variable=None, value=None, viss_eu_cd=None): 
         """
-        Updated     20180323   by Magnus Wenzer
+        Updated     20180620   by Magnus Wenzer
+        
+        20180612: MW added viss_eu_cd
+        20180620: MW added the posibility to add new viss_eu_cd
         """
-        if not all([type_area, variable, value]):
+        if not all([variable, value]):
             return False
+        if not any([type_area, viss_eu_cd]):
+            return False
+        
+        if type(value) != list:
+            value = [value]
+            
+        if type(value[0]) != list:
+            value = [value]
         
         new_value = []
         for val in value:
             if variable in self.list_columns: 
-                print('List column')
+                print('List column', val)
                 val = self._get_string_from_list(val, variable)
             elif variable in self.interval_columns: 
                 print('Interval column')
@@ -759,15 +784,23 @@ class SettingsFile(object):
                 print('Value could not be changed!')
                 return False
             new_value.append(val)
-        else:
+        
+        if type_area:
             print('Value to set for type_area "{}" and variable "{}": {}'.format(type_area, variable, new_value))
-
             num, suf = get_type_area_parts(type_area)
             if suf:
                 self.df.loc[(self.df['TYPE_AREA_NUMBER']==num) & (self.df['TYPE_AREA_SUFFIX']==suf), variable] = new_value 
             else:
                 self.df.loc[self.df['TYPE_AREA_NUMBER']==num, variable] = new_value
-            return True
+            
+        elif viss_eu_cd: 
+            if viss_eu_cd not in self.df['VISS_EU_CD'].values:
+                self._add_new_rows_for_viss_eu_cd(viss_eu_cd=viss_eu_cd)
+            print('Value to set for water body (viss_eu_cd) "{}" and variable "{}": {}'.format(viss_eu_cd, variable, new_value))
+            self.df.loc[self.df['VISS_EU_CD']==viss_eu_cd, variable] = new_value
+        
+        return True
+    
         
         
     #==========================================================================
@@ -1165,6 +1198,16 @@ class SettingsFile(object):
 class SettingsBase(object): 
     
     #==========================================================================
+    def set_value(self, type_area=None, variable=None, value=None, viss_eu_cd=None): 
+        """
+        Created     20180620    by Magnus Wenzer
+        """
+        
+        self.settings.set_value(type_area=type_area, variable=variable, value=value, viss_eu_cd=viss_eu_cd)
+        self.settings.save_file()
+        
+        
+    #==========================================================================
     def set_values(self, value_dict): 
         """
         Sets values for several type_areas and variables. 
@@ -1299,7 +1342,7 @@ class SettingsDataFilter(SettingsBase):
         self.filter_type = 'data'
         self.settings = settings_file_object 
         self.settings.connected_to_filter_settings_object = True 
-        self.allowed_variables = self.settings.filter_columns
+        self.allowed_variables = self.settings.filter_columns + self.settings.level_columns
         
     #==========================================================================
     def get_filter_boolean_for_df(self, df=None, water_body=None, **kwargs): 

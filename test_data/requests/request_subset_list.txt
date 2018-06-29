@@ -1,4 +1,4 @@
 {
     "status": "editable",
-    "workspace_uuid": "40e11bb1-49fb-4eb3-bb2b-4d5b9f520b2c"
+    "workspace_uuid": "8178806f-7829-4132-afac-a4ebcbd9ad27"
 }
