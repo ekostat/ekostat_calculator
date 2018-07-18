@@ -980,9 +980,9 @@ class SettingsFile(object):
     
     
     #==========================================================================
-    def get_filter_boolean_for_df(self, df=None, water_body = None): 
+    def get_filter_boolean_for_df(self, df=None, water_body=None): 
         """
-        Updated     20180716    by Magnus Wenzer
+        Updated     20180718    by Magnus Wenzer
         
         Get boolean tuple to use for filtering
         """
@@ -990,7 +990,8 @@ class SettingsFile(object):
         if water_body:
             combined_boolean = df['VISS_EU_CD'] == water_body
         else:
-            raise InputError('In SettingsFile get_filter_boolean_for_df','Must provide water_body for settings filter')
+            raise exceptions.MissingInputVariable
+#            raise InputError('In SettingsFile get_filter_boolean_for_df','Must provide water_body for settings filter')
             
        
         for variable in self.filter_columns: 
@@ -1086,12 +1087,16 @@ class SettingsFile(object):
 
         #print('RESULT', result)
         # Must check if there are several results. For example BQI has two depth intervalls.  
-        if type(result) is list or result is False:
+        if type(result) is tuple or result is False:
             if not result:
                 return False
             from_value, to_value = result
         else:
-            raise InputError('in filters.py _get_boolean_from_interval()', 'Returned multiple values from get_value, do not know which one to use')
+            print(type(result))
+            print(result)
+            print('variable', variable)
+            raise exceptions.UnexpectedInputVariable
+#            raise InputError('in filters.py _get_boolean_from_interval()', 'Returned multiple values from get_value, do not know which one to use')
 
         parameter = variable.split('_')[0]
         
@@ -1102,7 +1107,7 @@ class SettingsFile(object):
     def _get_boolean_from_monthday_interval(self, df=None, type_area=None, water_body=None, variable=None): 
         """
         Created     20180716    by Magnus Wenzer
-        Updated     20180717    by Magnus Wenzer
+        Updated     20180718    by Magnus Wenzer
         """
         if 'MONTHDAY' not in variable:
             raise exceptions.InvalidInputVariable
@@ -1113,11 +1118,12 @@ class SettingsFile(object):
 
         #print('RESULT', result)
         # Must check if there are several results. For example BQI has two depth intervalls.  
-        if type(result) is list or result is False:
+        if type(result) is tuple or result is False:
             if not result:
                 return False
         else:
-            raise InputError('in filters.py _get_boolean_from_monthday_interval()', 'Returned multiple values from get_value, do not know which one to use')
+            raise exceptions.UnexpectedInputVariable
+#            raise InputError('in filters.py _get_boolean_from_monthday_interval()', 'Returned multiple values from get_value, do not know which one to use')
 
         from_monthday, to_monthday = result
         from_month = int(from_monthday[:2])
@@ -1144,7 +1150,7 @@ class SettingsFile(object):
     #==========================================================================
     def _get_boolean_from_list(self, df=None, type_area=None, water_body = None, variable=None): 
         """
-        Updated     20180322    by Magnus Wenzer
+        Updated     20180718    by Magnus Wenzer
         """
         
         result = self.get_value(type_area=type_area, water_body = water_body,
@@ -1156,12 +1162,13 @@ class SettingsFile(object):
 #        print(len(result))
         
         
-        if type(result) is list or result is False:
+        if type(result) is tuple or result is False:
             if not result:
                 return False
             value_list = result
         else:
-            raise InputError('in filters.py _get_boolean_from_interval()', 'Returned multiple values from get_value, do not know which one do use')
+            raise exceptions.UnexpectedInputVariable
+#            raise InputError('in filters.py _get_boolean_from_interval()', 'Returned multiple values from get_value, do not know which one do use')
 
 #            if not type_area:
 #                    type_area = self.mapping_water_body.get_type_area_for_water_body(water_body, include_suffix=True)
@@ -1282,8 +1289,9 @@ class SettingsRef(SettingsBase):
                 #TODO: add closes matching salinity somewhere here
         elif not ref_value:
             return False
-        elif type(ref_value) is pd.Series:
-            raise InputError('In SettingsRef get_ref_value','returned pd.Series for ref_value, give more specific info to get the right row')
+        elif type(ref_value) is pd.Series: 
+            raise exceptions.UnexpectedInputVariable
+#            raise InputError('In SettingsRef get_ref_value','returned pd.Series for ref_value, give more specific info to get the right row')
         else:
             raise TypeError('Unknown Type of reference value, must be either equation as string or float. Given reference value {} is {}. Or salinity missing, given salinity value is {}'.format(ref_value, type(ref_value), salinity))
         
@@ -1505,19 +1513,7 @@ class WaterBodyStationFilter(object):
         self.directory = directory
         return True
 
-class InputError(Exception):
-
-    """Exception raised for errors in the input.
-
-    Attributes:
-        expression -- input expression in which the error occurred
-        message -- explanation of the error
-    """
-
-    def __init__(self, expression, message):
-        self.expression = expression
-        self.message = message            
-        
+         
         
 ###############################################################################
 def get_type_area_parts(type_area): 

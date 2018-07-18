@@ -1107,16 +1107,14 @@ class WorkSpace(object):
     def apply_indicator_data_filter(self, subset='', indicator='', step='step_2'):
         """
         Created     ????????    by Magnus Wenzer
-        Updated     20180319    by Magnus Wenzer
+        Updated     20180718    by Magnus Wenzer
         
-        Applies indicator data filter to the index handler. Step 2. 
+        Applies indicator data filter to the index handler. Step 2. Applies filter for all water_bodies. 
         
         Input:                
             subset:         subset to apply filter on. 
             
             indicator:      name of indicator to apply as a string, ex. "din_winter" 
-            
-            water_body:     water body in question, given av VISS_EU_CD string
             
             step:           step_2 is default
         
@@ -1496,10 +1494,12 @@ class WorkSpace(object):
         step_object = self.get_step_object(subset=subset, step=step)
         return step_object.get_indicator_data_filter_settings(indicator)
     
+    
     #==========================================================================
     def get_indicator_settings_name_list(self, subset=None, step=2):
         step_object = self.get_step_object(subset=subset, step=step)
         return sorted(step_object.indicator_settings.keys())
+    
     
     #==========================================================================
     def get_subset_list(self):
@@ -1508,9 +1508,11 @@ class WorkSpace(object):
         """
         return sorted(self.subset_dict.keys())
     
+    
     #==========================================================================
     def get_subset_object(self, subset): 
         return self.subset_dict.get(subset, False)
+    
     
     #==========================================================================
     def get_step_object(self, step=None, subset=None): 
@@ -1518,16 +1520,19 @@ class WorkSpace(object):
         if step == 'step_0':
             return self.step_0
         
-        assert all([subset, step])
+        if not all([subset, step]):
+            raise exceptions.MissingInputVariable
         
         sub = self.get_subset_object(subset)
         if not sub:
             return False
         return sub.get_step_object(step)
     
+    
     #==========================================================================
     def get_step_0_object(self): 
         return self.step_0 
+    
     
     #==========================================================================
     def get_step_1_object(self, subset): 

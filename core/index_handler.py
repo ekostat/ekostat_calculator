@@ -497,23 +497,56 @@ class IndexHandler(object):
     def get_filtered_data(self, subset=None, step=None, water_body=None, indicator=None): 
         """
         Updated     20180718    by Magnus Wenzer
+        
         Returns filtered data for the given boolean specification
         Takes input arguments: subset, step, water_body and indicator
         """
         
         
-        if indicator and not water_body:
+        if any([water_body, indicator]) and not all([water_body, indicator]):
             raise exceptions.MissingInputVariable
+        elif all([water_body, indicator]) and not subset:
+            raise exceptions.MissingInputVariable('subset missing')
             
-        step_0, step_1, step_2 = self._get_steps(step=step)
+        step_0, step_1, step_2 = self._get_steps(step=step) 
         
         if any([step_1, step_2]) and not subset:
-            raise exceptions.MissingInputVariable
+            raise exceptions.MissingInputVariable('subset missing') 
         
-        boolean = self._get_boolean(step_0, subset, step_1, step_2, water_body, indicator)
+        try:
+            boolean = self._get_boolean(step_0, subset, step_1, step_2, water_body, indicator)
+        except:
+            raise exceptions.BooleanNotFound
         
         return self.data_handler_object.get_all_column_data_df(boolean_filter=boolean)
     
+    
+    #==========================================================================
+    def _print_boolean_keys_at_level(self, key_dict, tab_length=0): 
+        """
+        Created     20180718    by Magnus Wenzer
+        """
+        if type(key_dict) != dict:
+            return
+        
+        key_list = sorted(key_dict)
+        if 'boolean' in key_list:
+            key_list.pop(key_list.index('boolean'))
+            key_list = ['boolean'] + key_list
+        for key in key_list:
+            print('{}{}'.format('\t'*tab_length, key))
+            self._print_boolean_keys_at_level(key_dict[key], tab_length+1)
+
+
+    #==========================================================================
+    def print_boolean_keys(self): 
+        """
+        Created     20180718    by Magnus Wenzer
+        """
+        print('Boolean KEYS')
+        print('-'*50)
+        self._print_boolean_keys_at_level(self.booleans)
+        
     
     #==========================================================================
     def reset_booleans(self, subset=None, step=None):

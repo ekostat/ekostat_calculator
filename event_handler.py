@@ -13,7 +13,7 @@ import json
 import codecs
 
 import pandas as pd
-
+import pickle
 
 import logging
 import importlib
@@ -41,23 +41,28 @@ class EventHandler(object):
                  workspace_directory='',
                  resource_directory='', 
                  log_directory='', 
-                 test_data_directory=''): 
+                 test_data_directory='', 
+                 reload_mapping_objects=False): 
         """
         Created     20180219    by Magnus Wenzer
-        Updated     20180616    by Magnus Wenzer
+        Updated     20180718    by Magnus Wenzer
         
         MW 20180530: Only one usr per event handler. 
         In terms of user_id this does not really matter at the moment. 
         user_id must be given in every call and the corresponding uuid_mapping 
         file is loaded in the method call if neaded. 
         """
-        assert all([user_id, workspace_directory, resource_directory, log_directory]), 'Missing directory paths when creating EventHandler instance.' 
-                 
+        if not all([user_id, workspace_directory, resource_directory, log_directory]): 
+            exceptions.MissingInputVariable('Missing directory paths when creating EventHandler instance.')
+        
+        t0 = time.time()
+        
         self.user_id = user_id
         self.workspace_directory = workspace_directory
         self.resource_directory = resource_directory
         self.log_directory = log_directory
         self.test_data_directory = test_data_directory
+        self.reload_mapping_objects = reload_mapping_objects
         
         
         self.log_id = 'event_handler'
@@ -83,23 +88,43 @@ class EventHandler(object):
         
         self.workspaces = {}
         
-        # Mapping objects
-        self.mapping_objects = {}
-        self.mapping_objects['water_body'] = core.WaterBody(file_path=os.path.join(self.resource_directory, 'mappings/water_body_match.txt'))
-        self.mapping_objects['quality_element'] = core.QualityElement(file_path=os.path.join(self.resource_directory, 'Quality_Elements.cfg'))
-        self.mapping_objects['hypsographs'] = core.Hypsograph(file_path=os.path.join(self.resource_directory, 'mappings/hypsographs.txt'))
-        
-        self.mapping_objects['display_mapping'] = core.ParameterMapping()
-        self.mapping_objects['display_mapping'].load_mapping_settings(file_path=os.path.join(self.resource_directory, 'mappings/display_mapping.txt'))
-        
-        self.mapping_objects['indicator_settings_homogeneous_parameters'] = core.IndSetHomPar(file_path=os.path.join(self.resource_directory, 'mappings/indicator_settings_homogeneous_parameters.txt'))
-        self.mapping_objects['indicator_settings_matching_columns'] = core.SimpleList(file_path=os.path.join(self.resource_directory, 'mappings/indicator_settings_matching_columns.txt'))
-        self.mapping_objects['indicator_settings_items_to_show_in_gui'] = core.SimpleList(file_path=os.path.join(self.resource_directory, 'mappings/indicator_settings_items_to_show_in_gui.txt'))
-        self.mapping_objects['indicator_settings_items_editable_in_gui'] = core.SimpleList(file_path=os.path.join(self.resource_directory, 'mappings/indicator_settings_items_editable_in_gui.txt'))
-                            
+        tm = time.time()
+        self._load_mapping_objects()
+        self._logger.debug('Time for mapping: {}'.format(time.time()-tm))             
         
         if self.test_data_directory:
-            self.load_test_requests()        
+            self.load_test_requests()  
+            
+        self._logger.debug('Time for initiating EventHandler: {}'.format(time.time()-t0))
+        
+    
+    #==========================================================================
+    def _load_mapping_objects(self):
+        
+        mappings_pickle_file_path = os.path.join(self.resource_directory, 'mapping_objects.pkl') 
+        if os.path.exists(mappings_pickle_file_path) and not self.reload_mapping_objects:
+            self._logger.debug('Loading mapping files from pickle file.')
+            with open(mappings_pickle_file_path, "rb") as fid: 
+                self.mapping_objects = pickle.load(fid)
+                
+        else:
+            self._logger.debug('Loading mapping files from original files.')
+            # Mapping objects
+            self.mapping_objects = {}
+            self.mapping_objects['water_body'] = core.WaterBody(file_path=os.path.join(self.resource_directory, 'mappings/water_body_match.txt'))
+            self.mapping_objects['quality_element'] = core.QualityElement(file_path=os.path.join(self.resource_directory, 'Quality_Elements.cfg'))
+            self.mapping_objects['hypsographs'] = core.Hypsograph(file_path=os.path.join(self.resource_directory, 'mappings/hypsographs.txt'))
+            
+            self.mapping_objects['display_mapping'] = core.ParameterMapping()
+            self.mapping_objects['display_mapping'].load_mapping_settings(file_path=os.path.join(self.resource_directory, 'mappings/display_mapping.txt'))
+            
+            self.mapping_objects['indicator_settings_homogeneous_parameters'] = core.IndSetHomPar(file_path=os.path.join(self.resource_directory, 'mappings/indicator_settings_homogeneous_parameters.txt'))
+            self.mapping_objects['indicator_settings_matching_columns'] = core.SimpleList(file_path=os.path.join(self.resource_directory, 'mappings/indicator_settings_matching_columns.txt'))
+            self.mapping_objects['indicator_settings_items_to_show_in_gui'] = core.SimpleList(file_path=os.path.join(self.resource_directory, 'mappings/indicator_settings_items_to_show_in_gui.txt'))
+            self.mapping_objects['indicator_settings_items_editable_in_gui'] = core.SimpleList(file_path=os.path.join(self.resource_directory, 'mappings/indicator_settings_items_editable_in_gui.txt'))
+            
+            with open(mappings_pickle_file_path, "wb") as fid:
+                pickle.dump(self.mapping_objects, fid) 
         
         
     #==========================================================================
@@ -2409,6 +2434,21 @@ class EventHandler(object):
         
         
     #==========================================================================
+    def action_apply_indicator_settings_data_filter(self, workspace_uuid=None, subset_uuid=None, step='step_2'):
+        """
+        Created     20180718    by Magnus Wenzer
+        Updated     
+        
+        Applies the settings data filter at step for the given workspace and subset. 
+        Filter is applied for all available indicators from step 1. 
+        """ 
+        self.action_load_workspace(workspace_uuid=workspace_uuid) 
+        workspace_object = self._get_workspace_object(unique_id=workspace_uuid) 
+        for indicator in workspace_object.get_available_indicators(subset=subset_uuid, step=1): 
+            workspace_object.apply_indicator_data_filter(subset=subset_uuid, indicator=indicator, step=step)
+        
+        
+    #==========================================================================
     def action_reset_data_filter(self, workspace_uuid=None, subset_uuid=None, step=1): 
         """
         Created     20180608    by Magnus Wenzer
@@ -2723,6 +2763,10 @@ class EventHandler(object):
         self.action_apply_data_filter(workspace_uuid=workspace_uuid, 
                                       subset_uuid=subset_uuid, 
                                       step=1) 
+        
+        self.action_apply_indicator_settings_data_filter(workspace_uuid=workspace_uuid, 
+                                                         subset_uuid=subset_uuid, 
+                                                         step=2)
                
         self._logger.debug('Time for excecuting request_subset_set_indicator_settings: {}'.format(time.time()-t0)) 
         return response
@@ -3064,11 +3108,11 @@ class EventHandler(object):
     def request_workspace_edit(self, request):
         """
         Created     20180221    by Magnus Wenzer
-        Updated     20180717    by Magnus Wenzer
+        Updated     20180718    by Magnus Wenzer
         
         "request" must contain: 
+            workspace_uuid 
             alias (new alias)
-            uuid 
         
         Returns a dict like:
             {
@@ -3080,20 +3124,18 @@ class EventHandler(object):
         t0 = time.time() 
         self._logger.debug('Start: request_workspace_edit')
         alias = request['alias'] 
-        unique_id = request['workspace_uuid'] 
+        workspace_uuid = request['workspace_uuid'] 
         
         uuid_mapping = self._get_uuid_mapping_object()
-        uuid_mapping.set_alias(unique_id, alias)
+        uuid_mapping.set_alias(workspace_uuid, alias)
         
         status = request.get('status', False)
         if status: 
-            uuid_mapping.set_status(unique_id, status)
+            uuid_mapping.set_status(workspace_uuid, status)
         else:
-            status = uuid_mapping.get_status(unique_id=unique_id)
+            status = uuid_mapping.get_status(unique_id=workspace_uuid)
         
-        response = {"alias": alias, 
-                    "workspace_uuid": unique_id, 
-                    "status": status}
+        response = self.dict_workspace(workspace_uuid=workspace_uuid)
         
         self._logger.debug('Time for excecuting request_workspace_data_sources_list: {}'.format(time.time()-t0))
         return response
@@ -3123,6 +3165,37 @@ class EventHandler(object):
         
         response = {'workspaces': []}
         response['workspaces'] = self.list_workspaces()
+        
+        self._logger.debug('Time for excecuting request_workspace_list: {}'.format(time.time()-t0))
+        return response 
+    
+    
+    #==========================================================================
+    def request_workspace_info(self, request):
+        """
+        Created     20180718    by Magnus Wenzer
+        Updated     
+        
+        "request" must contain: 
+            workspace_uuid
+        Returns a dict like:
+            {
+            	"workspaces": [
+            		{
+            			"alias": "My Workspace",
+            			"workspace_uuid": "my_workspace",
+            			"status": "editable"
+            		}
+            	]
+            }
+        """
+        t0 = time.time()
+        self._logger.debug('Start: request_workspace_list')
+        
+        workspace_uuid = request['workspace_uuid']
+        
+        response = {'workspaces': []}
+        response = self.dict_workspace(workspace_uuid=workspace_uuid)
         
         self._logger.debug('Time for excecuting request_workspace_list: {}'.format(time.time()-t0))
         return response

@@ -16,7 +16,12 @@ class EkostatException(Exception):
     handle the error text for different languages. 
     """
     code = None 
-    message = ''
+    message = '' 
+    
+    def __init__(self, message=''):
+        self.message = '{}: {}'.format(self.message, message)
+    
+    
     
     
 #==============================================================================
@@ -88,8 +93,39 @@ class MissingInputVariable(EkostatInternalException):
     code = 500   
     message = 'Input variable is missing'
     
+
+#==============================================================================
+class UnexpectedInputVariable(EkostatInternalException):
+    """
+    Created     20180718    by Magnus Wenzer
+    """
+    code = 500   
+    message = 'Found unexpected variable' 
+    
+
+#==============================================================================
+class BooleanNotFound(EkostatInternalException):
+    """
+    Created     20180718    by Magnus Wenzer
+    """
+    code = 500   
+    message = 'Could not find boolean' 
     
     
+    
+    
+#class InputError(Exception):
+#
+#    """Exception raised for errors in the input.
+#
+#    Attributes:
+#        expression -- input expression in which the error occurred
+#        message -- explanation of the error
+#    """
+#
+#    def __init__(self, expression, message):
+#        self.expression = expression
+#        self.message = message   
     
     
     

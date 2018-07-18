@@ -10,7 +10,9 @@ import core
 import os, sys
 import uuid
 import re
-import codecs
+import codecs 
+
+import core.exceptions as exceptions
 
 #if current_path not in sys.path: 
 #    sys.path.append(os.path.dirname(os.path.realpath(__file__)))
@@ -1194,7 +1196,7 @@ class UUIDmapping():
     #==========================================================================
     def set_alias(self, unique_id, new_alias): 
         if new_alias in self.get_alias_list_for_user():
-            return False
+            raise exceptions.WorkspaceAlreadyExists('when trying to set new alias')
         self.df.loc[self.df['uuid']==unique_id, 'alias'] = new_alias
         self._save_file()
         return True
