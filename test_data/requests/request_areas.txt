@@ -2,24 +2,24 @@
     "areas": [
         {
             "label": "SE5",
-            "value": "SE5",
+            "key": "SE5",
             "type": "district",
-            "status": "selectable",
-            "active": true,
+            "status": "editable",
+            "value": true,
             "children": [
                 {
                     "label": "1s - V\u00e4stkustens inre kustvatten, s\u00f6dra",
-                    "value": "1s",
+                    "key": "1s",
                     "type": "type_area",
-                    "status": "selectable",
-                    "active": true,
+                    "status": "editable",
+                    "value": true,
                     "children": [
                         {
                             "label": "Balg\u00f6arkipelagen",
-                            "value": "SE570900-121060",
+                            "key": "SE570900-121060",
                             "type": "water_body",
                             "status": "disabled",
-                            "active": false
+                            "value": false
                         }
                     ]
                 }

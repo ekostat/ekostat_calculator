@@ -9,14 +9,19 @@ import codecs
 import pandas as pd
 import numpy as np
 import utils
-import re
+import re 
+import datetime 
+
 
 #if current_path not in sys.path: 
 #    sys.path.append(os.path.dirname(os.path.realpath(__file__)))
 try:
     import core
 except:
-    pass
+    pass 
+
+import core.exceptions as exceptions
+
 
 ###############################################################################
 class DataFilter(object):
@@ -50,8 +55,12 @@ class DataFilter(object):
             return False
         return ~df[parameter].astype(str).isin(value_list)
     
+    
     #==========================================================================
     def _get_filter_boolean_for_df_from_include_list(self, df=None, parameter=None): 
+        """
+        Updated 20180717    by Magnus Wenzer
+        """
         parameter = parameter.upper()
         value_list = self.get_include_list_filter(parameter)
         if not value_list:
@@ -60,8 +69,18 @@ class DataFilter(object):
 #        print('\n'*5)
 #        print(parameter)
 #        print(value_list)
-#        print('\n'*5)
-        return df[parameter].astype(str).isin(value_list)
+#        print('\n'*5) 
+
+        boolean = df[parameter].astype(str).isin(value_list)
+        
+        # If parameter is MYEAR we want to include also some month before to be
+        # able to calculate winter status stretching over new year. 
+        if parameter == 'MYEAR':
+            start_date = datetime.datetime(int(value_list[0]), 11, 1) # Include nov and dec
+            stop_date = datetime.datetime(int(value_list[0]), 12, 31) # Include nov and dec 
+            
+            boolean = boolean | df['date'].between(start_date, stop_date)
+        return boolean
     
     
         
@@ -155,12 +174,14 @@ class DataFilter(object):
             if long_name.startswith('areas'):
                 pass
             elif long_name.startswith('LIST_'):
+                print('===', long_name)
                 filter_name = long_name[5:] 
                 with codecs.open(file_path, 'r', encoding='cp1252') as fid: 
                     if filter_name.startswith('EXCLUDE_'): 
                         self.exclude_list_filter[filter_name[8:]] = [item.strip() for item in fid.readlines()]
                     elif filter_name.startswith('INCLUDE_'): 
                         self.include_list_filter[filter_name[8:]] = [item.strip() for item in fid.readlines()]
+                        print('---', self.include_list_filter[filter_name[8:]])
 #            print('Loaded list:', self.include_list_filter[filter_name]) 
         
         #----------------------------------------------------------------------
@@ -307,6 +328,7 @@ class DataFilter(object):
             self.save_filter_files() 
         return True
     
+    
     #==========================================================================
     def set_exclude_list_filter(self, filter_name, filter_list, save_files=True, append_items=False): 
         if filter_name not in self.exclude_list_filter.keys():
@@ -417,7 +439,7 @@ class SettingsFile(object):
         self.connected_to_tolerance_settings_object = False
         
         self._prefix_list = ['FILTER', 'REF', 'TOLERANCE', 'LEVEL'] 
-        self._suffix_list = ['INT', 'EQ', 'FLOAT']
+        self._suffix_list = ['INT', 'EQ', 'FLOAT', 'STR']
         
         self._load_file()    
     
@@ -669,7 +691,7 @@ class SettingsFile(object):
             return_value.append(value)
             # TODO: return dataframe?
         # if only one row for given type_area or water_body, return as single value, else return as pandas series
-        print('return_value', return_value)
+#        print('return_value', return_value)
         if len(return_value) == 1:
             return return_value[0]
         elif len(return_value) > 1 and all(x == return_value[0] for x in return_value):
@@ -712,6 +734,7 @@ class SettingsFile(object):
         if not any([type_area, viss_eu_cd]):
             return False
         
+#        print('value'.upper(), value, type(value))
         if type(value) != list:
             value = [value]
         
@@ -747,61 +770,7 @@ class SettingsFile(object):
             self.df.loc[self.df['VISS_EU_CD']==viss_eu_cd, variable] = new_value
         
         return True
-        
-    
-    #==========================================================================
-    def old_set_value(self, type_area=None, variable=None, value=None, viss_eu_cd=None): 
-        """
-        Updated     20180620   by Magnus Wenzer
-        
-        20180612: MW added viss_eu_cd
-        20180620: MW added the posibility to add new viss_eu_cd
-        """
-        if not all([variable, value]):
-            return False
-        if not any([type_area, viss_eu_cd]):
-            return False
-        
-        if type(value) != list:
-            value = [value]
-            
-        if type(value[0]) != list:
-            value = [value]
-        
-        new_value = []
-        for val in value:
-            if variable in self.list_columns: 
-                print('List column', val)
-                val = self._get_string_from_list(val, variable)
-            elif variable in self.interval_columns: 
-                print('Interval column')
-                val = self._get_string_from_interval(val, variable) 
-            elif variable in self.tolerance_columns: 
-                print('Tolerance column')
-                val = str(val)
-            
-            if val == False: 
-                print('Value could not be changed!')
-                return False
-            new_value.append(val)
-        
-        if type_area:
-            print('Value to set for type_area "{}" and variable "{}": {}'.format(type_area, variable, new_value))
-            num, suf = get_type_area_parts(type_area)
-            if suf:
-                self.df.loc[(self.df['TYPE_AREA_NUMBER']==num) & (self.df['TYPE_AREA_SUFFIX']==suf), variable] = new_value 
-            else:
-                self.df.loc[self.df['TYPE_AREA_NUMBER']==num, variable] = new_value
-            
-        elif viss_eu_cd: 
-            if viss_eu_cd not in self.df['VISS_EU_CD'].values:
-                self._add_new_rows_for_viss_eu_cd(viss_eu_cd=viss_eu_cd)
-            print('Value to set for water body (viss_eu_cd) "{}" and variable "{}": {}'.format(viss_eu_cd, variable, new_value))
-            self.df.loc[self.df['VISS_EU_CD']==viss_eu_cd, variable] = new_value
-        
-        return True
-    
-        
+         
         
     #==========================================================================
     def _add_new_rows_for_viss_eu_cd(self, viss_eu_cd, nr_rows=1): 
@@ -936,23 +905,37 @@ class SettingsFile(object):
     
     #==========================================================================
     def _get_list_from_string(self, value, variable): 
+        """
+        Updated 20180716    by Magnus Wenzer 
+        
+        20180716: Changed to return tuple. 
+        """
         return_list = []
         for item in value.split(';'):
             item = self._convert(item.strip(), variable)
             return_list.append(item)
-        return return_list
+        return tuple(return_list)
     
     
     #==========================================================================
     def _get_interval_from_string(self, value, variable): 
+        """
+        Updated 20180716    by Magnus Wenzer 
+        
+        20180716: Changed to return tuple. 
+        """
         return_list = []
         for item in value.split('-'):
             item = self._convert(item.strip(), variable)
             return_list.append(item)
-        return return_list
+        return tuple(return_list)
+    
     
     #==========================================================================
     def _get_string_from_list(self, value, variable): 
+        print('¤'*50)
+        print('¤'*50)
+        print(value, type(value), variable)
         item_list = []
         for item in value:
             if not self._valid_value(item, variable):
@@ -960,6 +943,7 @@ class SettingsFile(object):
             else:
                 item_list.append(str(item))
         return ';'.join(item_list)
+    
     
     #==========================================================================
     def _get_string_from_interval(self, value, variable): 
@@ -971,6 +955,7 @@ class SettingsFile(object):
                 item_list.append(str(item))
         return '-'.join(item_list)
 
+
     #==========================================================================
     def _convert(self, value, variable):
         if variable in self.int_columns: 
@@ -979,19 +964,25 @@ class SettingsFile(object):
             return float(value)
         return value
     
+    
     #==========================================================================
     def _valid_value(self, value, variable): 
         """
         Checks the validity of a value based on the variable. 
-        """
-        if 'MONTH' in variable: 
+        """ 
+        if 'MONTHDAY' in variable:
+            if len(value) != 4:
+                return False
+        elif 'MONTH' in variable: 
             if int(value) not in list(range(1,13)):
                 return False
         return True
+    
+    
     #==========================================================================
     def get_filter_boolean_for_df(self, df=None, water_body = None): 
         """
-        Updated     20180326    by Lena Viktorsson
+        Updated     20180716    by Magnus Wenzer
         
         Get boolean tuple to use for filtering
         """
@@ -1004,9 +995,14 @@ class SettingsFile(object):
        
         for variable in self.filter_columns: 
             if variable in self.interval_columns:
-                boolean = self._get_boolean_from_interval(df=df,
-                                                          water_body = water_body,
-                                                          variable=variable)
+                if 'MONTHDAY' in variable:
+                    boolean = self._get_boolean_from_monthday_interval(df=df,
+                                                                      water_body=water_body,
+                                                                      variable=variable)
+                else:
+                    boolean = self._get_boolean_from_interval(df=df,
+                                                              water_body = water_body,
+                                                              variable=variable)
                 self.temp_boolean_interval = boolean
             elif variable in self.list_columns:
                 boolean = self._get_boolean_from_list(df=df,
@@ -1027,7 +1023,9 @@ class SettingsFile(object):
         if len(combined_boolean) == 0: 
             combined_boolean = pd.Series(np.ones(len(df), dtype=bool)) 
             
-        return combined_boolean
+        return combined_boolean 
+    
+    
     #==========================================================================
     def old_get_filter_boolean_for_df(self, df=None, water_body = None, type_area=None, level=None): 
         """
@@ -1075,6 +1073,8 @@ class SettingsFile(object):
             combined_boolean = pd.Series(np.ones(len(df), dtype=bool)) 
             
         return combined_boolean
+    
+    
     #==========================================================================
     def _get_boolean_from_interval(self, df=None, type_area=None, water_body = None, variable=None): 
         """
@@ -1091,68 +1091,55 @@ class SettingsFile(object):
                 return False
             from_value, to_value = result
         else:
-            raise InputError('in filters.py _get_boolean_from_interval()', 'Returned multiple values from get_value, do not know which one do use')
+            raise InputError('in filters.py _get_boolean_from_interval()', 'Returned multiple values from get_value, do not know which one to use')
 
         parameter = variable.split('_')[0]
         
         return (df[parameter] >= from_value) & (df[parameter] <= to_value)
+    
+    
     #==========================================================================
-    def old_get_boolean_from_interval(self, df=None, type_area=None, variable=None, level=None): 
+    def _get_boolean_from_monthday_interval(self, df=None, type_area=None, water_body=None, variable=None): 
         """
-        Updated     20180322    by Magnus Wenzer
+        Created     20180716    by Magnus Wenzer
+        Updated     20180717    by Magnus Wenzer
         """
-        
+        if 'MONTHDAY' not in variable:
+            raise exceptions.InvalidInputVariable
+            
         result = self.get_value(type_area=type_area, 
+                                water_body=water_body, 
                                 variable=variable)
-        
+
+        #print('RESULT', result)
         # Must check if there are several results. For example BQI has two depth intervalls.  
-        print('RESULT', result)
-        if not len(result):
-            return False
-        elif len(result) == 1:
-            from_value, to_value = result[0]
+        if type(result) is list or result is False:
+            if not result:
+                return False
         else:
-            if level == None:
-                return None
-            from_value, to_value = result[level]
-            
-            
-        parameter = variable.split('_')[0]
-#        print(df[parameter])
-#        print(type(df[parameter][0]))
-#        print('variable', parameter)
-#        print('from_value', from_value, type(from_value))
+            raise InputError('in filters.py _get_boolean_from_monthday_interval()', 'Returned multiple values from get_value, do not know which one to use')
 
-        # TODO: Remove astype(float) when this is changed in data handler
-#        print('='*50)
-#        print('parameter', parameter)
-#        print(type(df[parameter].values[0]), df[parameter]) 
-        return (df[parameter] >= from_value) & (df[parameter] <= to_value)
-#        return (df[parameter].astype(float) >= from_value) & (df[parameter].apply(float) <= to_value)
-#        return (df[parameter].apply(lambda x: float(x) if x else np.nan) >= from_value) & \
-#                (df[parameter].apply(lambda x: float(x) if x else np.nan) <= to_value) # No depth for Chl. Can't float. 
-
-    #==========================================================================
-    def old_get_boolean_from_list(self, df=None, type_area=None, variable=None, level=None): 
-        """
-        Updated     20180322    by Magnus Wenzer
-        """
-        result = self.get_value(type_area=type_area, 
-                                    variable=variable)
+        from_monthday, to_monthday = result
+        from_month = int(from_monthday[:2])
+        from_day = int(from_monthday[2:])
+        to_month = int(to_monthday[:2])
+        to_day = int(to_monthday[2:])
         
-        # Must check if there are several results. For example BQI has two depth intervalls.  
-        if not len(result):
-            return False
-        elif len(result) == 1:
-            value_list = result[0]
-        else:
-            if level == None:
-                return None
-            value_list = result[level]
         
-        parameter = variable.split('_')[0] 
-
-        return df[parameter].isin(value_list)
+        boolean = df['MYEAR'].isnull()
+        for year in set(df['MYEAR']): 
+            from_year = year
+            if from_month > to_month:
+                from_year -= 1
+            from_date = datetime.datetime(from_year, from_month, from_day)
+            to_date = datetime.datetime(year, to_month, to_day)
+            
+            b = df['date'].between(from_date, to_date)
+#            b = (from_date <= df['date']) & (df['date'] <= to_date) 
+            boolean = boolean | b
+            
+        return boolean
+    
         
     #==========================================================================
     def _get_boolean_from_list(self, df=None, type_area=None, water_body = None, variable=None): 

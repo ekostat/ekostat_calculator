@@ -2,55 +2,55 @@
     "alias": false,
     "subset_uuid": false,
     "status": false,
-    "active": null,
+    "value": null,
     "time": {},
     "areas": [
         {
             "label": "",
-            "value": "",
+            "key": "",
             "type": "",
             "status": "",
-            "active": false,
+            "value": false,
             "children": []
         },
         {
             "label": "",
-            "value": "",
+            "key": "",
             "type": "",
             "status": "",
-            "active": false,
+            "value": false,
             "children": []
         },
         {
             "label": "",
-            "value": "",
+            "key": "",
             "type": "",
             "status": "",
-            "active": false,
+            "value": false,
             "children": []
         },
         {
             "label": "",
-            "value": "",
+            "key": "",
             "type": "",
             "status": "",
-            "active": false,
+            "value": false,
             "children": []
         },
         {
             "label": "",
-            "value": "",
+            "key": "",
             "type": "",
             "status": "",
-            "active": false,
+            "value": false,
             "children": []
         },
         {
             "label": "",
-            "value": "",
+            "key": "",
             "type": "",
             "status": "",
-            "active": false,
+            "value": false,
             "children": []
         }
     ],

@@ -2,5 +2,5 @@
     "alias": "subset_20180615",
     "subset_uuid": "ac45fef1-3042-44f4-bdca-e121d1d93f45",
     "status": "editable",
-    "active": true
+    "value": true
 }

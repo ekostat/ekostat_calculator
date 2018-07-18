@@ -4,6 +4,16 @@
             "alias": "default_workspace",
             "workspace_uuid": "default_workspace",
             "status": "readable"
+        },
+        {
+            "alias": "New test workspace",
+            "workspace_uuid": "327bbf4f-f367-4d85-80f4-e9151907eadc",
+            "status": "editable"
+        },
+        {
+            "alias": "Another test workspace",
+            "workspace_uuid": "949e90f9-288b-4868-b9d0-c9cda8683e56",
+            "status": "editable"
         }
     ]
 }

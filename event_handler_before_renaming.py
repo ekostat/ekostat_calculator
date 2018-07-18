@@ -121,8 +121,8 @@ class EventHandler(object):
         """
         return_list = []
         for item in dict_list:
-            if item['value']: 
-                return_list.append(item['key'])
+            if item['active']: 
+                return_list.append(item['value'])
         return return_list
         
     
@@ -167,7 +167,7 @@ class EventHandler(object):
         Updated     20180530    by Magnus Wenzer 
         """
         w = self._get_workspace_object(unique_id=workspace_uuid)
-        w.apply_data_filter(subset=subset_uuid, step=step)
+        w.apply_data_filter(subset=subset_uuid,step=step)
         
         
     #==========================================================================
@@ -208,7 +208,7 @@ class EventHandler(object):
                     subset_target_alias=None): 
         """
         Created     20180219    by Magnus Wenzer
-        Updated     20180717    by Magnus Wenzer
+        Updated     20180601    by Magnus Wenzer
         
         """
         workspace_object = self.workspaces.get(workspace_uuid, False)
@@ -219,10 +219,10 @@ class EventHandler(object):
 #        print('!!!!!!!!!!!!', subset_target_alias) 
 #            print('subset_source_alias'.upper(), subset_source_alias)
         self._logger.debug('Trying to copy subset "{}"'.format(subset_source_uuid))
-#        try:
-        return_dict = workspace_object.copy_subset(subset_source_uuid, subset_target_alias)
-#        except:
-#            raise 
+        try:
+            return_dict = workspace_object.copy_subset(subset_source_uuid, subset_target_alias)
+        except:
+            raise 
 #        print('return_dict'.upper(), return_dict)
         return return_dict
         
@@ -243,8 +243,7 @@ class EventHandler(object):
         target_uuid = uuid_mapping.add_new_uuid_for_alias(target_alias)
         if not target_uuid:
             self._logger.debug('Could not add workspace with alias "{}". Workspace already exists!'.format(target_alias)) 
-            raise exceptions.WorkspaceAlreadyExists 
-#            return False
+            return False
         
         # Copy all directories and files in workspace 
         source_workspace_path = '/'.join([self.workspace_directory, source_uuid])
@@ -406,9 +405,9 @@ class EventHandler(object):
         dict like: 
             {
 							"label": "Biovolume - default",
-							"status": "editable",
-							'value': true,
-							'key': "Biovolume - default", 
+							"status": "selectable",
+							"selected": true,
+							"value": "Biovolume - default", 
                         "settings": {}
 						}
             
@@ -422,14 +421,14 @@ class EventHandler(object):
         """
         return_dict = {"label": "",
 					   "status": "",
-					   'value': False,
-					   'key': "", 
+					   "selected": False,
+					   "value": "", 
                     "settings": []}
         
 #        return_dict = {"label": "",
 #					   "status": "",
-#					   'value': False,
-#					   'key': ""}
+#					   "selected": False,
+#					   "value": ""}
         
         workspace_object = self._get_workspace_object(unique_id=workspace_uuid) 
         subset_object = workspace_object.get_subset_object(subset_uuid) 
@@ -444,23 +443,23 @@ class EventHandler(object):
             
         # Check request 
         selected = True
-        if request and 'value' in request.keys():
-            selected = request['value']
+        if request and 'selected' in request.keys():
+            selected = request['selected']
             
         # Check if indicator is available 
         if indicator in available_indicators: 
-            status = "editable"
+            status = "selectable"
         else:
-            status = "readable"
+            status = "not selectable"
             selected = False
             
         
         return_dict["label"] = self.mapping_objects['display_mapping'].get_mapping(indicator, 'internal_name', 'display_en')
         return_dict["status"] = status
-        return_dict['value'] = selected
-        return_dict['key'] = indicator
+        return_dict["selected"] = selected
+        return_dict["value"] = indicator
     
-        if kwargs.get('indicator_settings') and status=='editable': 
+        if kwargs.get('indicator_settings') and status=='selectable': 
             self.kwargs = kwargs
             request_list = []
             if request and 'settings' in request:
@@ -479,7 +478,7 @@ class EventHandler(object):
     def dict_time(self, workspace_uuid=None, subset_uuid=None, request=None): 
         """
         Created     20180317   by Magnus Wenzer
-        Updated     20180718   by Magnus Wenzer
+        Updated     20180611   by Magnus Wenzer
         """
         workspace_object = self._get_workspace_object(unique_id=workspace_uuid) 
         subset_object = workspace_object.get_subset_object(subset_uuid) 
@@ -489,7 +488,7 @@ class EventHandler(object):
 
         data_filter_object = subset_object.get_data_filter_object('step_1')
         if request:
-            year_list = [str(y) for y in range(int(request['year_interval'][0]), int(request['year_interval'][1])+1)]
+            year_list = [str(y) for y in range(int(request['year_interval'][0]), int(request['year_interval'][1]))]
             data_filter_object.set_filter(filter_type='include_list', 
                                           filter_name='MYEAR', 
                                           data=year_list)
@@ -539,11 +538,11 @@ class EventHandler(object):
         return_dict = {}
         if type_area:
             return_dict['area_type'] = 'type_area'
-            return_dict['key'] = type_area 
+            return_dict['value'] = type_area 
             return_dict['label'] = self.mapping_objects['water_body'].get_display_name(type_area=type_area)
         elif viss_eu_cd:
             return_dict['area_type'] = 'viss_eu_cd'
-            return_dict['key'] = viss_eu_cd 
+            return_dict['value'] = viss_eu_cd 
             return_dict['label'] = self.mapping_objects['water_body'].get_display_name(water_body=viss_eu_cd) 
         
         return_dict['children'] = self.list_indicator_settings_items(workspace_uuid=workspace_uuid, 
@@ -587,14 +586,14 @@ class EventHandler(object):
                                                                            indicator=indicator,
                                                                            filter_type='tolerance') 
         
-        item_mapping = self._get_mapping_for_name_in_dict('key', request) 
-        if type_area == '2' and indicator=='din_winter':
+        item_mapping = self._get_mapping_for_name_in_dict('value', request) 
+        if type_area == '2':
             self.item_mapping = item_mapping
             self.request = request
-            
+        
         # Loop and add filters 
         for settings_item in self.mapping_objects['indicator_settings_items_to_show_in_gui']:
-#            print('settings_item'.upper(), settings_item, item_mapping.get(settings_item))
+            print('settings_item'.upper(), settings_item, item_mapping.get(settings_item))
             
             # data_filter
             if settings_item in settings_data_filter_object.allowed_variables: 
@@ -631,48 +630,27 @@ class EventHandler(object):
                                      request={}): 
         """
         Created     20180615   by Magnus Wenzer
-        Updated     20180717   by Magnus Wenzer 
+        Updated     20180620   by Magnus Wenzer 
         
         Information for a specifick settings "item" in indicator_settings_filter object 
-        While the 'key' key is the indicator settings name, "children" is the actual settings value. 
+        While the "value" key is the indicator settings name, "children" is the actual settings value. 
         """
         
         if not all([settings_filter_object, settings_item]): 
             return {}
         if type_area == '2':
-#            print('request'.upper(), request)
+            print('request'.upper(), request)
             self.request_item = request
         
         settings_item_dict = {}
 
-        if request and request['status'] == 'editable': 
-#            if not request['status'] == 'editable':
-#                return request
+        if request: 
+            if not request['status'] == 'editable':
+                return request
             
-            value = request['value'] 
-            
-            # Convert MONTHDAY from list to string:
-            if 'MONTHDAY' in settings_item:
-                value = [''.join(map(lambda x: str(x).rjust(2, '0'), value[0])), 
-                         ''.join(map(lambda x: str(x).rjust(2, '0'), value[-1]))]
-                
-#                print('&'*50)
-#                print('&'*50)
-#                print(value, type(value), settings_item)
-            if 'LIST' in settings_item: 
+            value = request['children']
+            if 'LIST' in settings_item:
                 value = get_list_from_interval(value) 
-                
-            # 
-            # No tuples come from json. Convert first 
-#            if 'MONTHDAY' in settings_item:
-#                print('#'*50)
-#                print('#'*50)
-#                print(value, type(value), settings_item)
-            if type(value) == list:
-                if type(value[0]) == list:
-                    value = [tuple(val) for val in value]
-                else:
-                    value = tuple(value)
                 
             settings_filter_object.set_value(type_area=type_area, 
                                               variable=settings_item, 
@@ -683,10 +661,9 @@ class EventHandler(object):
         
         else: 
             # Create settings_item_dict
-            settings_item_dict['key'] = settings_item
+            settings_item_dict['value'] = settings_item
             
-            settings_item_dict["label"] = self.mapping_objects['display_mapping'].get_mapping(settings_item, 'internal_name', 'display_en')
-            settings_item_dict["unit"] = self.mapping_objects['display_mapping'].get_mapping(settings_item, 'internal_name', 'unit')
+            settings_item_dict["label"] = self.mapping_objects['display_mapping'].get_mapping(settings_item, 'internal_name', 'display_en') 
             
             # Check status 
             if settings_item in self.mapping_objects['indicator_settings_items_editable_in_gui']:
@@ -699,34 +676,8 @@ class EventHandler(object):
                                                      variable=settings_item, 
                                                      water_body=viss_eu_cd, 
                                                      return_series=False)
-            
-            # Check type of widget 
-            multi = ''
-            what = ''
-            typ = ''
-            if type(value) == list and len(value) > 1: 
-                multi = 'multi'  
-                
-            if 'INTERVAL' in settings_item: 
-                what = 'interval'   
-            elif 'LIST' in settings_item: 
-                what = 'interval'   
-            elif type(value) == int:
-                what = 'number'   
-            
-            if 'MONTHDAY' in settings_item:
-                typ = 'monthday'
-            elif type(value) == int or type(value[0]) == int:
-                typ = 'int' 
-   
-            settings_item_dict['widget'] = '{}{}:{}'.format(multi, what, typ)
-            
                                                      
-            if settings_item == 'MONTHDAY_INTERVAL': 
-                value = [list(map(int, [value[0][:2], value[0][2:]])), 
-                         list(map(int, [value[-1][:2], value[-1][2:]]))]
-                
-            elif 'INTERVAL' in settings_item:
+            if 'INTERVAL' in settings_item:
                 # Not allowed to edit if several intervals
                 if type(value[0]) == list: 
                     settings_item_dict['status'] = 'readable'
@@ -736,8 +687,7 @@ class EventHandler(object):
             
                      
             # Set value
-            print('value:', value)
-            settings_item_dict['value'] = value            
+            settings_item_dict['children'] = value            
                               
         return settings_item_dict
         
@@ -1031,11 +981,11 @@ class EventHandler(object):
             
             if type_area:
                 return_dict['area_type'] = 'type_area'
-                return_dict['key'] = type_area 
+                return_dict['value'] = type_area 
                 return_dict['label'] = self.mapping_objects['water_body'].get_display_name(type_area=type_area)
             elif viss_eu_cd:
                 return_dict['area_type'] = 'viss_eu_cd'
-                return_dict['key'] = viss_eu_cd 
+                return_dict['value'] = viss_eu_cd 
                 return_dict['label'] = self.mapping_objects['water_body'].get_display_name(water_body=viss_eu_cd) 
             
             return_dict['indicator'] = indicator
@@ -1143,9 +1093,9 @@ class EventHandler(object):
 #        year_list = data_filter_object.get_include_list_filter('MYEAR')
 #
 #        return {"label": "2006-2012",
-#				  "status": "editable",
-#				  'value': True,
-#				  'key': "2006-2012"}
+#				  "status": "selectable",
+#				  "selected": True,
+#				  "value": "2006-2012"}
         
         
     #==========================================================================
@@ -1229,7 +1179,7 @@ class EventHandler(object):
 #        subset_dict = {'alias': None,
 #                        'subset_uuid': None,
 #                        'status': None,
-#                        'value': None,
+#                        'active': None,
 #                        'time': {}, 
 #                        'areas': [], 
 ##                        'periods': [], # Should be removed
@@ -1244,11 +1194,11 @@ class EventHandler(object):
         subset_dict['alias'] = workspace_object.uuid_mapping.get_alias(subset_uuid, status=self.all_status) 
         subset_dict['subset_uuid'] = subset_uuid
         subset_dict['status'] = workspace_object.uuid_mapping.get_status(unique_id=subset_uuid) 
-        subset_dict['value'] = workspace_object.uuid_mapping.is_active(unique_id=subset_uuid)
+        subset_dict['active'] = workspace_object.uuid_mapping.is_active(unique_id=subset_uuid)
             
         # Check request 
-        if request.get('value', False):
-            if request['value']:
+        if request.get('active', False):
+            if request['active']:
                 workspace_object.uuid_mapping.set_active(subset_uuid)
             else:
                 workspace_object.uuid_mapping.set_inactive(subset_uuid)
@@ -1309,7 +1259,7 @@ class EventHandler(object):
         if not subset_object:
             self._logger.warning('Could not find subset object {}. Subset is probably not loaded.'.format(subset_uuid))
             return {"label": "",
-                      'key': "",
+                      "value": "",
                       "type": "",
                       "status": "", 
                       "url": "", 
@@ -1328,9 +1278,9 @@ class EventHandler(object):
                 
             # Always selectable if no request
             return {"label": water_body_mapping.get_display_name(water_body=water_body),
-                      'key': water_body,
+                      "value": water_body,
                       "type": "water_body",
-                      "status": "editable", 
+                      "status": "selectable", 
                       "url": water_body_mapping.get_url(water_body), 
                       "active": active}
                           
@@ -1341,7 +1291,7 @@ class EventHandler(object):
         Created     20180222    by Magnus Wenzer
         Updated     20180611    by Magnus Wenzer
         
-        "editable" is not checked at the moment....
+        "selectable" is not checked at the moment....
         """
         
         workspace_object = self._get_workspace_object(unique_id=workspace_uuid) 
@@ -1349,7 +1299,7 @@ class EventHandler(object):
         if not subset_object:
             self._logger.warning('Could not find subset object {}. Subset is probably not loaded.'.format(subset_uuid))
             return {"label": "",
-                      'key': "",
+                      "value": "",
                       "type": "",
                       "status": "", 
                       "active": False, 
@@ -1380,9 +1330,9 @@ class EventHandler(object):
                 active = True
                 
             return_dict = {"label": water_body_mapping.get_display_name(type_area=type_area),
-                          'key': type_area,
+                          "value": type_area,
                           "type": "type_area",
-                          "status": "editable", 
+                          "status": "selectable", 
                           "active": active, 
                           "children": []}
             
@@ -1405,7 +1355,7 @@ class EventHandler(object):
         Updated     20180315    by Magnus Wenzer
         
         Internally its only possible to filter water bodies.  
-        "editable" needs to be checked against water district and type. 
+        "selectable" needs to be checked against water district and type. 
         """
         workspace_object = self._get_workspace_object(unique_id=workspace_uuid) 
 #        print('subset_uuid', subset_uuid)
@@ -1415,7 +1365,7 @@ class EventHandler(object):
         if not subset_object:
             self._logger.warning('Could not find subset object {}. Subset is probably not loaded.'.format(subset_uuid))
             return {"label": "",
-                      'key': "",
+                      "value": "",
                       "type": "",
                       "status": "", 
                       "active": False, 
@@ -1423,7 +1373,7 @@ class EventHandler(object):
             
         if request: 
             for child in request['children']: 
-                type_area = child['key'] 
+                type_area = child['value'] 
                 # Water district is not set as a internal data filter list. Only water body is saved. 
                 self.dict_type_area(workspace_uuid=workspace_uuid, 
                                                           subset_uuid=subset_uuid, 
@@ -1445,9 +1395,9 @@ class EventHandler(object):
                 active = True
                 
             return_dict = {"label": water_body_mapping.get_display_name(water_district=water_district),
-                          'key': water_district,
+                          "value": water_district,
                           "type": "water_district",
-                          "status": "editable", 
+                          "status": "selectable", 
                           "active": active, 
                           "children": []}
             
@@ -1690,7 +1640,7 @@ class EventHandler(object):
             request_dict = {}
             # Need to check which element in request list belong to the indicator 
             for ind in request:
-                if ind['key'] == indicator:
+                if ind['value'] == indicator:
                     request_dict = ind
                     break
             
@@ -1756,7 +1706,7 @@ class EventHandler(object):
         else:
             type_area_list = set(indicator_settings_object.get_type_area_list())
         
-        request_dict = self._get_mapping_for_name_in_dict('key', request)
+        request_dict = self._get_mapping_for_name_in_dict('value', request)
         
         self.type_area_list = type_area_list
         
@@ -1768,7 +1718,7 @@ class EventHandler(object):
             # Need to check which element in request list belong to the indicator 
 #            for ty in request:
 ##                    print(ty)
-#                if ty and ty['key'] == type_area: # ty can be empty dict if no settings for indicator
+#                if ty and ty['value'] == type_area: # ty can be empty dict if no settings for indicator
 #                    request_dict = ty
 #                    break
                     
@@ -1804,10 +1754,10 @@ class EventHandler(object):
 #                continue
 #            request_dict = {}
             # Need to check which element in request list belong to the indicator 
-#            request_dict = self._get_mapping_for_name_in_dict('key', request)
+#            request_dict = self._get_mapping_for_name_in_dict('value', request)
 #            for ty in request:
 ##                    print(ty)
-#                if ty and ty['key'] == water_body: # ty can be empty dict if no settings for indicator
+#                if ty and ty['value'] == water_body: # ty can be empty dict if no settings for indicator
 #                    request_dict = ty
 #                    break
                     
@@ -1836,9 +1786,9 @@ class EventHandler(object):
         # Check request
         if request:
             for per in request:
-                if per['value']:
+                if per["selected"]:
 #                    print('per', per)
-                    from_year, to_year = map(int, per['key'].split('-'))
+                    from_year, to_year = map(int, per["value"].split('-'))
                     year_list = map(str, list(range(from_year, to_year+1)))
 #                    print('subset_object.alias', subset_object.alias)
                     subset_object.set_data_filter(step='step_1', filter_type='include_list', filter_name='MYEAR', data=year_list)
@@ -1847,14 +1797,14 @@ class EventHandler(object):
             return request
 
         return [{"label": "2007-2012",
-    				"status": "editable",
-    				'value': False,
-    				'key': "2007-2012"}, 
+    				"status": "selectable",
+    				"selected": False,
+    				"value": "2007-2012"}, 
     
                 {"label": "2013-2018",
-    				"status": "editable",
-    				'value': True,
-    				'key': "2013-2018"}]
+    				"status": "selectable",
+    				"selected": True,
+    				"value": "2013-2018"}]
         
     
     #==========================================================================
@@ -1985,7 +1935,7 @@ class EventHandler(object):
 #            qe_dict = None
 #            if request:
 #                for qe in request:
-#                    if qe['key'] == quality_element:
+#                    if qe['value'] == quality_element:
 #                        qe_dict = qe
 #                        break
                     
@@ -2030,21 +1980,21 @@ class EventHandler(object):
             [
                 {
                   "label": "SE5",
-                  'key': "SE5",
+                  "value": "SE5",
                   "type": "district",
-                  "status": "editable",
+                  "status": "selectable",
                   "active": true,
                   "children": [
                         {
                           "label": "1s - Västkustens inre kustvatten, södra",
-                          'key': "1s",
+                          "value": "1s",
                           "type": "type_area",
-                          "status": "editable",
+                          "status": "selectable",
                           "active": true,
                           "children": [
                                 {
                                   "label": "Balgöarkipelagen",
-                                  'key': "SE570900-121060",
+                                  "value": "SE570900-121060",
                                   "type": "water_body",
                                   "status": "readable",
                                   "active": false
@@ -2064,7 +2014,7 @@ class EventHandler(object):
 #        if 'water_district' not in request
         area_list = [] 
         self.temp_request = request
-        request_for_water_district = self._get_mapping_for_name_in_dict('key', request)
+        request_for_water_district = self._get_mapping_for_name_in_dict('value', request)
         
 
         for water_district in self.mapping_objects['water_body'].get_list('water_district'):
@@ -2091,7 +2041,7 @@ class EventHandler(object):
         if request:
             workspace_object = self._get_workspace_object(unique_id=workspace_uuid) 
             # Create list of type areas 
-            type_area_list = [req['key'] for req in request if req['value']]
+            type_area_list = [req['value'] for req in request if req['selected']]
             # Set data filter 
             workspace_object.set_data_filter(step='step_1', filter_type='include_list', filter_name='TYPE_AREA', data=type_area_list)
             
@@ -2125,7 +2075,7 @@ class EventHandler(object):
         if request:
             workspace_object = self._get_workspace_object(unique_id=workspace_uuid) 
             # Create list of type areas 
-            water_body_list = [req['key'] for req in request if req['value']]
+            water_body_list = [req['value'] for req in request if req['selected']]
             # Set data filter 
             workspace_object.set_data_filter(step='step_1', subset=subset_uuid, filter_type='include_list', filter_name='WATER_BODY', data=water_body_list)
             
@@ -2157,15 +2107,15 @@ class EventHandler(object):
         # TODO: kanske kan behandlas som periods for nu?
         return_list = [{
         					"label": "Bottenhavet",
-        					"status": "editable",
-        					'value': True,
-        					'key': "Bottenhavet"
+        					"status": "selectable",
+        					"selected": True,
+        					"value": "Bottenhavet"
         				},
         				{
         					"label": "Skagerakk", 
-        					"status": "editable",
-        					'value': False,
-        					'key': "Skagerakk"
+        					"status": "selectable",
+        					"selected": False,
+        					"value": "Skagerakk"
         				}] 
         
         return return_list
@@ -2574,7 +2524,7 @@ class EventHandler(object):
             workspace_uuid
             subset_uuid 
             information from the response to "request_subset_get_data_filter": 
-                Cointains information about time period and selected areas. (step_1 data filter)
+                Cointains information about time period and selected areas. 
                 
         Response: 
             - Only indicators that has data are active (only those need information). 
@@ -2599,8 +2549,7 @@ class EventHandler(object):
         # This has to be done as water bodies are appended to current filter when looping throughtype areas. 
         # So if data filters are removed from last request it wont automaticly be removed in the data filter files. 
         self.action_reset_data_filter(workspace_uuid=workspace_uuid, 
-                                      subset_uuid=subset_uuid, 
-                                      step=1)
+                                      subset_uuid=subset_uuid)
         
         response = {} 
         
@@ -2609,7 +2558,7 @@ class EventHandler(object):
         response['workspace'] = self.dict_workspace(workspace_uuid)
         
         
-        # Set data filter and add subset information to response
+        # Set data filter and add subset information ro response
         response['subset'] = self.dict_subset(workspace_uuid=workspace_uuid, 
                                      subset_uuid=subset_uuid, 
                                      request=request['subset'], 
@@ -2747,14 +2696,14 @@ class EventHandler(object):
         
         areas = request.get('areas', [])
         for water_district in areas:
-            if water_district.get('value', False):
-                selected_areas['water_district_list'].append(water_district['key']) 
+            if water_district.get('active', False):
+                selected_areas['water_district_list'].append(water_district['value']) 
                 for type_area in water_district.get('children', []): 
-                    if type_area.get('value', False): 
-                        selected_areas['type_area_list'].append(type_area['key'])
+                    if type_area.get('active', False): 
+                        selected_areas['type_area_list'].append(type_area['value'])
                         for water_body in type_area.get('children', []): 
-                            if water_body.get('value', False): 
-                                selected_areas['viss_eu_cd_list'].append(water_body['key'])
+                            if water_body.get('active', False): 
+                                selected_areas['viss_eu_cd_list'].append(water_body['value'])
                                 
         return selected_areas
         
@@ -2880,55 +2829,55 @@ class EventHandler(object):
             			"periods": [
             				{
             					"label": "2006-2012",
-            					"status": "editable",
-            					'value': true,
-            					'key': "2006-2012"
+            					"status": "selectable",
+            					"selected": true,
+            					"value": "2006-2012"
             				},
             				{
             					"label": "2012-2017",
-            					"status": "editable",
-            					'value': false,
-            					'key': "2012-2017"
+            					"status": "selectable",
+            					"selected": false,
+            					"value": "2012-2017"
             				}
             			],
             			"areas": [
             				{
             					"label": "WB 1",
-            					"status": "editable",
-            					'value': true,
-            					'key': "WB 1"
+            					"status": "selectable",
+            					"selected": true,
+            					"value": "WB 1"
             				},
             				{
             					"label": "WB 2",
-            					"status": "editable",
-            					'value': true,
-            					'key': "WB 2"
+            					"status": "selectable",
+            					"selected": true,
+            					"value": "WB 2"
             				},
             				{
             					"label": "WB 3",
-            					"status": "editable",
-            					'value': false,
-            					'key': "WB 3"
+            					"status": "selectable",
+            					"selected": false,
+            					"value": "WB 3"
             				},
             				{
             					"label": "WB 4",
-            					"status": "editable",
-            					'value': true,
-            					'key': "WB 4"
+            					"status": "selectable",
+            					"selected": true,
+            					"value": "WB 4"
             				}
             			],
             			"water_districts": [
             				{
             					"label": "Bottenhavet",
-            					"status": "editable",
-            					'value': true,
-            					'key': "Bottenhavet"
+            					"status": "selectable",
+            					"selected": true,
+            					"value": "Bottenhavet"
             				},
             				{
             					"label": "Skagerakk",
-            					"status": "editable",
-            					'value': false,
-            					'key': "Skagerakk"
+            					"status": "selectable",
+            					"selected": false,
+            					"value": "Skagerakk"
             				}
             			],
             			"supporting_elements": [
@@ -2937,9 +2886,9 @@ class EventHandler(object):
             					"children": [
             						{
             							"label": "Secchi - default",
-            							"status": "editable",
-            							'value': false,
-            							'key': "Secchi - default"
+            							"status": "selectable",
+            							"selected": false,
+            							"value": "Secchi - default"
             						}
             					]
             				}
@@ -2950,15 +2899,15 @@ class EventHandler(object):
             					"children": [
             						{
             							"label": "Chlorophyll - default",
-            							"status": "editable",
-            							'value': true,
-            							'key': "Chlorophyll - default"
+            							"status": "selectable",
+            							"selected": true,
+            							"value": "Chlorophyll - default"
             						},
             						{
             							"label": "Biovolume - default",
-            							"status": "editable",
-            							'value': true,
-            							'key': "Biovolume - default"
+            							"status": "selectable",
+            							"selected": true,
+            							"value": "Biovolume - default"
             						}
             					]
             				}
@@ -3064,7 +3013,7 @@ class EventHandler(object):
     def request_workspace_edit(self, request):
         """
         Created     20180221    by Magnus Wenzer
-        Updated     20180717    by Magnus Wenzer
+        Updated     20180531    by Magnus Wenzer
         
         "request" must contain: 
             alias (new alias)
@@ -3092,12 +3041,11 @@ class EventHandler(object):
             status = uuid_mapping.get_status(unique_id=unique_id)
         
         response = {"alias": alias, 
-                    "workspace_uuid": unique_id, 
+                    "uuid": unique_id, 
                     "status": status}
         
         self._logger.debug('Time for excecuting request_workspace_data_sources_list: {}'.format(time.time()-t0))
         return response
-    
     
     #==========================================================================
     def request_workspace_list(self, request):
@@ -3328,13 +3276,13 @@ class EventHandler(object):
 #==========================================================================
 def get_interval_from_list(input_list):
     """
-    Created     20180619    by Magnus Wenzer
-    Updated     20180716    by Magnus Wenzer
+    Created     20180619   by Magnus Wenzer
+    Updated  
 
     Takes a list and returns a an interval as a list. 
     Example: [3, 4, 5, 6] => [3, 6]
     """ 
-    if type(input_list) not in (list, tuple): 
+    if type(input_list) != list: 
         return None
     elif not len(set([type(i) for i in input_list])) == 1:
         return None
@@ -3349,38 +3297,33 @@ def get_interval_from_list(input_list):
 
 
 #==========================================================================
-def get_list_from_interval(input_interval):
+def get_list_from_interval(input_interval, month_interval=True):
     """
     Created     20180619   by Magnus Wenzer
-    Updated     20180717   by Magnus Wenzer
+    Updated     20180620   by Magnus Wenzer
 
-    Takes an interval in a list and returns a list with the gange of the interval: 
-        Example: [2, 7] => [2, 3, 4, 5, 6, 7] 
-    If start value > stop value the interval in intepretated as month interval: 
-        Example: [12, 3] => [12, 1, 2, 3]
+    Takes an interval in a list and returns a list with the gange of the interval. 
+    Example: [2, 7] => [2, 3, 4, 5, 6, 7]
     """ 
     if not input_interval:
         return None
     elif not len(set([type(i) for i in input_interval])) == 1:
         return None
     
-    start_value = input_interval[0]
-    stop_value = input_interval[-1]
-    
-    if type(start_value) != list: 
+    if input_interval and len(input_interval) == 2:
         output_list = []
         value = input_interval[0]
         while value != input_interval[-1]:
             output_list.append(value)
             value += 1
-            if stop_value < start_value and value == 13:
+            if input_interval and value == 13:
                 value = 1
-        output_list.append(stop_value)
-        return output_list
+        
+        return [i for i in range(input_interval[0], input_interval[-1]+1)]
     else:
         output_list = []
         for item in input_interval: 
-            output_list.append(get_list_from_interval(item))
+            output_list.append(get_list_from_interval(item, month_interval=month_interval))
         return output_list
     
         

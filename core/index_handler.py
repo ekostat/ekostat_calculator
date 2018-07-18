@@ -17,6 +17,8 @@ import time
 import utils
 import core
 
+import core.exceptions as exceptions
+
 """
 #==============================================================================
 #==============================================================================
@@ -32,6 +34,103 @@ class BooleanFilter(object):
     def add_filter(self): 
         pass
 
+
+"""
+#==============================================================================
+#==============================================================================
+"""
+class new_IndexHandler(object):
+    """
+    Created 20180717    by Magnus Wenzer 
+    
+    - Ska kunna ta emot filterobject
+    - Summera index arrayer
+    - Utgår från föregående boolean för det specifika subsetet.. 
+    - Pratar med DataHandler och dess DataFrame för att plocka fram boolean 
+    - select by columns
+    
+    Dictionary structure
+    - step_0 
+    - Subset (optional name)
+    - step_1
+    - step_2
+    - Water Body (optional name)
+    - Indicator (optional name)
+    """
+    def __init__(self, workspace_object=None, data_handler_object=None):
+        self.workspace_object = workspace_object
+        self.data_handler_object = data_handler_object
+        self.water_body_mapping = self.workspace_object.mapping_objects['water_body']
+        
+        self.levels = ['workspace', 'data_0', 'subset', 'data_1', 'water_body', 'indicator']
+        self.booleans = {} 
+        
+        
+    #==========================================================================
+    def _get_filter_level(self, key): 
+        """
+        Created 20180717    by Magnus Wenzer 
+        """ 
+        return {key: {}, 
+                'boolean': None} 
+        
+        
+    #==========================================================================
+    def _get_parent_level(self, level): 
+        if level == self.levels[0]:
+            return False
+        if level in self.levels:
+            return self.levels[self.levels.index(level) - 1]
+        
+        
+    #==========================================================================
+    def _add_filter_level(self, key): 
+        """
+        Created 20180717    by Magnus Wenzer 
+        """ 
+        if key not in self.levels:
+            raise
+            
+        if key == self.levels[0]: 
+            self.booleans = self._get_filter_level(key)
+        else:
+            key_found = False
+            boolean = self.booleans
+            for level in self.levels:
+                if key_found:
+                    break
+                elif key == level:
+                    boolean[key] = self._get_filter_level(key)
+                    key_found = True 
+                elif level in boolean.keys():
+                    boolean = boolean[level]
+                else:
+                    print('KEY is too deep')
+                    break
+                
+        return self.booleans
+    
+    
+    #==========================================================================
+    def add_filter(self, filter_object=None, subset=None, step=None, water_body=None, indicator=None): 
+        """
+        Created 20180717    by Magnus Wenzer 
+        
+        - Get reference of master DataFrame, df
+        - Set up step sequence: step_0, step_1, step_2
+        - Set up a dictionary including key 'boolean' containing None
+        - Add boolean to the given subset, step, type_area (given as input), indicator and level
+        
+        If type_area is given: subset and step must also be given
+        If indicator is given: water_body must also be given
+        """
+        #print('add filter for step: {}, waterbody: {}, indicator: {}'.format(step, water_body, indicator))
+        df = self.data_handler_object.get_all_column_data_df() 
+        
+        
+        
+        
+        
 
 """
 #==============================================================================
@@ -397,13 +496,19 @@ class IndexHandler(object):
     #==========================================================================
     def get_filtered_data(self, subset=None, step=None, water_body=None, indicator=None): 
         """
-        Updated     20180326    by Magnus Wenzer
+        Updated     20180718    by Magnus Wenzer
         Returns filtered data for the given boolean specification
         Takes input arguments: subset, step, water_body and indicator
         """
+        
+        
         if indicator and not water_body:
-            return False
+            raise exceptions.MissingInputVariable
+            
         step_0, step_1, step_2 = self._get_steps(step=step)
+        
+        if any([step_1, step_2]) and not subset:
+            raise exceptions.MissingInputVariable
         
         boolean = self._get_boolean(step_0, subset, step_1, step_2, water_body, indicator)
         

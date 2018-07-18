@@ -1158,6 +1158,9 @@ class DataHandler(object):
                 
                 self.all_data['STIME'] = self.all_data['STIME'].apply(lambda x: x[:5])
                 
+                # MW 20180716 
+                self.all_data['date'] = pd.to_datetime(self.all_data['SDATE'])
+                
 #                # MW: Add visit_id
 #                self.all_data['visit_id_str'] = self.all_data['LATIT_DD'] + \
 #                                                self.all_data['LONGI_DD'] + \

@@ -20,6 +20,8 @@ if current_path not in sys.path:
     sys.path.append(current_path)
 
 import core
+import core.exceptions as exceptions
+
 """
 Module contains classes related to the structure of a workspace-directory. 
 WorkSpace is the top class and contains one WorkStep-object representing step_0 
@@ -194,17 +196,21 @@ class WorkStep(object):
             return False
         return self.data_filter
     
+    
     #==========================================================================
     def get_data_filter_info(self): 
         """
         Returns a dict with data filter names as keys. 
         Every key contains a list of the active filters. 
         """
-        self.data_filter.get_filter_info()
+        return self.data_filter.get_filter_info()
         
+    
+    #==========================================================================
     def get_water_body_filter_object(self):
         
         return self.water_body_filter
+    
     
     #==========================================================================
     def get_indicator_data_filter_settings(self, indicator): 
@@ -284,19 +290,24 @@ class WorkStep(object):
         self.load_indicator_settings_filters()
         self.load_water_body_station_filter()
         
+        
     #==========================================================================
     def load_data_filter(self):
         """
         Load all settings files in the current WorkSpace filter folder... 
         """
+        print('STEP = ', self.name)
         self.data_filter = core.DataFilter(self.paths['directory_paths']['data_filters'], 
                                            mapping_objects=self.mapping_objects) 
     
+    
+    #==========================================================================
     def load_water_body_filter_object(self):
         """
         Load filter object for waterbodies
         """
         self.water_body_filter = core.WaterBodyFilter()        
+        
         
     #==========================================================================
     def load_indicator_settings_filters(self): 
@@ -447,7 +458,8 @@ class Subset(object):
                  mapping_objects={}, 
                  parent_workspace_object=None): 
         
-        assert all([alias, unique_id, parent_directory])
+        if not all([alias, unique_id, parent_directory]):
+            raise exceptions.MissingInputVariable
         
         self.alias = alias 
         self.unique_id = unique_id
@@ -754,8 +766,10 @@ class WorkSpace(object):
                  mapping_objects=None, 
                  user_id=None): 
         
-        assert all([alias, unique_id, parent_directory, user_id])
-        assert nr_subsets_allowed
+        if not all([alias, unique_id, parent_directory, user_id]):
+            raise exceptions.MissingInputVariable
+        if not nr_subsets_allowed:
+            raise exceptions.MissingInputVariable
         
 
         # Initiate paths 
@@ -1173,13 +1187,15 @@ class WorkSpace(object):
         
         if not source_uuid:
             self._logger.warning('No subset named "{}"'.format(source_uuid))
-            return False
+            raise exceptions.SubsetUUIDNotFound
+#            return False
         
         # Add UUID for workspace in uuid_mapping 
         target_uuid = self.uuid_mapping.add_new_uuid_for_alias(target_alias)
         if not target_uuid:
             self._logger.debug('Could not add subset with alias "{}". Subset already exists!'.format(target_alias)) 
-            return False
+            raise exceptions.SubsetAlreadyExists
+#            return False
 
         # Copy all directories and files in subset 
         source_subset_path = '/'.join([self.paths['directory_path_subset'], source_uuid])
@@ -1363,7 +1379,7 @@ class WorkSpace(object):
             self.uuid_mapping.set_status(unique_id, 'deleted')
         
         return {'alias': alias, 
-                'uuid': unique_id} 
+                'subset_uuid': unique_id} 
             
     #==========================================================================
     def get_all_file_paths_in_workspace(self): 
@@ -1429,7 +1445,7 @@ class WorkSpace(object):
     def get_available_indicators(self, subset=None, step=None):
         """
         Created:        201801   by Lena
-        Last modified:  20180611 by Magnus
+        Last modified:  20180718 by Magnus
         """
         #TODO: nu kollar den bara om det finns fler än 0 rader med givna parameters för indikatorn, kanske öka den gräns?
         try:
@@ -1440,6 +1456,7 @@ class WorkSpace(object):
             return False
         
         available_indicators = []
+        filtered_data = self.get_filtered_data(step = step, subset = subset) # MW 20180718 Moved here
         #for indicator, parameters in self.cfg['indicators'].items():
         for indicator, row in self.mapping_objects['quality_element'].indicator_config.iterrows():
             parameter_list = [item.strip() for item in row['parameters'].split(', ')]
@@ -1447,15 +1464,18 @@ class WorkSpace(object):
 #            print('subset', subset)
             try:
                 #TODO: speed of pd.to_numeric?
-                filtered_data = self.get_filtered_data(step = step, subset = subset)
+#                filtered_data = self.get_filtered_data(step = step, subset = subset) # MW 20180718 Moved outside loop
                 if len(filtered_data): # 20180611, MW added if 
 #                    self.filtered_data = filtered_data
-                    self.get_filtered_data(step = step, subset = subset)[parameter_list].apply(pd.to_numeric).dropna(thresh = len(parameter_list))
+                    filtered_data[parameter_list].apply(pd.to_numeric).dropna(thresh = len(parameter_list)) # MW 20180718 
+#                    self.get_filtered_data(step = step, subset = subset)[parameter_list].apply(pd.to_numeric).dropna(thresh = len(parameter_list))
                     available_indicators.append(indicator)
             except KeyError as e:
                 #TODO: lägga till felmeddelande i log?
 #                print('7777777', indicator)
-                print(e)
+#                print(e)
+                pass
+
         
         self.available_indicators = available_indicators            
         return available_indicators
@@ -1681,6 +1701,7 @@ class WorkSpace(object):
                                             data=data, 
                                             save_filter=save_filter, 
                                             append_items=append_items)
+        
         
     #==========================================================================
     def set_indicator_settings_data_filter(self, indicator=None, filter_settings=None, subset=None, step=2): 

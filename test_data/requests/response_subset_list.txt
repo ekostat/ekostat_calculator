@@ -9,7 +9,7 @@
             "alias": "default_subset",
             "subset_uuid": "default_subset",
             "status": "readable",
-            "active": false
+            "value": false
         }
     ]
 }
