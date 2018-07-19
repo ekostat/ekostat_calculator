@@ -6846,7 +6846,7 @@
                 "key": "SE5",
                 "type": "water_district",
                 "status": "editable",
-                "value": true,
+                "value": false,
                 "children": [
                     {
                         "label": "1n - V\u00e4stkustens inre kustvatten, norra",
@@ -7399,7 +7399,7 @@
                         "key": "2",
                         "type": "type_area",
                         "status": "editable",
-                        "value": true,
+                        "value": false,
                         "children": [
                             {
                                 "label": "Inre Idefjorden",
@@ -7447,7 +7447,7 @@
                                 "type": "water_body",
                                 "status": "editable",
                                 "url": " http://www.viss.lansstyrelsen.se/waters.aspx?waterEUID=SE580688-114860",
-                                "value": true
+                                "value": false
                             },
                             {
                                 "label": "Ell\u00f6sefjorden",
@@ -7543,7 +7543,7 @@
                                 "type": "water_body",
                                 "status": "editable",
                                 "url": " http://www.viss.lansstyrelsen.se/waters.aspx?waterEUID=SE582000-115270",
-                                "value": true
+                                "value": false
                             },
                             {
                                 "label": "Brofjorden",

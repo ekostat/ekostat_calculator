@@ -54,7 +54,7 @@ class DataFilter(object):
         if not value_list:
             return False
         return ~df[parameter].astype(str).isin(value_list)
-    
+        
     
     #==========================================================================
     def _get_filter_boolean_for_df_from_include_list(self, df=None, parameter=None): 
@@ -76,10 +76,10 @@ class DataFilter(object):
         # If parameter is MYEAR we want to include also some month before to be
         # able to calculate winter status stretching over new year. 
         if parameter == 'MYEAR':
-            start_date = datetime.datetime(int(value_list[0]), 11, 1) # Include nov and dec
-            stop_date = datetime.datetime(int(value_list[0]), 12, 31) # Include nov and dec 
-            
-            boolean = boolean | df['date'].between(start_date, stop_date)
+            start_date = datetime.datetime(int(value_list[0])-1, 6, 1) # Include nov and dec
+            stop_date = datetime.datetime(int(value_list[0])-1, 12, 31) # Include nov and dec 
+            date_boolean = df['date'].between(start_date, stop_date) 
+            boolean = boolean | date_boolean
         return boolean
     
     
@@ -980,13 +980,13 @@ class SettingsFile(object):
     
     
     #==========================================================================
-    def get_filter_boolean_for_df(self, df=None, water_body=None): 
+    def get_filter_boolean_for_df(self, df=None, water_body=None, **kwargs): 
         """
-        Updated     20180718    by Magnus Wenzer
+        Updated     20180719    by Magnus Wenzer
         
         Get boolean tuple to use for filtering
         """
-        combined_boolean = ()
+        combined_boolean = pd.Series(np.ones(len(df), dtype=bool)) 
         if water_body:
             combined_boolean = df['VISS_EU_CD'] == water_body
         else:
@@ -999,15 +999,16 @@ class SettingsFile(object):
                 if 'MONTHDAY' in variable:
                     boolean = self._get_boolean_from_monthday_interval(df=df,
                                                                       water_body=water_body,
-                                                                      variable=variable)
+                                                                      variable=variable, 
+                                                                      **kwargs)
                 else:
                     boolean = self._get_boolean_from_interval(df=df,
-                                                              water_body = water_body,
+                                                              water_body=water_body,
                                                               variable=variable)
                 self.temp_boolean_interval = boolean
             elif variable in self.list_columns:
                 boolean = self._get_boolean_from_list(df=df,
-                                                      water_body = water_body,
+                                                      water_body=water_body,
                                                       variable=variable)
                 self.temp_boolean_list = boolean
             else:
@@ -1015,14 +1016,16 @@ class SettingsFile(object):
                 continue
             
             if not type(boolean) == pd.Series:
-                continue            
-            if type(combined_boolean) == pd.Series:
-                combined_boolean = combined_boolean & boolean
+                continue   
             else:
-                combined_boolean = boolean 
-            combined_boolean = combined_boolean
-        if len(combined_boolean) == 0: 
-            combined_boolean = pd.Series(np.ones(len(df), dtype=bool)) 
+                combined_boolean = combined_boolean & boolean
+#            if type(combined_boolean) == pd.Series:
+#                combined_boolean = combined_boolean & boolean
+#            else:
+#                combined_boolean = boolean 
+#            combined_boolean = combined_boolean
+#        if len(combined_boolean) == 0: 
+#            combined_boolean = pd.Series(np.ones(len(df), dtype=bool))       
             
         return combined_boolean 
     
@@ -1104,10 +1107,15 @@ class SettingsFile(object):
     
     
     #==========================================================================
-    def _get_boolean_from_monthday_interval(self, df=None, type_area=None, water_body=None, variable=None): 
+    def _get_boolean_from_monthday_interval(self, 
+                                            df=None, 
+                                            type_area=None, 
+                                            water_body=None, 
+                                            variable=None, 
+                                            **kwargs): 
         """
         Created     20180716    by Magnus Wenzer
-        Updated     20180718    by Magnus Wenzer
+        Updated     20180719    by Magnus Wenzer
         """
         if 'MONTHDAY' not in variable:
             raise exceptions.InvalidInputVariable
@@ -1131,7 +1139,6 @@ class SettingsFile(object):
         to_month = int(to_monthday[:2])
         to_day = int(to_monthday[2:])
         
-        
         boolean = df['MYEAR'].isnull()
         for year in set(df['MYEAR']): 
             from_year = year
@@ -1140,9 +1147,30 @@ class SettingsFile(object):
             from_date = datetime.datetime(from_year, from_month, from_day)
             to_date = datetime.datetime(year, to_month, to_day)
             
-            b = df['date'].between(from_date, to_date)
+            b = df['date'].between(from_date, to_date) 
+
 #            b = (from_date <= df['date']) & (df['date'] <= to_date) 
             boolean = boolean | b
+            
+            
+            
+#        import numpy as np
+        """
+        MW 201719: From data filter, by default "some" months in the first year minus 1 is incuded in the filter. 
+        This is to be able to calculate winter seasons that stretches over new year. 
+        If not winter season we need to (to be sure) remove the months in the previous year. 
+        """
+        if from_month < to_month: 
+            min_year = kwargs.get('remove_data_before_year')
+            if min_year:
+                b = ~(df['MYEAR'] <= min_year) # This requires that month from the previous years has been added in the data filter at step 0 and/or 1. 
+                
+#                print('np.where(b)', np.where(b))
+#                print('=¤=¤=', min_year)
+#                print('¤¤¤¤1', len(np.where(b)[0]))
+#                print('¤¤¤¤2', len(np.where(boolean)[0]))
+                boolean = boolean & b
+#                print('¤¤¤¤3', len(np.where(boolean)[0]))
             
         return boolean
     
@@ -1342,13 +1370,15 @@ class SettingsDataFilter(SettingsBase):
     #==========================================================================
     def get_filter_boolean_for_df(self, df=None, water_body=None, **kwargs): 
         """
+        Updated     20180719    by Magnus Wenzer
         Get boolean pd.Series to use for filtering. 
         Name of this has to be the same as the one in class DataFilter. 
         """
         print('Water body', water_body)
 #        get_type_area_for_water_body(wb, include_suffix=False)
         return self.settings.get_filter_boolean_for_df(df=df, 
-                                                       water_body=water_body)
+                                                       water_body=water_body, 
+                                                       **kwargs)
 
 
 ###############################################################################

@@ -12,8 +12,8 @@
         "value": true,
         "time": {
             "year_interval": [
-                2013,
-                2019
+                2015,
+                2017
             ]
         },
         "areas": [
@@ -7975,17 +7975,6 @@
                                     "value": 3
                                 },
                                 {
-                                    "key": "MONTH_LIST",
-                                    "label": "Month interval ",
-                                    "unit": "",
-                                    "status": "editable",
-                                    "widget": "interval:int",
-                                    "value": [
-                                        6,
-                                        8
-                                    ]
-                                },
-                                {
                                     "key": "DEPH_INTERVAL",
                                     "label": "Depth interval ",
                                     "unit": "m",
@@ -7994,6 +7983,23 @@
                                     "value": [
                                         0,
                                         10
+                                    ]
+                                },
+                                {
+                                    "key": "MONTHDAY_INTERVAL",
+                                    "label": "Season ",
+                                    "unit": "",
+                                    "status": "editable",
+                                    "widget": "interval:monthday",
+                                    "value": [
+                                        [
+                                            6,
+                                            1
+                                        ],
+                                        [
+                                            8,
+                                            31
+                                        ]
                                     ]
                                 }
                             ]

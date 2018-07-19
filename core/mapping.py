@@ -1178,6 +1178,21 @@ class UUIDmapping():
     
     
     #==========================================================================
+    def is_present(self, unique_id): 
+        """
+        Created     20180719    by Magnus Wenzer
+        Updated 
+        
+        Returns True if unique_id is present else return False. 
+        """ 
+        if unique_id in self.df['uuid'].values:
+            return True
+        else:
+            return False
+        
+        
+    
+    #==========================================================================
     def permanent_delete_uuid(self, unique_id):
         self.df = self.df.drop(self.df.index[self.df['uuid']==unique_id])
         self._save_file()
@@ -1186,12 +1201,12 @@ class UUIDmapping():
     #==========================================================================
     def set_active(self, unique_id): 
         self.df.loc[self.df['uuid']==unique_id, 'active'] = 'True'
-        
+        self._save_file()
     
     #==========================================================================
     def set_inactive(self, unique_id): 
         self.df.loc[self.df['uuid']==unique_id, 'active'] = 'False'
-        
+        self._save_file()
         
     #==========================================================================
     def set_alias(self, unique_id, new_alias): 

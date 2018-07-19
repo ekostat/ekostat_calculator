@@ -8,6 +8,7 @@ Created on Wed Jan 31 15:05:36 2018
 import os
 import shutil
 import time
+import datetime
 
 import json
 import codecs
@@ -35,6 +36,23 @@ Maybe this should be in the root? Maybe not a class, only functions? Maybe __nam
 MW: Started this to start logging functionality. 
 """ 
 
+#==========================================================================
+def timer(func):
+    """
+    Created     20180719    by Magnus Wenzer
+        
+    """
+    def f(*args, **kwargs):
+        _logger = core.get_log('event_handler')
+        _logger.debug('Start: "{.__name__}"'.format(func))
+        from_time = time.time()
+        rv = func(*args, **kwargs)
+        to_time = time.time()
+        _logger.debug('Stop: "{.__name__}". Time for running method was {}'.format(func, to_time-from_time))
+        return rv
+    return f
+
+
 class EventHandler(object): 
     def __init__(self, 
                  user_id=None, 
@@ -53,7 +71,7 @@ class EventHandler(object):
         file is loaded in the method call if neaded. 
         """
         if not all([user_id, workspace_directory, resource_directory, log_directory]): 
-            exceptions.MissingInputVariable('Missing directory paths when creating EventHandler instance.')
+            raise exceptions.MissingInputVariable('Missing directory paths when creating EventHandler instance.')
         
         t0 = time.time()
         
@@ -96,8 +114,17 @@ class EventHandler(object):
             self.load_test_requests()  
             
         self._logger.debug('Time for initiating EventHandler: {}'.format(time.time()-t0))
-        
     
+    
+    #==========================================================================
+    @timer
+    def test_timer(self):
+        for _ in range(10000000):
+            9+9
+        print('test')
+    
+    
+        
     #==========================================================================
     def _load_mapping_objects(self):
         
@@ -134,6 +161,34 @@ class EventHandler(object):
             return False
         return True
     
+    
+    #==========================================================================
+    def _check_valid_uuid(self, workspace_uuid=None, subset_uuid=None): 
+        """
+        Created     20180719    by Magnus Wenzer
+        """
+        if not workspace_uuid:
+            raise exceptions.InvalidInputVariable 
+        
+#        print('===', workspace_uuid, subset_uuid)
+        if not subset_uuid:
+#            print('IF')
+            uuid_mapping = self._get_uuid_mapping_object() 
+            if workspace_uuid in uuid_mapping.get_uuid_list_for_user(status=['deleted']): 
+                raise exceptions.WorkspaceIsDeleted
+            elif workspace_uuid not in uuid_mapping.get_uuid_list_for_user(): 
+                raise exceptions.WorkspaceNotFound
+
+        else:
+#            print('ELSE')
+            workspace_object = self._get_workspace_object(unique_id=workspace_uuid) 
+            uuid_mapping = workspace_object.uuid_mapping
+            
+            if subset_uuid in uuid_mapping.get_uuid_list_for_user(status=['deleted']): 
+                raise exceptions.SubsetIsDeleted
+            elif subset_uuid not in uuid_mapping.get_uuid_list_for_user(): 
+                raise exceptions.SubsetNotFound 
+                
     
     #==========================================================================
     def _get_active_values_in_list_with_dicts(self, dict_list): 
@@ -501,10 +556,10 @@ class EventHandler(object):
     
     
     #==========================================================================
-    def dict_time(self, workspace_uuid=None, subset_uuid=None, request=None): 
+    def dict_time(self, workspace_uuid=None, subset_uuid=None, request=None, **kwargs): 
         """
         Created     20180317   by Magnus Wenzer
-        Updated     20180718   by Magnus Wenzer
+        Updated     20180719   by Magnus Wenzer
         """
         workspace_object = self._get_workspace_object(unique_id=workspace_uuid) 
         subset_object = workspace_object.get_subset_object(subset_uuid) 
@@ -512,9 +567,28 @@ class EventHandler(object):
             self._logger.warning('Could not find subset object {}. Subset is probably not loaded.'.format(subset_uuid))
             return {}
 
+        
+        
         data_filter_object = subset_object.get_data_filter_object('step_1')
         if request:
-            year_list = [str(y) for y in range(int(request['year_interval'][0]), int(request['year_interval'][1])+1)]
+            from_year = int(request['year_interval'][0]) 
+            to_year = int(request['year_interval'][1])
+#            print('='*50)
+#            print('='*50)
+#            print('='*50)
+#            print(from_year, to_year)
+            if from_year > to_year:
+                raise exceptions.InvalidUserInput('years in wrong order', code='year_interval_invalid')
+            
+            year_choices = request.get('year_choices')
+            if not year_choices: 
+                raise exceptions.MissingInputVariable('choice list for year is missing', code='year_choices_missing') 
+                
+            if not all([from_year in year_choices, to_year in year_choices]): 
+                raise exceptions.InvalidUserInput('years are not within range of choices', code='year_interval_invalid')
+                
+                
+            year_list = [str(y) for y in range(from_year, to_year+1)]
             data_filter_object.set_filter(filter_type='include_list', 
                                           filter_name='MYEAR', 
                                           data=year_list)
@@ -525,11 +599,21 @@ class EventHandler(object):
             
         else:
             year_list = sorted(map(int, data_filter_object.get_include_list_filter('MYEAR')))
+            year_choices = kwargs.get('year_choices', list(range(1980, datetime.datetime.now().year+1)))
 #            month_list = sorted(map(int, data_filter_object.get_include_list_filter('MONTH')))
             
-            return {"year_interval": [year_list[0], year_list[-1]]}#, "month_list": month_list}
+            return {'year_interval': [year_list[0], year_list[-1]], 
+                    'year_choices': year_choices}#, "month_list": month_list} 
         
     
+#    #==========================================================================
+#    def dict_item(self, ): 
+#        """
+#        Created     20180718   by Magnus Wenzer
+#        Updated     
+#        """
+        
+        
     #==========================================================================
     def dict_indicator_settings(self, 
                               workspace_uuid=None, 
@@ -1238,7 +1322,7 @@ class EventHandler(object):
     def dict_subset(self, workspace_uuid=None, subset_uuid=None, request={}, **kwargs):  
         """
         Created     20180222    by Magnus Wenzer
-        Updated     20180608    by Magnus Wenzer
+        Updated     20180719    by Magnus Wenzer
         
         Update 20180608 by MW: kwargs contains what to include. Currently options are: 
             inidcator_settings 
@@ -1248,7 +1332,9 @@ class EventHandler(object):
             if kwargs.get('<include>'):
                 "INCLUDE"
         """
-        workspace_object = self._get_workspace_object(unique_id=workspace_uuid)
+        workspace_object = self._get_workspace_object(unique_id=workspace_uuid) 
+        uuid_mapping = workspace_object.uuid_mapping
+        
         
         subset_dict = {}
 #        subset_dict = {'alias': None,
@@ -1266,10 +1352,10 @@ class EventHandler(object):
         if not subset_uuid and request.get('subset_uuid', False):
             subset_uuid = request['subset_uuid']
             
-        subset_dict['alias'] = workspace_object.uuid_mapping.get_alias(subset_uuid, status=self.all_status) 
+        subset_dict['alias'] = uuid_mapping.get_alias(subset_uuid, status=self.all_status) 
         subset_dict['subset_uuid'] = subset_uuid
-        subset_dict['status'] = workspace_object.uuid_mapping.get_status(unique_id=subset_uuid) 
-        subset_dict['value'] = workspace_object.uuid_mapping.is_active(unique_id=subset_uuid)
+        subset_dict['status'] = uuid_mapping.get_status(unique_id=subset_uuid) 
+        subset_dict['value'] = uuid_mapping.is_active(unique_id=subset_uuid)
             
         # Check request 
         if request.get('value', False):
@@ -1277,16 +1363,14 @@ class EventHandler(object):
                 workspace_object.uuid_mapping.set_active(subset_uuid)
             else:
                 workspace_object.uuid_mapping.set_inactive(subset_uuid)
-        
-        if request == None: 
-            request = {}
-            
+ 
         
         # Time
         if kwargs.get('time'):
             subset_dict['time'] = self.dict_time(workspace_uuid=workspace_uuid, 
                                                        subset_uuid=subset_uuid, 
-                                                       request=request.get('time', {}))
+                                                       request=request.get('time', {}), 
+                                                       **kwargs)
         
         # Deprecated list for periods
 #        subset_dict['periods'] = self.list_periods(workspace_uuid=workspace_uuid, 
@@ -1295,7 +1379,11 @@ class EventHandler(object):
         
 
         # Areas (contains water_district, type_area and water_body in a tree structure) 
-        if kwargs.get('areas'):
+        if kwargs.get('areas'): 
+            if request.get('areas'):
+                if len(self._get_active_values_in_list_with_dicts(request.get('areas'))) == 0:
+                    raise exceptions.NoAreasSelected
+                    
             subset_dict['areas'] = self.list_areas(workspace_uuid=workspace_uuid, 
                                                             subset_uuid=subset_uuid, 
                                                             request=request.get('areas', []))
@@ -1494,7 +1582,8 @@ class EventHandler(object):
         Updated     20180608    by Magnus Wenzer
         
         """
-        uuid_mapping = self._get_uuid_mapping_object()
+        uuid_mapping = self._get_uuid_mapping_object() 
+            
         alias = uuid_mapping.get_alias(workspace_uuid, status=self.all_status) 
         status = uuid_mapping.get_status(unique_id=workspace_uuid)
         
@@ -1576,7 +1665,7 @@ class EventHandler(object):
     def get_workspace(self, unique_id=None): 
         """
         Created     20180219    by Magnus Wenzer
-        Updated     20180601    by Magnus Wenzer
+        Updated     20180719    by Magnus Wenzer
         
         """
         # Get UUID for workspace
@@ -1584,12 +1673,16 @@ class EventHandler(object):
             pass
         else:
             uuid_mapping = self._get_uuid_mapping_object()
+            if not uuid_mapping.is_present(unique_id):
+                raise exceptions.WorkspaceNotFound
 
             alias = uuid_mapping.get_alias(unique_id)
             # return matching workspace 
             self._logger.debug('Getting workspace "{}" with alias "{}"'.format(unique_id, alias)) 
-        
-        return self.workspaces.get(unique_id, None)
+        workspace_object = self.workspaces.get(unique_id, None) 
+        if not workspace_object:
+            raise 
+        return workspace_object
     
     
     #==========================================================================
@@ -1937,9 +2030,7 @@ class EventHandler(object):
         subset_list = []
 #        subset_uuid_list = [] 
 #        sub_request_list = []
-        self.temp_request = request
-        request_for_subset_uuid = self._get_mapping_for_name_in_dict('subset_uuid', request)
-        self.temp_request_for_subset_uuid = request_for_subset_uuid
+        request_for_subset_uuid = self._get_mapping_for_name_in_dict('subset_uuid', request) 
 #                subset_uuid_list.append(sub['uuid'])
 #                sub_request_list.append(sub)
 #        else: 
@@ -2470,9 +2561,11 @@ class EventHandler(object):
         
         Action to load workspace. 
         """
+        self._check_valid_uuid(workspace_uuid)
         all_ok = self.load_workspace(unique_id=workspace_uuid, reload=force)
-        if not all_ok:
+        if not all_ok: 
             self._logger.warning('Could not load workspace with uuid: {}'.format(workspace_uuid))
+            raise exceptions.UnableToLoadWorkspace
         return all_ok
     
     
@@ -2490,7 +2583,10 @@ class EventHandler(object):
             return all_ok
         workspace_object = self._get_workspace_object(unique_id=workspace_uuid) 
         if workspace_object:
-            workspace_object.load_all_data(force=force)
+            data_loaded = workspace_object.load_all_data(force=force) 
+            if not data_loaded:
+                raise exceptions.UnableToLoadData
+            
             return True
         else:
             self._logger.warning('Could not load data for workspace: {}'.format(workspace_uuid))
@@ -2563,10 +2659,11 @@ class EventHandler(object):
     
     
     #==========================================================================
+    @timer
     def request_subset_get_data_filter(self, request):
         """
         Created     20180608    by Magnus Wenzer
-        Updated     
+        Updated     20180719    by Magnus Wenzer
         
         "request" must contain: 
             workspace_uuid
@@ -2575,7 +2672,6 @@ class EventHandler(object):
         Returns information about current time range and list of areas.
             
         """
-        t0 = time.time()
         self._logger.debug('Start: request_subset_get_data_filter')
         
         workspace_uuid = request['workspace_uuid']
@@ -2583,6 +2679,10 @@ class EventHandler(object):
         
         # Load workspace 
         self.action_load_workspace(workspace_uuid)
+        
+        workspace_object = self.get_workspace(workspace_uuid) 
+        df0 = workspace_object.get_filtered_data(step=0)
+        year_choices = sorted(set(df0['MYEAR']))
         
         response = {}
         response['workspace_uuid'] = workspace_uuid
@@ -2594,9 +2694,9 @@ class EventHandler(object):
                                               areas=True, 
                                               indicator_settings=False, 
                                               quality_elements=False, 
-                                              supporting_elements=False)
+                                              supporting_elements=False, 
+                                              year_choices=year_choices)
        
-        self._logger.debug('Time for excecuting request_subset_get_data_filter: {}'.format(time.time()-t0)) 
         
 #        print('='*50)
 #        self.workspace_uuid = workspace_uuid
@@ -2605,6 +2705,7 @@ class EventHandler(object):
         return response
     
     #==========================================================================
+    @timer 
     def request_subset_get_indicator_settings(self, request):
         """
         Created     20180608    by Magnus Wenzer
@@ -2621,7 +2722,6 @@ class EventHandler(object):
         
             
         """
-        t0 = time.time()
         self._logger.debug('Start: request_subset_get_indicator_settings')
         
         workspace_uuid = request.get('workspace_uuid', {}) 
@@ -2629,11 +2729,14 @@ class EventHandler(object):
             workspace_uuid = request['workspace']['workspace_uuid'] 
         subset_uuid = request['subset']['subset_uuid']
         
+        
         # Load workspace 
 #        self.action_load_workspace(workspace_uuid) 
         
         # Load data 
-        self.action_load_data(workspace_uuid) # workspace is loaded in action
+        self.action_load_data(workspace_uuid) # workspace is loaded in action 
+        
+        self._check_valid_uuid(workspace_uuid, subset_uuid)
         
         # Reset all data filters in step 1. 
         # This has to be done as water bodies are appended to current filter when looping throughtype areas. 
@@ -2651,10 +2754,10 @@ class EventHandler(object):
         
         # Set data filter and add subset information to response
         response['subset'] = self.dict_subset(workspace_uuid=workspace_uuid, 
-                                     subset_uuid=subset_uuid, 
-                                     request=request['subset'], 
-                                     time=True, 
-                                     areas=True) 
+                                              subset_uuid=subset_uuid, 
+                                              request=request['subset'], 
+                                              time=True, 
+                                              areas=True) 
         
         # Check selected areas 
         selected_areas = self._get_selected_areas_from_subset_request(request['subset'])
@@ -2687,15 +2790,15 @@ class EventHandler(object):
         
         
                
-        self._logger.debug('Time for excecuting request_subset_get_indicator_settings: {}'.format(time.time()-t0)) 
         return response
         
 #        self.workspace_uuid = workspace_uuid
 #        self.subset_uuid = subset_uuid 
 #        self.response = response
-
     
-#==========================================================================
+    
+    #==========================================================================
+    @timer
     def request_subset_set_indicator_settings(self, request):
         """
         Created     20180611    by Magnus Wenzer
@@ -2706,7 +2809,6 @@ class EventHandler(object):
         Response:         
             
         """
-        t0 = time.time()
         self._logger.debug('Start: request_subset_set_indicator_settings')
         
         workspace_uuid = request.get('workspace_uuid', {}) 
@@ -2714,12 +2816,15 @@ class EventHandler(object):
             workspace_uuid = request['workspace']['workspace_uuid'] 
         subset_uuid = request['subset']['subset_uuid']
         
+        
         # Load workspace 
 #        self.action_load_workspace(workspace_uuid) 
         
         # Load data 
         self.action_load_data(workspace_uuid) # workspace is loaded in action
         
+        self._check_valid_uuid(workspace_uuid, subset_uuid)
+                             
         # Reset all data filters in step 1. 
         # This has to be done as water bodies are appended to current filter when looping throughtype areas. 
         # So if data filters are removed from last request it wont automaticly be removed in the data filter files. 
@@ -2768,7 +2873,6 @@ class EventHandler(object):
                                                          subset_uuid=subset_uuid, 
                                                          step=2)
                
-        self._logger.debug('Time for excecuting request_subset_set_indicator_settings: {}'.format(time.time()-t0)) 
         return response
     
     
@@ -2807,6 +2911,7 @@ class EventHandler(object):
     
     
     #==========================================================================
+    @timer
     def request_subset_delete(self, request):
         """
         Created     20180221    by Magnus Wenzer
@@ -2818,56 +2923,79 @@ class EventHandler(object):
         
         Returns a dict like:
             {
-            	"alias": "My Workspace",
-            	"uuid": "..."
+            	"alias": "New Name",
+              "subset_uuid": "...",
+              "status": "..."
             }
         """
-        self._logger.debug('Start: request_subset_delete')
         workspace_uuid = request['workspace_uuid']
         subset_uuid = request['subset_uuid']
         
-        all_ok = self.action_load_workspace(workspace_uuid)
-        if not all_ok:
-            self._logger.warning('Workspace with uuid {} could not be loaded'.format(workspace_uuid))
-            return {} 
-#        print('###', user_id)
-#        print('###', alias)
-#        print('###', source_uuid)
-        response = self.delete_subset(workspace_uuid=workspace_uuid, subset_uuid=subset_uuid)
+        self._check_valid_uuid(workspace_uuid)
+        
+        self.action_load_workspace(workspace_uuid) 
+
+        self._check_valid_uuid(workspace_uuid, subset_uuid)
+        
+        self.delete_subset(workspace_uuid=workspace_uuid, subset_uuid=subset_uuid) 
+        
+        response = self.dict_subset(workspace_uuid=workspace_uuid, subset_uuid=subset_uuid)
         
         return response
     
     
     #==========================================================================
+    @timer
     def request_subset_edit(self, request):
         """
         Created     20180222    by Magnus Wenzer
-        Updated     20180323    by Magnus Wenzer
+        Updated     20180719    by Magnus Wenzer
         
-        """    
+        "request" must contain: 
+            workspace_uuid
+            subset_uuid
+            alias (new alias for subset)
+            
+            
+        Returns a dict like:
+            {
+            	"alias": "New Name",
+              "subset_uuid": "...",
+              "status": "..."
+            }
+        """
+        alias = request['alias'] 
+        workspace_uuid = request['workspace_uuid']
+        subset_uuid = request['subset_uuid']
+        self._check_valid_uuid(workspace_uuid)
         
-        self._logger.debug('Start: request_subset_edit')
-        workspace_uuid = request.get('workspace_uuid', {}) 
-        if not workspace_uuid:
-            workspace_uuid = request['workspace']['workspace_uuid'] 
-        request_subset_list = request['subsets']
+        self.action_load_workspace(workspace_uuid) 
+
+        self._check_valid_uuid(workspace_uuid, subset_uuid)
         
-        all_ok = self.action_load_workspace(workspace_uuid)
-        if not all_ok:
-            self._logger.warning('Workspace with uuid {} could not be loaded'.format(workspace_uuid))
-            return {} 
+        workspace_object = self.get_workspace(workspace_uuid)
+        uuid_mapping = workspace_object.uuid_mapping 
         
-        response = self.list_subsets(workspace_uuid=workspace_uuid, request=request_subset_list)
-        request['subsets'] = response
-#        request_list = None
-#        if 'subsets' in request.keys():
-#            request_list = request['subsets']
-#        response = self.list_subsets(workspace_uuid=workspace_uuid, user_id=user_id, request=request_list)
-        return request
-#        return response
+        old_alias = uuid_mapping.get_alias(subset_uuid)
+        if alias == old_alias:
+            raise exceptions.SubsetAlreadyExists(code='subset_alias_unchanged')
+            
+        uuid_mapping.set_alias(subset_uuid, alias)
+        
+        status = request.get('status', False)
+        if status: 
+            uuid_mapping.set_status(subset_uuid, status)
+        else:
+            status = uuid_mapping.get_status(unique_id=subset_uuid)
+        
+        response = self.dict_subset(workspace_uuid=workspace_uuid, 
+                                    subset_uuid=subset_uuid)
+        
+        return response
     
 
     #==========================================================================
+    @timer
     def request_subset_info(self, request):
         """
         Created     20180321    by Magnus Wenzer
@@ -2875,8 +3003,7 @@ class EventHandler(object):
         
         Handles a single subset. 
         """
-        t0 = time.time()
-        self._logger.debug('Start: request_subset_info')
+        
         workspace_uuid = request['workspace_uuid'] 
         subset_uuid = request['subset_uuid'] 
         
@@ -2884,6 +3011,7 @@ class EventHandler(object):
         if not all_ok:
             return {}
 #            return {'workspace_uuid': workspace_uuid}
+        self._check_valid_uuid(workspace_uuid, subset_uuid)
         
         response = {}
         response['workspace_uuid'] = workspace_uuid
@@ -2891,12 +3019,11 @@ class EventHandler(object):
         
         response['subset'] = self.dict_subset(workspace_uuid=workspace_uuid, 
                                     subset_uuid=subset_uuid, 
-                                    include_indicator_settings=True, 
-                                    time=True, 
-                                    areas=True, 
-                                    quality_elements=True, 
-                                    supporting_elements=True)
-        self._logger.debug('Time for excecuting request_subset_info: {}'.format(time.time()-t0))
+                                    include_indicator_settings=False, 
+                                    time=False, 
+                                    areas=False, 
+                                    quality_elements=False, 
+                                    supporting_elements=False)
         return response
     
     
@@ -3066,6 +3193,7 @@ class EventHandler(object):
     
     
     #==========================================================================
+    @timer
     def request_workspace_delete(self, request):
         """
         Created     20180221    by Magnus Wenzer
@@ -3080,7 +3208,6 @@ class EventHandler(object):
             "message": ""
             }
         """
-        self._logger.debug('Start: request_workspace_delete')
         response = {"all_ok": True, 
                     "message": ""}
         
@@ -3105,10 +3232,11 @@ class EventHandler(object):
     
     
     #==========================================================================
+    @timer
     def request_workspace_edit(self, request):
         """
         Created     20180221    by Magnus Wenzer
-        Updated     20180718    by Magnus Wenzer
+        Updated     20180719    by Magnus Wenzer
         
         "request" must contain: 
             workspace_uuid 
@@ -3117,16 +3245,20 @@ class EventHandler(object):
         Returns a dict like:
             {
             	"alias": "New Name",
-            	"uuid": "...", 
+            	"workspace_uuid": "...", 
               "status": "..."
             }
         """
-        t0 = time.time() 
-        self._logger.debug('Start: request_workspace_edit')
         alias = request['alias'] 
         workspace_uuid = request['workspace_uuid'] 
+        self._check_valid_uuid(workspace_uuid)
         
         uuid_mapping = self._get_uuid_mapping_object()
+        
+        old_alias = uuid_mapping.get_alias(workspace_uuid)
+        if alias == old_alias:
+            raise exceptions.WorkspaceAlreadyExists(code='workspace_alias_unchanged')
+        
         uuid_mapping.set_alias(workspace_uuid, alias)
         
         status = request.get('status', False)
@@ -3137,11 +3269,11 @@ class EventHandler(object):
         
         response = self.dict_workspace(workspace_uuid=workspace_uuid)
         
-        self._logger.debug('Time for excecuting request_workspace_data_sources_list: {}'.format(time.time()-t0))
         return response
     
     
     #==========================================================================
+    @timer
     def request_workspace_list(self, request):
         """
         Created     20180221    by Magnus Wenzer
@@ -3160,17 +3292,16 @@ class EventHandler(object):
             	]
             }
         """
-        t0 = time.time()
         self._logger.debug('Start: request_workspace_list')
         
         response = {'workspaces': []}
         response['workspaces'] = self.list_workspaces()
         
-        self._logger.debug('Time for excecuting request_workspace_list: {}'.format(time.time()-t0))
         return response 
     
     
     #==========================================================================
+    @timer
     def request_workspace_info(self, request):
         """
         Created     20180718    by Magnus Wenzer
@@ -3179,29 +3310,24 @@ class EventHandler(object):
         "request" must contain: 
             workspace_uuid
         Returns a dict like:
-            {
-            	"workspaces": [
-            		{
-            			"alias": "My Workspace",
-            			"workspace_uuid": "my_workspace",
-            			"status": "editable"
-            		}
-            	]
-            }
+    		{
+    			"alias": "My Workspace",
+    			"workspace_uuid": "my_workspace",
+    			"status": "editable"
+    		}
+
         """
-        t0 = time.time()
         self._logger.debug('Start: request_workspace_list')
         
         workspace_uuid = request['workspace_uuid']
         
-        response = {'workspaces': []}
         response = self.dict_workspace(workspace_uuid=workspace_uuid)
         
-        self._logger.debug('Time for excecuting request_workspace_list: {}'.format(time.time()-t0))
         return response
     
     
     #==========================================================================
+    @timer
     def request_workspace_data_sources_edit(self, request):
         """
         Created     20180524    by Magnus Wenzer
@@ -3230,7 +3356,6 @@ class EventHandler(object):
                         "datatype": "chlorophyll"
                     },...]
         """ 
-        t0 = time.time()
         self._logger.debug('Start: request_workspace_data_sources_list')
         workspace_uuid = request['workspace_uuid'] 
         response = {} 
@@ -3246,11 +3371,11 @@ class EventHandler(object):
         if all_ok: 
             response = self.request_workspace_data_sources_list({'workspace_uuid': workspace_uuid})
         
-        self._logger.debug('Time for excecuting request_workspace_data_sources_edit: {}'.format(time.time()-t0))
         return response
     
     
     #==========================================================================
+    @timer
     def request_workspace_data_sources_list(self, request):
         """
         Created     20180524    by Magnus Wenzer
@@ -3273,7 +3398,6 @@ class EventHandler(object):
                         "datatype": "chlorophyll"
                     },...]
         """ 
-        t0 = time.time()
         self._logger.debug('Start: request_workspace_data_sources_list')
         workspace_uuid = request['workspace_uuid'] 
         response = {} 
@@ -3283,7 +3407,6 @@ class EventHandler(object):
         self.action_load_workspace(workspace_uuid)
         
         response['data_sources'] = self.list_data_sources(workspace_uuid=workspace_uuid)
-        self._logger.debug('Time for excecuting request_workspace_data_sources_list: {}'.format(time.time()-t0))
         return response
         
     
@@ -3463,6 +3586,7 @@ def print_json(data):
     json_string = json.dumps(data, indent=2, sort_keys=True)
     print(json_string)
         
+   
 #"""
 #===============================================================================
 #===============================================================================

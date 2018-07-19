@@ -201,9 +201,10 @@ class IndexHandler(object):
     #==========================================================================
     def _add_boolean_to_dict(self, step_0 = None, subset = None, step_1 = None, step_2 = None, 
                              water_body = None, indicator = None,
-                             filter_object=None, df=None): #  **kwargs ?
+                             filter_object=None, df=None, **kwargs): #  **kwargs ?
         """
         Updated     20180423    by Lena Viktorsson
+        Updated     20180719    by Magnus Wenzer
         
         boolean_dict_keys in order: step_0, subset, step_1, step_2, water_body, indicator
         Uses bool_dict as a dynamic reference to a specific part of self.booleans
@@ -227,6 +228,7 @@ class IndexHandler(object):
         use_keys = {'keys':[key for key in reversed(boolean_dict_keys) if key],
                     'keys_in_booleans':list(self._get_keys_from_dict(self.booleans))}
         
+        
         for key in boolean_dict_keys:
             if not key in use_keys.get('keys_in_booleans'):
                 raise UserWarning(key,'should be included in IndexHandler, perhaps we are jumping to far ahead?')
@@ -235,12 +237,12 @@ class IndexHandler(object):
                 
                 if bool_dict.get('boolean') is not None:
                     # Merge boolean from parent with new boolean from filter_object, filter_object is either DataFilter or SettingsDataFilter
-                    bool_dict[key]['boolean'] = bool_dict.get('boolean') & filter_object.get_filter_boolean_for_df(df, water_body = water_body, indicator = indicator)
+                    bool_dict[key]['boolean'] = bool_dict.get('boolean') & filter_object.get_filter_boolean_for_df(df, water_body = water_body, indicator=indicator, **kwargs)
                     
                 else:
                     # No boolean from parent, use new boolean from filter_object
                     # This one should only be possible from 'step_0' due to else-sats below..
-                    bool_dict[key]['boolean'] = filter_object.get_filter_boolean_for_df(df, water_body = water_body, indicator = indicator)
+                    bool_dict[key]['boolean'] = filter_object.get_filter_boolean_for_df(df, water_body = water_body, indicator=indicator, **kwargs)
                 break
             
             else:
@@ -301,13 +303,17 @@ class IndexHandler(object):
         - Loop through *args, save a reference for the specific dictionary 
           within self.booleans
         - Return boolean for the specific argument input
-        """
+        """ 
+#        print(args)
         bool_dict = self.booleans.copy()
-        for key in args:
+        for k, key in enumerate(args):
+#            print('{}{}\t{}'.format('\t'*k, key, bool_dict.keys()))
             if key and key in bool_dict:
                 bool_dict = bool_dict[key]
             else:
                 break
+#        print(key)
+#        print(len(bool_dict.get('boolean', [])))
         # MW:  Added [] as default so that if no filter applied lenght is 0
         return bool_dict.get('boolean', [])
         
@@ -424,7 +430,7 @@ class IndexHandler(object):
                                   wb=water_body)
         
     #==========================================================================
-    def add_filter(self, filter_object=None, subset=None, step=None, water_body = None, indicator=None): 
+    def add_filter(self, filter_object=None, subset=None, step=None, water_body = None, indicator=None, **kwargs): 
         """
         Updated     20180423    by Magnus Wenzer
         
@@ -449,7 +455,7 @@ class IndexHandler(object):
         
         self._add_boolean_to_dict(step_0, subset, step_1, step_2, water_body, indicator,
                                   filter_object=filter_object, 
-                                  df=df)
+                                  df=df, **kwargs)
         
         
     #==========================================================================
@@ -514,6 +520,10 @@ class IndexHandler(object):
             raise exceptions.MissingInputVariable('subset missing') 
         
         try:
+#            print()
+#            print()
+#            print('-'*120)
+#            print('step_0', 'subset', 'step_1', 'step_2', 'water_body', 'indicator')
             boolean = self._get_boolean(step_0, subset, step_1, step_2, water_body, indicator)
         except:
             raise exceptions.BooleanNotFound
@@ -534,7 +544,11 @@ class IndexHandler(object):
             key_list.pop(key_list.index('boolean'))
             key_list = ['boolean'] + key_list
         for key in key_list:
-            print('{}{}'.format('\t'*tab_length, key))
+            if key == 'boolean':
+                len_data = len(self.data_handler_object.all_data.loc[key_dict[key]])
+                print('{}{}\t\t\t(data length: {})'.format('\t'*tab_length, key, len_data))
+            else:
+                print('{}{}'.format('\t'*tab_length, key))
             self._print_boolean_keys_at_level(key_dict[key], tab_length+1)
 
 

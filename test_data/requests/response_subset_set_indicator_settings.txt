@@ -415,17 +415,6 @@
                                     "value": 3
                                 },
                                 {
-                                    "key": "MONTH_LIST",
-                                    "label": "Month interval ",
-                                    "unit": "",
-                                    "status": "editable",
-                                    "widget": "interval:int",
-                                    "value": [
-                                        6,
-                                        8
-                                    ]
-                                },
-                                {
                                     "key": "DEPH_INTERVAL",
                                     "label": "Depth interval ",
                                     "unit": "m",
@@ -434,6 +423,23 @@
                                     "value": [
                                         0,
                                         10
+                                    ]
+                                },
+                                {
+                                    "key": "MONTHDAY_INTERVAL",
+                                    "label": "Season ",
+                                    "unit": "",
+                                    "status": "editable",
+                                    "widget": "interval:monthday",
+                                    "value": [
+                                        [
+                                            6,
+                                            1
+                                        ],
+                                        [
+                                            8,
+                                            31
+                                        ]
                                     ]
                                 }
                             ]
@@ -452,17 +458,6 @@
                                     "value": 3
                                 },
                                 {
-                                    "key": "MONTH_LIST",
-                                    "label": "Month interval ",
-                                    "unit": "",
-                                    "status": "editable",
-                                    "widget": "interval:int",
-                                    "value": [
-                                        6,
-                                        8
-                                    ]
-                                },
-                                {
                                     "key": "DEPH_INTERVAL",
                                     "label": "Depth interval ",
                                     "unit": "m",
@@ -471,6 +466,23 @@
                                     "value": [
                                         0,
                                         10
+                                    ]
+                                },
+                                {
+                                    "key": "MONTHDAY_INTERVAL",
+                                    "label": "Season ",
+                                    "unit": "",
+                                    "status": "editable",
+                                    "widget": "interval:monthday",
+                                    "value": [
+                                        [
+                                            6,
+                                            1
+                                        ],
+                                        [
+                                            8,
+                                            31
+                                        ]
                                     ]
                                 }
                             ]
@@ -489,17 +501,6 @@
                                     "value": 3
                                 },
                                 {
-                                    "key": "MONTH_LIST",
-                                    "label": "Month interval ",
-                                    "unit": "",
-                                    "status": "editable",
-                                    "widget": "interval:int",
-                                    "value": [
-                                        6,
-                                        8
-                                    ]
-                                },
-                                {
                                     "key": "DEPH_INTERVAL",
                                     "label": "Depth interval ",
                                     "unit": "m",
@@ -508,6 +509,23 @@
                                     "value": [
                                         0,
                                         10
+                                    ]
+                                },
+                                {
+                                    "key": "MONTHDAY_INTERVAL",
+                                    "label": "Season ",
+                                    "unit": "",
+                                    "status": "editable",
+                                    "widget": "interval:monthday",
+                                    "value": [
+                                        [
+                                            6,
+                                            1
+                                        ],
+                                        [
+                                            8,
+                                            31
+                                        ]
                                     ]
                                 }
                             ]
