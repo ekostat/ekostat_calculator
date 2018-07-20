@@ -457,7 +457,8 @@ class EventHandler(object):
         if not datatype_settings_object.has_info:
             return {}
         
-        if request:
+        if request: 
+            print('REQUEST', request['status'], file_name)
             datatype_settings_object.set_status(file_name=file_name, status=request['status'])
             info_dict = request
 
@@ -3385,7 +3386,7 @@ class EventHandler(object):
         
         # Load workspace 
         self.action_load_workspace(workspace_uuid)
-        
+        print('listar')
         response['data_sources'] = self.list_data_sources(workspace_uuid=workspace_uuid, 
                                                           request=request['data_sources']) 
         

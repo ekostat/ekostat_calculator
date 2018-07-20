@@ -892,7 +892,6 @@ class DataTypeMapping(object):
         Resets the "loaded" column. This will trigger the data to be reloaded. 
         """
         self.df['loaded'] = 0
-        self.df['loaded'] = 0
         self._save_file()
     
     #==========================================================================
@@ -1000,6 +999,25 @@ class DataTypeMapping(object):
         self._save_file()
         return True
         
+
+    #==========================================================================
+    def set_key(self, file_name=None, key=None, value=None): 
+        """
+        Set the key for file_name to value.
+        
+        Created     20180720    by Magnus Wenzer
+        
+        """
+        assert all([file_name, key, value != None])
+        try:
+            value = int(value)
+        except:
+            pass
+        self.df.loc[self.df['filename']==file_name, key] = value
+        # Save file 
+        self._save_file()
+        return True
+    
         
     #==========================================================================
     def add_file(self, file_name=None, data_type=None, status=0): 

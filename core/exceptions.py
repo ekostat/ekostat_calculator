@@ -189,6 +189,14 @@ class NoDataSelected(EkostatUserException):
     message = 'No data has been activated in settings' 
     
     
+#==============================================================================
+class MissingKeyInData(EkostatUserException):
+    """
+    Created     20180720    by Magnus Wenzer
+    """
+    code = 'missing_key_in_data'   
+    message = 'The loaded file is missing one ore more mandatory keys' 
+    
 #class InputError(Exception):
 #
 #    """Exception raised for errors in the input.

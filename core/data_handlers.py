@@ -19,6 +19,7 @@ import pickle
 import utils
 import core
 
+import core.exceptions as exceptions
 """
 #==============================================================================
 #==============================================================================
@@ -979,7 +980,7 @@ class DataHandler(object):
     def merge_all_data(self, save_to_txt=False):
         """
         Created:        
-        Last modified:  20180525    by Magnus Wenzer
+        Last modified:  20180720    by Magnus Wenzer
         
         - Do we need to sort all_data ?
         - Merge data from different datatypes for the same visit ?
@@ -993,6 +994,7 @@ class DataHandler(object):
                          u'phytoplankton',
                          u'zoobenthos']
         
+        mandatory_keys = ['DEPH']
         for dtype in all_datatypes:
             if dtype in dir(self):
                 #print(dtype)
@@ -1000,8 +1002,11 @@ class DataHandler(object):
                 # Appends dataframes from each datatype into one dataframe
                 for source in self.__getattribute__(dtype).column_data:
                     # Each datatype might have multiple sources..
-                    # .column_data is a dict
-                    self.all_data = self.all_data.append(self.__getattribute__(dtype).column_data[source], 
+                    # .column_data is a dict 
+                    df = self.__getattribute__(dtype).column_data[source] 
+                    if not all([item in df.columns for item in mandatory_keys]):
+                        raise exceptions.MissingKeyInData(message=os.path.basename(source))
+                    self.all_data = self.all_data.append(df, 
                                                          ignore_index=True)
         if not len(self.all_data):
             print('No data available after "merge_all_data"!')

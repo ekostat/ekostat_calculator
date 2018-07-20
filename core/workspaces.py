@@ -1634,8 +1634,14 @@ class WorkSpace(object):
             for datatype in self.datatype_settings.get_datatype_list():
 #                print('-- datatype', datatype)
 #                print('-- force', force)
-                self.load_datatype_data(datatype=datatype, force=force)
-            self.data_handler.merge_all_data(save_to_txt=False) 
+                self.load_datatype_data(datatype=datatype, force=force) 
+            try: 
+                self.data_handler.merge_all_data(save_to_txt=False) 
+            except exceptions.MissingKeyInData as e:
+                file_name = e.message.split(':')[-1].strip()
+                self.datatype_settings.set_key(file_name=file_name, key='status', value=0)
+                self.datatype_settings.set_key(file_name=file_name, key='loaded', value=0)
+                raise exceptions.MissingKeyInData
             data_loaded = True
             
         if not len(self.data_handler.all_data):
