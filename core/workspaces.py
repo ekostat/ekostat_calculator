@@ -296,7 +296,7 @@ class WorkStep(object):
         """
         Load all settings files in the current WorkSpace filter folder... 
         """
-        print('STEP = ', self.name)
+#        print('STEP = ', self.name)
         self.data_filter = core.DataFilter(self.paths['directory_paths']['data_filters'], 
                                            mapping_objects=self.mapping_objects) 
     
@@ -1575,7 +1575,7 @@ class WorkSpace(object):
     def load_all_data(self, force=False): 
         """ 
         Created:        2017        by Johannes Johansson (?)
-        Last modified:  20180530    by Magnus Wenzer
+        Last modified:  20180720    by Magnus Wenzer
         Loads all data from the input_data/raw_data-directory belonging to the workspace. 
         Only loads data if any file in dtype_settings in set to not "loaded" (loaded=0)
         """
@@ -1596,7 +1596,8 @@ class WorkSpace(object):
         if self.datatype_settings.no_data_to_load():
 #            print('self.datatype_settings.no_data_to_load():')
             self._logger.debug('No data to load.')
-            self.delete_all_export_data()
+            self.delete_all_export_data() 
+            return True
             
         elif not self.datatype_settings.all_data_is_loaded(): 
 #            print('self.datatype_settings.all_data_is_loaded():')

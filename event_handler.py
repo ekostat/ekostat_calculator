@@ -850,7 +850,7 @@ class EventHandler(object):
             
                      
             # Set value
-            print('value:', value)
+#            print('value:', value)
             settings_item_dict['value'] = value            
                               
         return settings_item_dict
@@ -3422,7 +3422,7 @@ class EventHandler(object):
     def request_workspace_load_default_data(self, request):
         """
         Created     20180319    by Magnus Wenzer
-        Updated     20180322    by Magnus Wenzer
+        Updated     20180720    by Magnus Wenzer
         
         "request" must contain: 
             {
@@ -3440,6 +3440,7 @@ class EventHandler(object):
         response = {"all_ok": False, 
                     "message": ""}
         
+        self._check_valid_uuid(workspace_uuid)
         uuid_mapping_object = self._get_uuid_mapping_object()
 #        print('user_id', user_id)
 #        print(workspace_uuid)

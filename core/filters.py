@@ -110,7 +110,7 @@ class DataFilter(object):
             boolean = self._get_filter_boolean_for_df_from_include_list(df=df, parameter=par)
 
             if not type(boolean) == pd.Series:
-                print(par)
+#                print(par)
                 continue            
             if type(combined_boolean) == pd.Series:
                 combined_boolean = combined_boolean & boolean
@@ -174,14 +174,14 @@ class DataFilter(object):
             if long_name.startswith('areas'):
                 pass
             elif long_name.startswith('LIST_'):
-                print('===', long_name)
+#                print('===', long_name)
                 filter_name = long_name[5:] 
                 with codecs.open(file_path, 'r', encoding='cp1252') as fid: 
                     if filter_name.startswith('EXCLUDE_'): 
                         self.exclude_list_filter[filter_name[8:]] = [item.strip() for item in fid.readlines()]
                     elif filter_name.startswith('INCLUDE_'): 
                         self.include_list_filter[filter_name[8:]] = [item.strip() for item in fid.readlines()]
-                        print('---', self.include_list_filter[filter_name[8:]])
+#                        print('---', self.include_list_filter[filter_name[8:]])
 #            print('Loaded list:', self.include_list_filter[filter_name]) 
         
         #----------------------------------------------------------------------
@@ -531,6 +531,7 @@ class SettingsFile(object):
         self.file_path = new_file_path
         return True
         
+    
     #==========================================================================
     def save_file(self, file_path=None):
         """
@@ -543,14 +544,15 @@ class SettingsFile(object):
         if not file_path:
             file_path = self.file_path
         # Rename columns 
-        print(len(self.df.columns))
-        print(self.df.columns)
-        print(len(self.columns_in_file))
+#        print(len(self.df.columns))
+#        print(self.df.columns)
+#        print(len(self.columns_in_file))
         self.df.columns = self.columns_in_file 
         
         self.df.to_csv(file_path, sep='\t', encoding='cp1252', index=False) 
         
         self.df.columns = self.columns
+
 
     #==========================================================================
     def old_get_value(self, filter_dict=None, variable=None): 
