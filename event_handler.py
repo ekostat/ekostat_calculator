@@ -1582,7 +1582,7 @@ class EventHandler(object):
             return return_dict
                 
     #==========================================================================
-    def dict_workspace(self, workspace_uuid=None): 
+    def dict_workspace(self, workspace_uuid=None, **kwargs): 
         """
         Created     20180221    by Magnus Wenzer
         Updated     20180608    by Magnus Wenzer
@@ -1593,11 +1593,25 @@ class EventHandler(object):
         alias = uuid_mapping.get_alias(workspace_uuid, status=self.all_status) 
         status = uuid_mapping.get_status(unique_id=workspace_uuid)
         
+        workspace_dict = {'alias': alias, 
+                          'workspace_uuid': workspace_uuid,
+                          'status': status}
+        
+        if kwargs.get('check_data_availability'): 
+            self.action_load_workspace(workspace_uuid)
+#            self._check_valid_uuid(workspace_uuid)
+#            self.load_workspace(workspace_uuid) 
+            workspace_object = self.get_workspace(workspace_uuid)
+            
+            if workspace_object.data_is_available():
+                workspace_dict.update({'data_is_available': True})
+            else:
+                workspace_dict.update({'data_is_available': False})
+                
+            
 #        workspace_object = self.get_workspace(workspace_uuid)
         
-        return {'alias': alias, 
-                'workspace_uuid': workspace_uuid,
-                'status': status}
+        return workspace_dict
     
     
     #==========================================================================
@@ -3188,6 +3202,7 @@ class EventHandler(object):
                
     
     #==========================================================================
+    @timer 
     def request_workspace_add(self, request):
         """
         Created     20180221    by Magnus Wenzer
@@ -3211,7 +3226,12 @@ class EventHandler(object):
 #        print('###', alias)
 #        print('###', source_uuid)
         
-        response = self.copy_workspace(source_uuid=source_uuid, target_alias=alias)
+        self.copy_workspace(source_uuid=source_uuid, target_alias=alias)
+        
+        uuid_mapping = self._get_uuid_mapping_object()
+        workspace_uuid = uuid_mapping.get_uuid(alias)
+        
+        response = self.dict_workspace(workspace_uuid, check_data_availability=True)
         
         return response
     

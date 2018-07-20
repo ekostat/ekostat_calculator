@@ -835,6 +835,20 @@ class DataTypeMapping(object):
     
     
     #==========================================================================
+    def has_data(self): 
+        """
+        Created     20180422    by Magnus Wenzer 
+        
+        Returns True if data is available else return False. 
+        """
+        if len(self.df):
+            return True
+        else:
+            return False
+        
+    
+    
+    #==========================================================================
     def get_datatype_list(self):
         return self.datatype_list
     

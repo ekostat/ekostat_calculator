@@ -1290,6 +1290,18 @@ class WorkSpace(object):
         
         
     #==========================================================================
+    def data_is_available(self):
+        """
+        Created     20180720    by Magnus Wenzer
+        Updated    
+        
+        Returns True if data is available else return False. 
+        """
+        return self.datatype_settings.has_data() 
+        
+        
+        
+    #==========================================================================
     def delete_all_export_data(self):
         """
         Created     20180423    by Magnus Wenzer

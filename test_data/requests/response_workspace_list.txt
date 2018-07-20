@@ -14,6 +14,21 @@
             "alias": "Another test workspace",
             "workspace_uuid": "949e90f9-288b-4868-b9d0-c9cda8683e56",
             "status": "editable"
+        },
+        {
+            "alias": "201807201008",
+            "workspace_uuid": "439ac943-45b3-4f0e-95e9-12a118533091",
+            "status": "editable"
+        },
+        {
+            "alias": "201807201020",
+            "workspace_uuid": "d5d666cd-cb8d-47af-ad5c-898da4fe32ff",
+            "status": "editable"
+        },
+        {
+            "alias": "201807201053",
+            "workspace_uuid": "cf55a9ab-8775-42c0-ad8a-9d8f4837d194",
+            "status": "editable"
         }
     ]
 }
