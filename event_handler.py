@@ -1593,7 +1593,7 @@ class EventHandler(object):
         alias = uuid_mapping.get_alias(workspace_uuid, status=self.all_status) 
         status = uuid_mapping.get_status(unique_id=workspace_uuid)
         
-        workspace_object = self.get_workspace(workspace_uuid)
+#        workspace_object = self.get_workspace(workspace_uuid)
         
         return {'alias': alias, 
                 'workspace_uuid': workspace_uuid,

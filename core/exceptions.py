@@ -195,7 +195,7 @@ class MissingKeyInData(EkostatUserException):
     Created     20180720    by Magnus Wenzer
     """
     code = 'missing_key_in_data'   
-    message = 'The loaded file is missing one ore more mandatory keys' 
+    message = 'The loaded file is missing one or more mandatory keys' 
     
 #class InputError(Exception):
 #
