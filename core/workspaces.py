@@ -1276,6 +1276,20 @@ class WorkSpace(object):
         self._logger.debug('')
         
     #==========================================================================
+    def data_is_loaded(self):
+        """
+        Created     20180720    by Magnus Wenzer
+        Updated    
+        
+        Returns True if data is loaded else return False. 
+        """
+        if len(self.data_handler.all_data):
+            return True
+        else:
+            return False
+        
+        
+    #==========================================================================
     def delete_all_export_data(self):
         """
         Created     20180423    by Magnus Wenzer
@@ -1597,7 +1611,7 @@ class WorkSpace(object):
 #            print('self.datatype_settings.no_data_to_load():')
             self._logger.debug('No data to load.')
             self.delete_all_export_data() 
-            raise exceptions.NoDataSelected
+            return True
             
         elif not self.datatype_settings.all_data_is_loaded(): 
 #            print('self.datatype_settings.all_data_is_loaded():')

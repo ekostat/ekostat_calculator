@@ -1592,6 +1592,8 @@ class EventHandler(object):
         alias = uuid_mapping.get_alias(workspace_uuid, status=self.all_status) 
         status = uuid_mapping.get_status(unique_id=workspace_uuid)
         
+        workspace_object = self.get_workspace(workspace_uuid)
+        
         return {'alias': alias, 
                 'workspace_uuid': workspace_uuid,
                 'status': status}
@@ -1640,17 +1642,25 @@ class EventHandler(object):
         
         
     #==========================================================================
-    def get_unique_id_for_alias(self, workspace_alias=None, subset_alias=None):
+    def get_unique_id_for_alias(self, workspace_alias=None, subset_alias=None, workspace_uuid=None):
+        """
+        Updated     20180720    by Magnus Wenzer
+        
+        """
+        
         uuid_mapping = self._get_uuid_mapping_object()
-        if workspace_alias and subset_alias: 
+        
+        if workspace_alias:
             workspace_uuid = uuid_mapping.get_uuid(workspace_alias)
+        
+        if workspace_uuid and subset_alias: 
             workspace_object = self.workspaces.get(workspace_uuid, None) 
             workspace_object = self._get_workspace_object(unique_id=workspace_uuid)
             if not workspace_object:
                 return False 
             return workspace_object.get_unique_id_for_alias(subset_alias)
         elif workspace_alias:
-            return uuid_mapping.get_uuid(workspace_alias)
+            return workspace_uuid
         else:
             return False
            
@@ -2668,7 +2678,7 @@ class EventHandler(object):
     def request_subset_get_data_filter(self, request):
         """
         Created     20180608    by Magnus Wenzer
-        Updated     20180719    by Magnus Wenzer
+        Updated     20180720    by Magnus Wenzer
         
         "request" must contain: 
             workspace_uuid
@@ -2688,7 +2698,11 @@ class EventHandler(object):
         
         self._check_valid_uuid(workspace_uuid, subset_uuid)
         
-        workspace_object = self.get_workspace(workspace_uuid) 
+        workspace_object = self.get_workspace(workspace_uuid)  
+        
+        if not workspace_object.data_is_loaded():
+            raise exceptions.NoDataSelected
+        
         df0 = workspace_object.get_filtered_data(step=0)
         year_choices = sorted(set(df0['MYEAR']))
         
@@ -2696,6 +2710,7 @@ class EventHandler(object):
         response['workspace_uuid'] = workspace_uuid
         response['workspace'] = self.dict_workspace(workspace_uuid) 
         
+        print('===', subset_uuid)
         response['subset'] = self.dict_subset(workspace_uuid=workspace_uuid, 
                                               subset_uuid=subset_uuid, 
                                               time=True, 
@@ -3419,7 +3434,7 @@ class EventHandler(object):
         
     
     #==========================================================================
-    def request_workspace_load_default_data(self, request):
+    def request_workspace_import_default_data(self, request):
         """
         Created     20180319    by Magnus Wenzer
         Updated     20180720    by Magnus Wenzer
