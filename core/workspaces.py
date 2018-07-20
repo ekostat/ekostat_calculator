@@ -1597,7 +1597,7 @@ class WorkSpace(object):
 #            print('self.datatype_settings.no_data_to_load():')
             self._logger.debug('No data to load.')
             self.delete_all_export_data() 
-            return True
+            raise exceptions.NoDataSelected
             
         elif not self.datatype_settings.all_data_is_loaded(): 
 #            print('self.datatype_settings.all_data_is_loaded():')

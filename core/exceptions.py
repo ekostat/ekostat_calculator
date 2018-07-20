@@ -180,6 +180,14 @@ class NoAreasSelected(EkostatUserException):
     message = 'No areas selected' 
     
     
+#==============================================================================
+class NoDataSelected(EkostatUserException):
+    """
+    Created     20180720    by Magnus Wenzer
+    """
+    code = 'no_data_selected'   
+    message = 'No data has been activated in settings' 
+    
     
 #class InputError(Exception):
 #
