@@ -599,11 +599,16 @@ class EventHandler(object):
             
         else:
             year_list = sorted(map(int, data_filter_object.get_include_list_filter('MYEAR')))
-            year_choices = kwargs.get('year_choices', list(range(1980, datetime.datetime.now().year+1)))
+            year_choices = [int(item) for item in kwargs.get('year_choices', list(range(1980, datetime.datetime.now().year+1)))] # Cant be int64 for json to work
+#            print('&'*50)
+#            print(year_list[0], type(year_list[0]))
+#            print(year_choices[0], type(year_choices[0]))
 #            month_list = sorted(map(int, data_filter_object.get_include_list_filter('MONTH')))
             
             return {'year_interval': [year_list[0], year_list[-1]], 
                     'year_choices': year_choices}#, "month_list": month_list} 
+    
+#            return {'year_interval': [year_list[0], year_list[-1]]}#, "month_list": month_list} 
         
     
 #    #==========================================================================
@@ -1389,7 +1394,7 @@ class EventHandler(object):
                                                             request=request.get('areas', []))
         
         # Quality elements 
-        if kwargs.get('quality_elements'):
+        if kwargs.get('quality_elements'): 
             subset_dict['quality_elements'] = self.list_quality_elements(workspace_uuid=workspace_uuid, 
                                                                          subset_uuid=subset_uuid, 
                                                                          request=request.get('quality_elements', []), 
@@ -1681,7 +1686,7 @@ class EventHandler(object):
             self._logger.debug('Getting workspace "{}" with alias "{}"'.format(unique_id, alias)) 
         workspace_object = self.workspaces.get(unique_id, None) 
         if not workspace_object:
-            raise 
+            raise exceptions.WorkspaceNotFound
         return workspace_object
     
     
@@ -2677,8 +2682,11 @@ class EventHandler(object):
         workspace_uuid = request['workspace_uuid']
         subset_uuid = request['subset_uuid']
         
+        self._check_valid_uuid(workspace_uuid)
         # Load workspace 
-        self.action_load_workspace(workspace_uuid)
+        self.action_load_data(workspace_uuid) 
+        
+        self._check_valid_uuid(workspace_uuid, subset_uuid)
         
         workspace_object = self.get_workspace(workspace_uuid) 
         df0 = workspace_object.get_filtered_data(step=0)

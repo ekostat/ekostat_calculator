@@ -6,7 +6,7 @@
         "status": "editable"
     },
     "subset": {
-        "alias": "subset_20180615",
+        "alias": "new_subset_name",
         "subset_uuid": "ac45fef1-3042-44f4-bdca-e121d1d93f45",
         "status": "editable",
         "value": true,
@@ -16,33 +16,6 @@
                 2017
             ],
             "year_choices": [
-                1980,
-                1981,
-                1982,
-                1983,
-                1984,
-                1985,
-                1986,
-                1987,
-                1988,
-                1989,
-                1990,
-                1991,
-                1992,
-                1993,
-                1994,
-                1995,
-                1996,
-                1997,
-                1998,
-                1999,
-                2000,
-                2001,
-                2002,
-                2003,
-                2004,
-                2005,
-                2006,
                 2007,
                 2008,
                 2009,
@@ -53,8 +26,7 @@
                 2014,
                 2015,
                 2016,
-                2017,
-                2018
+                2017
             ]
         },
         "areas": [
@@ -7400,7 +7372,7 @@
                         "key": "2",
                         "type": "type_area",
                         "status": "editable",
-                        "active": true,
+                        "active": false,
                         "children": [
                             {
                                 "label": "Inre Idefjorden",
@@ -7448,7 +7420,7 @@
                                 "type": "water_body",
                                 "status": "editable",
                                 "url": " http://www.viss.lansstyrelsen.se/waters.aspx?waterEUID=SE580688-114860",
-                                "active": true
+                                "active": false
                             },
                             {
                                 "label": "Ell\u00f6sefjorden",
@@ -7544,7 +7516,7 @@
                                 "type": "water_body",
                                 "status": "editable",
                                 "url": " http://www.viss.lansstyrelsen.se/waters.aspx?waterEUID=SE582000-115270",
-                                "active": true
+                                "active": false
                             },
                             {
                                 "label": "Brofjorden",

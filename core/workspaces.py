@@ -851,9 +851,10 @@ class WorkSpace(object):
         self.paths['directory_path_log'] = self.paths['workspace_directory'] + '/log'
         
         # Create directories if not present 
-        for p in self.paths:
-            if not os.path.exists(p):
-                os.makedirs(p)
+        for key, p in self.paths.items():
+            if type(p) == str:
+                if not os.path.exists(p):
+                    os.makedirs(p)
         # Step
         self.step_0 = None 
         
