@@ -60,10 +60,11 @@ class EventHandler(object):
                  resource_directory='', 
                  log_directory='', 
                  test_data_directory='', 
+                 temp_directory='', 
                  reload_mapping_objects=False): 
         """
         Created     20180219    by Magnus Wenzer
-        Updated     20180718    by Magnus Wenzer
+        Updated     20180721    by Magnus Wenzer
         
         MW 20180530: Only one usr per event handler. 
         In terms of user_id this does not really matter at the moment. 
@@ -75,11 +76,14 @@ class EventHandler(object):
         
         t0 = time.time()
         
+        self.time_get_workspace = 0
+        
         self.user_id = user_id
         self.workspace_directory = workspace_directory
         self.resource_directory = resource_directory
         self.log_directory = log_directory
-        self.test_data_directory = test_data_directory
+        self.test_data_directory = test_data_directory 
+        self.temp_directory = temp_directory
         self.reload_mapping_objects = reload_mapping_objects
         
         
@@ -127,7 +131,9 @@ class EventHandler(object):
         
     #==========================================================================
     def _load_mapping_objects(self):
-        
+        """
+        Updated     20180721    by Magnus Wenzer
+        """
         mappings_pickle_file_path = os.path.join(self.resource_directory, 'mapping_objects.pkl') 
         if os.path.exists(mappings_pickle_file_path) and not self.reload_mapping_objects:
             self._logger.debug('Loading mapping files from pickle file.')
@@ -149,6 +155,7 @@ class EventHandler(object):
             self.mapping_objects['indicator_settings_matching_columns'] = core.SimpleList(file_path=os.path.join(self.resource_directory, 'mappings/indicator_settings_matching_columns.txt'))
             self.mapping_objects['indicator_settings_items_to_show_in_gui'] = core.SimpleList(file_path=os.path.join(self.resource_directory, 'mappings/indicator_settings_items_to_show_in_gui.txt'))
             self.mapping_objects['indicator_settings_items_editable_in_gui'] = core.SimpleList(file_path=os.path.join(self.resource_directory, 'mappings/indicator_settings_items_editable_in_gui.txt'))
+            self.mapping_objects['datatype_list'] = core.MappingObject(file_path=os.path.join(self.resource_directory, 'mappings/datatype_list.txt'))
             
             with open(mappings_pickle_file_path, "wb") as fid:
                 pickle.dump(self.mapping_objects, fid) 
@@ -166,6 +173,7 @@ class EventHandler(object):
     def _check_valid_uuid(self, workspace_uuid=None, subset_uuid=None): 
         """
         Created     20180719    by Magnus Wenzer
+        Updated     20180720    by Magnus Wenzer
         """
         if not workspace_uuid:
             raise exceptions.InvalidInputVariable 
@@ -174,20 +182,21 @@ class EventHandler(object):
         if not subset_uuid:
 #            print('IF')
             uuid_mapping = self._get_uuid_mapping_object() 
+            
             if workspace_uuid in uuid_mapping.get_uuid_list_for_user(status=['deleted']): 
-                raise exceptions.WorkspaceIsDeleted
+                raise exceptions.WorkspaceIsDeleted(workspace_uuid)
             elif workspace_uuid not in uuid_mapping.get_uuid_list_for_user(): 
-                raise exceptions.WorkspaceNotFound
+                raise exceptions.WorkspaceNotFound(workspace_uuid)
 
         else:
 #            print('ELSE')
-            workspace_object = self._get_workspace_object(unique_id=workspace_uuid) 
+            workspace_object = self.workspaces.get(workspace_uuid, None) 
             uuid_mapping = workspace_object.uuid_mapping
             
             if subset_uuid in uuid_mapping.get_uuid_list_for_user(status=['deleted']): 
-                raise exceptions.SubsetIsDeleted
+                raise exceptions.SubsetIsDeleted(subset_uuid)
             elif subset_uuid not in uuid_mapping.get_uuid_list_for_user(): 
-                raise exceptions.SubsetNotFound 
+                raise exceptions.SubsetNotFound(subset_uuid)
                 
     
     #==========================================================================
@@ -217,13 +226,44 @@ class EventHandler(object):
         
     
     #==========================================================================
-    def _get_workspace_object(self, unique_id=None): 
+    def deprecated_get_workspace_object(self, unique_id=None): 
         """
         Updated     20180530    by Magnus wenzer
         """
         # TODO: _get_workspace_object and self.get_workspace does the same thing. 
         # TODO: Maybe use self.get_workspace to handle status and check against user etc 
         return self.workspaces.get(unique_id, False)
+    
+    
+    #==========================================================================
+    def _get_selected_areas_from_subset_request(self, request):
+        """
+        Created     20180611    by Magnus Wenzer
+        Updated 
+        
+        Returns a dict like: 
+            selected_areas = {'water_district_list': [], 
+                              'type_area_list': [], 
+                              'viss_eu_cd_list': []}
+            
+        ...containing the selected areas in subset reques / response
+        """
+        selected_areas = {'water_district_list': [], 
+                          'type_area_list': [], 
+                          'viss_eu_cd_list': []}
+        
+        areas = request.get('areas', [])
+        for water_district in areas:
+            if water_district.get('value', False):
+                selected_areas['water_district_list'].append(water_district['key']) 
+                for type_area in water_district.get('children', []): 
+                    if type_area.get('value', False): 
+                        selected_areas['type_area_list'].append(type_area['key'])
+                        for water_body in type_area.get('children', []): 
+                            if water_body.get('value', False): 
+                                selected_areas['viss_eu_cd_list'].append(water_body['key'])
+                                
+        return selected_areas
     
     
     #==========================================================================
@@ -237,6 +277,32 @@ class EventHandler(object):
         uuid_mapping_object = core.UUIDmapping(file_path, self.user_id)
         return uuid_mapping_object
     
+    
+    #==========================================================================
+    def _get_string_for_water_body(self, water_body): 
+        """
+        Created 20180721    by Magnus
+        """
+        name = self.mapping_objects['water_body'].get_display_name(water_body=water_body)
+        return '{} ({})'.format(name, water_body)
+       
+        
+    #==========================================================================
+    def _get_string_for_type_area(self, type_area): 
+        """
+        Created 20180721    by Magnus
+        """
+        name = self.mapping_objects['water_body'].get_display_name(type_area=type_area)
+        return '{} ({})'.format(name, type_area)
+    
+    
+    #==========================================================================
+    def _get_area_from_string(self, area_string): 
+        """
+        Created 20180721    by Magnus
+        """
+        return area_string.split('(')[-1].split(')')[0]
+    
         
     #==========================================================================
     def apply_data_filter(self, 
@@ -246,7 +312,7 @@ class EventHandler(object):
         """
         Updated     20180530    by Magnus Wenzer 
         """
-        w = self._get_workspace_object(unique_id=workspace_uuid)
+        w = self.get_workspace(workspace_uuid)
         w.apply_data_filter(subset=subset_uuid, step=step)
         
         
@@ -261,7 +327,7 @@ class EventHandler(object):
         Created     20180319    by Magnus Wenzer
         Updated     20180530    by Magnus Wenzer
         """
-        w = self._get_workspace_object(unique_id=workspace_uuid)
+        w = self.get_workspace(workspace_uuid)
         all_ok = w.apply_indicator_data_filter(subset=subset_uuid, 
                                                indicator=indicator, 
                                                type_area=type_area, 
@@ -449,7 +515,7 @@ class EventHandler(object):
                 "datatype": "chlorophyll"
             }
         """
-        workspace_object = self._get_workspace_object(unique_id=workspace_uuid) 
+        workspace_object = self.get_workspace(workspace_uuid) 
         if not workspace_object:
             return {}
         
@@ -512,7 +578,7 @@ class EventHandler(object):
 #					   'value': False,
 #					   'key': ""}
         
-        workspace_object = self._get_workspace_object(unique_id=workspace_uuid) 
+        workspace_object = self.get_workspace(workspace_uuid) 
         subset_object = workspace_object.get_subset_object(subset_uuid) 
         if not subset_object:
             self._logger.warning('Could not find subset object {}. Subset is probably not loaded.'.format(subset_uuid))
@@ -562,11 +628,11 @@ class EventHandler(object):
         Created     20180317   by Magnus Wenzer
         Updated     20180719   by Magnus Wenzer
         """
-        workspace_object = self._get_workspace_object(unique_id=workspace_uuid) 
+        workspace_object = self.get_workspace(workspace_uuid) 
         subset_object = workspace_object.get_subset_object(subset_uuid) 
         if not subset_object:
             self._logger.warning('Could not find subset object {}. Subset is probably not loaded.'.format(subset_uuid))
-            return {}
+            return {} 
 
         
         
@@ -612,12 +678,78 @@ class EventHandler(object):
 #            return {'year_interval': [year_list[0], year_list[-1]]}#, "month_list": month_list} 
         
     
-#    #==========================================================================
-#    def dict_item(self, ): 
-#        """
-#        Created     20180718   by Magnus Wenzer
-#        Updated     
-#        """
+    #==========================================================================
+    def dict_select_year_interval(self, **kwargs): 
+        """
+        Created     20180720   by Magnus Wenzer 
+        
+        """ 
+        
+        choices = [int(item) for item in kwargs.get('year_choices', list(range(1980, datetime.datetime.now().year+1)))] # Cant be int64 for json to work
+        
+        response = {'key': 'year_interval', 
+                    'label': 'Year interval', 
+                    'choices': choices, 
+                    'widget': 'interval:int', 
+                    'value': [2007, 2017]}
+        
+        return response
+    
+    
+    #==========================================================================
+    def dict_select_datatype(self, **kwargs): 
+        """
+        Created     20180721   by Magnus Wenzer 
+        
+        """ 
+        choices = sorted(self.mapping_objects['datatype_list'].get_list('codelist_name'))
+        
+        response = {'key': 'datatype', 
+                    'label': 'Data type', 
+                    'choices': choices, 
+                    'widget': 'select:str', 
+                    'value': ''}
+        
+        return response
+    
+    
+    #==========================================================================
+    def dict_select_water_body(self, **kwargs): 
+        """
+        Created     20180721   by Magnus Wenzer 
+        
+        "location_svar_sea_area_code" in sharkweb
+        """ 
+        choices = self.mapping_objects['water_body'].get_list(area_level='water_body')
+        choices = [self._get_string_for_water_body(c) for c in choices] 
+        choices = sorted(choices)
+        
+        response = {'key': 'water_body', 
+                    'label': 'Water body', 
+                    'choices': choices, 
+                    'widget': 'multiselect:str', 
+                    'value': []}
+        
+        return response
+    
+    
+    #==========================================================================
+    def dict_select_type_area(self, **kwargs): 
+        """
+        Created     20180721   by Magnus Wenzer 
+        
+        """ 
+        choices = self.mapping_objects['water_body'].get_list(area_level='type_area')
+        choices = [self._get_string_for_type_area(c) for c in choices]
+        choices = sorted(choices)
+        
+        response = {'key': 'type_area', 
+                    'label': 'Type area', 
+                    'choices': choices, 
+                    'widget': 'multiselect:str', 
+                    'value': []}
+        
+        return response
         
         
     #==========================================================================
@@ -636,7 +768,7 @@ class EventHandler(object):
         """
         
         
-        workspace_object = self._get_workspace_object(unique_id=workspace_uuid) 
+        workspace_object = self.get_workspace(workspace_uuid) 
         subset_object = workspace_object.get_subset_object(subset_uuid) 
         if not subset_object:
             self._logger.warning('Could not find subset object {}. Subset is probably not loaded.'.format(subset_uuid))
@@ -1030,7 +1162,7 @@ class EventHandler(object):
         """
         
         
-        workspace_object = self._get_workspace_object(unique_id=workspace_uuid) 
+        workspace_object = self.get_workspace(workspace_uuid) 
         subset_object = workspace_object.get_subset_object(subset_uuid) 
         if not subset_object:
             self._logger.warning('Could not find subset object {}. Subset is probably not loaded.'.format(subset_uuid))
@@ -1247,7 +1379,7 @@ class EventHandler(object):
 #        This should be more dynamic in the future. For example not set ranges but min and max year. 
 #        """ 
 #            
-#        workspace_object = self._get_workspace_object(unique_id=workspace_uuid) 
+#        workspace_object = self.get_workspace(workspace_uuid) 
 #        subset_object = workspace_object.get_subset_object(subset_uuid) 
 #        if not subset_object:
 #            self._logger.warning('Could not find subset object {}. Subset is probably not loaded.'.format(subset_uuid))
@@ -1288,7 +1420,7 @@ class EventHandler(object):
             if kwargs.get('<include>'):
                 "INCLUDE"
         """
-        workspace_object = self._get_workspace_object(unique_id=workspace_uuid) 
+        workspace_object = self.get_workspace(workspace_uuid) 
         subset_object = workspace_object.get_subset_object(subset_uuid) 
         if not subset_object:
             self._logger.warning('Could not find subset object {}. Subset is probably not loaded.'.format(subset_uuid))
@@ -1328,7 +1460,7 @@ class EventHandler(object):
     def dict_subset(self, workspace_uuid=None, subset_uuid=None, request={}, **kwargs):  
         """
         Created     20180222    by Magnus Wenzer
-        Updated     20180719    by Magnus Wenzer
+        Updated     20180720    by Magnus Wenzer
         
         Update 20180608 by MW: kwargs contains what to include. Currently options are: 
             inidcator_settings 
@@ -1338,7 +1470,7 @@ class EventHandler(object):
             if kwargs.get('<include>'):
                 "INCLUDE"
         """
-        workspace_object = self._get_workspace_object(unique_id=workspace_uuid) 
+        workspace_object = self.get_workspace(workspace_uuid) 
         uuid_mapping = workspace_object.uuid_mapping
         
         
@@ -1392,7 +1524,8 @@ class EventHandler(object):
                     
             subset_dict['areas'] = self.list_areas(workspace_uuid=workspace_uuid, 
                                                             subset_uuid=subset_uuid, 
-                                                            request=request.get('areas', []))
+                                                            request=request.get('areas', []), 
+                                                            **kwargs)
         
         # Quality elements 
         if kwargs.get('quality_elements'): 
@@ -1409,7 +1542,11 @@ class EventHandler(object):
                                                                                **kwargs)
 
 
-        
+        # Result 
+        if kwargs.get('result'): 
+            subset_dict['result'] = self.dict_result(workspace_uuid=workspace_uuid, 
+                                                     subset_uuid=subset_uuid, 
+                                                     **kwargs)
 
         return subset_dict
                                 
@@ -1422,7 +1559,7 @@ class EventHandler(object):
         
         Internally its only possible to filter water bodies.  
         """
-        workspace_object = self._get_workspace_object(unique_id=workspace_uuid) 
+        workspace_object = self.get_workspace(workspace_uuid) 
 #        print(subset_uuid)
         subset_object = workspace_object.get_subset_object(subset_uuid) 
         if not subset_object:
@@ -1463,7 +1600,7 @@ class EventHandler(object):
         "editable" is not checked at the moment....
         """
         
-        workspace_object = self._get_workspace_object(unique_id=workspace_uuid) 
+        workspace_object = self.get_workspace(workspace_uuid) 
         subset_object = workspace_object.get_subset_object(subset_uuid) 
         if not subset_object:
             self._logger.warning('Could not find subset object {}. Subset is probably not loaded.'.format(subset_uuid))
@@ -1526,7 +1663,7 @@ class EventHandler(object):
         Internally its only possible to filter water bodies.  
         "editable" needs to be checked against water district and type. 
         """
-        workspace_object = self._get_workspace_object(unique_id=workspace_uuid) 
+        workspace_object = self.get_workspace(workspace_uuid) 
 #        print('subset_uuid', subset_uuid)
         subset_object = workspace_object.get_subset_object(subset_uuid) 
         water_body_mapping = self.mapping_objects['water_body']
@@ -1585,9 +1722,10 @@ class EventHandler(object):
     def dict_workspace(self, workspace_uuid=None, **kwargs): 
         """
         Created     20180221    by Magnus Wenzer
-        Updated     20180608    by Magnus Wenzer
+        Updated     20180720    by Magnus Wenzer
         
         """
+        
         uuid_mapping = self._get_uuid_mapping_object() 
             
         alias = uuid_mapping.get_alias(workspace_uuid, status=self.all_status) 
@@ -1614,6 +1752,33 @@ class EventHandler(object):
         return workspace_dict
     
     
+    #==========================================================================
+    def dict_result(self, workspace_uuid=None, subset_uuid=None, **kwargs): 
+        """
+        Created     20180720    by Magnus Wenzer
+        
+        """
+        workspace_object = self.get_workspace(workspace_uuid) 
+        self._check_valid_uuid(workspace_uuid, subset_uuid)
+        
+        step3_object = workspace_object.get_step_object(step=3, subset=subset_uuid)
+        
+        # Loading saved results
+        step3_object.load_results()
+        
+#        labels = {}
+#        for key in step3_object.result_data.keys():
+#            labels[key] = self.mapping_objects['display_mapping'].get_mapping(key, 'internal_name', 'display_en')
+#            
+#        
+#        return_dict = {'dataframes': step3_object.result_data, 
+#                       'labels': labels}
+        
+        return_dict = {'dataframes': step3_object.result_data}
+        
+        return return_dict 
+        
+        
     #==========================================================================
     def print_workspaces(self): 
         """
@@ -1670,7 +1835,7 @@ class EventHandler(object):
         
         if workspace_uuid and subset_alias: 
             workspace_object = self.workspaces.get(workspace_uuid, None) 
-            workspace_object = self._get_workspace_object(unique_id=workspace_uuid)
+            workspace_object = self.get_workspace(workspace_uuid)
             if not workspace_object:
                 return False 
             return workspace_object.get_unique_id_for_alias(subset_alias)
@@ -1692,26 +1857,32 @@ class EventHandler(object):
     
     
     #==========================================================================
-    def get_workspace(self, unique_id=None): 
+    def get_workspace(self, workspace_uuid=None): 
         """
         Created     20180219    by Magnus Wenzer
-        Updated     20180719    by Magnus Wenzer
+        Updated     20180721    by Magnus Wenzer
         
         """
-        # Get UUID for workspace
-        if unique_id == 'default_workspace': 
-            pass
-        else:
-            uuid_mapping = self._get_uuid_mapping_object()
-            if not uuid_mapping.is_present(unique_id):
-                raise exceptions.WorkspaceNotFound
-
-            alias = uuid_mapping.get_alias(unique_id)
-            # return matching workspace 
-            self._logger.debug('Getting workspace "{}" with alias "{}"'.format(unique_id, alias)) 
-        workspace_object = self.workspaces.get(unique_id, None) 
+        t0 = time.time()
+        workspace_object = self.workspaces.get(workspace_uuid, None)
         if not workspace_object:
-            raise exceptions.WorkspaceNotFound
+            self._check_valid_uuid(workspace_uuid)
+        
+#        # Get UUID for workspace
+#        if workspace_uuid == 'default_workspace': 
+#            pass
+#        else:
+#            uuid_mapping = self._get_uuid_mapping_object()
+#            if not uuid_mapping.is_present(workspace_uuid):
+#                raise exceptions.WorkspaceNotFound(workspace_uuid)
+#
+##            alias = uuid_mapping.get_alias(workspace_uuid)
+##            # return matching workspace 
+##            self._logger.debug('Getting workspace "{}" with alias "{}"'.format(workspace_uuid, alias)) 
+#        workspace_object = self.workspaces.get(workspace_uuid, None) 
+#        if not workspace_object:
+#            raise exceptions.WorkspaceNotFound(workspace_uuid)
+        self.time_get_workspace += (time.time()-t0)
         return workspace_object
     
     
@@ -1731,7 +1902,7 @@ class EventHandler(object):
         """
         assert all([workspace_uuid, file_name, status])
         
-        workspace_object = self._get_workspace_object(unique_id=workspace_uuid) 
+        workspace_object = self.get_workspace(workspace_uuid) 
         if not workspace_object:
             return False
         
@@ -1742,7 +1913,64 @@ class EventHandler(object):
         return datatype_settings_object.set_status(file_name=file_name, status=status)
     
     
-    
+    #==========================================================================
+    def import_sharkweb_data(self, 
+                              workspace_uuid=None, 
+                              file_name='', 
+                              **kwargs): 
+        """
+        Created     20180721    by Magnus Wenzer
+        
+        Loads data from sharkweb. 
+        """
+        self.action_load_workspace(workspace_uuid)
+        reader = core.SharkWebReader(debug=True)
+        data_params = reader.get_data_params()
+        
+        invalid_keys = []
+        for key in kwargs:
+            if key in data_params:
+                data_params[key] = kwargs[key]
+            else:
+                invalid_keys.append(key)
+                
+        if invalid_keys:
+            exceptions.InvalidUserInput
+          
+#        data_params['datatype'] = 'Harbour Porpoise'
+#        data_params['sample_table_view'] = 'sample_col_harbourporpoise'
+#        
+#        data_params['county_list'] = ['Blekinge län', 'Kalmar län'] 
+#        try:            
+        # Read data 
+        reader.read_data(data_params=data_params) 
+        
+        # Find datatype
+        datatype = reader.data.split('\n')[1].split('\t')[0] 
+        internal_datatype_name = self.mapping_objects['datatype_list'].get_mapping(datatype, 'codelist_name', 'internal_name')
+        
+        # Save file 
+        full_file_name = '{}_sharkweb_data_{}_{}.txt'.format(internal_datatype_name, self.user_id, file_name)
+        file_path = os.path.join(self.temp_directory, full_file_name) 
+        reader.save_data(file_path) 
+        
+        # Import file in workspace 
+        workspace_object = self.get_workspace(workspace_uuid) 
+        workspace_object.import_file(file_path=file_path, 
+                                     data_type=internal_datatype_name, 
+                                     status=0, 
+                                     force=True)
+        
+        # Remove temp file 
+#            os.remove(file_path)
+        print('Done')
+        return True
+            
+#        except:
+#            exceptions.SharkwebLoadError
+            
+        
+        
     #==========================================================================
     def import_default_data(self, workspace_alias=None, force=False):
         """
@@ -1771,7 +1999,7 @@ class EventHandler(object):
         request is a list of dicts. 
         """ 
 #        print(workspace_uuid)
-        workspace_object = self._get_workspace_object(unique_id=workspace_uuid) 
+        workspace_object = self.get_workspace(workspace_uuid) 
         if not workspace_object:
             print('NOT workspace_object') 
             print(workspace_uuid)
@@ -1820,7 +2048,7 @@ class EventHandler(object):
             if kwargs.get('<include>'):
                 "INCLUDE"
         """ 
-        workspace_object = self._get_workspace_object(unique_id=workspace_uuid) 
+        workspace_object = self.get_workspace(workspace_uuid) 
 #        subset_object = workspace_object.get_subset_object(subset_uuid)
         
         indicator_list = self.mapping_objects['quality_element'].get_indicator_list_for_quality_element(quality_element)
@@ -1876,7 +2104,7 @@ class EventHandler(object):
         selected_areas_list = selected_areas['type_area_list'] + selected_areas['viss_eu_cd_list']
         
         
-        workspace_object = self._get_workspace_object(unique_id=workspace_uuid) 
+        workspace_object = self.get_workspace(workspace_uuid) 
 #        if indicator == 'din_winter':
 #            print('¤'*50)
 #            print(indicator) 
@@ -1978,7 +2206,7 @@ class EventHandler(object):
         
         Temporary method to give static periods.
         """
-        workspace_object = self._get_workspace_object(unique_id=workspace_uuid) 
+        workspace_object = self.get_workspace(workspace_uuid) 
         subset_object = workspace_object.get_subset_object(subset_uuid) 
         
         # Check request
@@ -2024,7 +2252,7 @@ class EventHandler(object):
         
         """ 
 #        print('list_quality_elements', request)
-#        workspace_object = self._get_workspace_object(unique_id=workspace_uuid) 
+#        workspace_object = self.get_workspace(workspace_uuid) 
 #        subset_object = workspace_object.get_subset_object(subset_uuid)
         
         quality_element_list = self.mapping_objects['quality_element'].get_quality_element_list() 
@@ -2115,7 +2343,7 @@ class EventHandler(object):
         
         """ 
 #        print('list_supporting_elements', request)
-#        workspace_object = self._get_workspace_object(unique_id=workspace_uuid) 
+#        workspace_object = self.get_workspace(workspace_uuid) 
 #        subset_object = workspace_object.get_subset_object(subset_uuid)
         
         quality_element_list = ['secchi depth', 'nutrients', 'oxygen balance']
@@ -2167,7 +2395,7 @@ class EventHandler(object):
         
     
     #==========================================================================
-    def list_areas(self, workspace_uuid=None, subset_uuid=None, request=None): 
+    def list_areas(self, workspace_uuid=None, subset_uuid=None, request=None, **kwargs): 
         """
         Created     20180315    by Magnus Wenzer
         Updated     20180315    by Magnus Wenzer
@@ -2214,7 +2442,7 @@ class EventHandler(object):
         
 
         for water_district in self.mapping_objects['water_body'].get_list('water_district'):
-            sub_request = request_for_water_district.get(water_district, None)
+            sub_request = request_for_water_district.get(water_district, None) 
         
             response = self.dict_water_district(workspace_uuid=workspace_uuid, 
                                                 subset_uuid=subset_uuid, 
@@ -2235,7 +2463,7 @@ class EventHandler(object):
         """
         # Check request 
         if request:
-            workspace_object = self._get_workspace_object(unique_id=workspace_uuid) 
+            workspace_object = self.get_workspace(workspace_uuid) 
             # Create list of type areas 
             type_area_list = [req['key'] for req in request if req['value']]
             # Set data filter 
@@ -2269,7 +2497,7 @@ class EventHandler(object):
         
         # Check request 
         if request:
-            workspace_object = self._get_workspace_object(unique_id=workspace_uuid) 
+            workspace_object = self.get_workspace(workspace_uuid) 
             # Create list of type areas 
             water_body_list = [req['key'] for req in request if req['value']]
             # Set data filter 
@@ -2347,36 +2575,9 @@ class EventHandler(object):
         
         
     #==========================================================================
-    def deprecated_assure_data_is_loaded(self, user_id=None, workspace_uuid=None): 
-        """
-        Created     20180323    by Magnus Wenzer
-        Updated     20180323    by Magnus Wenzer
+    def load_data(self, workspace_uuid=None, force=False): 
         
-        Assures that data is loaded in the given workspace. 
-        Data is loaded if workspace.index_handler.data_handler.all_data is empty
-        """
-        self.assure_workspace_is_loaded(user_id=user_id, workspace_uuid=workspace_uuid)
-        workspace_object = self._get_workspace_object(user_id=user_id, unique_id=workspace_uuid)
-#        self.ih = workspace_object.index_handler
-        if not len(workspace_object.index_handler.data_handler_object.all_data):
-            workspace_object.load_all_data()
-        
-    #==========================================================================
-    def deprecated_assure_workspace_is_loaded(self, user_id=None, workspace_uuid=None): 
-        """
-        Created     20180323    by Magnus Wenzer
-        Updated     20180323    by Magnus Wenzer
-        
-        Assures that workspace is loaded. 
-        Loads workspace if not loaded. 
-        """
-        if workspace_uuid not in self.workspaces:
-            self.load_workspace(user_id=user_id, unique_id=workspace_uuid)
-        
-        
-    #==========================================================================
-    def load_data(self, unique_id=None, force=False): 
-        workspace_object = self._get_workspace_object(unique_id=unique_id) 
+        workspace_object = self.get_workspace(workspace_uuid)
         if not workspace_object:
             return False 
         
@@ -2495,6 +2696,7 @@ class EventHandler(object):
                 
         self.load_test_requests()
         
+        
     #==========================================================================
     def load_workspace(self, unique_id=None, reload=False): 
         """
@@ -2550,7 +2752,7 @@ class EventHandler(object):
         If all previous steps are applied if necessary
         """ 
         self.action_load_workspace(workspace_uuid=workspace_uuid) 
-        workspace_object = self._get_workspace_object(unique_id=workspace_uuid) 
+        workspace_object = self.get_workspace(workspace_uuid) 
         workspace_object.apply_data_filter(step=step, subset=subset_uuid)
         
         
@@ -2564,7 +2766,7 @@ class EventHandler(object):
         Filter is applied for all available indicators from step 1. 
         """ 
         self.action_load_workspace(workspace_uuid=workspace_uuid) 
-        workspace_object = self._get_workspace_object(unique_id=workspace_uuid) 
+        workspace_object = self.get_workspace(workspace_uuid) 
         for indicator in workspace_object.get_available_indicators(subset=subset_uuid, step=1): 
             workspace_object.apply_indicator_data_filter(subset=subset_uuid, indicator=indicator, step=step)
         
@@ -2579,7 +2781,7 @@ class EventHandler(object):
         This is typically called before executing a request that sets the data filter. 
         """
         self.action_load_workspace(workspace_uuid=workspace_uuid)
-        workspace_object = self._get_workspace_object(unique_id=workspace_uuid) 
+        workspace_object = self.get_workspace(workspace_uuid) 
         workspace_object.reset_data_filter(subset_uuid=subset_uuid, step=step, include_filters=True, exclude_filters=True)
         
         
@@ -2611,7 +2813,7 @@ class EventHandler(object):
         all_ok = self.action_load_workspace(workspace_uuid)
         if not all_ok:
             return all_ok
-        workspace_object = self._get_workspace_object(unique_id=workspace_uuid) 
+        workspace_object = self.get_workspace(workspace_uuid) 
         if workspace_object:
             data_loaded = workspace_object.load_all_data(force=force) 
             if not data_loaded:
@@ -2640,15 +2842,37 @@ class EventHandler(object):
         if not all_ok:
             return all_ok
         
-        workspace_object = self._get_workspace_object(unique_id=workspace_uuid) 
+        workspace_object = self.get_workspace(workspace_uuid) 
         all_ok = workspace_object.import_default_data(force=force)
         
         if all_ok:
             workspace_object.load_all_data(force=force)
         return all_ok
+      
+        
+    #==========================================================================
+    @timer 
+    def request_sharkweb_search(self, request={}):
+        """
+        Created     20180222    by Magnus Wenzer
+        """ 
+        
+        if request:
+            #self.load_data_from_sharkweb(request)
+            pass
+        else:
+            response = {} 
+            response['year_interval'] = self.dict_select_year_interval() 
+            response['datatype'] = self.dict_select_datatype()
+            response['water_body'] = self.dict_select_water_body()
+            response['type_area'] = self.dict_select_type_area()
+            
+            return response
+        
         
         
     #==========================================================================
+    @timer 
     def request_subset_add(self, request):
         """
         Created     20180222    by Magnus Wenzer
@@ -2661,7 +2885,7 @@ class EventHandler(object):
         
         Returns a dict_subset            
         """ 
-        t0 = time.time()
+        
         self._logger.debug('Start: request_subset_add')
         workspace_uuid = request['workspace_uuid']
         subset_uuid = request['subset_uuid']
@@ -2684,7 +2908,6 @@ class EventHandler(object):
         response = self.dict_subset(workspace_uuid=workspace_uuid, 
                                    subset_uuid=subset_uuid)
         
-        self._logger.debug('Time for excecuting request_subset_add: {}'.format(time.time()-t0)) 
         return response
     
     
@@ -2707,7 +2930,7 @@ class EventHandler(object):
         workspace_uuid = request['workspace_uuid']
         subset_uuid = request['subset_uuid']
         
-        self._check_valid_uuid(workspace_uuid)
+#        self._check_valid_uuid(workspace_uuid)
         # Load workspace 
         self.action_load_data(workspace_uuid) 
         
@@ -2718,7 +2941,7 @@ class EventHandler(object):
         if not workspace_object.data_is_loaded():
             raise exceptions.NoDataSelected
         
-        df0 = workspace_object.get_filtered_data(step=0)
+        df0 = workspace_object.get_filtered_data(step=0) 
         year_choices = sorted(set(df0['MYEAR']))
         
         response = {}
@@ -2807,10 +3030,6 @@ class EventHandler(object):
                                       subset_uuid=subset_uuid, 
                                       step=1) 
         
-#        # Check available indicators 
-#        workspace_object = self._get_workspace_object(workspace_uuid)
-#        available_indicators = workspace_object.get_available_indicators(subset=subset_uuid, step=1)
-        
         
         # Quality elements 
         response['quality_elements'] = self.list_quality_elements(workspace_uuid=workspace_uuid, 
@@ -2883,10 +3102,6 @@ class EventHandler(object):
         self.selected_areas = selected_areas
         
         
-#        # Check available indicators 
-#        workspace_object = self._get_workspace_object(workspace_uuid)
-#        available_indicators = workspace_object.get_available_indicators(subset=subset_uuid, step=1)
-        
         
         # Quality elements 
         response['quality_elements'] = self.list_quality_elements(workspace_uuid=workspace_uuid, 
@@ -2914,38 +3129,6 @@ class EventHandler(object):
         return response
     
     
-    #==========================================================================
-    def _get_selected_areas_from_subset_request(self, request):
-        """
-        Created     20180611    by Magnus Wenzer
-        Updated 
-        
-        Returns a dict like: 
-            selected_areas = {'water_district_list': [], 
-                              'type_area_list': [], 
-                              'viss_eu_cd_list': []}
-            
-        ...containing the selected areas in subset reques / response
-        """
-        selected_areas = {'water_district_list': [], 
-                          'type_area_list': [], 
-                          'viss_eu_cd_list': []}
-        
-        areas = request.get('areas', [])
-        for water_district in areas:
-            if water_district.get('value', False):
-                selected_areas['water_district_list'].append(water_district['key']) 
-                for type_area in water_district.get('children', []): 
-                    if type_area.get('value', False): 
-                        selected_areas['type_area_list'].append(type_area['key'])
-                        for water_body in type_area.get('children', []): 
-                            if water_body.get('value', False): 
-                                selected_areas['viss_eu_cd_list'].append(water_body['key'])
-                                
-        return selected_areas
-        
-        
-
     
     
     #==========================================================================
@@ -3066,6 +3249,7 @@ class EventHandler(object):
     
     
     #==========================================================================
+    @timer 
     def request_subset_list(self, request):
         """
         Created     20180221    by Magnus Wenzer
@@ -3176,8 +3360,6 @@ class EventHandler(object):
             	]
             }
         """
-#        t0 = time.time()
-        self._logger.debug('Start: request_subset_list')
         
         workspace_uuid = request['workspace_uuid'] 
         # Initiate structure 
@@ -3200,6 +3382,37 @@ class EventHandler(object):
                
         return response
                
+    
+    #==========================================================================
+    @timer
+    def request_subset_result_get(self, request):
+        """
+        Created     20180720    by Magnus Wenzer
+        
+        "request" must contain: 
+            workspace_uuid
+            subset_uuid
+            
+        """
+        
+        workspace_uuid = request['workspace_uuid'] 
+        subset_uuid = request['subset_uuid'] 
+        
+        self.action_load_workspace(workspace_uuid)
+        
+        response = {} 
+        response['workspace_uuid'] = workspace_uuid
+        response['workspace'] = self.dict_workspace(workspace_uuid) 
+        response['subset'] = self.dict_subset(workspace_uuid=workspace_uuid, 
+                                    subset_uuid=subset_uuid, 
+                                    include_indicator_settings=False, 
+                                    time=False, 
+                                    areas=False, 
+                                    quality_elements=False, 
+                                    supporting_elements=False, 
+                                    result=True)
+        return response
+        
     
     #==========================================================================
     @timer 
@@ -3406,12 +3619,12 @@ class EventHandler(object):
         
         # Load workspace 
         self.action_load_workspace(workspace_uuid)
-        print('listar')
+#        print('listar')
         response['data_sources'] = self.list_data_sources(workspace_uuid=workspace_uuid, 
                                                           request=request['data_sources']) 
         
         # Load data 
-        all_ok = self.load_data(unique_id=workspace_uuid) 
+        all_ok = self.load_data(workspace_uuid=workspace_uuid) 
         if all_ok: 
             response = self.request_workspace_data_sources_list({'workspace_uuid': workspace_uuid})
         
@@ -3552,7 +3765,7 @@ class EventHandler(object):
         """
         if not filter_type:
             return False
-        workspace_object = self._get_workspace_object(unique_id=workspace_uuid) 
+        workspace_object = self.get_workspace(workspace_uuid) 
         subset_object = workspace_object.get_subset_object(subset_uuid) 
         if not subset_object:
             self._logger.warning('Could not find subset object {}. Subset is probably not loaded.'.format(subset_uuid))

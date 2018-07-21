@@ -97,7 +97,7 @@ class SaveLoadDelete(object):
         
     
     #==========================================================================
-    def load_df(self, file_name='df_data', load_txt=False): 
+    def old_load_df(self, file_name='df_data', load_txt=False): 
         """
         Created:        20180523     by Magnus
         Last modified:  20180523     by Magnus 
@@ -118,6 +118,32 @@ class SaveLoadDelete(object):
 #            df = pd.read_pickle(pickle_file_path)
         elif os.path.exists(txt_file_path):
             df = load_data_file(file_path=txt_file_path, sep='\t', encoding='cp1252',  fill_nan=u'')
+        return df
+    
+    
+    #==========================================================================
+    def load_df(self, file_name='df_data', load_txt=False): 
+        """
+        Created:        20180523     by Magnus
+        Last modified:  20180720     by Magnus 
+        
+        Loads a pandas dataframe structure from pickle- and/or txt-file. 
+        By default the pickle file is loaded if it exists. 
+        If the corresponding pickle-file does not exists the txt file is loaded
+        If load_txt=True the txt-file is loaded even if the pickle excists exists. 
+        """ 
+        pickle_file_path = os.path.join(self.directory, self._pikle_file_name(file_name))
+        txt_file_path = os.path.join(self.directory, self._txt_file_name(file_name))
+        
+        if load_txt or not os.path.exists(pickle_file_path): 
+            if os.path.exists(txt_file_path):
+                df = load_data_file(file_path=txt_file_path, sep='\t', encoding='cp1252',  fill_nan=u'')
+
+        elif os.path.exists(pickle_file_path):
+            with open(pickle_file_path, "rb") as fid: 
+                df = pickle.load(fid)
+#            df = pd.read_pickle(pickle_file_path)
+        
         return df
         
     

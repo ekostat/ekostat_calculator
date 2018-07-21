@@ -1,0 +1,17 @@
+codelist_name	internal_name
+Bacterioplankton	
+Chlorophyll	chlorophyll
+Grey seal	
+Harbour seal	
+Physical and chemical	physicalchemical
+Physical and Chemical	physicalchemical
+Epibenthos	
+Phytoplankton	
+Picoplankton	
+Primary production	
+Ringed seal	
+Seal pathology	
+Sedimentation	
+Zoobenthos	
+Zooplankton	
+Harbour porpoise	

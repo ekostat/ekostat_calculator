@@ -351,14 +351,15 @@ class IndicatorBase(object):
     def get_water_body_indicator_df(self, water_body = None):
         """
         Created:        20180215     by Lena
-        Last modified:  20180328     by Lena
+        Last modified:  20180720     by Magnus
         df should contains:
             - all needed columns from get_filtered_data
             - referencevalues
         TODO: add other info needed for indicator functions
         """
         
-        return self.water_body_indicator_df[water_body]
+        return self.water_body_indicator_df.get(water_body, False)
+#        return self.water_body_indicator_df[water_body]
 
 
     #==========================================================================  
@@ -369,6 +370,7 @@ class IndicatorBase(object):
         """
         print('method is not written yet')
         raise Exception
+
 
       #==========================================================================
     def set_water_body_indicator_df(self, water_body = None):
@@ -839,6 +841,7 @@ class IndicatorOxygen(IndicatorBase):
         self.classification_results[water_body].add_info('value', value)
         self.classification_results[water_body].add_info('test1_resultlist', self.test1_result_list)
         self.classification_results[water_body].add_info('test2_resultlist', self.test2_result_list)
+
 
     ###############################################################################     
     def set_water_body_indicator_df(self, water_body = None):

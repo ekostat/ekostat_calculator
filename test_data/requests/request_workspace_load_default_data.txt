@@ -1,3 +1,0 @@
-{
-    "workspace_uuid": "327bbf4f-f367-4d85-80f4-e9151907eadc"
-}

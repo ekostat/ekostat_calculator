@@ -122,7 +122,9 @@ class WorkStep(object):
         
     #==========================================================================
     def _initiate_attributes(self): 
-        """
+        """ 
+        Updated 20180720    by Magnus Wenzer
+        
         Load attributes 
         """
         self.data_filter = None
@@ -132,6 +134,8 @@ class WorkStep(object):
         self.allowed_data_filter_steps = ['step_0', 'step_1']
         self.allowed_indicator_settings_steps = ['step_2'] 
         self.allowe_indicator_calculation_steps = ['step_3']
+        
+        self.result_data = {}
         
         
     #==========================================================================
@@ -147,6 +151,7 @@ class WorkStep(object):
             return False
         return True
     
+    
     #==========================================================================
     def _set_directories(self):
         #set paths
@@ -157,6 +162,7 @@ class WorkStep(object):
         self.paths['directory_paths']['water_body_station_filter'] = self.paths['step_directory'] + '/settings/water_body'
         self.paths['directory_paths']['output'] = self.paths['step_directory'] + '/output'
         self.paths['directory_paths']['results'] = self.paths['step_directory'] + '/output/results'
+    
     
     #==========================================================================
     def add_files_from_workstep(self, step_object=None, overwrite=False):
@@ -256,23 +262,29 @@ class WorkStep(object):
         """ 
         """
         Created:        20180215     by Lena
-        Last modified:  20180403     by Lena
+        Last modified:  20180720     by Magnus
         create dict containing indicator objects according to data availability or choice?
         This should be moved to WorkStep class, and should be run accesed only for step 3.
         """
         if indicator_list == None:
-            indicator_list = self.parent_workspace_object.available_indicators
-            if indicator_list == None:
-                indicator_list = self.parent_workspace_object.get_available_indicators(subset=subset_unique_id, step=2)
+            indicator_list = self.parent_workspace_object.get_available_indicators(subset=subset_unique_id, step=2)
+#            indicator_list = self.parent_workspace_object.available_indicators
+#            if indicator_list == None:
+#                indicator_list = self.parent_workspace_object.get_available_indicators(subset=subset_unique_id, step=2)
             
         self.indicator_objects = dict.fromkeys(indicator_list)
         for indicator in self.indicator_objects.keys():
-            class_name = self.parent_workspace_object.mapping_objects['quality_element'].indicator_config.loc[indicator]['indicator_class']
-            #print(class_name)
+            try:
+                class_name = self.parent_workspace_object.mapping_objects['quality_element'].indicator_config.loc[indicator]['indicator_class']
+                print(class_name)
+            except KeyError as e:
+                raise exceptions.MissingKeyInSettings(message=indicator)
+                
             try:
                 class_ = getattr(core, class_name)
             except AttributeError as e:
-                raise AttributeError('{}\nClass does not exist'.foramt(e))
+                raise exceptions.MissingClassForIndicator(message=indicator)
+#                raise AttributeError('{}\nClass does not exist'.foramt(e))
             #print(class_)
             #instance = class_()
             # add indicator objects to dictionary
@@ -346,6 +358,37 @@ class WorkStep(object):
 #        print('load_water_body_station_filter')
         self.water_body_station_filter = core.WaterBodyStationFilter(water_body_settings_directory=self.paths['directory_paths']['water_body_station_filter'], 
                                                                      mapping_objects=self.mapping_objects)
+        
+    
+    #==========================================================================
+    def load_results(self, force_loading_txt=False): 
+        """
+        Created 20180720    by Magnus 
+        
+        Loads all files in the results-directory. 
+        pkl-files are loaded by default if present. 
+        Override this by setting force_loading_txt == True 
+        Data is stored in self.result_data
+        """
+        self.result_data = {}
+        results_directory = self.paths.get('directory_paths', {}).get('results', None)
+        if results_directory == None:
+            raise exceptions.MissingPath
+        
+        if not os.path.exists(results_directory): 
+            raise exceptions.MissingDirectory
+        
+        file_list = os.listdir(results_directory) 
+        key_list = list(set([item.split('.')[0] for item in file_list]))
+        
+        save_load_object = core.SaveLoadDelete(results_directory)
+        
+        for key in key_list: 
+            df = save_load_object.load_df(key, load_txt=force_loading_txt)
+            self.result_data[key] = df
+        
+        if not self.result_data: 
+            exceptions.NoResultsInResultDirectory
         
     #==========================================================================
     def set_indicator_settings_data_filter(self, indicator=None, filter_settings=None):
@@ -955,7 +998,7 @@ class WorkSpace(object):
     def import_file(self, file_path=None, data_type=None, status=0, force=True):
         """
         Created     ????????    by 
-        Updated     20180424    by Magnus Wenzer
+        Updated     20180721    by Magnus Wenzer
         
         Imports a data file to the raw_data directory in the workspace. 
         Also adds information to the datatype_settings-object.
@@ -966,21 +1009,29 @@ class WorkSpace(object):
         
                    # Not able to load data into default workspace
         if not self._change_ok():
+            print('1')
             return False
         
         if not os.path.exists(file_path): 
-            if force:
-                os.remove(file_path)
-            else:
-                return False 
+            print('2')
+            return False 
         
         # Copy file
-        target_file_path = '/'.join([self.paths['directory_path_raw_data'], os.path.basename(file_path)])
+        target_file_path = '/'.join([self.paths['directory_path_raw_data'], os.path.basename(file_path)]) 
+        if os.path.exists(target_file_path): 
+            if force:
+                os.remove(target_file_path)
+            else:
+                print('3')
+                return False
+        
+        
         shutil.copyfile(file_path, target_file_path)
         
         # Add file to dtype_settings file
 #        self.dtype_settings.add_file(file_path=file_path, data_type=data_type)
         self.datatype_settings.add_file(file_name=file_path, data_type=data_type, status=status)
+
 
     #==========================================================================
     def import_default_data(self, force=True):
@@ -1601,7 +1652,8 @@ class WorkSpace(object):
     def load_all_data(self, force=False): 
         """ 
         Created:        2017        by Johannes Johansson (?)
-        Last modified:  20180720    by Magnus Wenzer
+        Last modified:  20180721    by Magnus Wenzer
+        
         Loads all data from the input_data/raw_data-directory belonging to the workspace. 
         Only loads data if any file in dtype_settings in set to not "loaded" (loaded=0)
         """
@@ -1638,7 +1690,8 @@ class WorkSpace(object):
                 self._logger.debug('Data has been loaded from existing all_data.{} file.'.format(filetype))
             else:
                 self._logger.debug("""all_data.txt already loaded and datatype_settings.txt is unchanged. 
-                                   Call "delete_alldata_export" and load data again to reload all_data""")
+                                   Call "delete_alldata_export" and load data again to reload all_data""") 
+                data_loaded = True
         else:
 #            print('load_all_data - else')
             # We know that all_data does not excist. We only want to load the datatypes that has been changed and then merge data. 

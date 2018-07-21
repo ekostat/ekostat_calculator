@@ -41,7 +41,8 @@ from .mapping import UUIDmapping
 from .mapping import Hypsograph
 from .mapping import DataTypeMapping
 from .mapping import IndSetHomPar
-from .mapping import SimpleList
+from .mapping import SimpleList 
+from .mapping import MappingObject
 
 from .parameters import ParameterSALT_CTD
 from .parameters import ParameterNTRA 
@@ -55,6 +56,8 @@ from .quality_factors import QualityFactorNP
 
 from .ref_values import create_type_area_object
 from .ref_values import RefValues
+
+from .sharkweb import SharkWebReader
 
 from .workspaces import WorkSpace
 

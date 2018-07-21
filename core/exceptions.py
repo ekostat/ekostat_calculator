@@ -123,7 +123,8 @@ class InvalidInputVariable(EkostatInternalException):
     Created     20180716    by Magnus Wenzer
     """
     code = 500   
-    message = 'Input variable not valid'
+    message = 'Input variable not valid' 
+
     
     
 #==============================================================================
@@ -172,12 +173,56 @@ class BooleanNotFound(EkostatInternalException):
     
 
 #==============================================================================
+class MissingClassForIndicator(EkostatInternalException):
+    """
+    Created     20180720    by Magnus Wenzer
+    """
+    code = 500   
+    message = 'No class for indicator' 
+    
+    
+#==============================================================================
+class MissingKeyInSettings(EkostatInternalException):
+    """
+    Created     20180720    by Magnus Wenzer
+    """
+    code = 500   
+    message = 'Key in settings file is missing' 
+    
+    
+#==============================================================================
+class MissingDirectory(EkostatInternalException):
+    """
+    Created     20180720    by Magnus Wenzer
+    """
+    code = 500   
+    message = 'Missing directory' 
+    
+
+#==============================================================================
+class MissingPath(EkostatInternalException):
+    """
+    Created     20180720    by Magnus Wenzer
+    """
+    code = 500   
+    message = 'Missing path'     
+
+#==============================================================================
 class NoAreasSelected(EkostatUserException):
     """
     Created     20180719    by Magnus Wenzer
     """
     code = 'areas_missing'   
     message = 'No areas selected' 
+    
+    
+#==============================================================================
+class NoResultsInResultDirectory(EkostatUserException):
+    """
+    Created     20180721    by Magnus Wenzer
+    """
+    code = 'results_missing'   
+    message = 'No results in result directory' 
     
     
 #==============================================================================
@@ -196,6 +241,15 @@ class MissingKeyInData(EkostatUserException):
     """
     code = 'missing_key_in_data'   
     message = 'The loaded file is missing one or more mandatory keys' 
+    
+    
+#==============================================================================
+class SharkwebLoadError(EkostatUserException):
+    """
+    Created     20180721    by Magnus Wenzer
+    """
+    code = 'skarkweb_read_error'   
+    message = 'Unable to load data from sharkweb' 
     
 #class InputError(Exception):
 #

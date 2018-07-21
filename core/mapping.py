@@ -49,18 +49,57 @@ class IndSetHomPar(dict):
 class SimpleList(list):
     """
     Created     20180616    by Magnus Wenzer
-    
+
     """ 
     def __init__(self, file_path): 
         self.file_path = file_path 
         self.load_file() 
         
-    def load_file(self): 
-        with codecs.open(self.file_path) as fid: 
+    def load_file(self, **kwargs): 
+        """
+        Updated     20180721    by Magnus Wenzer
+        """
+        with codecs.open(self.file_path, **kwargs) as fid: 
             for line in fid:
                 line = line.strip()
                 if line:
                     self.append(line)
+                    
+
+"""
+#==============================================================================
+#==============================================================================
+""" 
+class MappingObject(list):
+    """
+    Created     20180721    by Magnus Wenzer
+
+    """ 
+    def __init__(self, file_path, **kwargs): 
+        self.file_path = file_path 
+        
+        read_options = {'sep': '\t', 
+                        'encoding': 'cp1252'}
+        
+        read_options.update(kwargs)
+        self.df = pd.read_csv(self.file_path, **read_options)
+                    
+        
+    #==========================================================================
+    def get_mapping(self, item=None, from_column=None, to_column=None):
+        """
+        Created     20180721    by Magnus Wenzer
+            
+        """ 
+        result = self.df.loc[self.df[from_column]==item, to_column]
+        if len(result):
+            return result.values[0]
+        return item
+    
+    
+    #==========================================================================
+    def get_list(self, key):
+        return list(self.df[key].values)
 
 
 """
@@ -388,6 +427,7 @@ class WaterBody(AttributeDict):
                                       first_key=u'TYPE_AREA_NO', 
                                       second_key=u'TYPE_AREA_SUFFIX',
                                       match_key=self.column_name['water_body']['internal'])
+        
         
     #==========================================================================
     def get_water_bodies_in_type_area(self, type_area):
