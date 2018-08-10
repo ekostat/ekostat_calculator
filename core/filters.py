@@ -1020,7 +1020,7 @@ class SettingsRef(SettingsBase):
         else:
             ref_value = self.get_value(variable = 'REF_VALUE_LIMIT', type_area = type_area)
         try:
-            print(ref_value)
+#            print(ref_value)
             ref_value = float(ref_value)
         except ValueError:
             pass

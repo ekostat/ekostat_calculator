@@ -75,10 +75,10 @@ class IndicatorBase(object):
         self.parameter_list =  [item.strip() for item in self.mapping_objects['quality_element'].indicator_config.loc[self.name]['parameters'].split(', ')] #[item.strip() for item in self.parent_workspace_object.cfg['indicators'].loc[self.name][0].split(', ')]
         self.additional_parameter_list = []
         if type(self.mapping_objects['quality_element'].indicator_config.loc[self.name]['additional_parameters']) is str:
-            self.additionel_parameter_list =  [item.strip() for item in self.mapping_objects['quality_element'].indicator_config.loc[self.name]['additional_parameters'].split(', ')] #[item.strip() for item in self.parent_workspace_object.cfg['indicators'].loc[self.name][0].split(', ')]
+            self.additional_parameter_list =  [item.strip() for item in self.mapping_objects['quality_element'].indicator_config.loc[self.name]['additional_parameters'].split(', ')] #[item.strip() for item in self.parent_workspace_object.cfg['indicators'].loc[self.name][0].split(', ')]
         else:
-            self.additionel_parameter_list = []
-        self.column_list = self.meta_columns + self.parameter_list + self.additionel_parameter_list
+            self.additional_parameter_list = []
+        self.column_list = self.meta_columns + self.parameter_list + self.additional_parameter_list
         print(self.column_list)
         self.indicator_parameter = self.parameter_list[0]
         # attributes that will be calculated
@@ -112,7 +112,15 @@ class IndicatorBase(object):
         self.paths = {}
         self.paths['output'] = self.step_object.paths['directory_paths']['output'] 
         self.paths['results'] = self.step_object.paths['directory_paths']['results']
-    
+    #==========================================================================
+    def _add_wb_name_to_df(self, df, water_body):
+        
+        try:
+            df['WATER_BODY_NAME'] = self.mapping_objects['water_body'][water_body]['WATERBODY_NAME']
+        except AttributeError:
+            df['WATER_BODY_NAME'] = 'unknown'
+            print('waterbody matching file does not recognise water body with VISS_EU_CD {}'.format(water_body))
+        
     #==========================================================================
     def _add_reference_value_to_df(self, df, water_body):    
         """
@@ -394,7 +402,8 @@ class IndicatorBase(object):
 #            raise('Error: numeric class: {} incorrect.'.format(local_EQR))
 #    
 #        return EQR, status
-
+           
+        
     #==========================================================================
     def _set_water_body_indicator_df(self, water_body = None):
         """
@@ -536,7 +545,21 @@ class IndicatorBase(object):
         
         return self.water_body_indicator_df[water_body]
 
-
+    #==========================================================================
+    def get_status_from_global_EQR(self, global_EQR):
+        
+        if global_EQR >= 0.8:
+            return 'HIGH'
+        elif global_EQR >= 0.6:
+            return 'GOOD'
+        elif global_EQR >= 0.4:
+            return 'MODERATE'
+        elif global_EQR >= 0.2:
+            return 'POOR'
+        elif global_EQR >= 0:
+            return 'BAD'
+        else:
+            return ''
     #==========================================================================  
     def get_closest_matching_salinity(self):
         """
@@ -722,10 +745,7 @@ class IndicatorBQI(IndicatorBase):
 
         # Set dataframe to use        
         self._set_water_body_indicator_df(water_body)
-        # get data to be used for status calculation
-        df = self.water_body_indicator_df[water_body].copy(deep = True)
-        year_list = df.YEAR.unique()
-        position_list = df.STATN.unique()
+        
         # Get type area and return False if there is not match for the given waterbody    
         type_area = self.mapping_objects['water_body'].get_type_area_for_water_body(water_body, include_suffix=True)
         if type_area == None:
@@ -733,22 +753,12 @@ class IndicatorBQI(IndicatorBase):
         
         wb_name = self.mapping_objects['water_body'][water_body]['WATERBODY_NAME']
         
-        
-        by_date = False
         by_year = False
-       
-#        by_year_pos = df.groupby(['VISS_EU_CD','YEAR', 'POSITION'])[self.indicator_parameter].agg(['count', 'min', 'max', 'mean']).reset_index()
-#        by_year_pos.rename(columns={'mean':'position_mean', 'count': 'position_count', 'min': 'position_min', 'max': 'station_max'}, inplace=True)
-#
-#        by_year = by_year_pos.groupby(['VISS_EU_CD','YEAR']).position_mean.agg(['count', 'min', 'max', 'mean']).reset_index()
-
-        # Random selection with replacement of as many values as there are station means (frac = 1)
-        # TODO: spead-up! Is it possible more efficient way to get the list from the map object?
+        
         def float_convert(x):
             try:
                 return float(x)
             except:
-#                print('float_convert')
                 return np.nan 
             
         def bootstrap(value_list, n):
@@ -759,73 +769,85 @@ class IndicatorBQI(IndicatorBase):
                     result1.append(value_list[random.randrange(0,len(value_list)-1)])
                 result2.append(np.mean(result1))
             return result2
+       
+#        by_year_pos = df.groupby(['VISS_EU_CD','YEAR', 'STATN'])[self.indicator_parameter].agg(['count', 'min', 'max', 'mean']).reset_index()
+#        by_year_pos.rename(columns={'mean':'position_mean', 'count': 'station_count', 'min': 'station_min', 'max': 'station_max'}, inplace=True)
+#
+#        by_year = by_year_pos.groupby(['VISS_EU_CD','YEAR']).position_mean.agg(['count', 'min', 'max', 'mean']).reset_index()
+
+        # Random selection with replacement of as many values as there are station means (frac = 1)
+        # TODO: spead-up! Is it possible more efficient way to get the list from the map object?
+        
+        # get data to be used for status calculation
+        df = self.water_body_indicator_df[water_body].copy(deep = True)
+        self._add_wb_name_to_df(df, water_body)
+        year_list = df.YEAR.unique()
+        station_list = df.STATN.unique()
         
         n = 9999
         by_year_pos_result_list = []
-        by_position_result_list = []
-        for position in position_list:
-            # All values in year
-            position_values = df.loc[df.STATN == position].dropna(subset = [self.indicator_parameter])
-            mxdep_list = [float_convert(p) for p in position_values.MXDEP.unique()]
-            mndep_list = [float_convert(p) for p in position_values.MNDEP.unique()]
+        by_station_result_list = []
+        for station in station_list:
+            # All values at station
+            station_values = df.loc[df.STATN == station].dropna(subset = [self.indicator_parameter])
+            # get station depths
+            mxdep_list = [float_convert(p) for p in station_values.MXDEP.unique()]
+            mndep_list = [float_convert(p) for p in station_values.MNDEP.unique()]
+            # get ref and boundaries
             ref_value = self._get_value(water_body = water_body, variable = 'REF_VALUE_LIMIT', MXDEP_list = mxdep_list, MNDEP_list = mndep_list)
             hg_value = self._get_value(water_body = water_body, variable = 'HG_VALUE_LIMIT', MXDEP_list = mxdep_list, MNDEP_list = mndep_list)
             gm_value = self._get_value(water_body = water_body, variable = 'GM_VALUE_LIMIT', MXDEP_list = mxdep_list, MNDEP_list = mndep_list)
             mp_value = self._get_value(water_body = water_body, variable = 'MP_VALUE_LIMIT', MXDEP_list = mxdep_list, MNDEP_list = mndep_list)
             pb_value = self._get_value(water_body = water_body, variable = 'PB_VALUE_LIMIT', MXDEP_list = mxdep_list, MNDEP_list = mndep_list)
-#            print('number of years at position {}: {}'.format(position,len(position_values.YEAR.unique())))
-#            print(position_values)
-            position_mean_list = []
+            ##### CALCLUTE MEAN BQI & EQR FOR EACH STATION  EACH YEAR #####
+            station_mean_list = []
             for year in year_list:
-                # all values at position in year
-                position_year_values = position_values.loc[position_values.YEAR == year]   
-                if position_year_values.empty:
-                    position_mean= np.nan
+                # all values at station in year
+                station_year_values = station_values.loc[station_values.YEAR == year]   
+                if station_year_values.empty:
+                    station_mean= np.nan
                     #global_EQR = np.nan
-                    by_year_pos_result_list.append((year, position, position_mean, np.nan))
+                    by_year_pos_result_list.append((int(year), station, station_mean, np.nan, np.nan, ref_value, hg_value, gm_value, mp_value, pb_value))
                 else:
-                    position_mean = position_year_values[self.indicator_parameter].mean()
-                    global_EQR, status = self._calculate_global_EQR_from_indicator_value(water_body = water_body, value = position_mean, 
+                    station_mean = station_year_values[self.indicator_parameter].mean()
+                    global_EQR, status = self._calculate_global_EQR_from_indicator_value(water_body = water_body, value = station_mean, 
                                                                                      REF_VALUE_LIMIT = ref_value, HG_VALUE_LIMIT = hg_value,
                                                                                      GM_VALUE_LIMIT = gm_value, MP_VALUE_LIMIT = mp_value,
                                                                                      PB_VALUE_LIMIT = pb_value)
-                    by_year_pos_result_list.append((int(year), position, position_mean, global_EQR, status, ref_value, hg_value, gm_value, mp_value, pb_value))
-                    position_mean_list.append(position_mean)
-#            print(position_mean_list)
-            if len(position_mean_list) > 1:
-                BQIsim = bootstrap(position_mean_list, n)
-            elif len(position_mean_list ) == 0:
+                    by_year_pos_result_list.append((int(year), station, station_mean, global_EQR, status, ref_value, hg_value, gm_value, mp_value, pb_value))
+                    station_mean_list.append(station_mean)
+            if len(station_mean_list) > 1:
+                BQIsim = bootstrap(station_mean_list, n)
+            elif len(station_mean_list ) == 0:
                 BQIsim = np.nan
             else:
-                BQIsim = position_mean_list
+                BQIsim = station_mean_list
              
             percentile = np.percentile(BQIsim, 0.2)
             global_EQR, status = self._calculate_global_EQR_from_indicator_value(water_body = water_body, value = percentile, 
                                                                                      REF_VALUE_LIMIT = ref_value, HG_VALUE_LIMIT = hg_value,
                                                                                      GM_VALUE_LIMIT = gm_value, MP_VALUE_LIMIT = mp_value,
                                                                                      PB_VALUE_LIMIT = pb_value)
-                    
-#            print('percentile', percentile)            
-            by_position_result_list.append((position, percentile, global_EQR, status, ref_value, hg_value, gm_value, mp_value, pb_value))
+                               
+            by_station_result_list.append((station, percentile, global_EQR, status, ref_value, hg_value, gm_value, mp_value, pb_value))
             
-        
-#        print(by_position_result_list)
-        
-        by_year_pos = pd.DataFrame(data = by_year_pos_result_list, columns = ['YEAR', 'position', 'position_mean', 'global_EQR','STATUS','ref_value', 'hg_value', 'gm_value', 'mp_value', 'pb_value'])
+        ##### Create dataframes for saving #####
+        by_year_pos = pd.DataFrame(data = by_year_pos_result_list, columns = ['YEAR', 'station', 'BQI_station_mean', 'global_EQR','STATUS','ref_value', 'hg_value', 'gm_value', 'mp_value', 'pb_value'])
         by_year_pos['WATER_BODY_NAME'] = wb_name
         by_year_pos['VISS_EU_CD'] = water_body
         by_year_pos['WATER_TYPE_AREA'] = type_area
                    
-        by_pos = pd.DataFrame(data = by_position_result_list, columns = ['STATN', '20th percentile', 'global_EQR','STATUS','ref_value', 'hg_value', 'gm_value', 'mp_value', 'pb_value'])
+        by_pos = pd.DataFrame(data = by_station_result_list, columns = ['STATN', 'BQI_20th percentile', 'global_EQR', 'STATUS','ref_value', 'hg_value', 'gm_value', 'mp_value', 'pb_value'])
         by_pos['WATER_BODY_NAME'] = wb_name
         by_pos['VISS_EU_CD'] = water_body
         by_pos['WATER_TYPE_AREA'] = type_area
         
-#        by_period = pd.DataFrame({'VISS_EU_CD': [water_body], 'WATER_BODY_NAME': [wb_name],'WATER_TYPE_AREA': [type_area], 'BQI': [BQI_by_period]})
-                                  #'GLOBAL_EQR': [global_EQR],  'STATUS': [status], })
+        global_EQR_by_period = np.mean(by_pos.global_EQR)
+        status_by_period = self.get_status_from_global_EQR(global_EQR_by_period)
+        by_period = pd.DataFrame({'VISS_EU_CD': [water_body], 'WATER_BODY_NAME': [wb_name],'WATER_TYPE_AREA': [type_area],
+                                  'GLOBAL_EQR': [global_EQR_by_period],  'STATUS': [status_by_period]})
         
-        # TODO: Add BQImax to settingsfile (from handbok or ask Mats L). Call _calculate_global_EQR and add results to resul class
-        return by_date, by_year_pos, by_year, by_pos
+        return df, by_year_pos, by_pos, by_period
         
     
     def old_calculate_status(self, water_body):
@@ -931,8 +953,9 @@ class IndicatorNutrients(IndicatorBase):
         #self.classification_results.add_info('water_body', water_body)
         
         self._set_water_body_indicator_df(water_body)
-        # get data to be used for status calculation, not deep copy because local_EQR values are relevant to see together with data
-        df = self.water_body_indicator_df[water_body]
+        # get data to be used for status calculation
+        df = self.water_body_indicator_df[water_body].copy(deep = True)
+        self._add_wb_name_to_df(df, water_body)
         if len(df) < 1:
             return False, False, False, False
         
@@ -945,12 +968,15 @@ class IndicatorNutrients(IndicatorBase):
             return False, False, False, False
         
         """ 
-        1) Beräkna local_EQR (EK-värde) för varje enskilt prov utifrån (ekvationer för) referensvärden i tabellerna 6.2-6.7.
+        1) 
+        TIDIGARE FÖRESKRIFTEN:
+        Beräkna local_EQR (EK-värde) för varje enskilt prov utifrån (ekvationer för) referensvärden i tabellerna 6.2-6.7.
         Beräkna local_EQR (EK-värde) för varje mätning och sedan ett medel-EK för varje specifikt mättillfälle.
-        TO BE UPDATED TO local_EQR for mean of nutrient conc and salinity 0-10 m.
+        NYA FÖRESKRIFTEN
+        calculate local_EQR for mean of nutrient conc and salinity 0-10 m for each station.
         
         """
-        # ENLIGT GAMLA FS SÅ SKA DETTA VARA KLGSTA NIVÅN PÅ VILKEN DET GÖRS MEDELVÄRDEN.
+        # ENLIGT GAMLA FS SÅ SKA DETTA VARA LÄGSTA NIVÅN PÅ VILKEN DET GÖRS MEDELVÄRDEN.
         #df['local_EQR'] = df.REFERENCE_VALUE/df[self.indicator_parameter]
         #df['local_EQR'] = df['local_EQR'].apply(set_value_above_one) 
         #df['global_EQR'], df['STATUS'] = zip(*df['local_EQR'].apply(self._calculate_global_EQR_from_local_EQR, water_body = water_body))
@@ -965,16 +991,15 @@ class IndicatorNutrients(IndicatorBase):
         # .reset_index keeps all df column headers
         # TODO: what about different stations in one waterbody?
         
-        ################# i gamla föreskriften så ska det vara medel av local_EQR inte medel av konc. och sedan ny local_EQR #############
         if len(df.VISS_EU_CD.unique()) > 1:
             #TODO hur ska vi hantera detta om vi tillåter val av stationer i angränsande waterbody?
             raise Exception('more than one waterbody in dataframe')
             
        
-        agg_dict1 = {self.indicator_parameter: 'mean', self.salt_parameter: 'mean', 'DEPH': 'count', 'VISS_EU_CD': 'max', 'WATER_TYPE_AREA': 'max'}       
+        agg_dict1 = {self.indicator_parameter: 'mean', self.salt_parameter: 'mean', 'DEPH': 'count', 'VISS_EU_CD': 'max', 'WATER_BODY_NAME': 'max', 'WATER_TYPE_AREA': 'max'}       
         agg_dict2 = {key: 'mean' for key in self.additional_parameter_list}       
         
-        by_date = df.groupby(['SDATE', 'YEAR']).agg({**agg_dict1, **agg_dict2}).reset_index()
+        by_date = df.groupby(['SDATE', 'YEAR', 'STATN']).agg({**agg_dict1, **agg_dict2}).reset_index()
         by_date.rename(columns={'DEPH':'DEPH_count'}, inplace=True)
         
         #by_date = df.groupby(['SDATE', 'YEAR'],).local_EQR.agg(['count', 'min', 'max', 'mean']).reset_index()
@@ -989,7 +1014,8 @@ class IndicatorNutrients(IndicatorBase):
             else:
                 check_par = 'PHOS'
             by_date['highest_'+check_par] = False
-            for name, group in by_date.groupby('YEAR'):
+            for name, group in by_date.groupby(['YEAR','STATN']):
+                group[check_par].idxmax()
                 by_date.loc[group[check_par].idxmax(), 'highest_'+check_par] = True 
             #print(by_date['highest_'+check_par])     
             by_date = by_date[by_date['highest_'+check_par]]
@@ -1025,11 +1051,12 @@ class IndicatorNutrients(IndicatorBase):
         """
         2) Medelvärdet av EK för varje parameter beräknas för varje år.
         """
-        agg_dict1 = {'local_EQR': 'mean', self.indicator_parameter: 'mean', self.salt_parameter: 'mean', 'SDATE': 'count', 'VISS_EU_CD': 'max', 'WATER_TYPE_AREA': 'max'}       
+        agg_dict1 = {'local_EQR': 'mean', self.indicator_parameter: 'mean', self.salt_parameter: 'mean', 'SDATE': 'count', 'VISS_EU_CD': 'max', 'WATER_BODY_NAME': 'max', 'WATER_TYPE_AREA': 'max'}       
         
         by_year = by_date.groupby(['YEAR']).agg({**agg_dict1, **agg_dict2}).reset_index()
         by_year.rename(columns={'SDATE':'DATE_count'}, inplace=True)
         by_year['global_EQR'], by_year['STATUS'] = zip(*by_year['local_EQR'].apply(self._calculate_global_EQR_from_local_EQR, water_body = water_body))
+        by_year['STATIONS_USED'] = ', '.join(by_date.STATN.unique())
         #by_year.set_index(keys = 'VISS_EU_CD', append =True, drop = False, inplace = True)
         
 #        by_year = by_date.groupby('YEAR').local_EQR.agg(['count', 'min', 'max', 'mean'])
@@ -1058,6 +1085,8 @@ class IndicatorNutrients(IndicatorBase):
         by_period = by_year.groupby(['VISS_EU_CD']).agg({**agg_dict1, **agg_dict2}).reset_index()
         by_period.rename(columns={'YEAR':'YEAR_count'}, inplace=True)
         by_period['global_EQR'], by_period['STATUS'] = zip(*by_period['local_EQR'].apply(self._calculate_global_EQR_from_local_EQR, water_body = water_body))
+        S = ', '.join(by_year.STATIONS_USED.unique())
+        by_period['STATIONS_USED'] = ', '.join(set(S.split(', '))) 
         #by_period.set_index(keys = 'VISS_EU_CD', append =True, drop = False, inplace = True)
         
         
@@ -1071,7 +1100,7 @@ class IndicatorNutrients(IndicatorBase):
 #            by_period['all_ok']  = True
 #                     
 #        all_ok = by_period['all_ok']    
-        print('\t\t\t{} status calculated'.format(self.name)) 
+#        print('\t\t\t{} status calculated'.format(self.name)) 
         #print(by_period)
          
         """
@@ -1102,7 +1131,7 @@ class IndicatorNutrients(IndicatorBase):
 #                
         """
         5) EK vägs samman för ingående parametrar (tot-N, tot-P, DIN och DIP) enligt
-        beskrivning nedan (6.4.2) för slutlig statusklassificering av hela kvalitetsfaktorn.
+        beskrivning i föreskrift för slutlig statusklassificering av hela kvalitetsfaktorn.
         Görs i quality_factors, def calculate_quality_factor()
         """
         
@@ -1433,7 +1462,7 @@ class IndicatorOxygen(IndicatorBase):
 #        print('area_fraction_value {} minimum_deficiency_depth {} \t{} limit {}'.format(area_fraction_value, self.minimum_deficiency_depth, deficiency_type, self.deficiency_limit))
 #        print('global EQR {} status {}'.format(global_EQR, status)      )
 #       global_EQR, status = self._calculate_global_EQR_from_indicator_value(water_body = 'unspecified', value = value)
-        
+       
         by_period = pd.DataFrame({'VISS_EU_CD': [water_body], 'WATER_BODY_NAME': [wb_name],'WATER_TYPE_AREA': [type_area], 
                                   'GLOBAL_EQR': [global_EQR],  'STATUS': [status], 'O2 conc test1': [self.test1_result], 'O2 conc test2': [self.test1_result], 
                                   'Area below limit %': [area_fraction_value], 'test2_ok': [self.test2_ok], 'total_month_list': [self.month_list],  'test1_month_list': [self.test1_month_list], 'test2_month_list': [self.test2_month_list],
@@ -1518,10 +1547,10 @@ class IndicatorPhytoplankton(IndicatorBase):
         
         agg_dict1 = {indicator_parameter: 'mean', self.salt_parameter: 'mean', 'DEPH': 'count', 'VISS_EU_CD': 'max', 'WATER_TYPE_AREA': 'max'}       
         if len(self.additional_parameter_list) > 0:
-        	agg_dict2 = {key: 'mean' for key in self.additionel_parameter_list}
+        	agg_dict2 = {key: 'mean' for key in self.additional_parameter_list}
         else: agg_dict2 = {}        	
         
-        by_date = df.groupby(['SDATE', 'YEAR', 'POSITION']).agg({**agg_dict1, **agg_dict2}).reset_index()
+        by_date = df.groupby(['SDATE', 'YEAR', 'STATN']).agg({**agg_dict1, **agg_dict2}).reset_index()
         by_date.rename(columns={'DEPH':'DEPH_count'}, inplace=True)
         
         by_date = self._add_reference_value_to_df(by_date, water_body)
@@ -1535,7 +1564,7 @@ class IndicatorPhytoplankton(IndicatorBase):
         """
         agg_dict1 = {'local_EQR': 'mean', indicator_parameter: 'mean', self.salt_parameter: 'mean', 'SDATE': 'count', 'VISS_EU_CD': 'max', 'WATER_TYPE_AREA': 'max'}       
         
-        by_year_pos = by_date.groupby(['YEAR', 'POSITION']).agg({**agg_dict1, **agg_dict2}).reset_index()
+        by_year_pos = by_date.groupby(['YEAR', 'STATN']).agg({**agg_dict1, **agg_dict2}).reset_index()
         by_year_pos .rename(columns={'SDATE':'DATE_count'}, inplace=True)
         by_year_pos['global_EQR'], by_year_pos['STATUS'] = zip(*by_year_pos ['local_EQR'].apply(self._calculate_global_EQR_from_local_EQR, water_body = water_body))
        # by_year_pos .set_index(keys = 'VISS_EU_CD', append =True, drop = False, inplace = True)
@@ -1543,10 +1572,10 @@ class IndicatorPhytoplankton(IndicatorBase):
         """
         3) Medelvärdet av EK för parametern beräknas för varje år.
         """
-        agg_dict1 = {'local_EQR': 'mean', indicator_parameter: 'mean', self.salt_parameter: 'mean', 'POSITION': 'count', 'VISS_EU_CD': 'max', 'WATER_TYPE_AREA': 'max'}       
+        agg_dict1 = {'local_EQR': 'mean', indicator_parameter: 'mean', self.salt_parameter: 'mean', 'STATN': 'count', 'VISS_EU_CD': 'max', 'WATER_TYPE_AREA': 'max'}       
         
         by_year = by_year_pos.groupby(['YEAR']).agg({**agg_dict1, **agg_dict2}).reset_index()
-        by_year.rename(columns={'POSITION':'POSITION_count'}, inplace=True)
+        by_year.rename(columns={'STATN':'STATN_count'}, inplace=True)
         by_year['global_EQR'], by_year['STATUS'] = zip(*by_year ['local_EQR'].apply(self._calculate_global_EQR_from_local_EQR, water_body = water_body))
         #by_year.set_index(keys = 'VISS_EU_CD', append =True, drop = False, inplace = True)
         
@@ -1560,9 +1589,10 @@ class IndicatorPhytoplankton(IndicatorBase):
         by_period = by_year.groupby(['VISS_EU_CD']).agg({**agg_dict1, **agg_dict2}).reset_index()
         by_period.rename(columns={'YEAR':'YEAR_count'}, inplace=True)
         by_period['global_EQR'], by_period['STATUS'] = zip(*by_period['local_EQR'].apply(self._calculate_global_EQR_from_local_EQR, water_body = water_body))
+        by_period['STATIONS_USED'] = ', '.join(by_year.STATN.unique())
         #by_period.set_index(keys = 'VISS_EU_CD', append =True, drop = False, inplace = True)
             
-        print('\t\t\t{} status calculated'.format(self.name)) 
+#        print('\t\t\t{} status calculated'.format(self.name)) 
 
         """
         4) Statusklassificeringen för respektive parameter görs genom att medelvärdet av
@@ -1627,15 +1657,19 @@ class IndicatorSecchi(IndicatorBase):
         self.classification_results.add_info(water_body, df)
         
         """ 
-        1) Beräkna EK för varje enskilt prov utifrån (ekvationer eller givna värden för) referensvärden.
-        Beräkna EK-värde för varje enskilt prov och sedan ett medel-EK för varje år och station.
+        1) Beräkna local_EQR för varje enskilt prov.
         
         """
-        df['local_EQR'] = df[self.indicator_parameter]/df.REFERENCE_VALUE
-        df['local_EQR'] = df['local_EQR'].apply(set_value_above_one)
-        df['global_EQR'], df['STATUS'] = zip(*df['local_EQR'].apply(self._calculate_global_EQR_from_local_EQR, water_body = water_body))
+        by_date = self._add_reference_value_to_df(df, water_body)
+        by_date['local_EQR'] = by_date.REFERENCE_VALUE/by_date[self.indicator_parameter]
+        by_date['local_EQR'] = by_date['local_EQR'].apply(set_value_above_one)
+        by_date['global_EQR'], by_date['STATUS'] = zip(*by_date['local_EQR'].apply(self._calculate_global_EQR_from_local_EQR, water_body = water_body))
         
-        #by_date = df
+#        df['local_EQR'] = df[self.indicator_parameter]/df.REFERENCE_VALUE
+#        df['local_EQR'] = df['local_EQR'].apply(set_value_above_one)
+#        df['global_EQR'], df['STATUS'] = zip(*df['local_EQR'].apply(self._calculate_global_EQR_from_local_EQR, water_body = water_body))
+#        
+
         by_year_pos = False
         by_year = False    
         """
@@ -1644,14 +1678,13 @@ class IndicatorSecchi(IndicatorBase):
         """
         agg_dict1 = {'local_EQR': 'mean', self.indicator_parameter: 'mean', 'YEAR': 'count', 'WATER_TYPE_AREA': 'max'}       
         if len(self.additional_parameter_list) > 0:
-        	agg_dict2 = {key: 'mean' for key in self.additionel_parameter_list}
+        	agg_dict2 = {key: 'mean' for key in self.additional_parameter_list}
         else: agg_dict2 = {}  
 
-        by_period = df.groupby(['VISS_EU_CD']).agg({**agg_dict1, **agg_dict2}).reset_index()
+        by_period = by_date.groupby(['VISS_EU_CD']).agg({**agg_dict1, **agg_dict2}).reset_index()
         by_period.rename(columns={'YEAR':'YEAR_count'}, inplace=True)
         by_period['global_EQR'], by_period['STATUS'] = zip(*by_period['local_EQR'].apply(self._calculate_global_EQR_from_local_EQR, water_body = water_body))
-              	
-        
+        by_period['STATIONS_USED'] = ', '.join(by_date.STATN.unique())      	        
 #        limit = self.tolerance_settings.get_value(variable = 'MIN_NR_YEARS', water_body = water_body)
         #limit = self.tolerance_settings.get_min_nr_years(type_area = type_area)
 #        if len(df['YEAR'].unique()) >= limit:
@@ -1661,14 +1694,9 @@ class IndicatorSecchi(IndicatorBase):
                      
 #        all_ok = by_period['all_ok']    
         
-        print('\t\t\t{} status calculated'.format(self.name)) 
-
-        """
-        4) Statusklassificeringen för respektive parameter görs genom att medelvärdet av
-        EK jämförs med de angivna EK-klassgränserna i tabellerna 6.2-6.7. 
-        """
+#        print('\t\t\t{} status calculated'.format(self.name)) 
         
-        return df, by_year_pos, by_year, by_period
+        return by_date, by_year_pos, by_year, by_period
     
 ###############################################################################
 if __name__ == '__main__':

@@ -231,9 +231,9 @@ class WorkStep(object):
                 t_wb = time.time()
                 by_date, by_year_pos, by_year, by_period = self.indicator_objects[indicator].calculate_status(water_body = water_body)
                 time_wb = time.time() - t_wb
-                print('-'*50)
-                print('Total time to calculate status for water body {}:'.format(water_body), time_wb)
-                print('-'*50)
+#                print('-'*50)
+#                print('Total time to calculate status for water body {}:'.format(water_body), time_wb)
+#                print('-'*50)
                 if type(by_date) is not bool:
                     status_by_date = concat_df(by_date, status_by_date, indicator_name + '_by_date',
                           water_body, self.indicator_objects[indicator])
