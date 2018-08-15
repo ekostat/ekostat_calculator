@@ -59,7 +59,7 @@ class QualityElementBase(object):
         # from SettingsFile
         self.tolerance_settings = self.parent_workspace_object.get_step_object(step = 2, subset = self.subset).get_indicator_tolerance_settings(self.name)
         # To be read from config-file
-        indicator_list = list(self.parent_workspace_object.mapping_objects['quality_element'].keys())
+        self.indicator_list = list(self.parent_workspace_object.mapping_objects['quality_element'].get_indicator_list_for_quality_element(self.name))
         self._load_indicator_results()
         # perform checks before continuing
         self._check()
@@ -68,8 +68,8 @@ class QualityElementBase(object):
         self.result_directory = self.step_object.paths['step_directory']+'/output/results/'
         self.sld = core.SaveLoadDelete(self.result_directory)
         
-        self._load_indicators()
-        self.indicator_list = []
+        #self._load_indicators()
+        #self.indicator_list = []
         self.class_result = None
     
     #==========================================================================    
@@ -78,7 +78,7 @@ class QualityElementBase(object):
     #==========================================================================  
     def _load_indicator_results(self):
         
-        self.indicator_list = {}
+        self.indicator_dict = {}
         for indicator in self.indicator_list:
             try:
                 self.indicator_dict[indicator] = self.step_object.indicator_objects[indicator].sld.load_df(file_name = indicator + '_by_period')
@@ -91,7 +91,22 @@ class QualityElementBase(object):
         self.paths = {}
         self.paths['output'] = self.step_object.paths['directory_paths']['output'] 
         self.paths['results'] = self.step_object.paths['directory_paths']['results']
+    
+    #==========================================================================
+    def get_status_from_global_EQR(self, global_EQR):
         
+        if global_EQR >= 0.8:
+            return 'HIGH'
+        elif global_EQR >= 0.6:
+            return 'GOOD'
+        elif global_EQR >= 0.4:
+            return 'MODERATE'
+        elif global_EQR >= 0.2:
+            return 'POOR'
+        elif global_EQR >= 0:
+            return 'BAD'
+        else:
+            return ''    
         
 ###############################################################################
 class QualityElementNutrients(QualityElementBase): 
@@ -122,6 +137,21 @@ class QualityElementNutrients(QualityElementBase):
         Statusklassificeringen avgörs av medelvärdet för den numeriska klassningen enligt tabell 2.1, ett värde 0-1.
         Dessa värden kan sedan jämföras med övriga kvalitetsfaktorer och ingå i sammansvägningen.
         """
+#        #==========================================================================
+#        def get_status_from_global_EQR(global_EQR):
+#            
+#            if global_EQR >= 0.8:
+#                return 'HIGH'
+#            elif global_EQR >= 0.6:
+#                return 'GOOD'
+#            elif global_EQR >= 0.4:
+#                return 'MODERATE'
+#            elif global_EQR >= 0.2:
+#                return 'POOR'
+#            elif global_EQR >= 0:
+#                return 'BAD'
+#            else:
+#                return ''
         def mean_EQR(df, winter_values, summer_values) :
             df['winter_EQR'] = df[winter_values].mean(axis = 1, skipna = False)
             df['summer_EQR'] = df[summer_values].mean(axis = 1, skipna = False)
@@ -133,27 +163,76 @@ class QualityElementNutrients(QualityElementBase):
             # - outer: use union of keys from both frames, similar to a SQL full outer join; sort keys lexicographically
             # - inner: use intersection of keys from both frames, similar to a SQL inner join; preserve the order of the left keys
         # TODO: replace merge by join? 
-        P_results = self.indicator_list['dip_winter'].merge(self.indicator_list['ptot_winter'], on = ['VISS_EU_CD', 'WATER_BODY_NAME', 'WATER_TYPE_AREA'], how = 'inner', suffixes = ['dip', 'ptot'], copy=True)
-        P_results.merge(self.indicator_list['ptot_summer'], on = ['VISS_EU_CD', 'WATER_BODY_NAME', 'WATER_TYPE_AREA'], how = 'inner', suffixes = ['winter', 'summer'], copy=True)
-        mean_EQR(P_results)
-        N_results = self.indicator_list['din_winter'].merge(self.indicator_list['ntot_winter'], on = ['VISS_EU_CD', 'WATER_BODY_NAME', 'WATER_TYPE_AREA'], how = 'inner', suffixes = ['din', 'ntot'], copy=True)
-        N_results.merge(self.indicator_list['ntot_summer'], on = ['VISS_EU_CD', 'WATER_BODY_NAME', 'WATER_TYPE_AREA'], how = 'inner', suffixes = ['winter', 'summer'], copy=True)
-        mean_EQR(N_results)
+        merge_on = ['VISS_EU_CD', 'WATER_BODY_NAME', 'WATER_TYPE_AREA']
+        for indicator in self.indicator_list:
+            col_list = list(self.indicator_dict[indicator].columns)
+            print(col_list)
+            [col_list.remove(r) for r in merge_on]
+            {k: k+'_'+indicator for k in col_list}
+            self.indicator_dict[indicator].rename(columns = {k: k+'_'+indicator for k in col_list}, inplace = True)
+            #print(list(self.indicator_dict[indicator].columns))
+#        print(self.indicator_dict['dip_winter'].columns)
+#        print(self.indicator_dict['ptot_winter'].columns)
+#        P_results = self.indicator_dict['dip_winter'].merge(self.indicator_dict['ptot_winter'], on = merge_on, how = 'outer', suffixes = ['_dip', '_ptot'], copy=True)
+#        print(P_results.columns)
+#        print(self.indicator_dict['ptot_summer'].columns, len(self.indicator_dict['ptot_summer']))
+#        P_results.merge(self.indicator_dict['ptot_summer'], on = merge_on, how = 'outer', suffixes = ['_winter', '_ptot_summer'], copy=True)
+#        print(P_results.columns)
+#        mean_EQR(P_results, ['dip_winter','ptot_winter'], ['ptot_summer'])
+#        N_results = self.indicator_dict['din_winter'].merge(self.indicator_dict['ntot_winter'], on = merge_on, how = 'inner', suffixes = ['din', 'ntot'], copy=True)
+#        N_results.merge(self.indicator_dict['ntot_summer'], on = merge_on, how = 'inner', suffixes = ['winter', 'summer'], copy=True)
+#        mean_EQR(N_results, ['din_winter','ntot_winter'], ['ntot_summer'])
         
-#        P_winter = self.indicator_list['dip_winter'].merge(self.indicator_list['ptot_winter'], on = ['VISS_EU_CD', 'WATER_BODY_NAME', 'WATER_TYPE_AREA'], how = 'inner', suffixes = ['dip', 'ptot'], copy=True)
-#        P_winter['mean'] = np.mean(P_winter['dip_winter'], P_winter['ptot_winter'])
-#        N_winter = self.indicator_list['din_winter'].merge(self.indicator_list['ntot_winter'], on = ['VISS_EU_CD', 'WATER_BODY_NAME', 'WATER_TYPE_AREA'], how = 'inner', suffixes = ['dip', 'ptot'], copy=True)
-#        N_winter['mean'] = np.mean(P_winter['din_winter'], P_winter['ntot_winter'])
-#        
-#        ###### QualityElement results #####
-#        P_results = P_winter.merge(self.indicator_list['ptot_summer'], on = ['VISS_EU_CD', 'WATER_BODY_NAME', 'WATER_TYPE_AREA'], how = 'inner', suffixes = ['winter', 'summer'], copy=True)
-#        P_results = 
+        P_winter = self.indicator_dict['dip_winter'].merge(self.indicator_dict['ptot_winter'], on = merge_on, how = 'inner', copy=True)
+        #print('P_winter columns 1', P_winter.columns)
+        P_winter['EQR_P_winter_mean'] = P_winter[['global_EQR_dip_winter','global_EQR_ptot_winter']].mean(axis = 1, skipna = False)
+        P_winter['STATUS_P_winter'] = P_winter['EQR_P_winter_mean'].apply(lambda x: self.get_status_from_global_EQR(x))
+        #print('P_winter columns 2', P_winter.columns)
+        N_winter = self.indicator_dict['din_winter'].merge(self.indicator_dict['ntot_winter'], on = merge_on, how = 'inner', copy=True)
+        N_winter['EQR_N_winter_mean'] = N_winter[['global_EQR_din_winter','global_EQR_ntot_winter']].mean(axis = 1, skipna = False)
+        N_winter['STATUS_N_winter'] = N_winter['EQR_N_winter_mean'].apply(lambda x: self.get_status_from_global_EQR(x))
         
-        results = P_results.merge(N_results, on = ['VISS_EU_CD', 'WATER_BODY_NAME', 'WATER_TYPE_AREA'], how = 'inner', suffixes = ['P', 'N'], copy=True)
-        results['mean_EQR'] = results[['mean_EQR_P','mean_EQR_N']].mean(axis = 1, skipna = False)
+        ###### QualityElement results #####
+        P_results = P_winter.merge(self.indicator_dict['ptot_summer'], on = merge_on, how = 'inner', copy=True)
+        #print('P_summer columns', self.indicator_dict['ptot_summer'].columns)
+        #print('P merged columns 1', P_results.columns)
+        P_results['MEAN_P_EQR'] = P_results[['EQR_P_winter_mean','global_EQR_ptot_summer']].mean(axis = 1, skipna = False)
+        P_results['STATUS_P'] = P_results['MEAN_P_EQR'].apply(lambda x: self.get_status_from_global_EQR(x))
+        #print('P merged columns 2', P_results.columns)
+        N_results = N_winter.merge(self.indicator_dict['ntot_summer'], on = merge_on, how = 'inner', copy=True)
+        N_results['MEAN_N_EQR'] = N_results[['EQR_N_winter_mean','global_EQR_ntot_summer']].mean(axis = 1, skipna = False)
+        #print(N_results.columns)
+        N_results['STATUS_N'] = N_results['MEAN_N_EQR'].apply(lambda x: self.get_status_from_global_EQR(x))
         
-        self.class_result = results
+        results = P_results.merge(N_results, on = merge_on, how = 'inner', suffixes = ['P', 'N'], copy=True)
+        results['mean_EQR'] = results[['MEAN_P_EQR','MEAN_N_EQR']].mean(axis = 1, skipna = False)
+        results['STATUS_NUTRIENTS'] = results['mean_EQR'].apply(lambda x: self.get_status_from_global_EQR(x))
         
+        self.results = results
+        
+###############################################################################
+class QualityElementPhytoplankton(QualityElementBase): 
+    """
+    Class calculate the quality element for Phytoplankton. 
+    """
+    def __init__(self, subset_uuid, parent_workspace_object, quality_element):
+        super().__init__(subset_uuid, parent_workspace_object, quality_element)  
+        
+    def calculate_quality_factor(self):
+        
+        merge_on = ['VISS_EU_CD', 'WATER_BODY_NAME', 'WATER_TYPE_AREA']
+        for indicator in self.indicator_list:
+            col_list = list(self.indicator_dict[indicator].columns)
+            #print(col_list)
+            [col_list.remove(r) for r in merge_on]
+            {k: k+'_'+indicator for k in col_list}
+            self.indicator_dict[indicator].rename(columns = {k: k+'_'+indicator for k in col_list}, inplace = True)
+            
+        results = self.indicator_dict[self.indicator_list[0]].merge(self.indicator_dict[self.indicator_list[2]], on = merge_on, how = 'inner', copy=True)
+        results['mean_EQR'] = results[['global_EQR'+'_'+self.indicator_list[0],'global_EQR'+'_'+self.indicator_list[1]]].mean(axis = 1, skipna = False)
+        results['STATUS_PHYTOPLANKTON'] = results['mean_EQR'].apply(lambda x: self.get_status_from_global_EQR(x))
+        
+        self.results = results
     
 ###############################################################################
 if __name__ == '__main__':

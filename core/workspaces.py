@@ -226,11 +226,13 @@ class WorkStep(object):
             indicator_name = self.indicator_objects[indicator].name
             print(indicator_name)
             t_ind = time.time()
-            for water_body in water_body_list:
+            for water_body in dict.fromkeys(water_body_list,True):
                 #print(water_body)
-                t_wb = time.time()
+#                t_wb = time.time()
+                if water_body not in self.indicator_objects[indicator].water_body_indicator_df.keys():
+                    continue
                 by_date, by_year_pos, by_year, by_period = self.indicator_objects[indicator].calculate_status(water_body = water_body)
-                time_wb = time.time() - t_wb
+#                time_wb = time.time() - t_wb
 #                print('-'*50)
 #                print('Total time to calculate status for water body {}:'.format(water_body), time_wb)
 #                print('-'*50)
@@ -275,7 +277,23 @@ class WorkStep(object):
             if type(status_by_period) is not bool:
                 self.indicator_objects[indicator].sld.save_df(status_by_period, file_name = indicator_name + '_by_period', force_save_txt=True)
         
+    def calculate_quality_element(self, subset_unique_id, quality_element, class_name):
         
+        self.quality_element = {}
+        #print(class_name)
+        try:
+            class_ = getattr(core, class_name)
+        except AttributeError as e:
+            raise AttributeError('{}\nClass does not exist'.foramt(e))
+        #print(class_)
+        #instance = class_()
+        # add indicator objects to dictionary
+        self.quality_element[quality_element] = class_(subset_uuid = subset_unique_id, 
+                                                                  parent_workspace_object = self.parent_workspace_object,
+                                                                  quality_element = quality_element)
+        
+        self.quality_element[quality_element].calculate_quality_factor()
+            
     #==========================================================================
     def get_all_file_paths_in_workstep(self): 
         """

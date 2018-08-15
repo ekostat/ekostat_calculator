@@ -54,7 +54,7 @@ from .parameters import ParameterDIN
 from .parameters import ParameterTOTN
 from .parameters import CalculatedParameterDIN
 
-from .quality_factors import QualityFactorNP
+from .quality_factors import QualityElementNutrients
 
 from .ref_values import create_type_area_object
 from .ref_values import RefValues

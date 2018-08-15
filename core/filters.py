@@ -876,7 +876,7 @@ class SettingsFile(object):
                                 variable=variable)
         
         # Must check if there are several results. For example BQI has two depth intervalls.  
-        print('RESULT', result)
+#        print('RESULT', result)
         if not len(result):
             return False
         elif len(result) == 1:
@@ -935,7 +935,7 @@ class SettingsFile(object):
         
         # Must check if there are several results. For example BQI has two depth intervalls.  
         
-        print('RESULT', result)
+#        print('RESULT', result)
 #        print(len(result))
         
         
@@ -1091,7 +1091,7 @@ class SettingsDataFilter(SettingsBase):
         Get boolean pd.Series to use for filtering. 
         Name of this has to be the same as the one in class DataFilter. 
         """
-        print('Water body', water_body)
+#        print('Water body', water_body)
 #        get_type_area_for_water_body(wb, include_suffix=False)
         return self.settings.get_filter_boolean_for_df(df=df, 
                                                        water_body=water_body)
