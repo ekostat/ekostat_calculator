@@ -72,7 +72,8 @@ class IndicatorBase(object):
         self.ref_settings = self.parent_workspace_object.get_step_object(step = 2, subset = self.subset).get_indicator_ref_settings(self.name)
         # To be read from config-file
         # TODO: Add 'ALABO' and 'TEMP'
-        self.meta_columns = ['SDATE', 'YEAR', 'MONTH', 'POSITION', 'STATN', 'VISS_EU_CD', 'WATER_TYPE_AREA', 'DEPH']
+        self.meta_columns = ['SDATE', 'YEAR', 'MONTH', 'POSITION', 'STATN', 'VISS_EU_CD', 'WATER_BODY_NAME', 'WATER_DISTRICT',
+       'WATER_TYPE_AREA', 'DEPH', 'ALABO', 'WADEP']
         self.parameter_list =  [item.strip() for item in self.mapping_objects['quality_element'].indicator_config.loc[self.name]['parameters'].split(', ')] #[item.strip() for item in self.parent_workspace_object.cfg['indicators'].loc[self.name][0].split(', ')]
         self.additional_parameter_list = []
         if type(self.mapping_objects['quality_element'].indicator_config.loc[self.name]['additional_parameters']) is str:
@@ -137,8 +138,8 @@ class IndicatorBase(object):
         #print(self.get_ref_value_type(water_body = water_body))
         if self.get_ref_value_type(water_body = water_body) == 'str':
             #print('ref_value is str')
-            df['REFERENCE_VALUE'] = np.nan
-#            reference_values = []
+#            df.loc[:,'REFERENCE_VALUE'] = np.nan
+            reference_values = []
             #print(df.VISS_EU_CD.unique())
             for ix in df.index:
                 salinity = df[self.salt_parameter][ix]
@@ -146,13 +147,74 @@ class IndicatorBase(object):
 #                #if np.isnan(salinity):
 #                #    df['REFERENCE_VALUE'].loc[ix] = np.nan
 #                #else:
-#                reference_values.append(self.get_ref_value(water_body = water_body, salinity = salinity))
-                df['REFERENCE_VALUE'].loc[ix] = self.get_ref_value(water_body = water_body, salinity = salinity)
+                reference_values.append(self.get_boundarie(water_body = water_body, salinity = salinity))
+#                df['REFERENCE_VALUE'].loc[ix] = self.get_ref_value(water_body = water_body, salinity = salinity)
 #            df['REFERENCE_VALUE'] = reference_values
+            df.loc[:,'REFERENCE_VALUE'] = pd.Series(reference_values, index = df.index)
         else:
-            df['REFERENCE_VALUE'] = self.get_ref_value(water_body)
+            df.loc[:,'REFERENCE_VALUE'] = self.get_ref_value(water_body)
                                     
         return df
+        
+    #==========================================================================
+    def _add_boundaries_to_df(self, df, water_body):    
+        """
+        Created:        20180426     by Lena
+        Last modified:  
+        add reference value to dataframe
+        Nutrient reference values: Det aktuella referensvärdet erhålls utifrån den salthalt som är observerad vidvarje enskilt prov.
+        Chl, Biov, Secchi in type 8, 12, 13, 24: Det aktuella referensvärdet erhålls utifrån den salthalt som är observerad vidvarje enskilt prov.
+        """
+        #print(water_body,len(self.ref_settings.settings.refvalue_column))
+        if len(self.ref_settings.settings.refvalue_column) == 0:
+            return df
+        
+        #print(self.get_ref_value_type(water_body = water_body))
+        if self.get_ref_value_type(water_body = water_body) == 'str':
+            #print('ref_value is str')
+#            df.loc[:,'REFERENCE_VALUE'] = np.nan
+            reference_values = []
+            hg_values = []
+            gm_values = []
+            mp_values = []
+            pb_values = []
+            #print(df.VISS_EU_CD.unique())
+            for ix in df.index:
+                salinity = df[self.salt_parameter][ix]
+#                #print(repr(salinity))
+#                #if np.isnan(salinity):
+#                #    df['REFERENCE_VALUE'].loc[ix] = np.nan
+#                #else:
+                ref_value = self.get_boundarie(water_body = water_body, salinity = salinity, variable = 'REF_VALUE_LIMIT')
+                reference_values.append(ref_value)
+                hg_values.append(ref_value*self.ref_settings.get_value(variable = 'HG_EQR_LIMIT', water_body = water_body))
+                gm_values.append(ref_value*self.ref_settings.get_value(variable = 'GM_EQR_LIMIT', water_body = water_body))
+                mp_values.append(ref_value*self.ref_settings.get_value(variable = 'MP_EQR_LIMIT', water_body = water_body))
+                pb_values.append(ref_value*self.ref_settings.get_value(variable = 'PB_EQR_LIMIT', water_body = water_body))
+#                hg_values.append(self.get_boundarie(water_body = water_body, salinity = salinity, variable = 'HG_VALUE_LIMIT'))
+#                gm_values.append(self.get_boundarie(water_body = water_body, salinity = salinity, variable = 'GM_VALUE_LIMIT'))
+#                mp_values.append(self.get_boundarie(water_body = water_body, salinity = salinity, variable = 'MP_VALUE_LIMIT'))
+#                pb_values.append(self.get_boundarie(water_body = water_body, salinity = salinity, variable = 'PB_VALUE_LIMIT'))
+#                df['REFERENCE_VALUE'].loc[ix] = self.get_ref_value(water_body = water_body, salinity = salinity)
+#            df['REFERENCE_VALUE'] = reference_values
+            df.loc[:,'REFERENCE_VALUE'] = pd.Series(reference_values, index = df.index)
+            df.loc[:,'HG_BOUNDARIE'] = pd.Series(hg_values, index = df.index)
+            df.loc[:,'GM_BOUNDARIE'] = pd.Series(gm_values, index = df.index)
+            df.loc[:,'MP_BOUNDARIE'] = pd.Series(mp_values, index = df.index)
+            df.loc[:,'PB_BOUNDARIE'] = pd.Series(pb_values, index = df.index)
+        else:
+            ref_value = self.get_boundarie(water_body, variable = 'REF_VALUE_LIMIT')
+            df.loc[:,'REFERENCE_VALUE'] = ref_value
+            df.loc[:,'HG_BOUNDARIE'] = ref_value*self.ref_settings.get_value(variable = 'HG_EQR_LIMIT', water_body = water_body)
+            df.loc[:,'GM_BOUNDARIE'] = ref_value*self.ref_settings.get_value(variable = 'GM_EQR_LIMIT', water_body = water_body)
+            df.loc[:,'MP_BOUNDARIE'] = ref_value*self.ref_settings.get_value(variable = 'MP_EQR_LIMIT', water_body = water_body)
+            df.loc[:,'PB_BOUNDARIE'] = ref_value*self.ref_settings.get_value(variable = 'PB_EQR_LIMIT', water_body = water_body)
+#            df.loc[:,'HG_BOUNDARIE'] = self.get_boundarie(water_body, variable = 'HG_VALUE_LIMIT')
+#            df.loc[:,'GM_BOUNDARIE'] = self.get_boundarie(water_body, variable = 'GM_VALUE_LIMIT')
+#            df.loc[:,'MP_BOUNDARIE'] = self.get_boundarie(water_body, variable = 'MP_VALUE_LIMIT')
+#            df.loc[:,'PB_BOUNDARIE'] = self.get_boundarie(water_body, variable = 'PB_VALUE_LIMIT')
+                                    
+#        return df
 
     #==========================================================================
     def _calculate_global_EQR_from_indicator_value(self, water_body = None, value = None, max_value = None, min_value = 0, **kwargs):
@@ -164,6 +226,12 @@ class IndicatorBase(object):
         """
         if not value:
             return False, False
+        
+        if np.isnan(value):
+            global_EQR = np.nan
+            status = ' '
+            return global_EQR, status
+        
         if value < 0:
             raise('Error: _calculate_global_EQR_from_indicator_value: {} value below 0.'.format(value))
         # Get EQR-class limits for the type area to be able to calculate the weighted numerical class
@@ -286,7 +354,11 @@ class IndicatorBase(object):
 #            local_EQR = getattr(self.classification_results[water_body], 'local_EQR')
 #        else:
 #            self.classification_results[water_body].add_info('local_EQR', local_EQR)
-#        
+#       
+        if np.isnan(local_EQR):
+            global_EQR = np.nan
+            status = ' '
+            return global_EQR, status
         if local_EQR < 0:
             raise Exception('Error: _calculate_global_EQR_from_indicator_value: {} local_EQR value below 0.'.format(local_EQR))
         
@@ -423,10 +495,12 @@ class IndicatorBase(object):
         """
         #type_area = self.mapping_objects['water_body'].get_type_area_for_water_body(water_body, include_suffix=True)
         if water_body:
-           if water_body not in self.get_filtered_data(subset = self.subset, step = 'step_2').dropna(subset = [self.indicator_parameter]).VISS_EU_CD.unique():
+            filtered_data = self.get_filtered_data(subset = self.subset, step = 'step_2', water_body = water_body, indicator = self.name).dropna(subset = [self.indicator_parameter])
+            if len(filtered_data) == 0:
+#            if water_body not in filtered_data.VISS_EU_CD.unique():
                print('no data for waterbody {}'.format(water_body))
                return False
-           water_body_list = [water_body]
+            water_body_list = [water_body]
             
         else:
             water_body_list = self.get_filtered_data(subset = self.subset, step = 'step_2').dropna(subset = [self.indicator_parameter]).VISS_EU_CD.unique()
@@ -435,6 +509,12 @@ class IndicatorBase(object):
         for water_body in dict.fromkeys(water_body_list, True):
 #            print(water_body)
             filtered_data = self.get_filtered_data(subset = self.subset, step = 'step_2', water_body = water_body, indicator = self.name)[self.column_list]                
+            try:
+                self.mapping_objects['water_body'][water_body]['WATERBODY_NAME']
+            except AttributeError:
+                self.water_body_indicator_df[water_body] = filtered_data.copy() 
+#                print(filtered_data.head())
+                continue
             if len(filtered_data.VISS_EU_CD.unique()) > 1 or filtered_data.VISS_EU_CD.unique() != water_body:
                 warnings.warn(message = 'Warning: get_filtered_data() returns {} waterbody. Input waterbody is {}'.format(filtered_data.VISS_EU_CD.unique(), water_body))
                 #raise Exception('Error: get_filtered_data() returns {} waterbody. Input waterbody is {}'.format(df.VISS_EU_CD.unique(), water_body))
@@ -457,12 +537,20 @@ class IndicatorBase(object):
             else:
                 df = filtered_data.dropna(subset = [self.indicator_parameter])
             #print(df.dtypes)
-            if hasattr(self, 'salt_parameter'):
-                df = self._add_reference_value_to_df(df, water_body)
+#            if hasattr(self, 'salt_parameter'):
+#            print(df.head())
+            if self.name != 'oxygen':
+                self._add_boundaries_to_df(df, water_body)
+#            print(df.head())
             self.water_body_indicator_df[water_body] = df 
 #        else:
 #            print('water_body must be given to set_water_body_indicator_df')
-            
+    #==========================================================================
+    def float_convert(self, x):
+            try:
+                return float(x)
+            except:
+                return np.nan         
     #==========================================================================
     def get_filtered_data(self, subset=None, step=None, water_body=None, indicator=None):
         """
@@ -540,7 +628,7 @@ class IndicatorBase(object):
         return self.ref_settings.get_ref_value_type(type_area = type_area, water_body = water_body)
     
     #==========================================================================        
-    def get_ref_value(self, type_area = None, water_body = None, salinity = None):
+    def get_boundarie(self, type_area = None, water_body = None, salinity = None, variable = None):
         """
         Created:        20180328     by Lena
         Last modified:  
@@ -548,7 +636,7 @@ class IndicatorBase(object):
         To get reference value from equation you need to supply both type_area and salinity
         
         """
-        return self.ref_settings.get_ref_value(type_area = type_area, water_body = water_body, salinity = salinity)
+        return self.ref_settings.get_boundarie(type_area = type_area, water_body = water_body, salinity = salinity, variable = variable)
     
     #==========================================================================
     def get_water_body_indicator_df(self, water_body = None):
@@ -701,22 +789,74 @@ class IndicatorBQI(IndicatorBase):
     def __init__(self, subset_uuid, parent_workspace_object, indicator):
         super().__init__(subset_uuid, parent_workspace_object, indicator) 
         self.indicator_parameter = self.parameter_list[0]
-        self.column_list.remove('DEPH')
+        #self.column_list.remove('DEPH')
         self.column_list = self.column_list + ['MNDEP', 'MXDEP']
         # Set dataframe to use        
         self._set_water_body_indicator_df(water_body = None)
         
+    def _add_boundaries_to_df(self, df, water_body):
+        
+        self.stations = df.STATN.unique()
+        df.loc[:, 'REFERENCE_VALUE'] = pd.Series(np.nan, index = df.index)
+        df.loc[:, 'HG_BOUNDARIE'] = pd.Series(np.nan, index = df.index)
+        df.loc[:, 'GM_BOUNDARIE'] = pd.Series(np.nan, index = df.index)
+        df.loc[:, 'MP_BOUNDARIE'] = pd.Series(np.nan, index = df.index)
+        df.loc[:, 'PB_BOUNDARIE'] = pd.Series(np.nan, index = df.index)
+#        print(df.head())
+        for station in self.stations:
+            ix = df.index[df.STATN == station]
+            station_values = df.loc[ix]
+            
+            mxdep_list = [self.float_convert(p) for p in station_values.MXDEP.unique()]
+            mndep_list = [self.float_convert(p) for p in station_values.MNDEP.unique()]
+            if np.isnan(mxdep_list).all and np.isnan(mndep_list).all:
+#                print(mxdep_list)
+                mxdep_list = [self.float_convert(p) for p in station_values.WADEP.unique()]
+                if np.isnan(mxdep_list).all:
+                    ref_value = np.nan
+                    hg_value = np.nan
+                    gm_value = np.nan
+                    mp_value = np.nan
+                    pb_value = np.nan
+#                print('WADEP used', mxdep_list)
+            if np.isnan(mxdep_list).all() and not np.isnan(mndep_list).all():
+                mxdep_list = [max(mndep_list)]
+            if np.isnan(mndep_list).all():
+                mndep_list = [min(mxdep_list)]
+            
+            ref_value = self._get_value(water_body = water_body, variable = 'REF_VALUE_LIMIT', MXDEP_list = mxdep_list, MNDEP_list = mndep_list)
+            hg_value = (ref_value*self.ref_settings.get_value(variable = 'HG_EQR_LIMIT', water_body = water_body))
+            gm_value = (ref_value*self.ref_settings.get_value(variable = 'GM_EQR_LIMIT', water_body = water_body))
+            mp_value = (ref_value*self.ref_settings.get_value(variable = 'MP_EQR_LIMIT', water_body = water_body))
+            pb_value = (ref_value*self.ref_settings.get_value(variable = 'PB_EQR_LIMIT', water_body = water_body))
+#            hg_value = self._get_value(water_body = water_body, variable = 'HG_VALUE_LIMIT', MXDEP_list = mxdep_list, MNDEP_list = mndep_list)
+#            gm_value = self._get_value(water_body = water_body, variable = 'GM_VALUE_LIMIT', MXDEP_list = mxdep_list, MNDEP_list = mndep_list)
+#            mp_value = self._get_value(water_body = water_body, variable = 'MP_VALUE_LIMIT', MXDEP_list = mxdep_list, MNDEP_list = mndep_list)
+#            pb_value = self._get_value(water_body = water_body, variable = 'PB_VALUE_LIMIT', MXDEP_list = mxdep_list, MNDEP_list = mndep_list)
+#            if not ref_value:
+#                print('no ref_value', df.WATER_BODY_NAME.unique(), df.WATER_TYPE_AREA.unique(), ref_value)
+            df.loc[ix, 'REFERENCE_VALUE'] = pd.Series(ref_value, index = ix)
+            df.loc[ix, 'HG_BOUNDARIE'] = pd.Series(hg_value, index = ix)
+            df.loc[ix, 'GM_BOUNDARIE'] = pd.Series(gm_value, index = ix)
+            df.loc[ix, 'MP_BOUNDARIE'] = pd.Series(mp_value, index = ix)
+            df.loc[ix, 'PB_BOUNDARIE'] = pd.Series(pb_value, index = ix)
+#            print(df.head())
+#        print(df.head())
+        
     def _get_deph_interval_list(self, water_body, MXDEP_list, MNDEP_list):
         
         interval = self.ref_settings.get_value(variable = 'LEVEL_DEPH_INTERVAL', water_body = water_body)
-#        print('interval is', interval)
+        if type(interval) is bool and not interval:
+#            print('interval is', interval)
+            return False 
+        
         deph_interval_list = False
         if type(interval) is list:
-            # check that position depths are within interval
-            if np.isnan(min(MNDEP_list)):
-                MNDEP_list = [min(interval)]
+            # check that position depths are within interval    
             if max(MXDEP_list) <= max(interval) and min(MNDEP_list) >= min(interval):
                 deph_interval_list =  [str(interval[0]) +'-'+ str(interval[1])]
+#        if np.isnan(min(MNDEP_list)):
+#            MNDEP_list = [min(deph_interval_list)]
         else:
             for row in (interval.get_values()):
 #                print('row is ',row)
@@ -725,8 +865,7 @@ class IndicatorBQI(IndicatorBase):
 #                print('min dep is ',min(MNDEP_list))
 #                print('max dep is ',min(MXDEP_list))
 #                print('check mxdep {} <= {} and mndep {} >= {}'.format(max(MXDEP_list), max(interval_list), min(MNDEP_list),min(interval_list)))
-                if np.isnan(min(MNDEP_list)):
-                    MNDEP_list = [min(interval_list)]
+#                print(MXDEP_list, MNDEP_list)
                 if max(MXDEP_list) <= max(interval_list) and min(MNDEP_list) >= min(interval_list):
                     deph_interval_list = [str(interval_list[0]) +'-'+ str(interval_list[1])]
                 if deph_interval_list:
@@ -745,6 +884,10 @@ class IndicatorBQI(IndicatorBase):
             ix = df.loc[df['LEVEL_DEPH_INTERVAL'] == deph_interval_list[0]].index
             return ix[0]
         else:
+#            interval = self.ref_settings.get_value(variable = 'LEVEL_DEPH_INTERVAL', water_body = water_body)
+#            print('deph_interval_list', deph_interval_list)
+#            print('MXDEP_list {}, MNDEP_list {}'.format(MXDEP_list, MNDEP_list))
+#            print('outside range {}'.format(interval))
             return False
                    
     def _get_value(self, water_body, variable, MXDEP_list, MNDEP_list):
@@ -753,6 +896,7 @@ class IndicatorBQI(IndicatorBase):
         if ix:
             return float(self.ref_settings.get_value(water_body = water_body).loc[ix][variable])
         else:
+#            print(MXDEP_list, MNDEP_list, self.ref_settings.get_value(water_body = water_body))
             return False
         
     #===============================================================
@@ -773,13 +917,7 @@ class IndicatorBQI(IndicatorBase):
         
         wb_name = self.mapping_objects['water_body'][water_body]['WATERBODY_NAME']
         
-        by_year = False
-        
-        def float_convert(x):
-            try:
-                return float(x)
-            except:
-                return np.nan 
+#        by_year = False
             
         def bootstrap(value_list, n):
             result2 = []
@@ -802,7 +940,7 @@ class IndicatorBQI(IndicatorBase):
         df = self.water_body_indicator_df[water_body].copy(deep = True)
         self._add_wb_name_to_df(df, water_body)
         year_list = df.YEAR.unique()
-        station_list = df.STATN.unique()
+        station_list = self.stations #df.STATN.unique()
         
         n = 9999
         by_year_pos_result_list = []
@@ -810,15 +948,24 @@ class IndicatorBQI(IndicatorBase):
         for station in station_list:
             # All values at station
             station_values = df.loc[df.STATN == station].dropna(subset = [self.indicator_parameter])
+            ref_value = station_values.REFERENCE_VALUE.unique()
+            hg_value = station_values.HG_BOUNDARIE.unique()
+            gm_value = station_values.GM_BOUNDARIE.unique()
+            mp_value = station_values.MP_BOUNDARIE.unique()
+            pb_value = station_values.PB_BOUNDARIE.unique()
             # get station depths
-            mxdep_list = [float_convert(p) for p in station_values.MXDEP.unique()]
-            mndep_list = [float_convert(p) for p in station_values.MNDEP.unique()]
-            # get ref and boundaries
-            ref_value = self._get_value(water_body = water_body, variable = 'REF_VALUE_LIMIT', MXDEP_list = mxdep_list, MNDEP_list = mndep_list)
-            hg_value = self._get_value(water_body = water_body, variable = 'HG_VALUE_LIMIT', MXDEP_list = mxdep_list, MNDEP_list = mndep_list)
-            gm_value = self._get_value(water_body = water_body, variable = 'GM_VALUE_LIMIT', MXDEP_list = mxdep_list, MNDEP_list = mndep_list)
-            mp_value = self._get_value(water_body = water_body, variable = 'MP_VALUE_LIMIT', MXDEP_list = mxdep_list, MNDEP_list = mndep_list)
-            pb_value = self._get_value(water_body = water_body, variable = 'PB_VALUE_LIMIT', MXDEP_list = mxdep_list, MNDEP_list = mndep_list)
+#            mxdep_list = [self.float_convert(p) for p in station_values.MXDEP.unique()]
+#            mndep_list = [self.float_convert(p) for p in station_values.MNDEP.unique()]
+#            print(mndep_list)
+#            print(df)
+#            if np.isnan(min(mxdep_list)):
+#                mxdep_list = [self.float_convert(p) for p in station_values.WADEP.unique()]
+#            # get ref and boundaries
+#            ref_value = self._get_value(water_body = water_body, variable = 'REF_VALUE_LIMIT', MXDEP_list = mxdep_list, MNDEP_list = mndep_list)
+#            hg_value = self._get_value(water_body = water_body, variable = 'HG_VALUE_LIMIT', MXDEP_list = mxdep_list, MNDEP_list = mndep_list)
+#            gm_value = self._get_value(water_body = water_body, variable = 'GM_VALUE_LIMIT', MXDEP_list = mxdep_list, MNDEP_list = mndep_list)
+#            mp_value = self._get_value(water_body = water_body, variable = 'MP_VALUE_LIMIT', MXDEP_list = mxdep_list, MNDEP_list = mndep_list)
+#            pb_value = self._get_value(water_body = water_body, variable = 'PB_VALUE_LIMIT', MXDEP_list = mxdep_list, MNDEP_list = mndep_list)
             ##### CALCLUTE MEAN BQI & EQR FOR EACH STATION  EACH YEAR #####
             station_mean_list = []
             for year in year_list:
@@ -881,7 +1028,7 @@ class IndicatorBQI(IndicatorBase):
         self._set_water_body_indicator_df(water_body)
         # get data to be used for status calculation
         df = self.water_body_indicator_df[water_body].copy(deep = True)
-        year_list = df.YEAR.unique()
+#        year_list = df.YEAR.unique()
         # Get type area and return False if there is not match for the given waterbody    
         type_area = self.mapping_objects['water_body'].get_type_area_for_water_body(water_body, include_suffix=True)
         if type_area == None:
@@ -984,16 +1131,23 @@ class IndicatorNutrients(IndicatorBase):
         
         #self._set_water_body_indicator_df(water_body)
         # get data to be used for status calculation
-        try:
-            df = self.water_body_indicator_df[water_body]
-        except KeyError:
-            if self._set_water_body_indicator_df(water_body):
-                df = self.water_body_indicator_df[water_body]
-            else:
-                return False, False, False, False
-        self._add_wb_name_to_df(df, water_body)
+        if water_body not in self.water_body_indicator_df.keys():
+            return False, False, False, False
+#        try:
+#            df = self.water_body_indicator_df[water_body]
+#        except KeyError:
+#            if self._set_water_body_indicator_df(water_body):
+#                df = self.water_body_indicator_df[water_body]
+#            else:
+#                return False, False, False, False
+#        self._add_wb_name_to_df(df, water_body)
+        df = self.water_body_indicator_df[water_body]
         if len(df) < 1 or 'unknown' in df.WATER_BODY_NAME.unique():
             return False, False, False, False
+        type_area = self.mapping_objects['water_body'].get_type_area_for_water_body(water_body, include_suffix=True)
+        if type_area == None:
+            return False, False, False, False
+            
         # Add column for winter year for winter indicators and set year_variable
         year_variable = 'YEAR'
         if 'winter' in self.name:
@@ -1008,9 +1162,7 @@ class IndicatorNutrients(IndicatorBase):
         """ Calculate local_EQR (EK-värde)
         """        
         
-        type_area = self.mapping_objects['water_body'].get_type_area_for_water_body(water_body, include_suffix=True)
-        if type_area == None:
-            return False, False, False, False
+        
         
         """ 
         1) 
@@ -1041,9 +1193,11 @@ class IndicatorNutrients(IndicatorBase):
             raise Exception('more than one waterbody in dataframe')
             
        
-        agg_dict1 = {self.indicator_parameter: 'mean', self.salt_parameter: 'mean', 'DEPH': 'count', 'VISS_EU_CD': 'max', 'WATER_BODY_NAME': 'max', 'WATER_TYPE_AREA': 'max'}       
+        agg_dict1 = {self.indicator_parameter: 'mean', self.salt_parameter: 'mean', 
+                     'REFERENCE_VALUE': 'mean', 'HG_BOUNDARIE': 'mean', 'GM_BOUNDARIE': 'mean', 'MP_BOUNDARIE': 'mean', 'PB_BOUNDARIE': 'mean', 
+                      'DEPH': 'count', 'VISS_EU_CD': 'max', 'WATER_BODY_NAME': 'max', 'WATER_TYPE_AREA': 'max'}       
         if year_variable == 'winter_YEAR':
-            agg_dict1 = {self.indicator_parameter: 'mean', self.salt_parameter: 'mean', year_variable: 'mean', 'DEPH': 'count', 'VISS_EU_CD': 'max', 'WATER_BODY_NAME': 'max', 'WATER_TYPE_AREA': 'max'}       
+            agg_dict1 = {self.indicator_parameter: 'mean', self.salt_parameter: 'mean', 'REFERENCE_VALUE': 'mean', year_variable: 'mean', 'DEPH': 'count', 'VISS_EU_CD': 'max', 'WATER_BODY_NAME': 'max', 'WATER_TYPE_AREA': 'max'}       
         
         
         agg_dict2 = {key: 'mean' for key in self.additional_parameter_list}       
@@ -1069,7 +1223,7 @@ class IndicatorNutrients(IndicatorBase):
             #print(by_date['highest_'+check_par])     
             by_date = by_date[by_date['highest_'+check_par]]
         
-        by_date = self._add_reference_value_to_df(by_date, water_body)
+#        by_date = self._add_reference_value_to_df(by_date, water_body)
         by_date['local_EQR'] = by_date.REFERENCE_VALUE/by_date[self.indicator_parameter]
         by_date['local_EQR'] = by_date['local_EQR'].apply(set_value_above_one)
         by_date['global_EQR'], by_date['STATUS'] = zip(*by_date['local_EQR'].apply(self._calculate_global_EQR_from_local_EQR, water_body = water_body))
@@ -1102,7 +1256,7 @@ class IndicatorNutrients(IndicatorBase):
         """
         agg_dict1 = {'local_EQR': 'mean', 'SDATE': 'count', 'VISS_EU_CD': 'max', 'WATER_BODY_NAME': 'max', 'WATER_TYPE_AREA': 'max'}       
         
-        by_year = by_date.groupby([year_variable]).agg({**agg_dict1, **agg_dict2}).reset_index()
+        by_year = by_date.groupby([year_variable]).agg({**agg_dict1}).reset_index() #, **agg_dict2
         by_year.rename(columns={'SDATE':'DATE_count'}, inplace=True)
         by_year['global_EQR'], by_year['STATUS'] = zip(*by_year['local_EQR'].apply(self._calculate_global_EQR_from_local_EQR, water_body = water_body))
         by_year['STATIONS_USED'] = ', '.join(by_date.STATN.unique())
@@ -1131,7 +1285,7 @@ class IndicatorNutrients(IndicatorBase):
         """
         agg_dict1 = {'local_EQR': 'mean', year_variable: 'count', 'WATER_TYPE_AREA': 'max', 'WATER_BODY_NAME': 'max',}       
         
-        by_period = by_year.groupby(['VISS_EU_CD']).agg({**agg_dict1, **agg_dict2}).reset_index()
+        by_period = by_year.groupby(['VISS_EU_CD']).agg({**agg_dict1}).reset_index() #, **agg_dict2
         by_period.rename(columns={year_variable:'YEAR_count'}, inplace=True)
         by_period['global_EQR'], by_period['STATUS'] = zip(*by_period['local_EQR'].apply(self._calculate_global_EQR_from_local_EQR, water_body = water_body))
         S = ', '.join(by_year.STATIONS_USED.unique())
@@ -1574,6 +1728,8 @@ class IndicatorPhytoplankton(IndicatorBase):
         
 #        self._set_water_body_indicator_df(water_body)
         # get data to be used for status calculation, not deep copy because local_EQR values are relevant to see together with data
+        if water_body not in self.water_body_indicator_df.keys():
+            return False, False, False, False
         df = self.water_body_indicator_df[water_body]
         if self.name == 'chl' and len(df.dropna(subset = [self.indicator_parameter])) == 0 and len(df.dropna(subset = [self.parameter_list[1]])) > 0: 
             indicator_parameter = self.parameter_list[1]
@@ -1591,6 +1747,7 @@ class IndicatorPhytoplankton(IndicatorBase):
         if type_area == None:
             return False, False, False, False
         
+#        self._add_wb_name_to_df(df, water_body)
         """ Calculate local_EQR (EK-värde)
         """ 
         """ 1) Beräkna local_EQR (EK-värde) för varje enskilt prov utifrån (ekvationer för) referensvärden i tabellerna 6.2-6.7.
@@ -1603,7 +1760,9 @@ class IndicatorPhytoplankton(IndicatorBase):
         
         # TODO: what about different stations in one waterbody?
         
-        agg_dict1 = {indicator_parameter: 'mean', self.salt_parameter: 'mean', 'DEPH': 'count', 'VISS_EU_CD': 'max', 'WATER_BODY_NAME': 'max', 'WATER_TYPE_AREA': 'max'}       
+        agg_dict1 = {indicator_parameter: 'mean', self.salt_parameter: 'mean', 
+                     'REFERENCE_VALUE': 'mean', 'HG_BOUNDARIE': 'mean', 'GM_BOUNDARIE': 'mean', 'MP_BOUNDARIE': 'mean', 'PB_BOUNDARIE': 'mean', 
+                      'DEPH': 'count', 'VISS_EU_CD': 'max', 'WATER_BODY_NAME': 'max', 'WATER_TYPE_AREA': 'max'}       
         if len(self.additional_parameter_list) > 0:
         	agg_dict2 = {key: 'mean' for key in self.additional_parameter_list}
         else: agg_dict2 = {}        	
@@ -1611,7 +1770,7 @@ class IndicatorPhytoplankton(IndicatorBase):
         by_date = df.groupby(['SDATE', 'YEAR', 'STATN']).agg({**agg_dict1, **agg_dict2}).reset_index()
         by_date.rename(columns={'DEPH':'DEPH_count'}, inplace=True)
         
-        by_date = self._add_reference_value_to_df(by_date, water_body)
+#        by_date = self._add_reference_value_to_df(by_date, water_body)
         by_date['local_EQR'] = by_date.REFERENCE_VALUE/by_date[indicator_parameter]
         by_date['local_EQR'] = by_date['local_EQR'].apply(set_value_above_one)
         by_date['global_EQR'], by_date['STATUS'] = zip(*by_date['local_EQR'].apply(self._calculate_global_EQR_from_local_EQR, water_body = water_body))
@@ -1631,9 +1790,10 @@ class IndicatorPhytoplankton(IndicatorBase):
         """
         agg_dict1 = {'local_EQR': 'mean', indicator_parameter: 'mean', self.salt_parameter: 'mean', 'STATN': 'count', 'VISS_EU_CD': 'max', 'WATER_BODY_NAME': 'max', 'WATER_TYPE_AREA': 'max'}       
         
-        by_year = by_year_pos.groupby(['YEAR']).agg({**agg_dict1, **agg_dict2}).reset_index()
+        by_year = by_year_pos.groupby(['YEAR']).agg({**agg_dict1}).reset_index() #, **agg_dict2
         by_year.rename(columns={'STATN':'STATN_count'}, inplace=True)
         by_year['global_EQR'], by_year['STATUS'] = zip(*by_year ['local_EQR'].apply(self._calculate_global_EQR_from_local_EQR, water_body = water_body))
+        by_year['STATIONS_USED'] = ', '.join(by_year_pos.STATN.unique())
         #by_year.set_index(keys = 'VISS_EU_CD', append =True, drop = False, inplace = True)
         
                 
@@ -1643,10 +1803,11 @@ class IndicatorPhytoplankton(IndicatorBase):
         """
         agg_dict1 = {'local_EQR': 'mean', indicator_parameter: 'mean', self.salt_parameter: 'mean', 'YEAR': 'count', 'YEAR': 'count', 'WATER_BODY_NAME': 'max', 'WATER_TYPE_AREA': 'max'}       
         
-        by_period = by_year.groupby(['VISS_EU_CD']).agg({**agg_dict1, **agg_dict2}).reset_index()
+        by_period = by_year.groupby(['VISS_EU_CD']).agg({**agg_dict1}).reset_index() #, **agg_dict2
         by_period.rename(columns={'YEAR':'YEAR_count'}, inplace=True)
         by_period['global_EQR'], by_period['STATUS'] = zip(*by_period['local_EQR'].apply(self._calculate_global_EQR_from_local_EQR, water_body = water_body))
-        by_period['STATIONS_USED'] = ', '.join(by_year.STATN.unique())
+        S = ', '.join(by_year.STATIONS_USED.unique())
+        by_period['STATIONS_USED'] = ', '.join(set(S.split(', '))) 
         #by_period.set_index(keys = 'VISS_EU_CD', append =True, drop = False, inplace = True)
             
 #        print('\t\t\t{} status calculated'.format(self.name)) 
@@ -1699,8 +1860,11 @@ class IndicatorSecchi(IndicatorBase):
         
 #        self._set_water_body_indicator_df(water_body)
         # get data to be used for status calculation, not deep copy because local_EQR values are relevant to see together with data
+        if water_body not in self.water_body_indicator_df.keys():
+            return False, False, False, False
         df = self.water_body_indicator_df[water_body]
-        
+        if water_body == 'SE603650-174500':
+            print(df.head())
         if len(df) < 1:
             return False, False, False, False
                
@@ -1712,6 +1876,7 @@ class IndicatorSecchi(IndicatorBase):
         if type_area == None:
             return False, False, False, False
         
+#        self._add_wb_name_to_df(df, water_body)
         # add dataframe to resultsclass
 #        self.classification_results.add_info(water_body, df)
         
@@ -1720,16 +1885,19 @@ class IndicatorSecchi(IndicatorBase):
         
         """
 #        agg_dict1 = {self.indicator_parameter: 'mean', self.salt_parameter: 'mean', 'DEPH': 'count', 'VISS_EU_CD': 'max', 'WATER_BODY_NAME': 'max', 'WATER_TYPE_AREA': 'max'}       
-        agg_dict1 = {self.indicator_parameter: 'mean', self.salt_parameter: 'mean', 'YEAR': 'mean', 'DEPH': 'count', 'VISS_EU_CD': 'max', 'WATER_BODY_NAME': 'max', 'WATER_TYPE_AREA': 'max'}       
+        agg_dict1 = {self.indicator_parameter: 'mean', self.salt_parameter: 'mean', 
+                     'REFERENCE_VALUE': 'mean', 'HG_BOUNDARIE': 'mean', 'GM_BOUNDARIE': 'mean', 'MP_BOUNDARIE': 'mean', 'PB_BOUNDARIE': 'mean', 
+                     'DEPH': 'count', 'VISS_EU_CD': 'max', 'WATER_BODY_NAME': 'max', 'WATER_TYPE_AREA': 'max'}       
         agg_dict2 = {key: 'mean' for key in self.additional_parameter_list}       
         
         by_date = df.groupby(['SDATE', 'YEAR', 'STATN']).agg({**agg_dict1, **agg_dict2}).reset_index()
         by_date.rename(columns={'DEPH':'DEPH_count'}, inplace=True)
-        by_date = self._add_reference_value_to_df(df, water_body)
+#        by_date = self._add_reference_value_to_df(df, water_body)
         by_date['local_EQR'] = by_date[self.indicator_parameter]/by_date.REFERENCE_VALUE
 #        by_date['local_EQR'] = by_date['local_EQR'].apply(set_value_above_one)
         by_date['global_EQR'], by_date['STATUS'] = zip(*by_date['local_EQR'].apply(self._calculate_global_EQR_from_local_EQR, water_body = water_body))
-        
+        if water_body == 'SE603650-174500':
+            print(by_date)
 #        df['local_EQR'] = df[self.indicator_parameter]/df.REFERENCE_VALUE
 #        df['local_EQR'] = df['local_EQR'].apply(set_value_above_one)
 #        df['global_EQR'], df['STATUS'] = zip(*df['local_EQR'].apply(self._calculate_global_EQR_from_local_EQR, water_body = water_body))
@@ -1746,7 +1914,7 @@ class IndicatorSecchi(IndicatorBase):
         	agg_dict2 = {key: 'mean' for key in self.additional_parameter_list}
         else: agg_dict2 = {}  
 
-        by_period = by_date.groupby(['VISS_EU_CD']).agg({**agg_dict1, **agg_dict2}).reset_index()
+        by_period = by_date.groupby(['VISS_EU_CD']).agg({**agg_dict1}).reset_index() #, **agg_dict2
         by_period.rename(columns={'YEAR':'YEAR_count'}, inplace=True)
         by_period['global_EQR'], by_period['STATUS'] = zip(*by_period['local_EQR'].apply(self._calculate_global_EQR_from_local_EQR, water_body = water_body))
         by_period['STATIONS_USED'] = ', '.join(by_date.STATN.unique())      	        

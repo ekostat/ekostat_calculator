@@ -226,6 +226,7 @@ class WorkStep(object):
             indicator_name = self.indicator_objects[indicator].name
             print(indicator_name)
             t_ind = time.time()
+            by_date, by_year_pos, by_year, by_period = False, False, False, False
             for water_body in dict.fromkeys(water_body_list,True):
                 #print(water_body)
 #                t_wb = time.time()
@@ -379,6 +380,7 @@ class WorkStep(object):
             
         self.indicator_objects = dict.fromkeys(indicator_list)
         for indicator in self.indicator_objects.keys():
+            t_start = time.time()
             class_name = self.parent_workspace_object.mapping_objects['quality_element'].indicator_config.loc[indicator]['indicator_class']
             #print(class_name)
             try:
@@ -391,6 +393,10 @@ class WorkStep(object):
             self.indicator_objects[indicator] = class_(subset_uuid = subset_unique_id, 
                                                                       parent_workspace_object = self.parent_workspace_object,
                                                                       indicator = indicator)
+            time_ind = time.time() - t_start
+            print('-'*50)
+            print('Total time to set up indicator object indicator {}:'.format(indicator), time_ind)
+            print('-'*50)   
 #            self.indicator_objects[indicator] = core.IndicatorBase(subset = subset_unique_id, 
 #                                                                      parent_workspace_object = self.parent_workspace_object,
 #                                                                      indicator = indicator)
@@ -1236,7 +1242,7 @@ class WorkSpace(object):
         indicator = indicator.lower()
         settings_filter_object = step_object.get_indicator_data_filter_settings(indicator)
         #set filters for all indicator in all waterbodies and if no key in boolean dict for waterbody add waterbody filter
-        for water_body in water_body_list:
+        for water_body in dict.fromkeys(water_body_list, True):
             if step not in self.index_handler.booleans['step_0'][subset]['step_1'].keys():
                 self.index_handler.add_filter(filter_object=water_body_filter_object, step=step, subset=subset, water_body = water_body)
             

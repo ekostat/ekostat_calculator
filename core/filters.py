@@ -1010,6 +1010,7 @@ class SettingsRef(SettingsBase):
     #==========================================================================    
     def get_ref_value(self, type_area = None, water_body = None, salinity = None):
         """
+        deprecated, replaced by get_boundarie. Update to that.
         Created     20180326    by Lena Viktorsson
         Updated     20180621    by Lena Viktorsson (added float(ref_value in the first try/except statement))
         """
@@ -1050,6 +1051,53 @@ class SettingsRef(SettingsBase):
             raise TypeError('Unknown Type of reference value, must be either equation as string or float. Given reference value {} is {}. Or salinity missing, given salinity value is {}'.format(ref_value, type(ref_value), salinity))
         
         return ref_value
+    
+    #==========================================================================    
+    def get_boundarie(self, type_area = None, water_body = None, salinity = None, variable = None):
+        """
+        Created     20180326    by Lena Viktorsson
+        Updated     20180621    by Lena Viktorsson (added float(ref_value in the first try/except statement))
+        """
+        if len(self.settings.refvalue_column) == 0:
+            return False
+        if water_body:
+            boundarie = self.get_value(variable = variable, water_body = water_body)
+        else:
+            boundarie = self.get_value(variable = variable, type_area = type_area)
+        try:
+#            print(ref_value)
+            boundarie = float(boundarie)
+        except (ValueError, TypeError):
+            pass
+
+        if type(boundarie) is float:
+            boundarie = boundarie
+        elif type(boundarie) is str:
+            try: 
+                s = salinity
+                if water_body:
+                    max_s = self.get_value(variable = 'SALINITY_MAX', water_body = water_body)
+                else:
+                    max_s = self.get_value(variable = 'SALINITY_MAX', type_area = type_area)
+                if s > max_s:
+                    s = max_s
+                #print(s, ref_value)
+                exp_as_func = eval('lambda s: ' + boundarie)
+                boundarie = exp_as_func(s)
+#                boundarie = eval(boundarie)
+                #print('resulting ref value: {}'.format(ref_value))
+            except TypeError as e:
+                raise TypeError('{}\nSalinity TypeError, salinity must be int, float or nan but is {}'.format(e, repr(s)))
+                #TODO: add closes matching salinity somewhere here
+        elif type(boundarie) is pd.Series:
+            raise InputError('In SettingsRef get_ref_value','returned pd.Series for ref_value, give more specific info to get the right row')
+        elif not boundarie:
+            return False
+        else:
+            raise TypeError('Unknown Type of reference value, must be either equation as string or float. Given reference value {} is {}. Or salinity missing, given salinity value is {}'.format(boundarie, type(boundarie), salinity))
+        
+        return boundarie
+    
     #==========================================================================    
     def get_ref_value_type(self, type_area = None, water_body = None):
         """

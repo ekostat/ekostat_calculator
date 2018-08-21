@@ -11,6 +11,7 @@ get_ipython().magic('pwd')
 import os 
 import sys
 path = "../"
+path = "D:/github/ekostat_calculator"
 sys.path.append(path)
 #os.path.abspath("../")
 print(os.path.abspath(path))
@@ -152,7 +153,7 @@ print('subsetlist', w.get_subset_list())
 # In[16]:
 
 
-w.data_handler.all_data.head()
+w.data_handler.all_data.columns
 
 
 # ### Apply first data filter 
@@ -231,11 +232,12 @@ w.get_available_indicators(subset= subset_uuid, step=2)
 
 #list(zip(typeA_list, df_step1.WATER_TYPE_AREA.unique()))
 #indicator_list = w.get_available_indicators(subset= subset_uuid, step=2)
-#indicator_list = ['din_winter','ntot_summer', 'ntot_winter', 'dip_winter', 'ptot_summer', 'ptot_winter','bqi','din_winter','ntot_summer', 'ntot_winter', 'dip_winter', 'ptot_summer', 'ptot_winter', 'biov', 'chl', 'secchi']
+indicator_list = ['din_winter','ntot_summer', 'ntot_winter', 'dip_winter', 'ptot_summer', 'ptot_winter','bqi','din_winter','ntot_summer', 'ntot_winter', 'dip_winter', 'ptot_summer', 'ptot_winter', 'biov', 'chl', 'secchi']
 #indicator_list = ['din_winter','ntot_summer', 'ntot_winter', 'dip_winter', 'ptot_summer', 'ptot_winter']
 #indicator_list = ['biov', 'chl']
 #indicator_list = ['bqi', 'secchi']
-indicator_list = ['bqi', 'secchi'] + ['biov', 'chl']
+#indicator_list = ['bqi', 'secchi'] + ['biov', 'chl'] + ['din_winter']
+#indicator_list = ['din_winter']
 
 # In[ ]:
 print('apply indicator data filter')
@@ -253,8 +255,9 @@ for indicator in indicator_list:
 # ### Set up indicator objects
 
 # In[ ]:
-
 print('indicator set up')
+#indicator_list = ['din_winter','ntot_summer', 'ntot_winter', 'dip_winter', 'ptot_summer', 'ptot_winter','din_winter','ntot_summer', 'ntot_winter', 'dip_winter', 'ptot_summer', 'ptot_winter', 'biov', 'chl', 'secchi']
+
 w.get_step_object(step = 3, subset = subset_uuid).indicator_setup(subset_unique_id = subset_uuid, indicator_list = indicator_list) 
 
 
@@ -262,7 +265,6 @@ w.get_step_object(step = 3, subset = subset_uuid).indicator_setup(subset_unique_
 
 # In[ ]:
 print('CALCULATE STATUS')
-indicator_list = ['secchi'] + ['biov', 'chl']
 w.get_step_object(step = 3, subset = subset_uuid).calculate_status(indicator_list = indicator_list)
 #'din_winter','ntot_summer', 'ntot_winter', 'dip_winter', 'ptot_summer', 'ptot_winter'
 

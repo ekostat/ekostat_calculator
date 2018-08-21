@@ -18,3 +18,4 @@ PARAM			PTOT
 VALUE								
 QFLAG								
 ALABO
+WADEP
