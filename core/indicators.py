@@ -825,14 +825,16 @@ class IndicatorBQI(IndicatorBase):
                 mndep_list = [min(mxdep_list)]
             
             ref_value = self._get_value(water_body = water_body, variable = 'REF_VALUE_LIMIT', MXDEP_list = mxdep_list, MNDEP_list = mndep_list)
-            hg_value = (ref_value*self.ref_settings.get_value(variable = 'HG_EQR_LIMIT', water_body = water_body))
-            gm_value = (ref_value*self.ref_settings.get_value(variable = 'GM_EQR_LIMIT', water_body = water_body))
-            mp_value = (ref_value*self.ref_settings.get_value(variable = 'MP_EQR_LIMIT', water_body = water_body))
-            pb_value = (ref_value*self.ref_settings.get_value(variable = 'PB_EQR_LIMIT', water_body = water_body))
-#            hg_value = self._get_value(water_body = water_body, variable = 'HG_VALUE_LIMIT', MXDEP_list = mxdep_list, MNDEP_list = mndep_list)
-#            gm_value = self._get_value(water_body = water_body, variable = 'GM_VALUE_LIMIT', MXDEP_list = mxdep_list, MNDEP_list = mndep_list)
-#            mp_value = self._get_value(water_body = water_body, variable = 'MP_VALUE_LIMIT', MXDEP_list = mxdep_list, MNDEP_list = mndep_list)
-#            pb_value = self._get_value(water_body = water_body, variable = 'PB_VALUE_LIMIT', MXDEP_list = mxdep_list, MNDEP_list = mndep_list)
+#            ref_value, hg_value, gm_value, mp_value, pb_value = self._get_value(water_body = water_body, variable = ['REF_VALUE_LIMIT', 'HG_VALUE_LIMIT', 'GM_VALUE_LIMIT', 'MP_VALUE_LIMIT', 'PB_VALUE_LIMIT'], MXDEP_list = mxdep_list, MNDEP_list = mndep_list)
+#            hg_value = (ref_value*self.ref_settings.get_value(variable = 'HG_EQR_LIMIT', water_body = water_body))
+#            gm_value = (ref_value*self.ref_settings.get_value(variable = 'GM_EQR_LIMIT', water_body = water_body))
+#            mp_value = (ref_value*self.ref_settings.get_value(variable = 'MP_EQR_LIMIT', water_body = water_body))
+#            pb_value = (ref_value*self.ref_settings.get_value(variable = 'PB_EQR_LIMIT', water_body = water_body))
+
+            hg_value = self._get_value(water_body = water_body, variable = 'HG_VALUE_LIMIT', MXDEP_list = mxdep_list, MNDEP_list = mndep_list)
+            gm_value = self._get_value(water_body = water_body, variable = 'GM_VALUE_LIMIT', MXDEP_list = mxdep_list, MNDEP_list = mndep_list)
+            mp_value = self._get_value(water_body = water_body, variable = 'MP_VALUE_LIMIT', MXDEP_list = mxdep_list, MNDEP_list = mndep_list)
+            pb_value = self._get_value(water_body = water_body, variable = 'PB_VALUE_LIMIT', MXDEP_list = mxdep_list, MNDEP_list = mndep_list)
 #            if not ref_value:
 #                print('no ref_value', df.WATER_BODY_NAME.unique(), df.WATER_TYPE_AREA.unique(), ref_value)
             df.loc[ix, 'REFERENCE_VALUE'] = pd.Series(ref_value, index = ix)
@@ -894,9 +896,16 @@ class IndicatorBQI(IndicatorBase):
         
         ix = self._get_settings_index(water_body, MXDEP_list, MNDEP_list)
         if ix:
+            if type(variable) is list:
+                results = []
+                for var in variable:
+                    results.append(float(self.ref_settings.get_value(water_body = water_body).loc[ix][var]))
+                return tuple(results)
             return float(self.ref_settings.get_value(water_body = water_body).loc[ix][variable])
         else:
 #            print(MXDEP_list, MNDEP_list, self.ref_settings.get_value(water_body = water_body))
+            if type(variable) is list:
+                return (False, )*len(variable)
             return False
         
     #===============================================================
@@ -1679,7 +1688,7 @@ class IndicatorOxygen(IndicatorBase):
                                   'GLOBAL_EQR': [global_EQR],  'STATUS': [status], 'O2 conc test1': [self.test1_result], 'O2 conc test2': [self.test1_result], 
                                   'Area below limit %': [area_fraction_value], 'test2_ok': [self.test2_ok], 'total_month_list': [self.month_list],  'test1_month_list': [self.test1_month_list], 'test2_month_list': [self.test2_month_list],
                                   'total_no_yr': [self.no_yr], 'test1_no_yr': [self.test1_no_yr], 'test2_no_yr': [self.test2_no_yr],
-                                  'DEFICIENCY_TYPE': [deficiency_type], 'LIMIT': [self.deficiency_limit], 
+                                  'DEFICIENCY_TYPE': [deficiency_type], 'CONC_LIMIT': [self.deficiency_limit], 
                                   'COMMENT': [comment]})
         
 #        by_period = by_period[['VISS_EU_CD', 'WATER_BODY_NAME', 'WATER_TYPE_AREA', 'GLOBAL_EQR', 'STATUS', 'O2 min conc test1', 'Area below limit %', 'DEFICIENCY_TYPE', 'LIMIT',	'NUMBER OF YEARS', 'COMMENT']]

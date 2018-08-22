@@ -176,7 +176,7 @@ w.apply_data_filter(step = 0) # This sets the first level of data filter in the 
 # In[19]:
 
 
-subset_alias = 'period_2007-2012_refvalues_2017'
+subset_alias = 'period_2007-2012_refvalues_2013'
 subset_uuid = ekos.get_unique_id_for_alias(workspace_alias = workspace_alias, subset_alias = subset_alias)
 #w.set_data_filter(subset = subset_uuid, step=1, 
 #                         filter_type='include_list', 
@@ -232,8 +232,8 @@ w.get_available_indicators(subset= subset_uuid, step=2)
 
 #list(zip(typeA_list, df_step1.WATER_TYPE_AREA.unique()))
 #indicator_list = w.get_available_indicators(subset= subset_uuid, step=2)
-indicator_list = ['din_winter','ntot_summer', 'ntot_winter', 'dip_winter', 'ptot_summer', 'ptot_winter','bqi','din_winter','ntot_summer', 'ntot_winter', 'dip_winter', 'ptot_summer', 'ptot_winter', 'biov', 'chl', 'secchi']
-#indicator_list = ['din_winter','ntot_summer', 'ntot_winter', 'dip_winter', 'ptot_summer', 'ptot_winter']
+#indicator_list = ['oxygen','din_winter','ntot_summer', 'ntot_winter', 'dip_winter', 'ptot_summer', 'ptot_winter','bqi', 'biov', 'chl', 'secchi']
+indicator_list = ['din_winter','ntot_summer', 'ntot_winter', 'dip_winter', 'ptot_summer', 'ptot_winter']
 #indicator_list = ['biov', 'chl']
 #indicator_list = ['bqi', 'secchi']
 #indicator_list = ['bqi', 'secchi'] + ['biov', 'chl'] + ['din_winter']
@@ -256,8 +256,6 @@ for indicator in indicator_list:
 
 # In[ ]:
 print('indicator set up')
-#indicator_list = ['din_winter','ntot_summer', 'ntot_winter', 'dip_winter', 'ptot_summer', 'ptot_winter','din_winter','ntot_summer', 'ntot_winter', 'dip_winter', 'ptot_summer', 'ptot_winter', 'biov', 'chl', 'secchi']
-
 w.get_step_object(step = 3, subset = subset_uuid).indicator_setup(subset_unique_id = subset_uuid, indicator_list = indicator_list) 
 
 
@@ -274,20 +272,26 @@ w.get_step_object(step = 3, subset = subset_uuid).calculate_status(indicator_lis
 # In[ ]:
 
 
-#w.get_step_object(step = 3, subset = subset_uuid).calculate_quality_element(subset_unique_id = subset_uuid, quality_element = 'Nutrients', class_name = 'QualityElementNutrients')
+w.get_step_object(step = 3, subset = subset_uuid).calculate_quality_element(subset_unique_id = subset_uuid, quality_element = 'Nutrients', class_name = 'QualityElementNutrients')
+
+
+# In[ ]:
+
+columns = ['VISS_EU_CD','WATER_BODY_NAME','WATER_TYPE_AREA','STATUS_NUTRIENTS','mean_EQR','MEAN_N_EQR','EQR_N_winter_mean','global_EQR_ntot_winter','global_EQR_din_winter','global_EQR_ntot_summer','MEAN_P_EQR','EQR_P_winter_mean','global_EQR_ptot_winter','global_EQR_dip_winter','global_EQR_ptot_summer']
+#w.get_step_object(step = 3, subset = subset_uuid).quality_element['Nutrients'].results.columns
+w.get_step_object(step = 3, subset = subset_uuid).quality_element['Nutrients'].results[columns].to_csv('D:/Nutrients'+subset_alias+'.txt', float_format='%.3f', header = True, index = None, sep = '\t')
 
 
 # In[ ]:
 
 
-#w.get_step_object(step = 3, subset = subset_uuid).quality_element['Nutrients'].results[['VISS_EU_CD','WATER_BODY_NAME','WATER_TYPE_AREA','STATUS_NUTRIENTS','mean_EQR','MEAN_N_EQR','EQR_N_winter_mean','global_EQR_ntot_summer','MEAN_P_EQR','EQR_P_winter_mean','global_EQR_ptot_summer']].to_csv('D:/Nutrients'+subset_alias+'.txt', float_format='%.3f', header = True, index = None, sep = '\t')
-
-
-# In[ ]:
-
-
-subset_alias
-
+def get_QF_results(subset_alias):
+    subset_uuid = ekos.get_unique_id_for_alias(workspace_alias = workspace_alias, subset_alias = subset_alias)
+    w.get_step_object(step = 3, subset = subset_uuid).calculate_quality_element(subset_unique_id = subset_uuid, quality_element = 'Nutrients', class_name = 'QualityElementNutrients')
+    columns = ['VISS_EU_CD','WATER_BODY_NAME','WATER_TYPE_AREA','STATUS_NUTRIENTS','mean_EQR','MEAN_N_EQR','EQR_N_winter_mean','global_EQR_ntot_winter','global_EQR_din_winter','global_EQR_ntot_summer','MEAN_P_EQR','EQR_P_winter_mean','global_EQR_ptot_winter','global_EQR_dip_winter','global_EQR_ptot_summer']
+    return w.get_step_object(step = 3, subset = subset_uuid).quality_element['Nutrients'].results[columns]
+    
+QF_2017 = get_QF_results('period_2007-2012_refvalues_2017')   
 
 # ## Plotting results
 

@@ -56,6 +56,9 @@ class QualityElementBase(object):
         self.mapping_objects = self.parent_workspace_object.mapping_objects
         self.index_handler = self.parent_workspace_object.index_handler
         self.step_object = self.parent_workspace_object.get_step_object(step = 3, subset = self.subset)
+        #paths and saving
+        self.result_directory = self.step_object.paths['step_directory']+'/output/results/'
+        self.sld = core.SaveLoadDelete(self.result_directory)
         # from SettingsFile
         self.tolerance_settings = self.parent_workspace_object.get_step_object(step = 2, subset = self.subset).get_indicator_tolerance_settings(self.name)
         # To be read from config-file
@@ -64,9 +67,6 @@ class QualityElementBase(object):
         # perform checks before continuing
         self._check()
         self._set_directories()
-        #paths and saving
-        self.result_directory = self.step_object.paths['step_directory']+'/output/results/'
-        self.sld = core.SaveLoadDelete(self.result_directory)
         
         #self._load_indicators()
         #self.indicator_list = []
@@ -81,7 +81,8 @@ class QualityElementBase(object):
         self.indicator_dict = {}
         for indicator in self.indicator_list:
             try:
-                self.indicator_dict[indicator] = self.step_object.indicator_objects[indicator].sld.load_df(file_name = indicator + '_by_period')
+                self.indicator_dict[indicator] = self.sld.load_df(file_name = indicator + '_by_period')         
+#                self.indicator_dict[indicator] = self.step_object.indicator_objects[indicator].sld.load_df(file_name = indicator + '_by_period')
             except FileNotFoundError:
                 print('No status results for {}. Cannot calculate status without it'.format(indicator))
               
@@ -166,7 +167,6 @@ class QualityElementNutrients(QualityElementBase):
         merge_on = ['VISS_EU_CD', 'WATER_BODY_NAME', 'WATER_TYPE_AREA']
         for indicator in self.indicator_list:
             col_list = list(self.indicator_dict[indicator].columns)
-            print(col_list)
             [col_list.remove(r) for r in merge_on]
             {k: k+'_'+indicator for k in col_list}
             self.indicator_dict[indicator].rename(columns = {k: k+'_'+indicator for k in col_list}, inplace = True)

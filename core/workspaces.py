@@ -377,9 +377,10 @@ class WorkStep(object):
             indicator_list = self.parent_workspace_object.available_indicators
             if indicator_list == None:
                 indicator_list = self.parent_workspace_object.get_available_indicators(subset=subset_unique_id, step=2)
-            
-        self.indicator_objects = dict.fromkeys(indicator_list)
-        for indicator in self.indicator_objects.keys():
+        if not hasattr(self, 'indicator_objects'):
+            self.indicator_objects = {}
+        indicators = dict.fromkeys(indicator_list)
+        for indicator in indicators:
             t_start = time.time()
             class_name = self.parent_workspace_object.mapping_objects['quality_element'].indicator_config.loc[indicator]['indicator_class']
             #print(class_name)
