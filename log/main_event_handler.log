@@ -1,197 +1,424 @@
-2018-06-01 14:01:47,470	logger.py	87	add_log	DEBUG	### Log added for log_id "event_handler" at locaton: D:\Utveckling\git\ekostat_calculator\log\main_event_handler.log
-2018-06-01 14:01:47,480	logger.py	88	add_log	DEBUG	------------------------------------------------------------------------------------------------------------------------
-2018-06-01 14:01:47,480	event_handler.py	74	__init__	DEBUG	Start EventHandler: event_handler
-2018-06-01 14:01:50,711	event_handler.py	242	copy_workspace	DEBUG	Trying to copy workspace "default_workspace". Copy has alias "test_workspace"
-2018-06-01 14:01:50,821	event_handler.py	1679	load_workspace	DEBUG	Trying to load new workspace "e7507f35-be18-4962-b0b8-42fddd76ed85" with alias "test_workspace"
-2018-06-01 14:01:51,021	event_handler.py	1697	load_workspace	INFO	Workspace "e7507f35-be18-4962-b0b8-42fddd76ed85" with alias "test_workspace loaded."
-2018-06-01 14:01:51,791	event_handler.py	74	__init__	DEBUG	Start EventHandler: event_handler
-2018-06-01 14:03:35,192	logger.py	85	add_log	DEBUG	
-2018-06-01 14:03:35,192	logger.py	86	add_log	DEBUG	========================================================================================================================
-2018-06-01 14:03:35,192	logger.py	87	add_log	DEBUG	### Log added for log_id "event_handler" at locaton: D:\Utveckling\git\ekostat_calculator\log\main_event_handler.log
-2018-06-01 14:03:35,192	logger.py	88	add_log	DEBUG	------------------------------------------------------------------------------------------------------------------------
-2018-06-01 14:03:35,202	event_handler.py	74	__init__	DEBUG	Start EventHandler: event_handler
-2018-06-01 14:03:38,426	event_handler.py	242	copy_workspace	DEBUG	Trying to copy workspace "default_workspace". Copy has alias "test_workspace"
-2018-06-01 14:03:38,526	event_handler.py	1679	load_workspace	DEBUG	Trying to load new workspace "186e4ab0-6702-437c-b744-239769cc5848" with alias "test_workspace"
-2018-06-01 14:03:38,726	event_handler.py	1697	load_workspace	INFO	Workspace "186e4ab0-6702-437c-b744-239769cc5848" with alias "test_workspace loaded."
-2018-06-01 14:03:39,447	event_handler.py	74	__init__	DEBUG	Start EventHandler: event_handler
-2018-06-01 14:10:06,097	event_handler.py	74	__init__	DEBUG	Start EventHandler: event_handler
-2018-06-01 14:10:09,428	event_handler.py	231	copy_workspace	DEBUG	Could not add workspace with alias "test_workspace". Workspace already exists!
-2018-06-01 14:10:09,448	event_handler.py	1679	load_workspace	DEBUG	Trying to load new workspace "186e4ab0-6702-437c-b744-239769cc5848" with alias "test_workspace"
-2018-06-01 14:10:09,618	event_handler.py	1697	load_workspace	INFO	Workspace "186e4ab0-6702-437c-b744-239769cc5848" with alias "test_workspace loaded."
-2018-06-01 14:27:24,520	logger.py	85	add_log	DEBUG	
-2018-06-01 14:27:24,530	logger.py	86	add_log	DEBUG	========================================================================================================================
-2018-06-01 14:27:24,540	logger.py	87	add_log	DEBUG	### Log added for log_id "event_handler" at locaton: D:\Utveckling\git\ekostat_calculator\log\main_event_handler.log
-2018-06-01 14:27:24,540	logger.py	88	add_log	DEBUG	------------------------------------------------------------------------------------------------------------------------
-2018-06-01 14:27:24,540	event_handler.py	74	__init__	DEBUG	Start EventHandler: event_handler
-2018-06-01 14:27:27,913	event_handler.py	242	copy_workspace	DEBUG	Trying to copy workspace "default_workspace". Copy has alias "test_workspace"
-2018-06-01 14:27:28,026	event_handler.py	1679	load_workspace	DEBUG	Trying to load new workspace "23570435-3366-4e06-8898-2fb9318e51be" with alias "test_workspace"
-2018-06-01 14:27:28,226	event_handler.py	1697	load_workspace	INFO	Workspace "23570435-3366-4e06-8898-2fb9318e51be" with alias "test_workspace loaded."
-2018-06-01 14:28:57,890	logger.py	85	add_log	DEBUG	
-2018-06-01 14:28:57,900	logger.py	86	add_log	DEBUG	========================================================================================================================
-2018-06-01 14:28:57,900	logger.py	87	add_log	DEBUG	### Log added for log_id "event_handler" at locaton: D:\Utveckling\git\ekostat_calculator\log\main_event_handler.log
-2018-06-01 14:28:57,900	logger.py	88	add_log	DEBUG	------------------------------------------------------------------------------------------------------------------------
-2018-06-01 14:28:57,900	event_handler.py	74	__init__	DEBUG	Start EventHandler: event_handler
-2018-06-01 14:29:01,268	event_handler.py	242	copy_workspace	DEBUG	Trying to copy workspace "default_workspace". Copy has alias "test_workspace"
-2018-06-01 14:29:01,368	event_handler.py	1679	load_workspace	DEBUG	Trying to load new workspace "db96e152-8791-4693-ac2d-e4eae15c8678" with alias "test_workspace"
-2018-06-01 14:29:01,568	event_handler.py	1697	load_workspace	INFO	Workspace "db96e152-8791-4693-ac2d-e4eae15c8678" with alias "test_workspace loaded."
-2018-06-01 14:32:21,277	logger.py	85	add_log	DEBUG	
-2018-06-01 14:32:21,287	logger.py	86	add_log	DEBUG	========================================================================================================================
-2018-06-01 14:32:21,287	logger.py	87	add_log	DEBUG	### Log added for log_id "event_handler" at locaton: D:\Utveckling\git\ekostat_calculator\log\main_event_handler.log
-2018-06-01 14:32:21,287	logger.py	88	add_log	DEBUG	------------------------------------------------------------------------------------------------------------------------
-2018-06-01 14:32:21,297	event_handler.py	74	__init__	DEBUG	Start EventHandler: event_handler
-2018-06-01 14:32:24,985	event_handler.py	242	copy_workspace	DEBUG	Trying to copy workspace "default_workspace". Copy has alias "test_workspace"
-2018-06-01 14:32:25,094	event_handler.py	1679	load_workspace	DEBUG	Trying to load new workspace "41b50149-9e91-4437-8984-2369781548d0" with alias "test_workspace"
-2018-06-01 14:32:25,330	event_handler.py	1697	load_workspace	INFO	Workspace "41b50149-9e91-4437-8984-2369781548d0" with alias "test_workspace loaded."
-2018-06-01 14:35:23,467	logger.py	85	add_log	DEBUG	
-2018-06-01 14:35:23,479	logger.py	86	add_log	DEBUG	========================================================================================================================
-2018-06-01 14:35:23,481	logger.py	87	add_log	DEBUG	### Log added for log_id "event_handler" at locaton: D:\Utveckling\git\ekostat_calculator\log\main_event_handler.log
-2018-06-01 14:35:23,483	logger.py	88	add_log	DEBUG	------------------------------------------------------------------------------------------------------------------------
-2018-06-01 14:35:23,486	event_handler.py	74	__init__	DEBUG	Start EventHandler: event_handler
-2018-06-01 14:35:27,672	event_handler.py	242	copy_workspace	DEBUG	Trying to copy workspace "default_workspace". Copy has alias "test_workspace"
-2018-06-01 14:35:27,787	event_handler.py	1679	load_workspace	DEBUG	Trying to load new workspace "ee1231ae-95b9-404e-8213-9fc11de170be" with alias "test_workspace"
-2018-06-01 14:35:28,047	event_handler.py	1697	load_workspace	INFO	Workspace "ee1231ae-95b9-404e-8213-9fc11de170be" with alias "test_workspace loaded."
-2018-06-01 14:38:11,692	event_handler.py	1004	get_workspace	DEBUG	Getting workspace "ee1231ae-95b9-404e-8213-9fc11de170be" with alias "None"
-2018-06-01 14:51:17,409	event_handler.py	74	__init__	DEBUG	Start EventHandler: event_handler
-2018-06-01 14:51:21,438	event_handler.py	231	copy_workspace	DEBUG	Could not add workspace with alias "test_workspace". Workspace already exists!
-2018-06-01 14:51:21,456	event_handler.py	1679	load_workspace	DEBUG	Trying to load new workspace "ee1231ae-95b9-404e-8213-9fc11de170be" with alias "test_workspace"
-2018-06-01 14:51:21,676	event_handler.py	1697	load_workspace	INFO	Workspace "ee1231ae-95b9-404e-8213-9fc11de170be" with alias "test_workspace loaded."
-2018-06-01 16:29:31,121	logger.py	85	add_log	DEBUG	
-2018-06-01 16:29:31,130	logger.py	86	add_log	DEBUG	========================================================================================================================
-2018-06-01 16:29:31,133	logger.py	87	add_log	DEBUG	### Log added for log_id "event_handler" at locaton: D:\Utveckling\git\ekostat_calculator\log\main_event_handler.log
-2018-06-01 16:29:31,136	logger.py	88	add_log	DEBUG	------------------------------------------------------------------------------------------------------------------------
-2018-06-01 16:29:31,138	event_handler.py	74	__init__	DEBUG	Start EventHandler: event_handler
-2018-06-01 16:29:34,733	event_handler.py	231	copy_workspace	DEBUG	Could not add workspace with alias "test_workspace". Workspace already exists!
-2018-06-01 16:29:34,756	event_handler.py	1680	load_workspace	DEBUG	Trying to load new workspace "65937123-ef28-4ee1-b28f-f43d8a762ab9" with alias "test_workspace"
-2018-06-01 16:29:34,978	event_handler.py	1698	load_workspace	INFO	Workspace "65937123-ef28-4ee1-b28f-f43d8a762ab9" with alias "test_workspace loaded."
-2018-06-01 16:36:55,414	event_handler.py	74	__init__	DEBUG	Start EventHandler: event_handler
-2018-06-01 16:36:58,702	event_handler.py	231	copy_workspace	DEBUG	Could not add workspace with alias "test_workspace". Workspace already exists!
-2018-06-01 16:36:58,721	event_handler.py	1680	load_workspace	DEBUG	Trying to load new workspace "65937123-ef28-4ee1-b28f-f43d8a762ab9" with alias "test_workspace"
-2018-06-01 16:36:58,899	event_handler.py	1698	load_workspace	INFO	Workspace "65937123-ef28-4ee1-b28f-f43d8a762ab9" with alias "test_workspace loaded."
-2018-06-01 16:37:38,293	event_handler.py	74	__init__	DEBUG	Start EventHandler: event_handler
-2018-06-01 16:37:41,658	event_handler.py	231	copy_workspace	DEBUG	Could not add workspace with alias "test_workspace". Workspace already exists!
-2018-06-01 16:37:41,676	event_handler.py	1680	load_workspace	DEBUG	Trying to load new workspace "65937123-ef28-4ee1-b28f-f43d8a762ab9" with alias "test_workspace"
-2018-06-01 16:37:41,862	event_handler.py	1698	load_workspace	INFO	Workspace "65937123-ef28-4ee1-b28f-f43d8a762ab9" with alias "test_workspace loaded."
-2018-06-01 16:38:29,654	event_handler.py	74	__init__	DEBUG	Start EventHandler: event_handler
-2018-06-01 16:38:33,104	event_handler.py	231	copy_workspace	DEBUG	Could not add workspace with alias "test_workspace". Workspace already exists!
-2018-06-01 16:38:33,121	event_handler.py	1680	load_workspace	DEBUG	Trying to load new workspace "65937123-ef28-4ee1-b28f-f43d8a762ab9" with alias "test_workspace"
-2018-06-01 16:38:33,298	event_handler.py	1698	load_workspace	INFO	Workspace "65937123-ef28-4ee1-b28f-f43d8a762ab9" with alias "test_workspace loaded."
-2018-06-01 16:48:23,490	logger.py	85	add_log	DEBUG	
-2018-06-01 16:48:23,498	logger.py	86	add_log	DEBUG	========================================================================================================================
-2018-06-01 16:48:23,500	logger.py	87	add_log	DEBUG	### Log added for log_id "event_handler" at locaton: D:\Utveckling\git\ekostat_calculator\log\main_event_handler.log
-2018-06-01 16:48:23,502	logger.py	88	add_log	DEBUG	------------------------------------------------------------------------------------------------------------------------
-2018-06-01 16:48:23,503	event_handler.py	74	__init__	DEBUG	Start EventHandler: event_handler
-2018-06-01 16:48:27,090	event_handler.py	242	copy_workspace	DEBUG	Trying to copy workspace "default_workspace". Copy has alias "test_workspace"
-2018-06-01 16:48:27,203	event_handler.py	1679	load_workspace	DEBUG	Trying to load new workspace "f8fb3d42-3ee9-4c47-8aa8-41f28f532290" with alias "test_workspace"
-2018-06-01 16:48:27,417	event_handler.py	1697	load_workspace	INFO	Workspace "f8fb3d42-3ee9-4c47-8aa8-41f28f532290" with alias "test_workspace loaded."
-2018-06-01 16:49:04,495	event_handler.py	74	__init__	DEBUG	Start EventHandler: event_handler
-2018-06-01 16:49:07,953	event_handler.py	231	copy_workspace	DEBUG	Could not add workspace with alias "test_workspace". Workspace already exists!
-2018-06-01 16:49:07,970	event_handler.py	1679	load_workspace	DEBUG	Trying to load new workspace "f8fb3d42-3ee9-4c47-8aa8-41f28f532290" with alias "test_workspace"
-2018-06-01 16:49:08,147	event_handler.py	1697	load_workspace	INFO	Workspace "f8fb3d42-3ee9-4c47-8aa8-41f28f532290" with alias "test_workspace loaded."
-2018-06-01 16:49:45,300	logger.py	85	add_log	DEBUG	
-2018-06-01 16:49:45,309	logger.py	86	add_log	DEBUG	========================================================================================================================
-2018-06-01 16:49:45,311	logger.py	87	add_log	DEBUG	### Log added for log_id "event_handler" at locaton: D:\Utveckling\git\ekostat_calculator\log\main_event_handler.log
-2018-06-01 16:49:45,314	logger.py	88	add_log	DEBUG	------------------------------------------------------------------------------------------------------------------------
-2018-06-01 16:49:45,316	event_handler.py	74	__init__	DEBUG	Start EventHandler: event_handler
-2018-06-01 16:49:48,797	event_handler.py	242	copy_workspace	DEBUG	Trying to copy workspace "default_workspace". Copy has alias "test_workspace"
-2018-06-01 16:49:48,903	event_handler.py	1679	load_workspace	DEBUG	Trying to load new workspace "83a74a3a-c65a-4ddf-a236-94101aac1411" with alias "test_workspace"
-2018-06-01 16:49:49,135	event_handler.py	1697	load_workspace	INFO	Workspace "83a74a3a-c65a-4ddf-a236-94101aac1411" with alias "test_workspace loaded."
-2018-06-01 16:53:06,661	event_handler.py	1690	load_workspace	DEBUG	Workspace "83a74a3a-c65a-4ddf-a236-94101aac1411" with alias "test_workspace" is already loaded. Set reload=True if you want to reload the workspace.
-2018-06-01 16:53:06,666	event_handler.py	1697	load_workspace	INFO	Workspace "83a74a3a-c65a-4ddf-a236-94101aac1411" with alias "test_workspace loaded."
-2018-06-01 16:53:43,792	event_handler.py	74	__init__	DEBUG	Start EventHandler: event_handler
-2018-06-01 16:53:47,273	event_handler.py	231	copy_workspace	DEBUG	Could not add workspace with alias "test_workspace". Workspace already exists!
-2018-06-01 16:53:52,647	event_handler.py	74	__init__	DEBUG	Start EventHandler: event_handler
-2018-06-01 16:53:55,993	event_handler.py	231	copy_workspace	DEBUG	Could not add workspace with alias "test_workspace". Workspace already exists!
-2018-06-01 16:54:02,188	event_handler.py	74	__init__	DEBUG	Start EventHandler: event_handler
-2018-06-01 16:54:05,650	event_handler.py	231	copy_workspace	DEBUG	Could not add workspace with alias "test_workspace". Workspace already exists!
-2018-06-01 16:54:05,666	event_handler.py	1679	load_workspace	DEBUG	Trying to load new workspace "83a74a3a-c65a-4ddf-a236-94101aac1411" with alias "test_workspace"
-2018-06-01 16:54:05,847	event_handler.py	1697	load_workspace	INFO	Workspace "83a74a3a-c65a-4ddf-a236-94101aac1411" with alias "test_workspace loaded."
-2018-06-01 16:58:47,475	logger.py	85	add_log	DEBUG	
-2018-06-01 16:58:47,486	logger.py	86	add_log	DEBUG	========================================================================================================================
-2018-06-01 16:58:47,488	logger.py	87	add_log	DEBUG	### Log added for log_id "event_handler" at locaton: D:\Utveckling\git\ekostat_calculator\log\main_event_handler.log
-2018-06-01 16:58:47,490	logger.py	88	add_log	DEBUG	------------------------------------------------------------------------------------------------------------------------
-2018-06-01 16:58:47,494	event_handler.py	74	__init__	DEBUG	Start EventHandler: event_handler
-2018-06-01 16:58:51,228	event_handler.py	242	copy_workspace	DEBUG	Trying to copy workspace "default_workspace". Copy has alias "test_workspace"
-2018-06-01 16:58:51,354	event_handler.py	1679	load_workspace	DEBUG	Trying to load new workspace "5755da79-b0c1-446e-a33c-97c43b0b5077" with alias "test_workspace"
-2018-06-01 16:58:51,595	event_handler.py	1697	load_workspace	INFO	Workspace "5755da79-b0c1-446e-a33c-97c43b0b5077" with alias "test_workspace loaded."
-2018-06-01 16:59:19,672	event_handler.py	74	__init__	DEBUG	Start EventHandler: event_handler
-2018-06-01 16:59:23,389	event_handler.py	231	copy_workspace	DEBUG	Could not add workspace with alias "test_workspace". Workspace already exists!
-2018-06-01 16:59:23,407	event_handler.py	1679	load_workspace	DEBUG	Trying to load new workspace "5755da79-b0c1-446e-a33c-97c43b0b5077" with alias "test_workspace"
-2018-06-01 16:59:23,637	event_handler.py	1697	load_workspace	INFO	Workspace "5755da79-b0c1-446e-a33c-97c43b0b5077" with alias "test_workspace loaded."
-2018-06-01 17:00:38,990	event_handler.py	74	__init__	DEBUG	Start EventHandler: event_handler
-2018-06-01 17:00:43,688	event_handler.py	231	copy_workspace	DEBUG	Could not add workspace with alias "test_workspace". Workspace already exists!
-2018-06-01 17:00:43,709	event_handler.py	1679	load_workspace	DEBUG	Trying to load new workspace "5755da79-b0c1-446e-a33c-97c43b0b5077" with alias "test_workspace"
-2018-06-01 17:00:43,930	event_handler.py	1697	load_workspace	INFO	Workspace "5755da79-b0c1-446e-a33c-97c43b0b5077" with alias "test_workspace loaded."
-2018-06-01 17:01:06,292	event_handler.py	74	__init__	DEBUG	Start EventHandler: event_handler
-2018-06-01 17:01:11,389	event_handler.py	231	copy_workspace	DEBUG	Could not add workspace with alias "test_workspace". Workspace already exists!
-2018-06-01 17:01:11,407	event_handler.py	1679	load_workspace	DEBUG	Trying to load new workspace "5755da79-b0c1-446e-a33c-97c43b0b5077" with alias "test_workspace"
-2018-06-01 17:01:11,736	event_handler.py	1697	load_workspace	INFO	Workspace "5755da79-b0c1-446e-a33c-97c43b0b5077" with alias "test_workspace loaded."
-2018-06-01 17:01:42,903	event_handler.py	74	__init__	DEBUG	Start EventHandler: event_handler
-2018-06-01 17:01:46,830	event_handler.py	231	copy_workspace	DEBUG	Could not add workspace with alias "test_workspace". Workspace already exists!
-2018-06-01 17:01:46,849	event_handler.py	1679	load_workspace	DEBUG	Trying to load new workspace "5755da79-b0c1-446e-a33c-97c43b0b5077" with alias "test_workspace"
-2018-06-01 17:01:47,110	event_handler.py	1697	load_workspace	INFO	Workspace "5755da79-b0c1-446e-a33c-97c43b0b5077" with alias "test_workspace loaded."
-2018-06-01 17:03:22,065	event_handler.py	1004	get_workspace	DEBUG	Getting workspace "5755da79-b0c1-446e-a33c-97c43b0b5077" with alias "None"
-2018-06-01 17:06:53,803	event_handler.py	1004	get_workspace	DEBUG	Getting workspace "5755da79-b0c1-446e-a33c-97c43b0b5077" with alias "None"
-2018-06-04 08:05:19,673	logger.py	85	add_log	DEBUG	
-2018-06-04 08:05:19,683	logger.py	86	add_log	DEBUG	========================================================================================================================
-2018-06-04 08:05:19,683	logger.py	87	add_log	DEBUG	### Log added for log_id "event_handler" at locaton: D:\Utveckling\git\ekostat_calculator\log\main_event_handler.log
-2018-06-04 08:05:19,683	logger.py	88	add_log	DEBUG	------------------------------------------------------------------------------------------------------------------------
-2018-06-04 08:05:19,683	event_handler.py	74	__init__	DEBUG	Start EventHandler: event_handler
-2018-06-04 08:05:24,633	event_handler.py	231	copy_workspace	DEBUG	Could not add workspace with alias "test_workspace". Workspace already exists!
-2018-06-04 08:05:24,653	event_handler.py	1674	load_workspace	DEBUG	Trying to load new workspace "5755da79-b0c1-446e-a33c-97c43b0b5077" with alias "test_workspace"
-2018-06-04 08:05:24,953	event_handler.py	1692	load_workspace	INFO	Workspace "5755da79-b0c1-446e-a33c-97c43b0b5077" with alias "test_workspace loaded."
-2018-06-04 08:16:32,292	event_handler.py	74	__init__	DEBUG	Start EventHandler: event_handler
-2018-06-04 08:16:36,929	event_handler.py	231	copy_workspace	DEBUG	Could not add workspace with alias "test_workspace". Workspace already exists!
-2018-06-04 08:16:36,949	event_handler.py	1674	load_workspace	DEBUG	Trying to load new workspace "5755da79-b0c1-446e-a33c-97c43b0b5077" with alias "test_workspace"
-2018-06-04 08:16:37,159	event_handler.py	1692	load_workspace	INFO	Workspace "5755da79-b0c1-446e-a33c-97c43b0b5077" with alias "test_workspace loaded."
-2018-06-04 08:21:04,982	logger.py	85	add_log	DEBUG	
-2018-06-04 08:21:04,982	logger.py	86	add_log	DEBUG	========================================================================================================================
-2018-06-04 08:21:04,982	logger.py	87	add_log	DEBUG	### Log added for log_id "event_handler" at locaton: D:\Utveckling\git\ekostat_calculator\log\main_event_handler.log
-2018-06-04 08:21:04,992	logger.py	88	add_log	DEBUG	------------------------------------------------------------------------------------------------------------------------
-2018-06-04 08:21:04,992	event_handler.py	74	__init__	DEBUG	Start EventHandler: event_handler
-2018-06-04 08:21:10,094	event_handler.py	231	copy_workspace	DEBUG	Could not add workspace with alias "test_workspace". Workspace already exists!
-2018-06-04 08:21:10,114	event_handler.py	1674	load_workspace	DEBUG	Trying to load new workspace "5755da79-b0c1-446e-a33c-97c43b0b5077" with alias "test_workspace"
-2018-06-04 08:21:10,424	event_handler.py	1692	load_workspace	INFO	Workspace "5755da79-b0c1-446e-a33c-97c43b0b5077" with alias "test_workspace loaded."
-2018-06-04 08:22:28,331	event_handler.py	74	__init__	DEBUG	Start EventHandler: event_handler
-2018-06-04 08:22:33,669	event_handler.py	231	copy_workspace	DEBUG	Could not add workspace with alias "test_workspace". Workspace already exists!
-2018-06-04 08:22:33,691	event_handler.py	1674	load_workspace	DEBUG	Trying to load new workspace "5755da79-b0c1-446e-a33c-97c43b0b5077" with alias "test_workspace"
-2018-06-04 08:22:34,002	event_handler.py	1692	load_workspace	INFO	Workspace "5755da79-b0c1-446e-a33c-97c43b0b5077" with alias "test_workspace loaded."
-2018-06-04 08:25:11,976	event_handler.py	74	__init__	DEBUG	Start EventHandler: event_handler
-2018-06-04 08:25:16,445	event_handler.py	231	copy_workspace	DEBUG	Could not add workspace with alias "test_workspace". Workspace already exists!
-2018-06-04 08:25:16,464	event_handler.py	1674	load_workspace	DEBUG	Trying to load new workspace "5755da79-b0c1-446e-a33c-97c43b0b5077" with alias "test_workspace"
-2018-06-04 08:25:16,732	event_handler.py	1692	load_workspace	INFO	Workspace "5755da79-b0c1-446e-a33c-97c43b0b5077" with alias "test_workspace loaded."
-2018-06-04 08:45:58,993	event_handler.py	74	__init__	DEBUG	Start EventHandler: event_handler
-2018-06-04 08:46:03,741	event_handler.py	231	copy_workspace	DEBUG	Could not add workspace with alias "test_workspace". Workspace already exists!
-2018-06-04 08:46:03,761	event_handler.py	1674	load_workspace	DEBUG	Trying to load new workspace "5755da79-b0c1-446e-a33c-97c43b0b5077" with alias "test_workspace"
-2018-06-04 08:46:04,038	event_handler.py	1692	load_workspace	INFO	Workspace "5755da79-b0c1-446e-a33c-97c43b0b5077" with alias "test_workspace loaded."
-2018-06-04 08:46:33,302	event_handler.py	74	__init__	DEBUG	Start EventHandler: event_handler
-2018-06-04 08:46:58,579	event_handler.py	74	__init__	DEBUG	Start EventHandler: event_handler
-2018-06-04 08:47:03,659	event_handler.py	231	copy_workspace	DEBUG	Could not add workspace with alias "test_workspace". Workspace already exists!
-2018-06-04 08:47:03,679	event_handler.py	1674	load_workspace	DEBUG	Trying to load new workspace "5755da79-b0c1-446e-a33c-97c43b0b5077" with alias "test_workspace"
-2018-06-04 08:47:03,918	event_handler.py	1692	load_workspace	INFO	Workspace "5755da79-b0c1-446e-a33c-97c43b0b5077" with alias "test_workspace loaded."
-2018-06-04 08:47:31,687	event_handler.py	74	__init__	DEBUG	Start EventHandler: event_handler
-2018-06-04 09:07:11,290	event_handler.py	74	__init__	DEBUG	Start EventHandler: event_handler
-2018-06-04 09:07:17,859	event_handler.py	231	copy_workspace	DEBUG	Could not add workspace with alias "test_workspace". Workspace already exists!
-2018-06-04 09:07:17,878	event_handler.py	1674	load_workspace	DEBUG	Trying to load new workspace "5755da79-b0c1-446e-a33c-97c43b0b5077" with alias "test_workspace"
-2018-06-04 09:07:18,263	event_handler.py	1692	load_workspace	INFO	Workspace "5755da79-b0c1-446e-a33c-97c43b0b5077" with alias "test_workspace loaded."
-2018-06-04 09:07:54,855	event_handler.py	74	__init__	DEBUG	Start EventHandler: event_handler
-2018-06-04 09:08:31,377	event_handler.py	74	__init__	DEBUG	Start EventHandler: event_handler
-2018-06-04 09:08:39,066	event_handler.py	231	copy_workspace	DEBUG	Could not add workspace with alias "test_workspace". Workspace already exists!
-2018-06-04 09:08:39,076	event_handler.py	74	__init__	DEBUG	Start EventHandler: event_handler
-2018-06-04 09:09:35,968	event_handler.py	74	__init__	DEBUG	Start EventHandler: event_handler
-2018-06-04 09:09:41,695	event_handler.py	231	copy_workspace	DEBUG	Could not add workspace with alias "test_workspace". Workspace already exists!
-2018-06-04 09:09:41,708	event_handler.py	74	__init__	DEBUG	Start EventHandler: event_handler
-2018-06-04 09:09:56,308	event_handler.py	74	__init__	DEBUG	Start EventHandler: event_handler
-2018-06-04 09:10:04,584	event_handler.py	231	copy_workspace	DEBUG	Could not add workspace with alias "test_workspace". Workspace already exists!
-2018-06-04 09:10:04,604	event_handler.py	74	__init__	DEBUG	Start EventHandler: event_handler
-2018-06-04 09:11:30,246	event_handler.py	74	__init__	DEBUG	Start EventHandler: event_handler
-2018-06-04 09:11:35,058	event_handler.py	231	copy_workspace	DEBUG	Could not add workspace with alias "test_workspace". Workspace already exists!
-2018-06-04 09:11:35,078	event_handler.py	1674	load_workspace	DEBUG	Trying to load new workspace "5755da79-b0c1-446e-a33c-97c43b0b5077" with alias "test_workspace"
-2018-06-04 09:11:35,409	event_handler.py	1692	load_workspace	INFO	Workspace "5755da79-b0c1-446e-a33c-97c43b0b5077" with alias "test_workspace loaded."
-2018-06-04 09:11:35,425	event_handler.py	74	__init__	DEBUG	Start EventHandler: event_handler
-2018-06-04 09:12:01,422	event_handler.py	74	__init__	DEBUG	Start EventHandler: event_handler
-2018-06-04 09:12:06,216	event_handler.py	231	copy_workspace	DEBUG	Could not add workspace with alias "test_workspace". Workspace already exists!
-2018-06-04 09:12:06,236	event_handler.py	1674	load_workspace	DEBUG	Trying to load new workspace "5755da79-b0c1-446e-a33c-97c43b0b5077" with alias "test_workspace"
-2018-06-04 09:12:06,509	event_handler.py	1692	load_workspace	INFO	Workspace "5755da79-b0c1-446e-a33c-97c43b0b5077" with alias "test_workspace loaded."
-2018-06-04 09:12:06,519	event_handler.py	74	__init__	DEBUG	Start EventHandler: event_handler
-2018-06-04 09:12:10,990	event_handler.py	1674	load_workspace	DEBUG	Trying to load new workspace "5755da79-b0c1-446e-a33c-97c43b0b5077" with alias "test_workspace"
-2018-06-04 09:12:11,244	event_handler.py	1692	load_workspace	INFO	Workspace "5755da79-b0c1-446e-a33c-97c43b0b5077" with alias "test_workspace loaded."
+2018-07-21 10:56:03,930	event_handler.py	2578	load_workspace	INFO	Workspace "5cf3719a-9d44-48e0-b228-496a6894d263" with alias "New test workspace loaded."
+2018-07-21 10:56:17,976	event_handler.py	51	f	DEBUG	Stop: "request_subset_get_data_filter". Time for running method was 14.320702314376831
+2018-07-21 10:59:42,867	event_handler.py	102	__init__	DEBUG	Start EventHandler: event_handler
+2018-07-21 10:59:42,867	event_handler.py	135	_load_mapping_objects	DEBUG	Loading mapping files from pickle file.
+2018-07-21 10:59:43,300	event_handler.py	113	__init__	DEBUG	Time for mapping: 0.43270301818847656
+2018-07-21 10:59:43,316	event_handler.py	118	__init__	DEBUG	Time for initiating EventHandler: 0.44830322265625
+2018-07-21 10:59:43,316	event_handler.py	47	f	DEBUG	Start: "request_subset_get_data_filter"
+2018-07-21 10:59:43,316	event_handler.py	2738	request_subset_get_data_filter	DEBUG	Start: request_subset_get_data_filter
+2018-07-21 10:59:43,331	event_handler.py	2562	load_workspace	DEBUG	Trying to load new workspace "5cf3719a-9d44-48e0-b228-496a6894d263" with alias "New test workspace"
+2018-07-21 10:59:43,593	event_handler.py	2580	load_workspace	INFO	Workspace "5cf3719a-9d44-48e0-b228-496a6894d263" with alias "New test workspace loaded."
+2018-07-21 10:59:45,146	event_handler.py	51	f	DEBUG	Stop: "request_subset_get_data_filter". Time for running method was 1.8304102420806885
+2018-07-21 11:00:07,557	event_handler.py	102	__init__	DEBUG	Start EventHandler: event_handler
+2018-07-21 11:00:07,559	event_handler.py	135	_load_mapping_objects	DEBUG	Loading mapping files from pickle file.
+2018-07-21 11:00:07,976	event_handler.py	113	__init__	DEBUG	Time for mapping: 0.4165031909942627
+2018-07-21 11:00:07,991	event_handler.py	118	__init__	DEBUG	Time for initiating EventHandler: 0.434603214263916
+2018-07-21 11:00:07,991	event_handler.py	47	f	DEBUG	Start: "request_subset_get_data_filter"
+2018-07-21 11:00:07,991	event_handler.py	2738	request_subset_get_data_filter	DEBUG	Start: request_subset_get_data_filter
+2018-07-21 11:00:08,023	event_handler.py	2562	load_workspace	DEBUG	Trying to load new workspace "5cf3719a-9d44-48e0-b228-496a6894d263" with alias "New test workspace"
+2018-07-21 11:00:08,272	event_handler.py	2580	load_workspace	INFO	Workspace "5cf3719a-9d44-48e0-b228-496a6894d263" with alias "New test workspace loaded."
+2018-07-21 11:00:09,905	event_handler.py	51	f	DEBUG	Stop: "request_subset_get_data_filter". Time for running method was 1.913712978363037
+2018-07-21 11:23:55,282	event_handler.py	102	__init__	DEBUG	Start EventHandler: event_handler
+2018-07-21 11:23:55,285	event_handler.py	135	_load_mapping_objects	DEBUG	Loading mapping files from pickle file.
+2018-07-21 11:23:55,838	event_handler.py	113	__init__	DEBUG	Time for mapping: 0.5529754161834717
+2018-07-21 11:23:55,856	event_handler.py	118	__init__	DEBUG	Time for initiating EventHandler: 0.5735747814178467
+2018-07-21 11:23:55,856	event_handler.py	47	f	DEBUG	Start: "request_subset_result_get"
+2018-07-21 11:23:55,876	event_handler.py	2562	load_workspace	DEBUG	Trying to load new workspace "5cf3719a-9d44-48e0-b228-496a6894d263" with alias "New test workspace"
+2018-07-21 11:23:56,230	event_handler.py	2580	load_workspace	INFO	Workspace "5cf3719a-9d44-48e0-b228-496a6894d263" with alias "New test workspace loaded."
+2018-07-21 11:24:48,966	event_handler.py	102	__init__	DEBUG	Start EventHandler: event_handler
+2018-07-21 11:24:48,966	event_handler.py	135	_load_mapping_objects	DEBUG	Loading mapping files from pickle file.
+2018-07-21 11:24:49,497	event_handler.py	113	__init__	DEBUG	Time for mapping: 0.5311558246612549
+2018-07-21 11:24:49,573	event_handler.py	118	__init__	DEBUG	Time for initiating EventHandler: 0.6067497730255127
+2018-07-21 11:24:49,573	event_handler.py	47	f	DEBUG	Start: "request_subset_result_get"
+2018-07-21 11:24:49,607	event_handler.py	2562	load_workspace	DEBUG	Trying to load new workspace "5cf3719a-9d44-48e0-b228-496a6894d263" with alias "New test workspace"
+2018-07-21 11:24:49,919	event_handler.py	2580	load_workspace	INFO	Workspace "5cf3719a-9d44-48e0-b228-496a6894d263" with alias "New test workspace loaded."
+2018-07-21 11:24:50,064	event_handler.py	51	f	DEBUG	Stop: "request_subset_result_get". Time for running method was 0.475161075592041
+2018-07-21 11:25:24,581	event_handler.py	102	__init__	DEBUG	Start EventHandler: event_handler
+2018-07-21 11:25:24,581	event_handler.py	135	_load_mapping_objects	DEBUG	Loading mapping files from pickle file.
+2018-07-21 11:25:25,060	event_handler.py	113	__init__	DEBUG	Time for mapping: 0.4787604808807373
+2018-07-21 11:25:25,063	event_handler.py	118	__init__	DEBUG	Time for initiating EventHandler: 0.4812602996826172
+2018-07-21 11:25:25,063	event_handler.py	47	f	DEBUG	Start: "request_subset_result_get"
+2018-07-21 11:25:25,083	event_handler.py	2562	load_workspace	DEBUG	Trying to load new workspace "5cf3719a-9d44-48e0-b228-496a6894d263" with alias "New test workspace"
+2018-07-21 11:25:25,435	event_handler.py	2580	load_workspace	INFO	Workspace "5cf3719a-9d44-48e0-b228-496a6894d263" with alias "New test workspace loaded."
+2018-07-21 11:25:25,563	event_handler.py	51	f	DEBUG	Stop: "request_subset_result_get". Time for running method was 0.4975590705871582
+2018-07-21 11:28:03,846	event_handler.py	102	__init__	DEBUG	Start EventHandler: event_handler
+2018-07-21 11:28:03,846	event_handler.py	135	_load_mapping_objects	DEBUG	Loading mapping files from pickle file.
+2018-07-21 11:28:04,323	event_handler.py	113	__init__	DEBUG	Time for mapping: 0.4774606227874756
+2018-07-21 11:28:04,341	event_handler.py	118	__init__	DEBUG	Time for initiating EventHandler: 0.4955589771270752
+2018-07-21 11:28:04,341	event_handler.py	47	f	DEBUG	Start: "request_subset_result_get"
+2018-07-21 11:28:04,359	event_handler.py	2562	load_workspace	DEBUG	Trying to load new workspace "5cf3719a-9d44-48e0-b228-496a6894d263" with alias "New test workspace"
+2018-07-21 11:28:04,642	event_handler.py	2580	load_workspace	INFO	Workspace "5cf3719a-9d44-48e0-b228-496a6894d263" with alias "New test workspace loaded."
+2018-07-21 11:28:04,660	event_handler.py	51	f	DEBUG	Stop: "request_subset_result_get". Time for running method was 0.3183739185333252
+2018-07-21 12:02:13,577	event_handler.py	102	__init__	DEBUG	Start EventHandler: event_handler
+2018-07-21 12:02:13,577	event_handler.py	142	_load_mapping_objects	DEBUG	Loading mapping files from original files.
+2018-07-21 12:03:09,654	event_handler.py	102	__init__	DEBUG	Start EventHandler: event_handler
+2018-07-21 12:03:09,654	event_handler.py	137	_load_mapping_objects	DEBUG	Loading mapping files from pickle file.
+2018-07-21 12:03:23,082	event_handler.py	102	__init__	DEBUG	Start EventHandler: event_handler
+2018-07-21 12:03:23,082	event_handler.py	142	_load_mapping_objects	DEBUG	Loading mapping files from original files.
+2018-07-21 12:06:29,146	event_handler.py	102	__init__	DEBUG	Start EventHandler: event_handler
+2018-07-21 12:06:29,146	event_handler.py	137	_load_mapping_objects	DEBUG	Loading mapping files from pickle file.
+2018-07-21 12:06:45,293	event_handler.py	102	__init__	DEBUG	Start EventHandler: event_handler
+2018-07-21 12:06:45,293	event_handler.py	142	_load_mapping_objects	DEBUG	Loading mapping files from original files.
+2018-07-21 12:07:29,747	logger.py	85	add_log	DEBUG	
+2018-07-21 12:07:29,747	logger.py	86	add_log	DEBUG	========================================================================================================================
+2018-07-21 12:07:29,747	logger.py	87	add_log	DEBUG	### Log added for log_id "event_handler" at locaton: ..\log\main_event_handler.log
+2018-07-21 12:07:29,750	logger.py	88	add_log	DEBUG	------------------------------------------------------------------------------------------------------------------------
+2018-07-21 12:07:29,750	event_handler.py	102	__init__	DEBUG	Start EventHandler: event_handler
+2018-07-21 12:07:29,750	event_handler.py	142	_load_mapping_objects	DEBUG	Loading mapping files from original files.
+2018-07-21 12:07:33,594	event_handler.py	113	__init__	DEBUG	Time for mapping: 3.844099998474121
+2018-07-21 12:07:33,610	event_handler.py	118	__init__	DEBUG	Time for initiating EventHandler: 3.8622000217437744
+2018-07-21 12:07:48,265	event_handler.py	102	__init__	DEBUG	Start EventHandler: event_handler
+2018-07-21 12:07:48,265	event_handler.py	142	_load_mapping_objects	DEBUG	Loading mapping files from original files.
+2018-07-21 12:07:52,006	event_handler.py	113	__init__	DEBUG	Time for mapping: 3.7411000728607178
+2018-07-21 12:07:52,021	event_handler.py	118	__init__	DEBUG	Time for initiating EventHandler: 3.756700277328491
+2018-07-21 12:08:15,014	event_handler.py	102	__init__	DEBUG	Start EventHandler: event_handler
+2018-07-21 12:08:15,014	event_handler.py	142	_load_mapping_objects	DEBUG	Loading mapping files from original files.
+2018-07-21 12:08:18,953	event_handler.py	113	__init__	DEBUG	Time for mapping: 3.939199924468994
+2018-07-21 12:08:18,969	event_handler.py	118	__init__	DEBUG	Time for initiating EventHandler: 3.9547996520996094
+2018-07-21 12:08:55,424	event_handler.py	102	__init__	DEBUG	Start EventHandler: event_handler
+2018-07-21 12:08:55,426	event_handler.py	137	_load_mapping_objects	DEBUG	Loading mapping files from pickle file.
+2018-07-21 12:08:55,932	event_handler.py	113	__init__	DEBUG	Time for mapping: 0.5055999755859375
+2018-07-21 12:08:55,934	event_handler.py	118	__init__	DEBUG	Time for initiating EventHandler: 0.5105998516082764
+2018-07-21 12:08:55,934	event_handler.py	47	f	DEBUG	Start: "request_subset_result_get"
+2018-07-21 12:08:55,957	event_handler.py	2565	load_workspace	DEBUG	Trying to load new workspace "5cf3719a-9d44-48e0-b228-496a6894d263" with alias "New test workspace"
+2018-07-21 12:08:56,355	event_handler.py	2583	load_workspace	INFO	Workspace "5cf3719a-9d44-48e0-b228-496a6894d263" with alias "New test workspace loaded."
+2018-07-21 12:08:56,380	event_handler.py	51	f	DEBUG	Stop: "request_subset_result_get". Time for running method was 0.44609999656677246
+2018-07-21 12:28:07,773	logger.py	85	add_log	DEBUG	
+2018-07-21 12:28:07,775	logger.py	86	add_log	DEBUG	========================================================================================================================
+2018-07-21 12:28:07,776	logger.py	87	add_log	DEBUG	### Log added for log_id "event_handler" at locaton: ..\log\main_event_handler.log
+2018-07-21 12:28:07,779	logger.py	88	add_log	DEBUG	------------------------------------------------------------------------------------------------------------------------
+2018-07-21 12:28:07,781	event_handler.py	102	__init__	DEBUG	Start EventHandler: event_handler
+2018-07-21 12:28:07,782	event_handler.py	137	_load_mapping_objects	DEBUG	Loading mapping files from pickle file.
+2018-07-21 12:28:08,157	event_handler.py	113	__init__	DEBUG	Time for mapping: 0.375
+2018-07-21 12:28:08,173	event_handler.py	118	__init__	DEBUG	Time for initiating EventHandler: 0.4006001949310303
+2018-07-21 12:28:08,173	event_handler.py	47	f	DEBUG	Start: "request_sharkweb_search"
+2018-07-21 12:28:12,190	event_handler.py	102	__init__	DEBUG	Start EventHandler: event_handler
+2018-07-21 12:28:12,190	event_handler.py	137	_load_mapping_objects	DEBUG	Loading mapping files from pickle file.
+2018-07-21 12:28:12,525	event_handler.py	113	__init__	DEBUG	Time for mapping: 0.3341999053955078
+2018-07-21 12:28:12,540	event_handler.py	118	__init__	DEBUG	Time for initiating EventHandler: 0.34980010986328125
+2018-07-21 12:28:12,541	event_handler.py	47	f	DEBUG	Start: "request_sharkweb_search"
+2018-07-21 12:28:30,110	logger.py	85	add_log	DEBUG	
+2018-07-21 12:28:30,111	logger.py	86	add_log	DEBUG	========================================================================================================================
+2018-07-21 12:28:30,113	logger.py	87	add_log	DEBUG	### Log added for log_id "event_handler" at locaton: ..\log\main_event_handler.log
+2018-07-21 12:28:30,115	logger.py	88	add_log	DEBUG	------------------------------------------------------------------------------------------------------------------------
+2018-07-21 12:28:30,117	event_handler.py	102	__init__	DEBUG	Start EventHandler: event_handler
+2018-07-21 12:28:30,120	event_handler.py	137	_load_mapping_objects	DEBUG	Loading mapping files from pickle file.
+2018-07-21 12:28:30,503	event_handler.py	113	__init__	DEBUG	Time for mapping: 0.3840000629425049
+2018-07-21 12:28:30,504	event_handler.py	118	__init__	DEBUG	Time for initiating EventHandler: 0.39499998092651367
+2018-07-21 12:28:30,504	event_handler.py	47	f	DEBUG	Start: "request_sharkweb_search"
+2018-07-21 12:28:45,898	event_handler.py	102	__init__	DEBUG	Start EventHandler: event_handler
+2018-07-21 12:28:45,900	event_handler.py	137	_load_mapping_objects	DEBUG	Loading mapping files from pickle file.
+2018-07-21 12:28:46,182	event_handler.py	113	__init__	DEBUG	Time for mapping: 0.2820000648498535
+2018-07-21 12:28:46,258	event_handler.py	118	__init__	DEBUG	Time for initiating EventHandler: 0.3599998950958252
+2018-07-21 12:28:46,259	event_handler.py	47	f	DEBUG	Start: "request_sharkweb_search"
+2018-07-21 12:28:50,527	event_handler.py	102	__init__	DEBUG	Start EventHandler: event_handler
+2018-07-21 12:28:50,527	event_handler.py	137	_load_mapping_objects	DEBUG	Loading mapping files from pickle file.
+2018-07-21 12:28:50,857	event_handler.py	113	__init__	DEBUG	Time for mapping: 0.32919979095458984
+2018-07-21 12:28:50,872	event_handler.py	118	__init__	DEBUG	Time for initiating EventHandler: 0.3447999954223633
+2018-07-21 12:28:50,872	event_handler.py	47	f	DEBUG	Start: "request_sharkweb_search"
+2018-07-21 14:53:48,874	logger.py	85	add_log	DEBUG	
+2018-07-21 14:53:48,874	logger.py	86	add_log	DEBUG	========================================================================================================================
+2018-07-21 14:53:48,874	logger.py	87	add_log	DEBUG	### Log added for log_id "event_handler" at locaton: ..\log\main_event_handler.log
+2018-07-21 14:53:48,874	logger.py	88	add_log	DEBUG	------------------------------------------------------------------------------------------------------------------------
+2018-07-21 14:53:48,874	event_handler.py	102	__init__	DEBUG	Start EventHandler: event_handler
+2018-07-21 14:53:48,874	event_handler.py	137	_load_mapping_objects	DEBUG	Loading mapping files from pickle file.
+2018-07-21 14:53:49,314	event_handler.py	113	__init__	DEBUG	Time for mapping: 0.43979811668395996
+2018-07-21 14:53:49,317	event_handler.py	118	__init__	DEBUG	Time for initiating EventHandler: 0.45839786529541016
+2018-07-21 14:53:49,323	event_handler.py	47	f	DEBUG	Start: "request_sharkweb_search"
+2018-07-21 14:54:14,615	event_handler.py	102	__init__	DEBUG	Start EventHandler: event_handler
+2018-07-21 14:54:14,615	event_handler.py	137	_load_mapping_objects	DEBUG	Loading mapping files from pickle file.
+2018-07-21 14:54:14,954	event_handler.py	113	__init__	DEBUG	Time for mapping: 0.33899831771850586
+2018-07-21 14:54:15,010	event_handler.py	118	__init__	DEBUG	Time for initiating EventHandler: 0.39499831199645996
+2018-07-21 14:54:15,012	event_handler.py	47	f	DEBUG	Start: "request_sharkweb_search"
+2018-07-21 14:54:30,765	logger.py	85	add_log	DEBUG	
+2018-07-21 14:54:30,765	logger.py	86	add_log	DEBUG	========================================================================================================================
+2018-07-21 14:54:30,765	logger.py	87	add_log	DEBUG	### Log added for log_id "event_handler" at locaton: ..\log\main_event_handler.log
+2018-07-21 14:54:30,765	logger.py	88	add_log	DEBUG	------------------------------------------------------------------------------------------------------------------------
+2018-07-21 14:54:30,765	event_handler.py	102	__init__	DEBUG	Start EventHandler: event_handler
+2018-07-21 14:54:30,765	event_handler.py	137	_load_mapping_objects	DEBUG	Loading mapping files from pickle file.
+2018-07-21 14:54:31,216	event_handler.py	113	__init__	DEBUG	Time for mapping: 0.4515984058380127
+2018-07-21 14:54:31,233	event_handler.py	118	__init__	DEBUG	Time for initiating EventHandler: 0.468198299407959
+2018-07-21 14:54:31,233	event_handler.py	47	f	DEBUG	Start: "request_sharkweb_search"
+2018-07-21 14:54:31,233	event_handler.py	51	f	DEBUG	Stop: "request_sharkweb_search". Time for running method was 0.0
+2018-07-21 15:04:55,008	logger.py	85	add_log	DEBUG	
+2018-07-21 15:04:55,024	logger.py	86	add_log	DEBUG	========================================================================================================================
+2018-07-21 15:04:55,024	logger.py	87	add_log	DEBUG	### Log added for log_id "event_handler" at locaton: ..\log\main_event_handler.log
+2018-07-21 15:04:55,024	logger.py	88	add_log	DEBUG	------------------------------------------------------------------------------------------------------------------------
+2018-07-21 15:04:55,024	event_handler.py	102	__init__	DEBUG	Start EventHandler: event_handler
+2018-07-21 15:04:55,024	event_handler.py	137	_load_mapping_objects	DEBUG	Loading mapping files from pickle file.
+2018-07-21 15:04:55,306	event_handler.py	113	__init__	DEBUG	Time for mapping: 0.281998872756958
+2018-07-21 15:04:55,357	event_handler.py	118	__init__	DEBUG	Time for initiating EventHandler: 0.3485987186431885
+2018-07-21 15:04:55,362	event_handler.py	47	f	DEBUG	Start: "request_sharkweb_search"
+2018-07-21 15:04:55,723	event_handler.py	51	f	DEBUG	Stop: "request_sharkweb_search". Time for running method was 0.35939812660217285
+2018-07-21 15:05:58,793	event_handler.py	102	__init__	DEBUG	Start EventHandler: event_handler
+2018-07-21 15:05:58,794	event_handler.py	137	_load_mapping_objects	DEBUG	Loading mapping files from pickle file.
+2018-07-21 15:05:59,080	event_handler.py	113	__init__	DEBUG	Time for mapping: 0.2869985103607178
+2018-07-21 15:05:59,145	event_handler.py	118	__init__	DEBUG	Time for initiating EventHandler: 0.3511984348297119
+2018-07-21 15:05:59,160	event_handler.py	47	f	DEBUG	Start: "request_sharkweb_search"
+2018-07-21 15:05:59,487	event_handler.py	51	f	DEBUG	Stop: "request_sharkweb_search". Time for running method was 0.3271982669830322
+2018-07-21 16:39:23,377	event_handler.py	104	__init__	DEBUG	Start EventHandler: event_handler
+2018-07-21 16:39:23,377	event_handler.py	139	_load_mapping_objects	DEBUG	Loading mapping files from pickle file.
+2018-07-21 16:39:23,801	event_handler.py	115	__init__	DEBUG	Time for mapping: 0.4239962100982666
+2018-07-21 16:39:23,802	event_handler.py	120	__init__	DEBUG	Time for initiating EventHandler: 0.42499613761901855
+2018-07-21 16:39:23,803	event_handler.py	47	f	DEBUG	Start: "request_workspace_add"
+2018-07-21 16:39:23,805	event_handler.py	3370	request_workspace_add	DEBUG	Start: request_workspace_add
+2018-07-21 16:39:23,827	event_handler.py	403	copy_workspace	DEBUG	Trying to copy workspace "default_workspace". Copy has alias "201807211639"
+2018-07-21 16:39:24,404	event_handler.py	2712	load_workspace	DEBUG	Trying to load new workspace "1f0aedc7-b5d1-4560-a828-315d544c9f6f" with alias "201807211639"
+2018-07-21 16:39:24,667	event_handler.py	2730	load_workspace	INFO	Workspace "1f0aedc7-b5d1-4560-a828-315d544c9f6f" with alias "201807211639 loaded."
+2018-07-21 16:39:24,667	event_handler.py	51	f	DEBUG	Stop: "request_workspace_add". Time for running method was 0.8619940280914307
+2018-07-21 16:39:25,668	event_handler.py	104	__init__	DEBUG	Start EventHandler: event_handler
+2018-07-21 16:39:25,668	event_handler.py	139	_load_mapping_objects	DEBUG	Loading mapping files from pickle file.
+2018-07-21 16:39:26,066	event_handler.py	115	__init__	DEBUG	Time for mapping: 0.39839649200439453
+2018-07-21 16:39:26,071	event_handler.py	120	__init__	DEBUG	Time for initiating EventHandler: 0.4033963680267334
+2018-07-21 16:39:26,073	event_handler.py	47	f	DEBUG	Start: "request_subset_add"
+2018-07-21 16:39:26,074	event_handler.py	2824	request_subset_add	DEBUG	Start: request_subset_add
+2018-07-21 16:39:26,100	event_handler.py	2712	load_workspace	DEBUG	Trying to load new workspace "1f0aedc7-b5d1-4560-a828-315d544c9f6f" with alias "201807211639"
+2018-07-21 16:39:26,347	event_handler.py	2730	load_workspace	INFO	Workspace "1f0aedc7-b5d1-4560-a828-315d544c9f6f" with alias "201807211639 loaded."
+2018-07-21 16:39:26,347	event_handler.py	367	copy_subset	DEBUG	Trying to copy subset "default_subset"
+2018-07-21 16:39:26,857	event_handler.py	51	f	DEBUG	Stop: "request_subset_add". Time for running method was 0.7825949192047119
+2018-07-21 16:40:31,322	logger.py	85	add_log	DEBUG	
+2018-07-21 16:40:31,325	logger.py	86	add_log	DEBUG	========================================================================================================================
+2018-07-21 16:40:31,327	logger.py	87	add_log	DEBUG	### Log added for log_id "event_handler" at locaton: ..\log\main_event_handler.log
+2018-07-21 16:40:31,329	logger.py	88	add_log	DEBUG	------------------------------------------------------------------------------------------------------------------------
+2018-07-21 16:40:31,332	event_handler.py	104	__init__	DEBUG	Start EventHandler: event_handler
+2018-07-21 16:40:31,334	event_handler.py	139	_load_mapping_objects	DEBUG	Loading mapping files from pickle file.
+2018-07-21 16:40:31,809	event_handler.py	115	__init__	DEBUG	Time for mapping: 0.47520017623901367
+2018-07-21 16:40:31,815	event_handler.py	120	__init__	DEBUG	Time for initiating EventHandler: 0.49320006370544434
+2018-07-21 16:40:31,818	event_handler.py	47	f	DEBUG	Start: "test_timer"
+2018-07-21 16:40:32,138	event_handler.py	51	f	DEBUG	Stop: "test_timer". Time for running method was 0.31840014457702637
+2018-07-21 16:40:51,324	event_handler.py	104	__init__	DEBUG	Start EventHandler: event_handler
+2018-07-21 16:40:51,326	event_handler.py	139	_load_mapping_objects	DEBUG	Loading mapping files from pickle file.
+2018-07-21 16:40:51,812	event_handler.py	115	__init__	DEBUG	Time for mapping: 0.48620009422302246
+2018-07-21 16:40:51,813	event_handler.py	120	__init__	DEBUG	Time for initiating EventHandler: 0.4892001152038574
+2018-07-21 16:41:42,118	event_handler.py	104	__init__	DEBUG	Start EventHandler: event_handler
+2018-07-21 16:41:42,120	event_handler.py	139	_load_mapping_objects	DEBUG	Loading mapping files from pickle file.
+2018-07-21 16:41:42,501	event_handler.py	115	__init__	DEBUG	Time for mapping: 0.38139986991882324
+2018-07-21 16:41:42,502	event_handler.py	120	__init__	DEBUG	Time for initiating EventHandler: 0.38540005683898926
+2018-07-21 16:42:45,607	event_handler.py	104	__init__	DEBUG	Start EventHandler: event_handler
+2018-07-21 16:42:45,607	event_handler.py	139	_load_mapping_objects	DEBUG	Loading mapping files from pickle file.
+2018-07-21 16:42:46,005	event_handler.py	115	__init__	DEBUG	Time for mapping: 0.39799976348876953
+2018-07-21 16:42:46,085	event_handler.py	120	__init__	DEBUG	Time for initiating EventHandler: 0.47819995880126953
+2018-07-21 16:43:52,019	logger.py	85	add_log	DEBUG	
+2018-07-21 16:43:52,019	logger.py	86	add_log	DEBUG	========================================================================================================================
+2018-07-21 16:43:52,019	logger.py	87	add_log	DEBUG	### Log added for log_id "event_handler" at locaton: ..\log\main_event_handler.log
+2018-07-21 16:43:52,019	logger.py	88	add_log	DEBUG	------------------------------------------------------------------------------------------------------------------------
+2018-07-21 16:43:52,035	event_handler.py	104	__init__	DEBUG	Start EventHandler: event_handler
+2018-07-21 16:43:52,035	event_handler.py	139	_load_mapping_objects	DEBUG	Loading mapping files from pickle file.
+2018-07-21 16:43:52,413	event_handler.py	115	__init__	DEBUG	Time for mapping: 0.37820005416870117
+2018-07-21 16:43:52,414	event_handler.py	120	__init__	DEBUG	Time for initiating EventHandler: 0.39479994773864746
+2018-07-21 16:43:52,417	event_handler.py	47	f	DEBUG	Start: "test_timer"
+2018-07-21 16:43:52,741	event_handler.py	51	f	DEBUG	Stop: "test_timer". Time for running method was 0.32180023193359375
+2018-07-21 16:46:50,817	event_handler.py	104	__init__	DEBUG	Start EventHandler: event_handler
+2018-07-21 16:46:50,818	event_handler.py	139	_load_mapping_objects	DEBUG	Loading mapping files from pickle file.
+2018-07-21 16:46:51,120	event_handler.py	115	__init__	DEBUG	Time for mapping: 0.3024001121520996
+2018-07-21 16:46:51,121	event_handler.py	120	__init__	DEBUG	Time for initiating EventHandler: 0.3043999671936035
+2018-07-21 16:48:56,504	logger.py	85	add_log	DEBUG	
+2018-07-21 16:48:56,504	logger.py	86	add_log	DEBUG	========================================================================================================================
+2018-07-21 16:48:56,504	logger.py	87	add_log	DEBUG	### Log added for log_id "event_handler" at locaton: ..\log\main_event_handler.log
+2018-07-21 16:48:56,504	logger.py	88	add_log	DEBUG	------------------------------------------------------------------------------------------------------------------------
+2018-07-21 16:48:56,504	event_handler.py	104	__init__	DEBUG	Start EventHandler: event_handler
+2018-07-21 16:48:56,504	event_handler.py	139	_load_mapping_objects	DEBUG	Loading mapping files from pickle file.
+2018-07-21 16:48:56,847	event_handler.py	115	__init__	DEBUG	Time for mapping: 0.3428001403808594
+2018-07-21 16:48:56,848	event_handler.py	120	__init__	DEBUG	Time for initiating EventHandler: 0.35940003395080566
+2018-07-21 16:48:56,848	event_handler.py	47	f	DEBUG	Start: "test_timer"
+2018-07-21 16:48:57,114	event_handler.py	51	f	DEBUG	Stop: "test_timer". Time for running method was 0.26600003242492676
+2018-07-21 16:49:03,096	event_handler.py	104	__init__	DEBUG	Start EventHandler: event_handler
+2018-07-21 16:49:03,112	event_handler.py	139	_load_mapping_objects	DEBUG	Loading mapping files from pickle file.
+2018-07-21 16:49:03,388	event_handler.py	115	__init__	DEBUG	Time for mapping: 0.27680015563964844
+2018-07-21 16:49:03,441	event_handler.py	120	__init__	DEBUG	Time for initiating EventHandler: 0.3453996181488037
+2018-07-21 16:50:56,032	logger.py	85	add_log	DEBUG	
+2018-07-21 16:50:56,032	logger.py	86	add_log	DEBUG	========================================================================================================================
+2018-07-21 16:50:56,032	logger.py	87	add_log	DEBUG	### Log added for log_id "event_handler" at locaton: ..\log\main_event_handler.log
+2018-07-21 16:50:56,032	logger.py	88	add_log	DEBUG	------------------------------------------------------------------------------------------------------------------------
+2018-07-21 16:50:56,032	event_handler.py	104	__init__	DEBUG	Start EventHandler: event_handler
+2018-07-21 16:50:56,032	event_handler.py	139	_load_mapping_objects	DEBUG	Loading mapping files from pickle file.
+2018-07-21 16:50:56,364	event_handler.py	115	__init__	DEBUG	Time for mapping: 0.3317997455596924
+2018-07-21 16:50:56,365	event_handler.py	120	__init__	DEBUG	Time for initiating EventHandler: 0.33280014991760254
+2018-07-21 16:50:56,365	event_handler.py	47	f	DEBUG	Start: "test_timer"
+2018-07-21 16:50:56,657	event_handler.py	51	f	DEBUG	Stop: "test_timer". Time for running method was 0.29179978370666504
+2018-07-21 16:51:02,792	event_handler.py	104	__init__	DEBUG	Start EventHandler: event_handler
+2018-07-21 16:51:02,792	event_handler.py	139	_load_mapping_objects	DEBUG	Loading mapping files from pickle file.
+2018-07-21 16:51:03,094	event_handler.py	115	__init__	DEBUG	Time for mapping: 0.30159997940063477
+2018-07-21 16:51:03,095	event_handler.py	120	__init__	DEBUG	Time for initiating EventHandler: 0.3025999069213867
+2018-07-21 16:51:03,096	event_handler.py	47	f	DEBUG	Start: "request_workspace_add"
+2018-07-21 16:51:03,099	event_handler.py	3427	request_workspace_add	DEBUG	Start: request_workspace_add
+2018-07-21 16:51:03,119	event_handler.py	403	copy_workspace	DEBUG	Trying to copy workspace "default_workspace". Copy has alias "201807211651"
+2018-07-21 16:51:03,577	event_handler.py	2715	load_workspace	DEBUG	Trying to load new workspace "f9218f1c-5e07-4f35-8795-d01a3275fc6b" with alias "201807211651"
+2018-07-21 16:51:03,791	event_handler.py	2733	load_workspace	INFO	Workspace "f9218f1c-5e07-4f35-8795-d01a3275fc6b" with alias "201807211651 loaded."
+2018-07-21 16:51:03,792	event_handler.py	51	f	DEBUG	Stop: "request_workspace_add". Time for running method was 0.6932001113891602
+2018-07-21 16:51:04,857	event_handler.py	104	__init__	DEBUG	Start EventHandler: event_handler
+2018-07-21 16:51:04,857	event_handler.py	139	_load_mapping_objects	DEBUG	Loading mapping files from pickle file.
+2018-07-21 16:51:05,158	event_handler.py	115	__init__	DEBUG	Time for mapping: 0.30119991302490234
+2018-07-21 16:51:05,159	event_handler.py	120	__init__	DEBUG	Time for initiating EventHandler: 0.3022000789642334
+2018-07-21 16:51:05,159	event_handler.py	47	f	DEBUG	Start: "request_subset_add"
+2018-07-21 16:51:05,159	event_handler.py	2881	request_subset_add	DEBUG	Start: request_subset_add
+2018-07-21 16:51:05,173	event_handler.py	2715	load_workspace	DEBUG	Trying to load new workspace "f9218f1c-5e07-4f35-8795-d01a3275fc6b" with alias "201807211651"
+2018-07-21 16:51:05,384	event_handler.py	2733	load_workspace	INFO	Workspace "f9218f1c-5e07-4f35-8795-d01a3275fc6b" with alias "201807211651 loaded."
+2018-07-21 16:51:05,384	event_handler.py	367	copy_subset	DEBUG	Trying to copy subset "default_subset"
+2018-07-21 16:51:05,784	event_handler.py	51	f	DEBUG	Stop: "request_subset_add". Time for running method was 0.6251997947692871
+2018-07-21 16:53:42,329	event_handler.py	104	__init__	DEBUG	Start EventHandler: event_handler
+2018-07-21 16:53:42,330	event_handler.py	139	_load_mapping_objects	DEBUG	Loading mapping files from pickle file.
+2018-07-21 16:53:42,678	event_handler.py	115	__init__	DEBUG	Time for mapping: 0.34819984436035156
+2018-07-21 16:53:42,679	event_handler.py	120	__init__	DEBUG	Time for initiating EventHandler: 0.3512001037597656
+2018-07-21 16:55:14,857	logger.py	85	add_log	DEBUG	
+2018-07-21 16:55:14,872	logger.py	86	add_log	DEBUG	========================================================================================================================
+2018-07-21 16:55:14,872	logger.py	87	add_log	DEBUG	### Log added for log_id "event_handler" at locaton: ..\log\main_event_handler.log
+2018-07-21 16:55:14,872	logger.py	88	add_log	DEBUG	------------------------------------------------------------------------------------------------------------------------
+2018-07-21 16:55:14,872	event_handler.py	104	__init__	DEBUG	Start EventHandler: event_handler
+2018-07-21 16:55:14,872	event_handler.py	139	_load_mapping_objects	DEBUG	Loading mapping files from pickle file.
+2018-07-21 16:55:15,204	event_handler.py	115	__init__	DEBUG	Time for mapping: 0.3317999839782715
+2018-07-21 16:55:15,220	event_handler.py	120	__init__	DEBUG	Time for initiating EventHandler: 0.36300015449523926
+2018-07-21 16:55:15,220	event_handler.py	47	f	DEBUG	Start: "test_timer"
+2018-07-21 16:55:15,500	event_handler.py	51	f	DEBUG	Stop: "test_timer". Time for running method was 0.27900004386901855
+2018-07-21 16:55:35,778	event_handler.py	104	__init__	DEBUG	Start EventHandler: event_handler
+2018-07-21 16:55:35,780	event_handler.py	139	_load_mapping_objects	DEBUG	Loading mapping files from pickle file.
+2018-07-21 16:55:36,120	event_handler.py	115	__init__	DEBUG	Time for mapping: 0.3416001796722412
+2018-07-21 16:55:36,121	event_handler.py	120	__init__	DEBUG	Time for initiating EventHandler: 0.3436000347137451
+2018-07-21 17:12:45,851	logger.py	85	add_log	DEBUG	
+2018-07-21 17:12:45,882	logger.py	86	add_log	DEBUG	========================================================================================================================
+2018-07-21 17:12:45,882	logger.py	87	add_log	DEBUG	### Log added for log_id "event_handler" at locaton: ..\log\main_event_handler.log
+2018-07-21 17:12:45,882	logger.py	88	add_log	DEBUG	------------------------------------------------------------------------------------------------------------------------
+2018-07-21 17:12:45,882	event_handler.py	104	__init__	DEBUG	Start EventHandler: event_handler
+2018-07-21 17:12:45,882	event_handler.py	139	_load_mapping_objects	DEBUG	Loading mapping files from pickle file.
+2018-07-21 17:12:46,288	event_handler.py	115	__init__	DEBUG	Time for mapping: 0.40599989891052246
+2018-07-21 17:12:46,304	event_handler.py	120	__init__	DEBUG	Time for initiating EventHandler: 0.4538002014160156
+2018-07-21 17:12:46,304	event_handler.py	47	f	DEBUG	Start: "test_timer"
+2018-07-21 17:12:46,695	event_handler.py	51	f	DEBUG	Stop: "test_timer". Time for running method was 0.39079976081848145
+2018-07-21 17:12:46,862	event_handler.py	104	__init__	DEBUG	Start EventHandler: event_handler
+2018-07-21 17:12:46,862	event_handler.py	139	_load_mapping_objects	DEBUG	Loading mapping files from pickle file.
+2018-07-21 17:12:47,220	event_handler.py	115	__init__	DEBUG	Time for mapping: 0.3580002784729004
+2018-07-21 17:12:47,239	event_handler.py	120	__init__	DEBUG	Time for initiating EventHandler: 0.3770003318786621
+2018-07-21 17:12:56,132	event_handler.py	104	__init__	DEBUG	Start EventHandler: event_handler
+2018-07-21 17:12:56,137	event_handler.py	139	_load_mapping_objects	DEBUG	Loading mapping files from pickle file.
+2018-07-21 17:12:56,586	event_handler.py	115	__init__	DEBUG	Time for mapping: 0.4498000144958496
+2018-07-21 17:12:56,587	event_handler.py	120	__init__	DEBUG	Time for initiating EventHandler: 0.4547998905181885
+2018-07-21 17:16:41,582	logger.py	85	add_log	DEBUG	
+2018-07-21 17:16:41,582	logger.py	86	add_log	DEBUG	========================================================================================================================
+2018-07-21 17:16:41,582	logger.py	87	add_log	DEBUG	### Log added for log_id "event_handler" at locaton: ..\log\main_event_handler.log
+2018-07-21 17:16:41,582	logger.py	88	add_log	DEBUG	------------------------------------------------------------------------------------------------------------------------
+2018-07-21 17:16:41,582	event_handler.py	104	__init__	DEBUG	Start EventHandler: event_handler
+2018-07-21 17:16:41,583	event_handler.py	144	_load_mapping_objects	DEBUG	Loading mapping files from original files.
+2018-07-21 17:18:43,861	event_handler.py	104	__init__	DEBUG	Start EventHandler: event_handler
+2018-07-21 17:18:43,863	event_handler.py	144	_load_mapping_objects	DEBUG	Loading mapping files from original files.
+2018-07-21 17:19:35,158	event_handler.py	104	__init__	DEBUG	Start EventHandler: event_handler
+2018-07-21 17:19:35,158	event_handler.py	144	_load_mapping_objects	DEBUG	Loading mapping files from original files.
+2018-07-21 17:19:38,335	event_handler.py	115	__init__	DEBUG	Time for mapping: 3.176999807357788
+2018-07-21 17:19:38,336	event_handler.py	120	__init__	DEBUG	Time for initiating EventHandler: 3.177999973297119
+2018-07-21 17:21:19,112	event_handler.py	104	__init__	DEBUG	Start EventHandler: event_handler
+2018-07-21 17:21:19,113	event_handler.py	139	_load_mapping_objects	DEBUG	Loading mapping files from pickle file.
+2018-07-21 17:21:19,463	event_handler.py	115	__init__	DEBUG	Time for mapping: 0.3493998050689697
+2018-07-21 17:21:19,478	event_handler.py	120	__init__	DEBUG	Time for initiating EventHandler: 0.3660001754760742
+2018-07-21 17:21:19,478	event_handler.py	47	f	DEBUG	Start: "request_workspace_add"
+2018-07-21 17:21:19,478	event_handler.py	3431	request_workspace_add	DEBUG	Start: request_workspace_add
+2018-07-21 17:21:19,479	event_handler.py	403	copy_workspace	DEBUG	Trying to copy workspace "default_workspace". Copy has alias "201807211721"
+2018-07-21 17:21:19,929	event_handler.py	2719	load_workspace	DEBUG	Trying to load new workspace "f61f6558-08a7-4b00-82ac-8fcb68ad0162" with alias "201807211721"
+2018-07-21 17:21:20,170	event_handler.py	2737	load_workspace	INFO	Workspace "f61f6558-08a7-4b00-82ac-8fcb68ad0162" with alias "201807211721 loaded."
+2018-07-21 17:21:20,170	event_handler.py	51	f	DEBUG	Stop: "request_workspace_add". Time for running method was 0.6919999122619629
+2018-07-21 17:21:21,188	event_handler.py	104	__init__	DEBUG	Start EventHandler: event_handler
+2018-07-21 17:21:21,188	event_handler.py	139	_load_mapping_objects	DEBUG	Loading mapping files from pickle file.
+2018-07-21 17:21:21,529	event_handler.py	115	__init__	DEBUG	Time for mapping: 0.34060025215148926
+2018-07-21 17:21:21,529	event_handler.py	120	__init__	DEBUG	Time for initiating EventHandler: 0.34060025215148926
+2018-07-21 17:21:21,530	event_handler.py	47	f	DEBUG	Start: "request_subset_add"
+2018-07-21 17:21:21,530	event_handler.py	2885	request_subset_add	DEBUG	Start: request_subset_add
+2018-07-21 17:21:21,534	event_handler.py	2719	load_workspace	DEBUG	Trying to load new workspace "f61f6558-08a7-4b00-82ac-8fcb68ad0162" with alias "201807211721"
+2018-07-21 17:21:21,735	event_handler.py	2737	load_workspace	INFO	Workspace "f61f6558-08a7-4b00-82ac-8fcb68ad0162" with alias "201807211721 loaded."
+2018-07-21 17:21:21,735	event_handler.py	367	copy_subset	DEBUG	Trying to copy subset "default_subset"
+2018-07-21 17:21:22,161	event_handler.py	51	f	DEBUG	Stop: "request_subset_add". Time for running method was 0.6313998699188232
+2018-07-21 17:24:48,848	logger.py	85	add_log	DEBUG	
+2018-07-21 17:24:48,850	logger.py	86	add_log	DEBUG	========================================================================================================================
+2018-07-21 17:24:48,851	logger.py	87	add_log	DEBUG	### Log added for log_id "event_handler" at locaton: ..\log\main_event_handler.log
+2018-07-21 17:24:48,853	logger.py	88	add_log	DEBUG	------------------------------------------------------------------------------------------------------------------------
+2018-07-21 17:24:48,854	event_handler.py	104	__init__	DEBUG	Start EventHandler: event_handler
+2018-07-21 17:24:48,856	event_handler.py	139	_load_mapping_objects	DEBUG	Loading mapping files from pickle file.
+2018-07-21 17:24:49,206	event_handler.py	115	__init__	DEBUG	Time for mapping: 0.350600004196167
+2018-07-21 17:24:49,207	event_handler.py	120	__init__	DEBUG	Time for initiating EventHandler: 0.3605997562408447
+2018-07-21 17:24:49,207	event_handler.py	47	f	DEBUG	Start: "test_timer"
+2018-07-21 17:24:49,494	event_handler.py	51	f	DEBUG	Stop: "test_timer". Time for running method was 0.28620004653930664
+2018-07-21 17:24:49,646	event_handler.py	104	__init__	DEBUG	Start EventHandler: event_handler
+2018-07-21 17:24:49,646	event_handler.py	139	_load_mapping_objects	DEBUG	Loading mapping files from pickle file.
+2018-07-21 17:24:49,966	event_handler.py	115	__init__	DEBUG	Time for mapping: 0.3206000328063965
+2018-07-21 17:24:49,966	event_handler.py	120	__init__	DEBUG	Time for initiating EventHandler: 0.3206000328063965
+2018-07-21 17:26:36,359	event_handler.py	104	__init__	DEBUG	Start EventHandler: event_handler
+2018-07-21 17:26:36,359	event_handler.py	139	_load_mapping_objects	DEBUG	Loading mapping files from pickle file.
+2018-07-21 17:26:36,662	event_handler.py	115	__init__	DEBUG	Time for mapping: 0.3025999069213867
+2018-07-21 17:26:36,677	event_handler.py	120	__init__	DEBUG	Time for initiating EventHandler: 0.31820011138916016
+2018-07-21 17:26:36,677	event_handler.py	47	f	DEBUG	Start: "request_workspace_add"
+2018-07-21 17:26:36,677	event_handler.py	3431	request_workspace_add	DEBUG	Start: request_workspace_add
+2018-07-21 17:26:36,678	event_handler.py	403	copy_workspace	DEBUG	Trying to copy workspace "default_workspace". Copy has alias "201807211726"
+2018-07-21 17:26:37,142	event_handler.py	2719	load_workspace	DEBUG	Trying to load new workspace "27689220-2492-4e82-86ca-152390a7be2b" with alias "201807211726"
+2018-07-21 17:26:37,343	event_handler.py	2737	load_workspace	INFO	Workspace "27689220-2492-4e82-86ca-152390a7be2b" with alias "201807211726 loaded."
+2018-07-21 17:26:37,343	event_handler.py	51	f	DEBUG	Stop: "request_workspace_add". Time for running method was 0.6653997898101807
+2018-07-21 17:26:37,510	event_handler.py	104	__init__	DEBUG	Start EventHandler: event_handler
+2018-07-21 17:26:37,512	event_handler.py	139	_load_mapping_objects	DEBUG	Loading mapping files from pickle file.
+2018-07-21 17:26:37,843	event_handler.py	115	__init__	DEBUG	Time for mapping: 0.33119988441467285
+2018-07-21 17:26:37,858	event_handler.py	120	__init__	DEBUG	Time for initiating EventHandler: 0.3487999439239502
+2018-07-21 17:26:37,858	event_handler.py	47	f	DEBUG	Start: "request_subset_add"
+2018-07-21 17:26:37,859	event_handler.py	2885	request_subset_add	DEBUG	Start: request_subset_add
+2018-07-21 17:26:37,863	event_handler.py	2719	load_workspace	DEBUG	Trying to load new workspace "27689220-2492-4e82-86ca-152390a7be2b" with alias "201807211726"
+2018-07-21 17:26:38,051	event_handler.py	2737	load_workspace	INFO	Workspace "27689220-2492-4e82-86ca-152390a7be2b" with alias "201807211726 loaded."
+2018-07-21 17:26:38,051	event_handler.py	367	copy_subset	DEBUG	Trying to copy subset "default_subset"
+2018-07-21 17:26:38,473	event_handler.py	51	f	DEBUG	Stop: "request_subset_add". Time for running method was 0.6138002872467041
+2018-07-21 17:26:51,538	event_handler.py	104	__init__	DEBUG	Start EventHandler: event_handler
+2018-07-21 17:26:51,540	event_handler.py	139	_load_mapping_objects	DEBUG	Loading mapping files from pickle file.
+2018-07-21 17:26:51,878	event_handler.py	115	__init__	DEBUG	Time for mapping: 0.33820009231567383
+2018-07-21 17:26:51,894	event_handler.py	120	__init__	DEBUG	Time for initiating EventHandler: 0.35580015182495117
+2018-07-21 17:29:16,458	event_handler.py	2719	load_workspace	DEBUG	Trying to load new workspace "27689220-2492-4e82-86ca-152390a7be2b" with alias "201807211726"
+2018-07-21 17:29:16,659	event_handler.py	2737	load_workspace	INFO	Workspace "27689220-2492-4e82-86ca-152390a7be2b" with alias "201807211726 loaded."
+2018-07-21 17:29:22,415	event_handler.py	2730	load_workspace	DEBUG	Workspace "27689220-2492-4e82-86ca-152390a7be2b" with alias "201807211726" is already loaded. Set reload=True if you want to reload the workspace.
+2018-07-21 17:29:51,663	event_handler.py	2730	load_workspace	DEBUG	Workspace "27689220-2492-4e82-86ca-152390a7be2b" with alias "201807211726" is already loaded. Set reload=True if you want to reload the workspace.
+2018-07-21 17:33:49,161	event_handler.py	104	__init__	DEBUG	Start EventHandler: event_handler
+2018-07-21 17:33:49,162	event_handler.py	139	_load_mapping_objects	DEBUG	Loading mapping files from pickle file.
+2018-07-21 17:33:49,548	event_handler.py	115	__init__	DEBUG	Time for mapping: 0.38599395751953125
+2018-07-21 17:33:49,549	event_handler.py	120	__init__	DEBUG	Time for initiating EventHandler: 0.38799405097961426
+2018-07-21 17:34:56,738	event_handler.py	2719	load_workspace	DEBUG	Trying to load new workspace "27689220-2492-4e82-86ca-152390a7be2b" with alias "201807211726"
+2018-07-21 17:34:56,970	event_handler.py	2737	load_workspace	INFO	Workspace "27689220-2492-4e82-86ca-152390a7be2b" with alias "201807211726 loaded."
+2018-07-21 17:38:38,911	event_handler.py	104	__init__	DEBUG	Start EventHandler: event_handler
+2018-07-21 17:38:38,913	event_handler.py	139	_load_mapping_objects	DEBUG	Loading mapping files from pickle file.
+2018-07-21 17:38:39,333	event_handler.py	115	__init__	DEBUG	Time for mapping: 0.42059874534606934
+2018-07-21 17:38:39,334	event_handler.py	120	__init__	DEBUG	Time for initiating EventHandler: 0.4235985279083252
+2018-07-21 17:38:39,334	event_handler.py	47	f	DEBUG	Start: "test_timer"
+2018-07-21 17:38:39,676	event_handler.py	51	f	DEBUG	Stop: "test_timer". Time for running method was 0.33879852294921875
+2018-07-21 17:39:43,052	event_handler.py	104	__init__	DEBUG	Start EventHandler: event_handler
+2018-07-21 17:39:43,053	event_handler.py	139	_load_mapping_objects	DEBUG	Loading mapping files from pickle file.
+2018-07-21 17:39:43,476	event_handler.py	115	__init__	DEBUG	Time for mapping: 0.42239809036254883
+2018-07-21 17:39:43,477	event_handler.py	120	__init__	DEBUG	Time for initiating EventHandler: 0.42439842224121094
+2018-07-21 17:40:05,619	event_handler.py	104	__init__	DEBUG	Start EventHandler: event_handler
+2018-07-21 17:40:05,621	event_handler.py	139	_load_mapping_objects	DEBUG	Loading mapping files from pickle file.
+2018-07-21 17:40:06,084	event_handler.py	115	__init__	DEBUG	Time for mapping: 0.4625983238220215
+2018-07-21 17:40:06,085	event_handler.py	120	__init__	DEBUG	Time for initiating EventHandler: 0.46559858322143555
+2018-07-21 17:40:22,894	event_handler.py	2720	load_workspace	DEBUG	Trying to load new workspace "27689220-2492-4e82-86ca-152390a7be2b" with alias "201807211726"
+2018-07-21 17:40:23,157	event_handler.py	2738	load_workspace	INFO	Workspace "27689220-2492-4e82-86ca-152390a7be2b" with alias "201807211726 loaded."
+2018-07-21 17:43:27,701	event_handler.py	104	__init__	DEBUG	Start EventHandler: event_handler
+2018-07-21 17:43:27,701	event_handler.py	144	_load_mapping_objects	DEBUG	Loading mapping files from original files.
+2018-07-21 17:43:31,812	event_handler.py	115	__init__	DEBUG	Time for mapping: 4.110974311828613
+2018-07-21 17:43:31,813	event_handler.py	120	__init__	DEBUG	Time for initiating EventHandler: 4.111974477767944
+2018-07-21 17:43:49,478	event_handler.py	2721	load_workspace	DEBUG	Trying to load new workspace "27689220-2492-4e82-86ca-152390a7be2b" with alias "201807211726"
+2018-07-21 17:43:49,738	event_handler.py	2739	load_workspace	INFO	Workspace "27689220-2492-4e82-86ca-152390a7be2b" with alias "201807211726 loaded."
+2018-07-21 17:45:43,668	event_handler.py	2732	load_workspace	DEBUG	Workspace "27689220-2492-4e82-86ca-152390a7be2b" with alias "201807211726" is already loaded. Set reload=True if you want to reload the workspace.
+2018-07-21 17:46:57,694	event_handler.py	2732	load_workspace	DEBUG	Workspace "27689220-2492-4e82-86ca-152390a7be2b" with alias "201807211726" is already loaded. Set reload=True if you want to reload the workspace.
+2018-07-21 17:47:31,923	event_handler.py	104	__init__	DEBUG	Start EventHandler: event_handler
+2018-07-21 17:47:31,924	event_handler.py	139	_load_mapping_objects	DEBUG	Loading mapping files from pickle file.
+2018-07-21 17:47:32,293	event_handler.py	115	__init__	DEBUG	Time for mapping: 0.3697998523712158
+2018-07-21 17:47:32,374	event_handler.py	120	__init__	DEBUG	Time for initiating EventHandler: 0.4514000415802002
+2018-07-21 17:48:16,259	event_handler.py	104	__init__	DEBUG	Start EventHandler: event_handler
+2018-07-21 17:48:16,261	event_handler.py	139	_load_mapping_objects	DEBUG	Loading mapping files from pickle file.
+2018-07-21 17:48:16,697	event_handler.py	115	__init__	DEBUG	Time for mapping: 0.4361999034881592
+2018-07-21 17:48:16,698	event_handler.py	120	__init__	DEBUG	Time for initiating EventHandler: 0.43919992446899414
+2018-07-21 17:49:38,554	event_handler.py	104	__init__	DEBUG	Start EventHandler: event_handler
+2018-07-21 17:49:38,556	event_handler.py	139	_load_mapping_objects	DEBUG	Loading mapping files from pickle file.
+2018-07-21 17:49:38,937	event_handler.py	115	__init__	DEBUG	Time for mapping: 0.38119983673095703
+2018-07-21 17:49:38,953	event_handler.py	120	__init__	DEBUG	Time for initiating EventHandler: 0.39980006217956543
+2018-07-21 17:49:56,065	event_handler.py	2721	load_workspace	DEBUG	Trying to load new workspace "27689220-2492-4e82-86ca-152390a7be2b" with alias "201807211726"
+2018-07-21 17:49:56,387	event_handler.py	2739	load_workspace	INFO	Workspace "27689220-2492-4e82-86ca-152390a7be2b" with alias "201807211726 loaded."
+2018-07-21 17:50:53,094	event_handler.py	104	__init__	DEBUG	Start EventHandler: event_handler
+2018-07-21 17:50:53,094	event_handler.py	139	_load_mapping_objects	DEBUG	Loading mapping files from pickle file.
+2018-07-21 17:50:53,414	event_handler.py	115	__init__	DEBUG	Time for mapping: 0.3205997943878174
+2018-07-21 17:50:53,430	event_handler.py	120	__init__	DEBUG	Time for initiating EventHandler: 0.3361999988555908
+2018-07-21 17:50:53,431	event_handler.py	2721	load_workspace	DEBUG	Trying to load new workspace "27689220-2492-4e82-86ca-152390a7be2b" with alias "201807211726"
+2018-07-21 17:50:53,669	event_handler.py	2739	load_workspace	INFO	Workspace "27689220-2492-4e82-86ca-152390a7be2b" with alias "201807211726 loaded."
+2018-07-21 17:51:45,136	event_handler.py	104	__init__	DEBUG	Start EventHandler: event_handler
+2018-07-21 17:51:45,137	event_handler.py	139	_load_mapping_objects	DEBUG	Loading mapping files from pickle file.
+2018-07-21 17:51:45,478	event_handler.py	115	__init__	DEBUG	Time for mapping: 0.3417999744415283
+2018-07-21 17:51:45,494	event_handler.py	120	__init__	DEBUG	Time for initiating EventHandler: 0.3584001064300537
+2018-07-21 17:51:45,495	event_handler.py	2721	load_workspace	DEBUG	Trying to load new workspace "27689220-2492-4e82-86ca-152390a7be2b" with alias "201807211726"
+2018-07-21 17:51:45,725	event_handler.py	2739	load_workspace	INFO	Workspace "27689220-2492-4e82-86ca-152390a7be2b" with alias "201807211726 loaded."

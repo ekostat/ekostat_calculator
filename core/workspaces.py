@@ -21,6 +21,8 @@ if current_path not in sys.path:
     sys.path.append(current_path)
 
 import core
+import core.exceptions as exceptions
+
 """
 Module contains classes related to the structure of a workspace-directory. 
 WorkSpace is the top class and contains one WorkStep-object representing step_0 
@@ -73,7 +75,7 @@ class WorkStep(object):
         self.load_all_files()
         self._check_folder_structure()        
         
-        print('Initiating WorkStep: {}'.format(self.paths['step_directory']))    
+#        print('Initiating WorkStep: {}'.format(self.paths['step_directory']))    
         
     #==========================================================================
     def _create_folder_structure(self):
@@ -121,7 +123,9 @@ class WorkStep(object):
         
     #==========================================================================
     def _initiate_attributes(self): 
-        """
+        """ 
+        Updated 20180720    by Magnus Wenzer
+        
         Load attributes 
         """
         self.data_filter = None
@@ -131,6 +135,8 @@ class WorkStep(object):
         self.allowed_data_filter_steps = ['step_0', 'step_1']
         self.allowed_indicator_settings_steps = ['step_2'] 
         self.allowe_indicator_calculation_steps = ['step_3']
+        
+        self.result_data = {}
         
         
     #==========================================================================
@@ -146,6 +152,7 @@ class WorkStep(object):
             return False
         return True
     
+    
     #==========================================================================
     def _set_directories(self):
         #set paths
@@ -156,6 +163,7 @@ class WorkStep(object):
         self.paths['directory_paths']['water_body_station_filter'] = self.paths['step_directory'] + '/settings/water_body'
         self.paths['directory_paths']['output'] = self.paths['step_directory'] + '/output'
         self.paths['directory_paths']['results'] = self.paths['step_directory'] + '/output/results'
+    
     
     #==========================================================================
     def add_files_from_workstep(self, step_object=None, overwrite=False):
@@ -313,17 +321,21 @@ class WorkStep(object):
             return False
         return self.data_filter
     
+    
     #==========================================================================
     def get_data_filter_info(self): 
         """
         Returns a dict with data filter names as keys. 
         Every key contains a list of the active filters. 
         """
-        self.data_filter.get_filter_info()
+        return self.data_filter.get_filter_info()
         
+    
+    #==========================================================================
     def get_water_body_filter_object(self):
         
         return self.water_body_filter
+    
     
     #==========================================================================
     def get_indicator_data_filter_settings(self, indicator): 
@@ -369,11 +381,12 @@ class WorkStep(object):
         """ 
         """
         Created:        20180215     by Lena
-        Last modified:  20180403     by Lena
+        Last modified:  20180720     by Magnus
         create dict containing indicator objects according to data availability or choice?
         Should be run accesed only for step 3.
         """
         if indicator_list == None:
+
             indicator_list = self.parent_workspace_object.available_indicators
             if indicator_list == None:
                 indicator_list = self.parent_workspace_object.get_available_indicators(subset=subset_unique_id, step=2)
@@ -384,10 +397,12 @@ class WorkStep(object):
             t_start = time.time()
             class_name = self.parent_workspace_object.mapping_objects['quality_element'].indicator_config.loc[indicator]['indicator_class']
             #print(class_name)
+
             try:
                 class_ = getattr(core, class_name)
             except AttributeError as e:
-                raise AttributeError('{}\nClass does not exist'.foramt(e))
+                raise exceptions.MissingClassForIndicator(message=indicator)
+#                raise AttributeError('{}\nClass does not exist'.foramt(e))
             #print(class_)
             #instance = class_()
             # add indicator objects to dictionary
@@ -409,19 +424,24 @@ class WorkStep(object):
         self.load_indicator_settings_filters()
         self.load_water_body_station_filter()
         
+        
     #==========================================================================
     def load_data_filter(self):
         """
         Load all settings files in the current WorkSpace filter folder... 
         """
+#        print('STEP = ', self.name)
         self.data_filter = core.DataFilter(self.paths['directory_paths']['data_filters'], 
                                            mapping_objects=self.mapping_objects) 
     
+    
+    #==========================================================================
     def load_water_body_filter_object(self):
         """
         Load filter object for waterbodies
         """
         self.water_body_filter = core.WaterBodyFilter()        
+        
         
     #==========================================================================
     def load_indicator_settings_filters(self): 
@@ -457,9 +477,40 @@ class WorkStep(object):
             
     #==========================================================================
     def load_water_body_station_filter(self):
-        print('load_water_body_station_filter')
+#        print('load_water_body_station_filter')
         self.water_body_station_filter = core.WaterBodyStationFilter(water_body_settings_directory=self.paths['directory_paths']['water_body_station_filter'], 
                                                                      mapping_objects=self.mapping_objects)
+        
+    
+    #==========================================================================
+    def load_results(self, force_loading_txt=False): 
+        """
+        Created 20180720    by Magnus 
+        
+        Loads all files in the results-directory. 
+        pkl-files are loaded by default if present. 
+        Override this by setting force_loading_txt == True 
+        Data is stored in self.result_data
+        """
+        self.result_data = {}
+        results_directory = self.paths.get('directory_paths', {}).get('results', None)
+        if results_directory == None:
+            raise exceptions.MissingPath
+        
+        if not os.path.exists(results_directory): 
+            raise exceptions.MissingDirectory
+        
+        file_list = os.listdir(results_directory) 
+        key_list = list(set([item.split('.')[0] for item in file_list]))
+        
+        save_load_object = core.SaveLoadDelete(results_directory)
+        
+        for key in key_list: 
+            df = save_load_object.load_df(key, load_txt=force_loading_txt)
+            self.result_data[key] = df
+        
+        if not self.result_data: 
+            exceptions.NoResultsInResultDirectory
         
     #==========================================================================
     def set_indicator_settings_data_filter(self, indicator=None, filter_settings=None):
@@ -572,7 +623,8 @@ class Subset(object):
                  mapping_objects={}, 
                  parent_workspace_object=None): 
         
-        assert all([alias, unique_id, parent_directory])
+        if not all([alias, unique_id, parent_directory]):
+            raise exceptions.MissingInputVariable
         
         self.alias = alias 
         self.unique_id = unique_id
@@ -581,9 +633,7 @@ class Subset(object):
         self.paths['subset_directory'] = '/'.join([self.paths['parent_directory'], self.unique_id]) 
         self.parent_workspace_object = parent_workspace_object
         self.paths['directory_path_log'] = self.parent_workspace_object.paths['directory_path_log']
-        
-        print('-'*100)
-        print('Initiating Subset: {}'.format(self.paths['subset_directory'])) 
+         
         
         self.mapping_objects = mapping_objects
         
@@ -602,6 +652,7 @@ class Subset(object):
         self.steps = {}
         self.available_indicators = []
             
+        
     #==========================================================================
     def _set_logger(self, log_id):
         # Add logger 
@@ -613,10 +664,12 @@ class Subset(object):
         self._logger = core.get_log(log_id)
 #        self._logger.debug('Logger set for subset {} with unique_id {}'.format(self. name, log_id))
     
+
     #==========================================================================
     def _set_loggers_to_steps(self): 
         for step in self.steps.keys():
             self.steps[step]._logger = self._logger
+    
     
     #==========================================================================
     def _change_ok(self): 
@@ -631,19 +684,21 @@ class Subset(object):
             return False
         return True
     
+    
     #==========================================================================
     def deprecated__load_subset_config(self): 
         self.config_object = Config(self.paths['subset_directory'] + '/subset.cfg')
+        
         
     #==========================================================================
     def _load_steps(self): 
         if not os.path.exists(self.paths['subset_directory']): 
             os.makedirs(self.paths['subset_directory'])
-        print('===')
-        print(self.paths['subset_directory'])
+            
         step_list = [item for item in os.listdir(self.paths['subset_directory']) if '.' not in item]
         for step in step_list:
             self._load_workstep(step)
+        
         
     #==========================================================================
     def deprecated__add_files_from_subset(self, subset_object=None, overwrite=False):
@@ -876,14 +931,10 @@ class WorkSpace(object):
                  mapping_objects=None, 
                  user_id=None): 
         
-#        print('='*30)
-#        print(alias)
-#        print(unique_id)
-#        print(parent_directory)
-#        print(user_id)
-#        print('-'*30)
-        assert all([alias, unique_id, parent_directory, user_id])
-        assert nr_subsets_allowed
+        if not all([alias, unique_id, parent_directory, user_id]):
+            raise exceptions.MissingInputVariable
+        if not nr_subsets_allowed:
+            raise exceptions.MissingInputVariable
         
 
         # Initiate paths 
@@ -919,7 +970,7 @@ class WorkSpace(object):
     #==========================================================================
     def _add_subset(self, unique_id=None): 
         assert unique_id, 'No subset name given!'
-        print('===', unique_id)
+        
         if unique_id == 'default_subset':
             alias = 'default_subset' 
         else:
@@ -930,9 +981,7 @@ class WorkSpace(object):
         
         
         self.paths['directory_path_subsets'][unique_id] = self.paths['directory_path_subset'] + '/{}'.format(unique_id)
-        print('!!!', alias)
-        print('!!!', unique_id)
-        print('!!!', self.paths['directory_path_subset'])
+
         self.subset_dict[unique_id] = Subset(alias=alias, 
                                              unique_id=unique_id, 
                                              parent_directory=self.paths['directory_path_subset'],
@@ -958,12 +1007,6 @@ class WorkSpace(object):
         # Setup default paths 
         self.paths['mapping_directory'] = '/'.join([self.paths['resource_directory'], 'mappings'])
         self.paths['workspace_directory'] = '/'.join([self.paths['parent_directory'], self.unique_id]) 
-
-        print('')
-        print('='*100)
-        print('Initiating WorkSpace: {}'.format(self.paths['workspace_directory'])) 
-        print('Parent directory is: {}'.format(self.paths['parent_directory']))
-        print('Resource directory is: {}'.format(self.paths['resource_directory']))
         
         self.paths['directory_path_subsets'] = {}
         self.paths['directory_path_input_data'] = self.paths['workspace_directory'] + '/input_data'
@@ -972,6 +1015,11 @@ class WorkSpace(object):
         self.paths['directory_path_subset'] = self.paths['workspace_directory'] + '/subsets'
         self.paths['directory_path_log'] = self.paths['workspace_directory'] + '/log'
         
+        # Create directories if not present 
+        for key, p in self.paths.items():
+            if type(p) == str:
+                if not os.path.exists(p):
+                    os.makedirs(p)
         # Step
         self.step_0 = None 
         
@@ -1030,16 +1078,16 @@ class WorkSpace(object):
         Adds paths and objects for the workspace. 
         """        
         # Create input data folder if non existing
-        if not os.path.exists(self.paths['directory_path_raw_data']):
-            os.makedirs(self.paths['directory_path_raw_data'])
-            
-        # Create raw data folder if non existing
-        if not os.path.exists(self.paths['directory_path_input_data']):
-            os.makedirs(self.paths['directory_path_input_data'])
-        
-        # Initiate one subset as default 
-        if not os.path.exists(self.paths['directory_path_subset']):
-            os.makedirs(self.paths['directory_path_subset'])
+#        if not os.path.exists(self.paths['directory_path_raw_data']):
+#            os.makedirs(self.paths['directory_path_raw_data'])
+#            
+#        # Create raw data folder if non existing
+#        if not os.path.exists(self.paths['directory_path_input_data']):
+#            os.makedirs(self.paths['directory_path_input_data'])
+#        
+#        # Initiate one subset as default 
+#        if not os.path.exists(self.paths['directory_path_subset']):
+#            os.makedirs(self.paths['directory_path_subset'])
             
         subsets = [item for item in os.listdir(self.paths['directory_path_subset']) if '.' not in item]
 #        self._logger.debug('subsets', subsets)
@@ -1072,7 +1120,7 @@ class WorkSpace(object):
     def import_file(self, file_path=None, data_type=None, status=0, force=True):
         """
         Created     ????????    by 
-        Updated     20180424    by Magnus Wenzer
+        Updated     20180721    by Magnus Wenzer
         
         Imports a data file to the raw_data directory in the workspace. 
         Also adds information to the datatype_settings-object.
@@ -1083,21 +1131,29 @@ class WorkSpace(object):
         
                    # Not able to load data into default workspace
         if not self._change_ok():
+            print('1')
             return False
         
         if not os.path.exists(file_path): 
-            if force:
-                os.remove(file_path)
-            else:
-                return False 
+            print('2')
+            return False 
         
         # Copy file
-        target_file_path = '/'.join([self.paths['directory_path_raw_data'], os.path.basename(file_path)])
+        target_file_path = '/'.join([self.paths['directory_path_raw_data'], os.path.basename(file_path)]) 
+        if os.path.exists(target_file_path): 
+            if force:
+                os.remove(target_file_path)
+            else:
+                print('3')
+                return False
+        
+        
         shutil.copyfile(file_path, target_file_path)
         
         # Add file to dtype_settings file
 #        self.dtype_settings.add_file(file_path=file_path, data_type=data_type)
         self.datatype_settings.add_file(file_name=file_path, data_type=data_type, status=status)
+
 
     #==========================================================================
     def import_default_data(self, force=True):
@@ -1161,7 +1217,32 @@ class WorkSpace(object):
     
     
     #==========================================================================
-    def apply_data_filter(self, step=None, subset=None):
+    def apply_data_filter(self, step=None, subset=None, apply_all_previous_filters=True):
+        """
+        Created     20180608    by Magnus Wenzer
+        Updated     
+        
+        Applies the data filter on the step given. 
+        If apply_all_previous_filters==True all previous steps are applied before. 
+        """
+        if apply_all_previous_filters:
+            step = get_step_name(step)
+            step_nr = int(step[-1])
+            
+            for s in range(step_nr+1):
+#                print('s', s)
+#                self._apply_data_filter(step=s, subset=subset)
+                if s==0:
+                    self._apply_data_filter(step=s) # Cannot handle subset if step=0
+                else:
+                    self._apply_data_filter(step=s, subset=subset)
+                
+        else:
+            self._apply_data_filter(step=step, subset=subset)
+        
+
+    #==========================================================================
+    def _apply_data_filter(self, step=None, subset=None):
         """
         Created     ????????    by Magnus Wenzer
         Updated     20180220    by Magnus Wenzer
@@ -1199,20 +1280,19 @@ class WorkSpace(object):
         all_ok = self.index_handler.add_filter(filter_object=filter_object, step=step, subset=subset)
         return all_ok
         
+    
     #==========================================================================
     def apply_indicator_data_filter(self, subset='', indicator='', step='step_2', water_body_list = False):
         """
         Created     ????????    by Magnus Wenzer
-        Updated     20180319    by Magnus Wenzer
+        Updated     20180719    by Magnus Wenzer
         
-        Applies indicator data filter to the index handler. Step 2. 
+        Applies indicator data filter to the index handler. Step 2. Applies filter for all water_bodies. 
         
         Input:                
             subset:         subset to apply filter on. 
             
             indicator:      name of indicator to apply as a string, ex. "din_winter" 
-            
-            water_body:     water body in question, given av VISS_EU_CD string
             
             step:           step_2 is default
         
@@ -1225,12 +1305,17 @@ class WorkSpace(object):
             water_body_list = self.get_filtered_data(step=step, subset=subset).VISS_EU_CD.unique()
         if not len(water_body_list):
             #raise Error?
-            print('no waterbodies in filtered data')
+            self._logger.warning('No waterbodies in filtered data')
             return False
         
         if subset not in self.get_subset_list(): 
             self._logger.debug('Provided subset "{}" not in subset list'.format(subset))
             return False
+        
+        # Find first year of filtered data from step 1. 
+        kwargs = {}
+        df = self.get_filtered_data(subset=subset, step=1)
+        kwargs['remove_data_before_year'] = min(df['MYEAR'])
         
         # Get subset and step objects
         step = get_step_name(step)
@@ -1245,12 +1330,12 @@ class WorkSpace(object):
         #set filters for all indicator in all waterbodies and if no key in boolean dict for waterbody add waterbody filter
         for water_body in dict.fromkeys(water_body_list, True):
             if step not in self.index_handler.booleans['step_0'][subset]['step_1'].keys():
-                self.index_handler.add_filter(filter_object=water_body_filter_object, step=step, subset=subset, water_body = water_body)
+                self.index_handler.add_filter(filter_object=water_body_filter_object, step=step, subset=subset, water_body=water_body, **kwargs)
             
             if water_body not in self.index_handler.booleans['step_0'][subset]['step_1']['step_2'].keys():
-                self.index_handler.add_filter(filter_object=water_body_filter_object, step=step, subset=subset, water_body = water_body)
+                self.index_handler.add_filter(filter_object=water_body_filter_object, step=step, subset=subset, water_body=water_body, **kwargs)
                 
-            self.index_handler.add_filter(filter_object=settings_filter_object, step=step, subset=subset, indicator=indicator, water_body = water_body)
+            self.index_handler.add_filter(filter_object=settings_filter_object, step=step, subset=subset, indicator=indicator, water_body=water_body, **kwargs)
         
         time_total = time.time() - t_tot
         print('-'*50)
@@ -1288,22 +1373,23 @@ class WorkSpace(object):
         
         if not source_uuid:
             self._logger.warning('No subset named "{}"'.format(source_uuid))
-            return False
+            raise exceptions.SubsetNotFound
+#            return False
         
         # Add UUID for workspace in uuid_mapping 
         target_uuid = self.uuid_mapping.add_new_uuid_for_alias(target_alias)
-        print('target_uuid', target_uuid)
         if not target_uuid:
             self._logger.debug('Could not add subset with alias "{}". Subset already exists!'.format(target_alias)) 
-            return False
+            raise exceptions.SubsetAlreadyExists
+#            return False
 
         # Copy all directories and files in subset 
         source_subset_path = '/'.join([self.paths['directory_path_subset'], source_uuid])
         target_subset_path = '/'.join([self.paths['directory_path_subset'], target_uuid]) 
         
         
-        print('source_subset_path:', source_subset_path)
-        print('target_subset_path:', target_subset_path)
+#        print('source_subset_path:', source_subset_path)
+#        print('target_subset_path:', target_subset_path)
         
         # Copy files
         shutil.copytree(source_subset_path, target_subset_path)
@@ -1366,6 +1452,32 @@ class WorkSpace(object):
             self.subset_dict[subset].print_all_paths()
         
         self._logger.debug('')
+        
+    #==========================================================================
+    def data_is_loaded(self):
+        """
+        Created     20180720    by Magnus Wenzer
+        Updated    
+        
+        Returns True if data is loaded else return False. 
+        """
+        if len(self.data_handler.all_data):
+            return True
+        else:
+            return False
+        
+        
+    #==========================================================================
+    def data_is_available(self):
+        """
+        Created     20180720    by Magnus Wenzer
+        Updated    
+        
+        Returns True if data is available else return False. 
+        """
+        return self.datatype_settings.has_data() 
+        
+        
         
     #==========================================================================
     def delete_all_export_data(self):
@@ -1477,10 +1589,11 @@ class WorkSpace(object):
         else:
             self._logger.warning('Removing subset "{}" with alias "{}".'.format(unique_id, alias)) 
             self.uuid_mapping.set_status(unique_id, 'deleted')
+            self.uuid_mapping.set_inactive(unique_id)
         
-        return {'alias': alias, 
-                'uuid': unique_id} 
+        return True
             
+    
     #==========================================================================
     def get_all_file_paths_in_workspace(self): 
         """
@@ -1492,6 +1605,7 @@ class WorkSpace(object):
                     file_list.append('/'.join([root, f]).replace('\\', '/'))
         return sorted(file_list)
     
+    
     #==========================================================================
     def get_all_file_paths_in_input_data(self):
         file_list = []
@@ -1500,20 +1614,24 @@ class WorkSpace(object):
                     file_list.append('/'.join([root, f]).replace('\\', '/'))
         return sorted(file_list)
     
+    
     #==========================================================================
     def get_alias_for_unique_id(self, unique_id):
         return self.uuid_mapping.get_alias(unique_id=unique_id)
+    
     
     #==========================================================================
     def get_unique_id_for_alias(self, alias):
         return self.uuid_mapping.get_uuid(alias)
         
+    
     #==========================================================================
     def get_data_filter_object(self, step=None, subset=None): 
         step_object = self.get_step_object(step=step, subset=subset)
         if not step_object:
             return False
         return step_object.get_data_filter_object()
+    
     
     #==========================================================================
     def get_water_body_station_filter(self, subset=None): 
@@ -1523,12 +1641,14 @@ class WorkSpace(object):
             return False
         return step_object.get_water_body_station_filter()
         
+    
     #==========================================================================
     def get_data_filter_info(self, step=None, subset=None): 
         data_filter = self.get_data_filter_object(step=step, subset=subset)
         if not data_filter:
             return False
         return data_filter.get_filter_info()
+    
     
     #==========================================================================
     def get_filtered_data(self, step=None, subset=None, water_body=None, indicator=None): 
@@ -1538,14 +1658,15 @@ class WorkSpace(object):
         step = get_step_name(step)
         if step == None:
             return False
-        self._logger.debug('STEP: {}'.format(step))
+#        self._logger.debug('STEP: {}'.format(step))
         return self.index_handler.get_filtered_data(subset=subset, step=step, water_body=water_body, indicator=indicator)
+    
     
     #==========================================================================
     def get_available_indicators(self, subset=None, step=None):
         """
         Created:        201801   by Lena
-        Last modified:  20180406 by Lena
+        Last modified:  20180718 by Magnus
         """
         #TODO: nu kollar den bara om det finns fler än 0 rader med givna parameters för indikatorn, kanske öka den gräns?
         try:
@@ -1556,21 +1677,30 @@ class WorkSpace(object):
             return False
         
         available_indicators = []
+        filtered_data = self.get_filtered_data(step = step, subset = subset) # MW 20180718 Moved here
         #for indicator, parameters in self.cfg['indicators'].items():
         for indicator, row in self.mapping_objects['quality_element'].indicator_config.iterrows():
             parameter_list = [item.strip() for item in row['parameters'].split(', ')]
             #parameter_list = [item.strip() for item in parameters[0].split(', ')]
-            print('subset', subset)
+#            print('subset', subset)
             try:
                 #TODO: speed of pd.to_numeric?
-                self.get_filtered_data(step = step, subset = subset)[parameter_list].apply(pd.to_numeric).dropna(thresh = len(parameter_list))
-                available_indicators.append(indicator)
+#                filtered_data = self.get_filtered_data(step = step, subset = subset) # MW 20180718 Moved outside loop
+                if len(filtered_data): # 20180611, MW added if 
+#                    self.filtered_data = filtered_data
+                    filtered_data[parameter_list].apply(pd.to_numeric).dropna(thresh = len(parameter_list)) # MW 20180718 
+#                    self.get_filtered_data(step = step, subset = subset)[parameter_list].apply(pd.to_numeric).dropna(thresh = len(parameter_list))
+                    available_indicators.append(indicator)
             except KeyError as e:
                 #TODO: lägga till felmeddelande i log?
-                print(e)
+#                print('7777777', indicator)
+#                print(e)
+                pass
+
         
         self.available_indicators = available_indicators            
         return available_indicators
+
 
     #==========================================================================
     def get_indicator(self, subset = None, indicator = None):  
@@ -1583,15 +1713,18 @@ class WorkSpace(object):
         step_object = self.get_step_object(step = 3, subset = subset)
         return step_object.indicator_objects.get(indicator, False)
         
+    
     #==========================================================================
     def get_indicator_settings_data_filter_object(self, subset=None, step='step_2', indicator=None): 
         step_object = self.get_step_object(subset=subset, step=step)
         return step_object.get_indicator_data_filter_settings(indicator)
     
+    
     #==========================================================================
     def get_indicator_settings_name_list(self, subset=None, step=2):
         step_object = self.get_step_object(subset=subset, step=step)
         return sorted(step_object.indicator_settings.keys())
+    
     
     #==========================================================================
     def get_subset_list(self):
@@ -1600,9 +1733,11 @@ class WorkSpace(object):
         """
         return sorted(self.subset_dict.keys())
     
+    
     #==========================================================================
     def get_subset_object(self, subset): 
         return self.subset_dict.get(subset, False)
+    
     
     #==========================================================================
     def get_step_object(self, step=None, subset=None): 
@@ -1610,99 +1745,42 @@ class WorkSpace(object):
         if step == 'step_0':
             return self.step_0
         
-        assert all([subset, step])
+        if not all([subset, step]):
+            raise exceptions.MissingInputVariable
         
         sub = self.get_subset_object(subset)
         if not sub:
             return False
         return sub.get_step_object(step)
     
+    
     #==========================================================================
     def get_step_0_object(self): 
         return self.step_0 
+    
     
     #==========================================================================
     def get_step_1_object(self, subset): 
         return self.subset_dict[subset].get_step_1_object()
     
+    
     #==========================================================================
     def get_step_2_object(self, subset): 
         return self.subset_dict[subset].get_step_2_object()
+    
     
     #==========================================================================
     def initiate_quality_factors(self, ):
         self.quality_factor_NP = core.QualityFactorNP()
         
        
-    #==========================================================================
-    def old_load_all_data(self, force=False): 
-        """ 
-        Created:        2017        by Johannes Johansson (?)
-        Last modified:  20180409    by Lena Viktorsson
-        Loads all data from the input_data/raw_data-directory belonging to the workspace. 
-        """
-        output_directory = self.paths['directory_path_input_data'] + '/exports/' 
-        """
-        # The input_data directory is given to DataHandler during initation. 
-        # If no directory is given use the default directory! 
-        # This has to be done in physicalchemical, zoobenthos etc. 
-        """
-#        # TODO:  User should maybe choose which files to load in dtype_settings?
-
-        if os.path.isfile(self.paths['directory_path_input_data'] + '/exports/all_data.txt'): 
-            print(self.paths['directory_path_input_data'])
-            data_loaded, filetype = self.data_handler.load_all_datatxt()
-            print(data_loaded, filetype)
-            if data_loaded:
-                self._logger.debug('data has been loaded from existing all_data.{} file.'.format(filetype))
-            else:
-                self._logger.debug('all_data.txt already loaded, delete it if you want to re-create it.')
-        else:
-                                                                 
-            if not self.dtype_settings.has_info:
-                self._logger.debug('No info found')
-                return False
-            data_loaded = False
-            for file_path, data_type in self.dtype_settings.get_active_paths_with_data_type(): 
-                
-                if data_type == 'phyche':
-                    self.data_handler.physicalchemical.load_source(file_path=file_path, raw_data_copy=True)
-                    data_loaded = True
-                    self.data_handler.physicalchemical.save_data_as_txt(directory=output_directory, prefix=u'Column_format') 
-                    
-                elif data_type == 'phyche_model':
-                    self.data_handler.physicalchemicalmodel.load_source(file_path=file_path, raw_data_copy=True)
-                    data_loaded = True
-                    self.data_handler.physicalchemicalmodel.save_data_as_txt(directory=output_directory, prefix=u'Column_format')
-    
-                elif data_type== 'zooben':
-                    self.data_handler.zoobenthos.load_source(file_path=file_path,
-                                                             raw_data_copy=True)
-                    data_loaded = True
-                    self.data_handler.zoobenthos.save_data_as_txt(directory=output_directory, prefix=u'Column_format')
-                elif data_type == 'pp':
-                    self.data_handler.phytoplankton.load_source(file_path=file_path,
-                                                             raw_data_copy=True)
-                    data_loaded = True
-                    self.data_handler.phytoplankton.save_data_as_txt(directory=output_directory, prefix=u'Column_format')
-                elif data_type == 'chlorophyll':
-                    self.data_handler.chlorophyll.load_source(file_path=file_path,
-                                                             raw_data_copy=True)
-                    data_loaded = True
-                    self.data_handler.chlorophyll.save_data_as_txt(directory=output_directory, prefix=u'Column_format')   
-                else:
-                    self._logger.debug('could not read {} from raw_data directory. Check data type'.format(os.path.basename(file_path)))
-    
-            
-            self.data_handler.merge_all_data(save_to_txt=True)
-            
-        return data_loaded
     
     #==========================================================================
     def load_all_data(self, force=False): 
         """ 
         Created:        2017        by Johannes Johansson (?)
-        Last modified:  20180530    by Magnus Wenzer
+        Last modified:  20180721    by Magnus Wenzer
+        
         Loads all data from the input_data/raw_data-directory belonging to the workspace. 
         Only loads data if any file in dtype_settings in set to not "loaded" (loaded=0)
         """
@@ -1721,12 +1799,13 @@ class WorkSpace(object):
             return False
             
         if self.datatype_settings.no_data_to_load():
-            print('self.datatype_settings.no_data_to_load():')
+#            print('self.datatype_settings.no_data_to_load():')
             self._logger.debug('No data to load.')
-            self.delete_all_export_data()
+            self.delete_all_export_data() 
+            return True
             
         elif not self.datatype_settings.all_data_is_loaded(): 
-            print('self.datatype_settings.all_data_is_loaded():')
+#            print('self.datatype_settings.all_data_is_loaded():')
             self._logger.debug('All selected data in (status 1 in datatype_settings.txt) is not loaded.')
             # dtype_settings is not matching the loaded files so we delete all_data (if excisting)
             self.delete_alldata_export()
@@ -1738,18 +1817,28 @@ class WorkSpace(object):
                 self._logger.debug('Data has been loaded from existing all_data.{} file.'.format(filetype))
             else:
                 self._logger.debug("""all_data.txt already loaded and datatype_settings.txt is unchanged. 
-                                   Call "delete_alldata_export" and load data again to reload all_data""")
+                                   Call "delete_alldata_export" and load data again to reload all_data""") 
+                data_loaded = True
         else:
-            print('load_all_data - else')
+#            print('load_all_data - else')
             # We know that all_data does not excist. We only want to load the datatypes that has been changed and then merge data. 
             # Loop and load datatypes (if loaded are decided in method load datatype_data)
             for datatype in self.datatype_settings.get_datatype_list():
-                print('datatype', datatype)
-                print('force', force)
-                self.load_datatype_data(datatype=datatype, force=force)
-            
-            self.data_handler.merge_all_data(save_to_txt=False) 
+#                print('-- datatype', datatype)
+#                print('-- force', force)
+                self.load_datatype_data(datatype=datatype, force=force) 
+            try: 
+                self.data_handler.merge_all_data(save_to_txt=False) 
+            except exceptions.MissingKeyInData as e:
+                file_name = e.message.split(':')[-1].strip()
+                self.datatype_settings.set_key(file_name=file_name, key='status', value=0)
+                self.datatype_settings.set_key(file_name=file_name, key='loaded', value=0)
+                raise exceptions.MissingKeyInData
             data_loaded = True
+            
+        if not len(self.data_handler.all_data):
+            raise exceptions.UnableToLoadData(message='No data is loaded!', 
+                                              code='no_data_loaded')
             
         return data_loaded
         
@@ -1804,6 +1893,21 @@ class WorkSpace(object):
     
     
     #==========================================================================
+    def reset_data_filter(self, subset_uuid=None, step=1, include_filters=[], exclude_filters=[]): 
+        """
+        Created 20180608    by Magnus Wenzer 
+        Updated 
+        
+        Resets the data filter in include_filters and exclude_filters. 
+        If arguments=True all filters in group are reset. 
+        """ 
+        data_filter_object = self.get_data_filter_object(step=step, subset=subset_uuid)
+        data_filter_object.reset_filter(include_filters=include_filters, 
+                                        exclude_filters=exclude_filters)
+        
+        
+        
+    #==========================================================================
     def set_data_filter(self, step='', subset='', filter_type='', filter_name='', data=None, save_filter=True, append_items=False): 
         """
         Sets/changes the data_filter of the given filter_name. 
@@ -1840,6 +1944,7 @@ class WorkSpace(object):
                                             data=data, 
                                             save_filter=save_filter, 
                                             append_items=append_items)
+        
         
     #==========================================================================
     def set_indicator_settings_data_filter(self, indicator=None, filter_settings=None, subset=None, step=2): 

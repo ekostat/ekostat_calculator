@@ -1,25 +1,26 @@
-internal_name	display_en
-nutrients	Nutrients
-nutrients	Nutrients
-nutrients	Nutrients
-nutrients	Nutrients
-nutrients	Nutrients
-nutrients	Nutrients
-bottom fauna	Bottom fauna
-macroalgae and macrophytes	Macroalgae and macrophytes
-oxygen balance	Oxygen balance
-phytoplankton	Phytoplankton
-phytoplankton	Phytoplankton
-secchi depth	Secchi depth
-din_winter	DIN winter
-ntot_summer	Ntot summer
-ntot_winter	Ntot winter
-dip_winter	DIP winter
-ptot_summer	Ptot summer
-ptot_winter	Ptot winter
-bqi	BQI
-msmdi	MSMDI
-o2	Oxygen
-biov	Biovolume
-chl	Chlorophyll
-secchi 	Secchi 
+internal_name	display_en	unit
+nutrients	Nutrients	
+bottom fauna	Bottom fauna	
+macroalgae and macrophytes	Macroalgae and macrophytes	
+oxygen balance	Oxygen balance	
+phytoplankton	Phytoplankton	
+phytoplankton	Phytoplankton	
+secchi depth	Secchi depth	
+din_winter	DIN winter	
+ntot_summer	Ntot summer	
+ntot_winter	Ntot winter	
+dip_winter	DIP winter	
+ptot_summer	Ptot summer	
+ptot_winter	Ptot winter 	
+oxygen	Oxygen	
+bqi	BQI	
+msmdi	MSMDI	
+o2	Oxygen	
+biov	Biovolume	
+chl	Chlorophyll	
+secchi	Secchi 	
+DEPH_INTERVAL	Depth interval 	m
+MONTH_LIST	Month interval 	
+MONTHDAY_INTERVAL	Season 	
+MIN_NR_YEARS	Minimum number of years	years
+BOTTOM_WATER	Bottom layer	m

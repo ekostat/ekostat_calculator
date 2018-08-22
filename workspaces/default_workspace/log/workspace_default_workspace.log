@@ -257,3 +257,7 @@
 2018-06-01 13:28:46,312	workspaces.py	825	_change_ok	DEBUG	Not allowed to change default workspace!
 2018-06-01 13:33:26,093	workspaces.py	825	_change_ok	DEBUG	Not allowed to change default workspace!
 2018-06-01 13:34:23,960	workspaces.py	825	_change_ok	DEBUG	Not allowed to change default workspace!
+2018-07-20 08:42:18,692	logger.py	85	add_log	DEBUG	
+2018-07-20 08:42:18,694	logger.py	86	add_log	DEBUG	========================================================================================================================
+2018-07-20 08:42:18,695	logger.py	87	add_log	DEBUG	### Log added for log_id "default_workspace" at locaton: ..\workspaces\default_workspace\log\workspace_default_workspace.log
+2018-07-20 08:42:18,697	logger.py	88	add_log	DEBUG	------------------------------------------------------------------------------------------------------------------------

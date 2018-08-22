@@ -642,14 +642,15 @@ class IndicatorBase(object):
     def get_water_body_indicator_df(self, water_body = None):
         """
         Created:        20180215     by Lena
-        Last modified:  20180328     by Lena
+        Last modified:  20180720     by Magnus
         df should contains:
             - all needed columns from get_filtered_data
             - referencevalues
         TODO: add other info needed for indicator functions
         """
         
-        return self.water_body_indicator_df[water_body]
+        return self.water_body_indicator_df.get(water_body, False)
+#        return self.water_body_indicator_df[water_body]
 
     #==========================================================================
     def get_status_from_global_EQR(self, global_EQR):
@@ -1676,6 +1677,7 @@ class IndicatorOxygen(IndicatorBase):
 #            global_EQR, status = self._calculate_global_EQR_from_indicator_value(value = conc_value, water_body = water_body)
 #        else:
 #            print('deficiency type {}'.format(deficiency_type))
+
         
 #        print(deficiency_type)
 #        print('test1_result {}'.format(self.test1_result))

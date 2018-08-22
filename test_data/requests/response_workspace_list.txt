@@ -7,12 +7,27 @@
         },
         {
             "alias": "New test workspace",
-            "workspace_uuid": "448eeeaa-50db-4873-a840-61bfba3cc719",
+            "workspace_uuid": "327bbf4f-f367-4d85-80f4-e9151907eadc",
             "status": "editable"
         },
         {
             "alias": "Another test workspace",
-            "workspace_uuid": "9ffb9abd-ce92-47ff-abaa-d98a81284ebd",
+            "workspace_uuid": "949e90f9-288b-4868-b9d0-c9cda8683e56",
+            "status": "editable"
+        },
+        {
+            "alias": "201807201008",
+            "workspace_uuid": "439ac943-45b3-4f0e-95e9-12a118533091",
+            "status": "editable"
+        },
+        {
+            "alias": "201807201020",
+            "workspace_uuid": "d5d666cd-cb8d-47af-ad5c-898da4fe32ff",
+            "status": "editable"
+        },
+        {
+            "alias": "201807201053",
+            "workspace_uuid": "cf55a9ab-8775-42c0-ad8a-9d8f4837d194",
             "status": "editable"
         }
     ]

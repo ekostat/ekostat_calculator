@@ -10,9 +10,96 @@ import core
 import os, sys
 import uuid
 import re
+import codecs 
+
+import core.exceptions as exceptions
 
 #if current_path not in sys.path: 
 #    sys.path.append(os.path.dirname(os.path.realpath(__file__)))
+
+
+"""
+#==============================================================================
+#==============================================================================
+""" 
+class IndSetHomPar(dict):
+    """
+    Created     20180612    by Magnus Wenzer
+    
+    """ 
+    def __init__(self, file_path): 
+        self.file_path = file_path 
+        self.load_file() 
+        
+    def load_file(self): 
+        with codecs.open(self.file_path) as fid: 
+            for line in fid:
+                line = line.strip()
+                if line:
+                    indicator, par = [item.strip() for item in line.split('\t')]
+                    if not self.get(indicator):
+                        self[indicator] = []
+                    self[indicator].append(par) 
+                    
+                    
+"""
+#==============================================================================
+#==============================================================================
+""" 
+class SimpleList(list):
+    """
+    Created     20180616    by Magnus Wenzer
+
+    """ 
+    def __init__(self, file_path): 
+        self.file_path = file_path 
+        self.load_file() 
+        
+    def load_file(self, **kwargs): 
+        """
+        Updated     20180721    by Magnus Wenzer
+        """
+        with codecs.open(self.file_path, **kwargs) as fid: 
+            for line in fid:
+                line = line.strip()
+                if line:
+                    self.append(line)
+                    
+
+"""
+#==============================================================================
+#==============================================================================
+""" 
+class MappingObject(list):
+    """
+    Created     20180721    by Magnus Wenzer
+
+    """ 
+    def __init__(self, file_path, **kwargs): 
+        self.file_path = file_path 
+        
+        read_options = {'sep': '\t', 
+                        'encoding': 'cp1252'}
+        
+        read_options.update(kwargs)
+        self.df = pd.read_csv(self.file_path, **read_options)
+                    
+        
+    #==========================================================================
+    def get_mapping(self, item=None, from_column=None, to_column=None):
+        """
+        Created     20180721    by Magnus Wenzer
+            
+        """ 
+        result = self.df.loc[self.df[from_column]==item, to_column]
+        if len(result):
+            return result.values[0]
+        return item
+    
+    
+    #==========================================================================
+    def get_list(self, key):
+        return list(self.df[key].values)
 
 
 """
@@ -85,15 +172,18 @@ class AttributeDict(dict):
         for i, value in enumerate(df[first_key].values):
             setattr(self, value.strip(), {key: df[key][i] for key in key_list})
                     
+            
     #==========================================================================
     def keys(self):
         return list(self.__dict__.keys())
         
+    
     #==========================================================================
     def get(self, key):
         """
         Updated     20180613    by Lena Viktorsson
         """ 
+
         if key.lower() in self.keys():
             return getattr(self, key.lower())
         
@@ -112,6 +202,7 @@ class AttributeDict(dict):
 #            except:
 #                return getattr(self, 'SE' + key)
     
+    
     #==========================================================================
     def _get_array_from_df(self, df=None, key_a=u'', key_b=u'', match=None):
 #        print(type(df[key_a]), type(df[key_a][0]))
@@ -119,17 +210,21 @@ class AttributeDict(dict):
         return [x.strip() for x in df[key_a].loc[df[key_b].isin([match])].values]
 #        return [x.strip() for x in df[key_a].iloc[np.where(df[key_b]==match)].values]
         
+
     #==========================================================================
     def get_list(self, key_list):
         return list(self.get(key) for key in key_list)
+    
         
     #==========================================================================
     def get_mapping_dict(self, key_list):
         return dict(list((key, self.get(key)) for key in key_list))
         
+    
     #==========================================================================
     def __getitem__(self, key):
         return getattr(self, key)
+    
     
     #==========================================================================
 
@@ -355,6 +450,7 @@ class WaterBody(AttributeDict):
                                       second_key=u'TYPE_AREA_SUFFIX',
                                       match_key=self.column_name['water_body']['internal'])
         
+        
     #==========================================================================
     def get_water_bodies_in_type_area(self, type_area):
         return self.get(type_area)
@@ -365,6 +461,10 @@ class WaterBody(AttributeDict):
         """
         Created     20180315    by Magnus Wenzer
         Updated     20180315    by Magnus Wenzer
+        
+        kwargs examples: 
+            water_body='SE633710-200500'
+            type_area='1n'
         """
         area = list(kwargs.keys())[0]
         value = kwargs[area]
@@ -482,19 +582,23 @@ class WaterBody(AttributeDict):
             return None
         
         if include_suffix:
+
             string = self.get(wb).get(key_number) + '-' + \
                      self.get(wb).get(key_suffix)
             return string.strip('-')
         else:
             return self.get(wb).get(key_number)
     
+    
     #==========================================================================
     def get_type_area_suffix_for_water_body(self, wb, key=u'TYPE_AREA_SUFFIX'):
         return self.get(wb).get(key)
     
+    
     #==========================================================================
     def get_eu_cd_for_water_body(self, wb, key=u'EU_CD'):
         return self.get(wb).get(key)
+
 
     #==========================================================================
     def get_basin_number_for_water_body(self, wb, key=u'BASIN_NUMBER'):
@@ -503,14 +607,17 @@ class WaterBody(AttributeDict):
         """
         return self.get(wb).get(key)
         
+    
     #==========================================================================
     def get_hid_for_water_body(self, wb, key=u'HID'):
         return self.get(wb).get(key)
         
+    
     #==========================================================================
     def get_url_viss_for_water_body(self, wb, key=u'URL_VISS'):
         return self.get(wb).get(key)
         
+    
     #==========================================================================
     def get_center_position_for_water_body(self, wb, key_lat=u'CENTER_LAT', 
                                            key_lon=u'CENTER_LON'):
@@ -796,6 +903,20 @@ class DataTypeMapping(object):
     
     
     #==========================================================================
+    def has_data(self): 
+        """
+        Created     20180422    by Magnus Wenzer 
+        
+        Returns True if data is available else return False. 
+        """
+        if len(self.df):
+            return True
+        else:
+            return False
+        
+    
+    
+    #==========================================================================
     def get_datatype_list(self):
         return self.datatype_list
     
@@ -852,7 +973,6 @@ class DataTypeMapping(object):
         
         Resets the "loaded" column. This will trigger the data to be reloaded. 
         """
-        self.df['loaded'] = 0
         self.df['loaded'] = 0
         self._save_file()
     
@@ -961,6 +1081,25 @@ class DataTypeMapping(object):
         self._save_file()
         return True
         
+
+    #==========================================================================
+    def set_key(self, file_name=None, key=None, value=None): 
+        """
+        Set the key for file_name to value.
+        
+        Created     20180720    by Magnus Wenzer
+        
+        """
+        assert all([file_name, key, value != None])
+        try:
+            value = int(value)
+        except:
+            pass
+        self.df.loc[self.df['filename']==file_name, key] = value
+        # Save file 
+        self._save_file()
+        return True
+    
         
     #==========================================================================
     def add_file(self, file_name=None, data_type=None, status=0): 
@@ -1051,8 +1190,15 @@ class UUIDmapping():
     
     #==========================================================================
     def get_alias(self, unique_id=None, status=None): 
+        """
+        Updated 20180530    by Magnus
+        
+        """
         if not status:
             status = self.all_status
+        
+        if 'default_' in unique_id:
+            return unique_id
         
 #        print('status', status)
 #        print('status', status)
@@ -1132,6 +1278,21 @@ class UUIDmapping():
     
     
     #==========================================================================
+    def is_present(self, unique_id): 
+        """
+        Created     20180719    by Magnus Wenzer
+        Updated 
+        
+        Returns True if unique_id is present else return False. 
+        """ 
+        if unique_id in self.df['uuid'].values:
+            return True
+        else:
+            return False
+        
+        
+    
+    #==========================================================================
     def permanent_delete_uuid(self, unique_id):
         self.df = self.df.drop(self.df.index[self.df['uuid']==unique_id])
         self._save_file()
@@ -1140,17 +1301,17 @@ class UUIDmapping():
     #==========================================================================
     def set_active(self, unique_id): 
         self.df.loc[self.df['uuid']==unique_id, 'active'] = 'True'
-        
+        self._save_file()
     
     #==========================================================================
     def set_inactive(self, unique_id): 
         self.df.loc[self.df['uuid']==unique_id, 'active'] = 'False'
-        
+        self._save_file()
         
     #==========================================================================
     def set_alias(self, unique_id, new_alias): 
         if new_alias in self.get_alias_list_for_user():
-            return False
+            raise exceptions.WorkspaceAlreadyExists('when trying to set new alias')
         self.df.loc[self.df['uuid']==unique_id, 'alias'] = new_alias
         self._save_file()
         return True

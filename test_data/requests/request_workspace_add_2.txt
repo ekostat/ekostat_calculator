@@ -1,4 +1,4 @@
 {
     "alias": "Another test workspace",
-    "source": "default_workspace"
+    "workspace_uuid": "default_workspace"
 }

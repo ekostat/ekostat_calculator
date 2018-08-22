@@ -19,6 +19,7 @@ import pickle
 import utils
 import core
 
+import core.exceptions as exceptions
 """
 #==============================================================================
 #==============================================================================
@@ -894,6 +895,7 @@ class DataHandler(object):
         self.parameter_mapping = core.ParameterMapping()
         self.parameter_mapping.load_mapping_settings(file_path=file_path)
 
+
     #==========================================================================
     def add_df(self, pd_df, data_type, add_columns=False):
         """
@@ -909,6 +911,7 @@ class DataHandler(object):
             self.row_data = self.row_data.append(pd_df, ignore_index=True).fillna('')
 #        print(self.data_phys_chem.head())
     
+
     #==========================================================================
 #    def add_txt_file(self, file_path, data_type): 
     def add_txt_file(self, file_path, data_type, map_object=None): 
@@ -920,6 +923,7 @@ class DataHandler(object):
 
         self.add_df(data, data_type)
         # TODO: Check if all is ok
+        
         
 #    #==========================================================================
 #    def filter_data(self, data_filter_object, filter_id=''):
@@ -976,7 +980,7 @@ class DataHandler(object):
     def merge_all_data(self, save_to_txt=False):
         """
         Created:        
-        Last modified:  20180525    by Magnus Wenzer
+        Last modified:  20180720    by Magnus Wenzer
         
         - Do we need to sort all_data ?
         - Merge data from different datatypes for the same visit ?
@@ -990,6 +994,7 @@ class DataHandler(object):
                          u'phytoplankton',
                          u'zoobenthos']
         
+        mandatory_keys = ['DEPH']
         for dtype in all_datatypes:
             if dtype in dir(self):
                 #print(dtype)
@@ -997,8 +1002,11 @@ class DataHandler(object):
                 # Appends dataframes from each datatype into one dataframe
                 for source in self.__getattribute__(dtype).column_data:
                     # Each datatype might have multiple sources..
-                    # .column_data is a dict
-                    self.all_data = self.all_data.append(self.__getattribute__(dtype).column_data[source], 
+                    # .column_data is a dict 
+                    df = self.__getattribute__(dtype).column_data[source] 
+                    if not all([item in df.columns for item in mandatory_keys]):
+                        raise exceptions.MissingKeyInData(message=os.path.basename(source))
+                    self.all_data = self.all_data.append(df, 
                                                          ignore_index=True)
         if not len(self.all_data):
             print('No data available after "merge_all_data"!')
@@ -1154,6 +1162,9 @@ class DataHandler(object):
                         
                 
                 self.all_data['STIME'] = self.all_data['STIME'].apply(lambda x: x[:5])
+                
+                # MW 20180716 
+                self.all_data['date'] = pd.to_datetime(self.all_data['SDATE'])
                 
 #                # MW: Add visit_id
 #                self.all_data['visit_id_str'] = self.all_data['LATIT_DD'] + \
