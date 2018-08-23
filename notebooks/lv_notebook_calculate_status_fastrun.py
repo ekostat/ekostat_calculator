@@ -102,16 +102,14 @@ print(workspace_uuid)
 
 # In[9]:
 
-
-workspace_alias = ekos.get_alias_for_unique_id(workspace_unique_id = workspace_uuid)
+# ÄNDRAT
+workspace_alias = ekos.get_alias_for_unique_id(workspace_uuid = workspace_uuid)
 
 
 # In[10]:
 
 
 ekos.load_workspace(unique_id = workspace_uuid)
-# Här får jag ofta felmeddelande:
-# AttributeError: module 'core' has no attribute 'ParameterMapping'
 
 
 # In[11]:
@@ -132,13 +130,14 @@ ekos.load_workspace(unique_id = workspace_uuid)
 
 
 #%%timeit
-ekos.load_data(unique_id = workspace_uuid)
+# ÄNDRAT
+ekos.load_data(workspace_uuid = workspace_uuid, force = True)
 
 
 # In[14]:
 
-
-w = ekos.get_workspace(unique_id = workspace_uuid)
+# ÄNDRAT
+w = ekos.get_workspace(workspace_uuid = workspace_uuid)
 len(w.data_handler.get_all_column_data_df())
 
 

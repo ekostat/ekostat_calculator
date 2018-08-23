@@ -993,8 +993,8 @@ class DataHandler(object):
                          u'physicalchemicalmodel',
                          u'phytoplankton',
                          u'zoobenthos']
-        
-        mandatory_keys = ['DEPH']
+        # TODO: vart ska vi kolla mandatory keys? och vart ska de läsas in?
+        mandatory_keys = []#['DEPH']
         for dtype in all_datatypes:
             if dtype in dir(self):
                 #print(dtype)
