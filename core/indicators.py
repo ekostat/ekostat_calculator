@@ -1960,7 +1960,6 @@ if __name__ == '__main__':
     winter_filter_1 = core.DataFilter('winter_filter', file_path=winter_data_filter_file_path)
     
     tolerance_filter_file_path = 'D:/Utveckling/g_EKOSTAT_tool/test_data/filters/tolerance_filter_template.txt'
-    tolerance_filter = core.ToleranceFilter('test_tolerance_filter', file_path=tolerance_filter_file_path)
     
     raw_data = core.DataHandler('raw')
     raw_data.add_txt_file(raw_data_file_path, data_type='column') 

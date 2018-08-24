@@ -641,7 +641,7 @@ class QualityElement(object):
     def __init__(self, file_path): 
         self.file_path = file_path
         self.cf_df = pd.read_csv(self.file_path, sep='\t', dtype='str', encoding='cp1252')
-        assert all(['quality element' in self.cf_df.keys(), 'indicator' in self.cf_df.keys(), 'parameters' in self.cf_df.keys()]), 'configuration file must contain quality element, indicator and parameters information'
+        assert all(['quality element' in self.cf_df.keys(), 'indicator' in self.cf_df.keys(), 'parameters' in self.cf_df.keys(), 'additional_parameters'  in self.cf_df.keys(), 'indicator_class' in self.cf_df.keys()]) #'configuration file must contain quality element, indicator and parameters information'
         self.cfg = {}
         self.cfg['quality elements'] = self.cf_df.groupby('quality element')['indicator'].unique()
         self.cfg['indicators'] = self.cf_df.groupby('indicator')['parameters'].unique() 

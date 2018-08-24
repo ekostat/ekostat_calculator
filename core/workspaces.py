@@ -134,7 +134,7 @@ class WorkStep(object):
         
         self.allowed_data_filter_steps = ['step_0', 'step_1']
         self.allowed_indicator_settings_steps = ['step_2'] 
-        self.allowe_indicator_calculation_steps = ['step_3']
+        self.allowed_indicator_calculation_steps = ['step_3']
         
         self.result_data = {}
         

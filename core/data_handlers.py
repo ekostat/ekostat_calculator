@@ -1164,8 +1164,21 @@ class DataHandler(object):
                 self.all_data['STIME'] = self.all_data['STIME'].apply(lambda x: x[:5])
                 
                 # MW 20180716 
-                self.all_data['date'] = pd.to_datetime(self.all_data['SDATE'])
-                
+                try: 
+                    self.all_data['date'] = pd.to_datetime(self.all_data['SDATE'])
+                except ValueError:
+                    remove_index = []
+                    for row_index in self.all_data.index:
+                        try:
+                            pd.to_datetime(self.all_data.iloc[row_index].SDATE)
+                        except ValueError:
+                            #self.all_data.loc[row_index, 'SDATE'] = ''
+                            remove_index.append(row_index)
+                    sld_object = core.SaveLoadDelete(self.export_directory)
+                    sld_object.save_df(self.all_data.iloc[remove_index], 'removed__before_saving_all_data')
+                    self.all_data.drop(remove_index, inplace = True)
+                    self.all_data['date'] = pd.to_datetime(self.all_data['SDATE'])
+                    
 #                # MW: Add visit_id
 #                self.all_data['visit_id_str'] = self.all_data['LATIT_DD'] + \
 #                                                self.all_data['LONGI_DD'] + \
