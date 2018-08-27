@@ -18,3 +18,5 @@ MXDEP
 PARAM								
 VALUE								
 QFLAG								
+ALABO
+WADEP

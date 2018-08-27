@@ -212,16 +212,26 @@ class AttributeDict(dict):
     #==========================================================================
     def get(self, key):
         """
-        Updated     20180319    by Magnus Wenzer
+        Updated     20180613    by Lena Viktorsson
         """ 
-#        print('KEY', '={}='.format(key))
-        try:
+
+        if key.lower() in self.keys():
             return getattr(self, key.lower())
-        except: 
-            try:
-                return getattr(self, key)
-            except:
-                return getattr(self, 'SE' + key)
+        
+        if key in self.keys():
+            return getattr(self, key)
+        
+        if 'SE' + key in self.keys():
+            return getattr(self, 'SE' + key)
+        
+        return None
+#        try:
+#            return getattr(self, key.lower())
+#        except: 
+#            try:
+#                return getattr(self, key)
+#            except:
+#                return getattr(self, 'SE' + key)
     
     
     #==========================================================================
@@ -301,8 +311,11 @@ class Hypsograph():
             
  #==========================================================================
     def get_max_depth_of_water_body(self, water_body): 
-        result = self.wb_df[water_body][self.depth_par].max()
-        return result
+        if water_body in self.wb_df.keys(): 
+            result = self.wb_df[water_body][self.depth_par].max()
+            return result
+        else:
+            return False
 #        if len(result):
 #            return result.values[0] 
 #        else:
@@ -310,36 +323,45 @@ class Hypsograph():
     
     #==========================================================================
     def get_total_area_of_water_body(self, water_body): 
-        result = self.wb_df[water_body].loc[self.wb_df[water_body][self.depth_par]==0, self.area_par]
-        if len(result):
-            return result.values[0] 
+        if water_body in self.wb_df.keys(): 
+            result = self.wb_df[water_body].loc[self.wb_df[water_body][self.depth_par]==0, self.area_par]
+            if len(result):
+                return result.values[0] 
+            else:
+                return False
         else:
             return False
         
     #==========================================================================
     def get_volume_below_depth(self, water_body=None, depth=None): 
-        result = self.wb_df[water_body].loc[self.wb_df[water_body][self.depth_par]==depth, self.volume_par]
-        if len(result):
-            return result.values[0] 
+        if water_body in self.wb_df.keys(): 
+            result = self.wb_df[water_body].loc[self.wb_df[water_body][self.depth_par]==depth, self.volume_par]
+            if len(result):
+                return result.values[0] 
+            else:
+                return False 
         else:
-            return False 
-        
+            return False
     #==========================================================================
     def get_volume_fraction_below_depth(self, water_body=None, depth=None): 
-        result = self.wb_df[water_body].loc[self.wb_df[water_body][self.depth_par]==depth, self.frac_volume_par]
-        if len(result):
-            return result.values[0] 
+        if water_body in self.wb_df.keys(): 
+            result = self.wb_df[water_body].loc[self.wb_df[water_body][self.depth_par]==depth, self.frac_volume_par]
+            if len(result):
+                return result.values[0] 
+            else:
+                return False 
         else:
-            return False 
-        
+            return False
     #==========================================================================
     def get_area_fraction_at_depth(self, water_body=None, depth=None): 
-        result = self.wb_df[water_body].loc[self.wb_df[water_body][self.depth_par]==depth, self.frac_area_par]
-        if len(result):
-            return result.values[0] 
+        if water_body in self.wb_df.keys(): 
+            result = self.wb_df[water_body].loc[self.wb_df[water_body][self.depth_par]==depth, self.frac_area_par]
+            if len(result):
+                return result.values[0] 
+            else:
+                return False 
         else:
-            return False 
-        
+            return False
 """
 #==============================================================================
 #==============================================================================
@@ -584,8 +606,14 @@ class WaterBody(AttributeDict):
     def get_type_area_for_water_body(self, wb, include_suffix=False, 
                                      key_number=u'TYPE_AREA_NO', 
                                      key_suffix=u'TYPE_AREA_SUFFIX'):
-        if include_suffix: 
-            print('WB', wb)
+        """
+        Updated     20180613    by Lena Viktorsson
+        """
+        if self.get(wb) == None:
+            return None
+        
+        if include_suffix:
+
             string = self.get(wb).get(key_number) + '-' + \
                      self.get(wb).get(key_suffix)
             return string.strip('-')
@@ -644,7 +672,7 @@ class QualityElement(object):
     def __init__(self, file_path): 
         self.file_path = file_path
         self.cf_df = pd.read_csv(self.file_path, sep='\t', dtype='str', encoding='cp1252')
-        assert all(['quality element' in self.cf_df.keys(), 'indicator' in self.cf_df.keys(), 'parameters' in self.cf_df.keys()]), 'configuration file must contain quality element, indicator and parameters information'
+        assert all(['quality element' in self.cf_df.keys(), 'indicator' in self.cf_df.keys(), 'parameters' in self.cf_df.keys(), 'additional_parameters'  in self.cf_df.keys(), 'indicator_class' in self.cf_df.keys()]) #'configuration file must contain quality element, indicator and parameters information'
         self.cfg = {}
         self.cfg['quality elements'] = self.cf_df.groupby('quality element')['indicator'].unique()
         self.cfg['indicators'] = self.cf_df.groupby('indicator')['parameters'].unique() 

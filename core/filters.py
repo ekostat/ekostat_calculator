@@ -611,7 +611,9 @@ class SettingsFile(object):
     def get_value(self, variable=None, type_area=None, water_body=None, return_series=True): 
         """
         Created:        xxxxxxxx     by Magnus
+
         Last modified:  20180615     by Magnus
+
         returns value from settings file by given arguments
         if variable and water_body is given returns single value
         if variable and type_area is given returns single value when there is only one setting for the given type_area, else return pandas series for given variable (MW: If return_series==True (default) else return "result")
@@ -622,6 +624,9 @@ class SettingsFile(object):
         if water_body:
             try:
                 type_area = self.mapping_water_body.get_type_area_for_water_body(water_body, include_suffix=True)
+                if type_area == None:
+                    print('waterbody matching file does not recognise water body with VISS_EU_CD {}'.format(water_body))
+                    return False
             except AttributeError as e:
                 print(e)
                 print('waterbody matching file does not recognise water body with VISS_EU_CD {}'.format(water_body))
@@ -658,10 +663,15 @@ class SettingsFile(object):
                                            (self.df['TYPE_AREA_SUFFIX']==suf) & \
                                            (self.df['VISS_EU_CD'] == 'unspecified'), var]
             else:
+# KONFLIKT OSÄKER PÅ VILKEN value_series som är korrekt
+                #value_series = self.df.loc[(self.df['TYPE_AREA_NUMBER']==num), var]
+        
+
                 value_series = self.df.loc[(self.df['TYPE_AREA_NUMBER']==num) & \
                                            (self.df['VISS_EU_CD'] == 'unspecified'), var]
         self.suf = suf
         self.num = num
+
 #        print('----')
 #        print('water_body {}, type_area {}, variable {}'.format(water_body, type_area, variable))
 #        print('num {}, suf {}, suf? {}'.format(num, suf, self.df.loc[self.df['TYPE_AREA_NUMBER']==num, 'TYPE_AREA_SUFFIX'].values))
@@ -683,7 +693,7 @@ class SettingsFile(object):
             elif variable in self.interval_columns: 
                 value = self._get_interval_from_string(value, variable)
             elif variable in self.refvalue_column:
-                print('value {} in refvalue_column'.format(value))
+#                print('value {} in refvalue_column'.format(value))
                 if variable.isnumeric():
                     value = float(value)
                 else:
@@ -693,7 +703,7 @@ class SettingsFile(object):
             return_value.append(value)
             # TODO: return dataframe?
         # if only one row for given type_area or water_body, return as single value, else return as pandas series
-#        print('return_value', return_value)
+
         if len(return_value) == 1:
             return return_value[0]
         elif len(return_value) > 1 and all(x == return_value[0] for x in return_value):
@@ -1128,9 +1138,17 @@ class SettingsFile(object):
 
         #print('RESULT', result)
         # Must check if there are several results. For example BQI has two depth intervalls.  
+
+#       KONFLIKT DENNA DEL FUNGERAR MED CALCULATE_STATUS
+        #if not len(result):
+        #    return False
+        #elif len(result) == 1:
+        #    from_value, to_value = result[0]
+
         if type(result) is tuple or result is False:
             if not result:
                 return False
+
         else:
             raise exceptions.UnexpectedInputVariable
 #            raise InputError('in filters.py _get_boolean_from_monthday_interval()', 'Returned multiple values from get_value, do not know which one to use')
@@ -1188,7 +1206,7 @@ class SettingsFile(object):
         
         # Must check if there are several results. For example BQI has two depth intervalls.  
         
-        print('RESULT', result)
+#        print('RESULT', result)
 #        print(len(result))
         
         
@@ -1297,23 +1315,36 @@ class SettingsRef(SettingsBase):
     #==========================================================================    
     def get_ref_value(self, type_area = None, water_body = None, salinity = None):
         """
+        deprecated, replaced by get_boundarie. Update to that.
         Created     20180326    by Lena Viktorsson
-        Updated     20180418    by Lena Viktorsson
+        Updated     20180621    by Lena Viktorsson (added float(ref_value in the first try/except statement))
         """
-
         if len(self.settings.refvalue_column) == 0:
             return False
         if water_body:
-            ref_value = self.get_value(variable = self.settings.refvalue_column[0], water_body = water_body)
+            ref_value = self.get_value(variable = 'REF_VALUE_LIMIT', water_body = water_body)
         else:
-            ref_value = self.get_value(variable = self.settings.refvalue_column[0], type_area = type_area)
+            ref_value = self.get_value(variable = 'REF_VALUE_LIMIT', type_area = type_area)
+        try:
+#            print(ref_value)
+            ref_value = float(ref_value)
+        except ValueError:
+            pass
         
         if type(ref_value) is float:
             ref_value = ref_value
         elif type(ref_value) is str:
             try: 
                 s = salinity
-                ref_value = eval(ref_value) 
+                if water_body:
+                    max_s = self.get_value(variable = 'SALINITY_MAX', water_body = water_body)
+                else:
+                    max_s = self.get_value(variable = 'SALINITY_MAX', type_area = type_area)
+                if s > max_s:
+                    s = max_s
+                #print(s, ref_value)
+                ref_value = eval(ref_value)
+                #print('resulting ref value: {}'.format(ref_value))
             except TypeError as e:
                 raise TypeError('{}\nSalinity TypeError, salinity must be int, float or nan but is {}'.format(e, repr(s)))
                 #TODO: add closes matching salinity somewhere here
@@ -1327,6 +1358,53 @@ class SettingsRef(SettingsBase):
         
         return ref_value
     
+
+    #==========================================================================    
+    def get_boundarie(self, type_area = None, water_body = None, salinity = None, variable = None):
+        """
+        Created     20180326    by Lena Viktorsson
+        Updated     20180621    by Lena Viktorsson (added float(ref_value in the first try/except statement))
+        """
+        if len(self.settings.refvalue_column) == 0:
+            return False
+        if water_body:
+            boundarie = self.get_value(variable = variable, water_body = water_body)
+        else:
+            boundarie = self.get_value(variable = variable, type_area = type_area)
+        try:
+#            print(ref_value)
+            boundarie = float(boundarie)
+        except (ValueError, TypeError):
+            pass
+
+        if type(boundarie) is float:
+            boundarie = boundarie
+        elif type(boundarie) is str:
+            try: 
+                s = salinity
+                if water_body:
+                    max_s = self.get_value(variable = 'SALINITY_MAX', water_body = water_body)
+                else:
+                    max_s = self.get_value(variable = 'SALINITY_MAX', type_area = type_area)
+                if s > max_s:
+                    s = max_s
+                #print(s, ref_value)
+                exp_as_func = eval('lambda s: ' + boundarie)
+                boundarie = exp_as_func(s)
+#                boundarie = eval(boundarie)
+                #print('resulting ref value: {}'.format(ref_value))
+            except TypeError as e:
+                raise TypeError('{}\nSalinity TypeError, salinity must be int, float or nan but is {}'.format(e, repr(s)))
+                #TODO: add closes matching salinity somewhere here
+        elif type(boundarie) is pd.Series:
+            raise InputError('In SettingsRef get_ref_value','returned pd.Series for ref_value, give more specific info to get the right row')
+        elif not boundarie:
+            return False
+        else:
+            raise TypeError('Unknown Type of reference value, must be either equation as string or float. Given reference value {} is {}. Or salinity missing, given salinity value is {}'.format(boundarie, type(boundarie), salinity))
+        
+        return boundarie
+
     
     #==========================================================================    
     def get_ref_value_type(self, type_area = None, water_body = None):
@@ -1338,9 +1416,9 @@ class SettingsRef(SettingsBase):
             return False
         
         if water_body:
-            ref_value = self.get_value(variable = self.settings.refvalue_column[0], water_body = water_body)
+            ref_value = self.get_value(variable = 'REF_VALUE_LIMIT', water_body = water_body)
         else:
-            ref_value = self.get_value(variable = self.settings.refvalue_column[0], type_area = type_area)
+            ref_value = self.get_value(variable = 'REF_VALUE_LIMIT', type_area = type_area)
         
         if type(ref_value) is float:
             return 'float'
@@ -1376,7 +1454,7 @@ class SettingsDataFilter(SettingsBase):
         Get boolean pd.Series to use for filtering. 
         Name of this has to be the same as the one in class DataFilter. 
         """
-        print('Water body', water_body)
+#        print('Water body', water_body)
 #        get_type_area_for_water_body(wb, include_suffix=False)
         return self.settings.get_filter_boolean_for_df(df=df, 
                                                        water_body=water_body, 

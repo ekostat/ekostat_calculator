@@ -14,6 +14,7 @@ import pandas as pd
 import uuid
 import re
 import pathlib
+import time
 
 current_path = os.path.dirname(os.path.realpath(__file__))[:-4]
 if current_path not in sys.path:
@@ -133,7 +134,7 @@ class WorkStep(object):
         
         self.allowed_data_filter_steps = ['step_0', 'step_1']
         self.allowed_indicator_settings_steps = ['step_2'] 
-        self.allowe_indicator_calculation_steps = ['step_3']
+        self.allowed_indicator_calculation_steps = ['step_3']
         
         self.result_data = {}
         
@@ -183,6 +184,124 @@ class WorkStep(object):
             shutil.copy(from_file_path, to_file_path)
         
         self.load_all_files()    
+    
+    #==========================================================================
+    def calculate_status(self, indicator_list = None, water_body_list = None):
+        """
+        Created     20180613    by Lena Viktorsson
+        Calls calculate_status for each indicator object and returns the result for each waterbody as dataframes in a dict
+        """
+        if self.name != 'step_3':
+            return False
+        
+        if water_body_list == None:
+            water_body_list = self.parent_workspace_object.get_filtered_data(step='step_2', subset = self.parent_subset_object.unique_id).VISS_EU_CD.unique()
+        if not len(water_body_list):
+            #raise Error?
+            print('no waterbodies in filtered data')
+            return False
+        
+        #---------------------------------------------------------------------    
+        def concat_df(df, save_df, filename, water_body, indicator_object):
+            #concatenate results
+            if type(save_df) is pd.DataFrame:
+                if water_body in save_df.VISS_EU_CD.unique():
+                    save_df.drop(save_df.loc[save_df.VISS_EU_CD == water_body].index, inplace = True)
+                save_df = pd.concat([save_df, df])
+            elif os.path.exists(indicator_object.result_directory + filename + '.txt'):
+                save_df = indicator_object.sld.load_df(file_name = filename)
+                if water_body in save_df.VISS_EU_CD.unique():
+                    save_df.drop(save_df.loc[save_df.VISS_EU_CD == water_body].index, inplace = True)
+                save_df = pd.concat([save_df, df])
+            else:
+                save_df = df
+            save_df['new_index'] = [str(ix) +'_' + wb for ix, wb in zip(save_df.index, save_df.VISS_EU_CD)]
+            save_df.set_index(keys = 'new_index')
+            return save_df
+        #---------------------------------------------------------------------
+        
+        if indicator_list == None:
+            indicator_list = self.parent_workspace_object.available_indicators
+            if indicator_list == None:
+                indicator_list = self.parent_workspace_object.get_available_indicators(subset = self.parent_subset_object.unique_id, step = 2)
+            
+            
+        for indicator in indicator_list:
+            status_by_date = False
+            status_by_year_pos = False
+            status_by_year = False
+            status_by_period = False
+            indicator_name = self.indicator_objects[indicator].name
+            print(indicator_name)
+            t_ind = time.time()
+            by_date, by_year_pos, by_year, by_period = False, False, False, False
+            for water_body in dict.fromkeys(water_body_list,True):
+                #print(water_body)
+#                t_wb = time.time()
+                if water_body not in self.indicator_objects[indicator].water_body_indicator_df.keys():
+                    continue
+                by_date, by_year_pos, by_year, by_period = self.indicator_objects[indicator].calculate_status(water_body = water_body)
+#                time_wb = time.time() - t_wb
+#                print('-'*50)
+#                print('Total time to calculate status for water body {}:'.format(water_body), time_wb)
+#                print('-'*50)
+                if type(by_date) is not bool:
+                    status_by_date = concat_df(by_date, status_by_date, indicator_name + '_by_date',
+                          water_body, self.indicator_objects[indicator])
+                if type(by_year_pos) is not bool:
+                    status_by_year_pos = concat_df(by_year_pos, status_by_year_pos, indicator_name + '_by_year_pos',
+                          water_body, self.indicator_objects[indicator])
+                if type(by_year) is not bool:
+                    status_by_year = concat_df(by_year, status_by_year, indicator_name + '_by_year',
+                          water_body, self.indicator_objects[indicator])
+                if type(by_period) is not bool:
+                    status_by_period = concat_df(by_period, status_by_period, indicator_name + '_by_period',
+                          water_body, self.indicator_objects[indicator])
+                
+                
+#                if type(by_date) is not bool:
+#                    #SAVE by_date results
+#                    if type(status_by_date) is pd.DataFrame:
+#                        if water_body in status_by_date.VISS_EU_CD.unique():
+#                            status_by_date.drop(status_by_date.loc[status_by_date.VISS_EU_CD == water_body].index, inplace = True)
+#                        status_by_date = pd.concat([status_by_date, by_date])
+#                    elif os.path.exists(self.indicator_objects[indicator].result_directory + indicator_name + '_by_date.txt'):
+#                        status_by_date = self.indicator_objects[indicator].sld.load_df(file_name = indicator_name + '_by_date')
+#                        if water_body in status_by_date.VISS_EU_CD.unique():
+#                            status_by_date.drop(status_by_date.loc[status_by_date.VISS_EU_CD == water_body].index, inplace = True)
+#                        status_by_date = pd.concat([status_by_date, by_date])
+#                    else:
+#                        status_by_date = by_date 
+            time_ind = time.time() - t_ind
+            print('-'*50)
+            print('Total time to calculate status for indicator {}:'.format(indicator), time_ind)
+            print('-'*50)    
+            
+            if type(status_by_date) is not bool:                                  
+                self.indicator_objects[indicator].sld.save_df(status_by_date, file_name = indicator_name + '_by_date', force_save_txt=True)
+            if type(status_by_year_pos) is not bool:
+                self.indicator_objects[indicator].sld.save_df(status_by_year_pos, file_name = indicator_name + '_by_year', force_save_txt=True)
+            if type(status_by_year) is not bool:
+                self.indicator_objects[indicator].sld.save_df(status_by_year, file_name = indicator_name + '_by_year_pos', force_save_txt=True)
+            if type(status_by_period) is not bool:
+                self.indicator_objects[indicator].sld.save_df(status_by_period, file_name = indicator_name + '_by_period', force_save_txt=True)
+        
+    def calculate_quality_element(self, subset_unique_id, quality_element, class_name):
+        
+        self.quality_element = {}
+        #print(class_name)
+        try:
+            class_ = getattr(core, class_name)
+        except AttributeError as e:
+            raise AttributeError('{}\nClass does not exist'.foramt(e))
+        #print(class_)
+        #instance = class_()
+        # add indicator objects to dictionary
+        self.quality_element[quality_element] = class_(subset_uuid = subset_unique_id, 
+                                                                  parent_workspace_object = self.parent_workspace_object,
+                                                                  quality_element = quality_element)
+        
+        self.quality_element[quality_element].calculate_quality_factor()
             
     #==========================================================================
     def get_all_file_paths_in_workstep(self): 
@@ -256,7 +375,7 @@ class WorkStep(object):
     #==========================================================================
     def indicator_setup(self, subset_unique_id = None, indicator_list = None):  
         """
-        when step 3 is initiated indicator objects should be instansiated for all  indicators selected in step 2 as default
+        when step 3 is initiated indicator objects should be instantiated for all  indicators selected in step 2 as default
         where do we save info on selected indicators? in step_2/datafilters folder?
         We can calculate all indicators available but then the indicator selection is useless with regards to saving time for the user.
         """ 
@@ -264,22 +383,21 @@ class WorkStep(object):
         Created:        20180215     by Lena
         Last modified:  20180720     by Magnus
         create dict containing indicator objects according to data availability or choice?
-        This should be moved to WorkStep class, and should be run accesed only for step 3.
+        Should be run accesed only for step 3.
         """
         if indicator_list == None:
-            indicator_list = self.parent_workspace_object.get_available_indicators(subset=subset_unique_id, step=2)
-#            indicator_list = self.parent_workspace_object.available_indicators
-#            if indicator_list == None:
-#                indicator_list = self.parent_workspace_object.get_available_indicators(subset=subset_unique_id, step=2)
-            
-        self.indicator_objects = dict.fromkeys(indicator_list)
-        for indicator in self.indicator_objects.keys():
-            try:
-                class_name = self.parent_workspace_object.mapping_objects['quality_element'].indicator_config.loc[indicator]['indicator_class']
-                print(class_name)
-            except KeyError as e:
-                raise exceptions.MissingKeyInSettings(message=indicator)
-                
+
+            indicator_list = self.parent_workspace_object.available_indicators
+            if indicator_list == None:
+                indicator_list = self.parent_workspace_object.get_available_indicators(subset=subset_unique_id, step=2)
+        if not hasattr(self, 'indicator_objects'):
+            self.indicator_objects = {}
+        indicators = dict.fromkeys(indicator_list)
+        for indicator in indicators:
+            t_start = time.time()
+            class_name = self.parent_workspace_object.mapping_objects['quality_element'].indicator_config.loc[indicator]['indicator_class']
+            #print(class_name)
+
             try:
                 class_ = getattr(core, class_name)
             except AttributeError as e:
@@ -288,9 +406,13 @@ class WorkStep(object):
             #print(class_)
             #instance = class_()
             # add indicator objects to dictionary
-            self.indicator_objects[indicator] = class_(subset = subset_unique_id, 
+            self.indicator_objects[indicator] = class_(subset_uuid = subset_unique_id, 
                                                                       parent_workspace_object = self.parent_workspace_object,
                                                                       indicator = indicator)
+            time_ind = time.time() - t_start
+            print('-'*50)
+            print('Total time to set up indicator object indicator {}:'.format(indicator), time_ind)
+            print('-'*50)   
 #            self.indicator_objects[indicator] = core.IndicatorBase(subset = subset_unique_id, 
 #                                                                      parent_workspace_object = self.parent_workspace_object,
 #                                                                      indicator = indicator)
@@ -1160,7 +1282,7 @@ class WorkSpace(object):
         
     
     #==========================================================================
-    def apply_indicator_data_filter(self, subset='', indicator='', step='step_2'):
+    def apply_indicator_data_filter(self, subset='', indicator='', step='step_2', water_body_list = False):
         """
         Created     ????????    by Magnus Wenzer
         Updated     20180719    by Magnus Wenzer
@@ -1178,8 +1300,9 @@ class WorkSpace(object):
             True:           If all is ok
             False:          If something faild
         """
-        
-        water_body_list = self.get_filtered_data(step=step, subset=subset).VISS_EU_CD.unique()
+        t_tot = time.time()
+        if not water_body_list:
+            water_body_list = self.get_filtered_data(step=step, subset=subset).VISS_EU_CD.unique()
         if not len(water_body_list):
             #raise Error?
             self._logger.warning('No waterbodies in filtered data')
@@ -1205,7 +1328,7 @@ class WorkSpace(object):
         indicator = indicator.lower()
         settings_filter_object = step_object.get_indicator_data_filter_settings(indicator)
         #set filters for all indicator in all waterbodies and if no key in boolean dict for waterbody add waterbody filter
-        for water_body in water_body_list:
+        for water_body in dict.fromkeys(water_body_list, True):
             if step not in self.index_handler.booleans['step_0'][subset]['step_1'].keys():
                 self.index_handler.add_filter(filter_object=water_body_filter_object, step=step, subset=subset, water_body=water_body, **kwargs)
             
@@ -1214,6 +1337,10 @@ class WorkSpace(object):
                 
             self.index_handler.add_filter(filter_object=settings_filter_object, step=step, subset=subset, indicator=indicator, water_body=water_body, **kwargs)
         
+        time_total = time.time() - t_tot
+        print('-'*50)
+        print('Total time to apply data filters for indicator {}:'.format(indicator), time_total)
+        print('-'*50)
         
     #==========================================================================
     def apply_water_body_station_filter(self, subset=None, water_body=None): 
@@ -1665,7 +1792,7 @@ class WorkSpace(object):
         """
         if force: 
             self._logger.debug('Method load_all_data is forced.')
-            # method is forced so we delete all_data (if excisting)
+            # method is forced so we delete all_data (if existing)
             self.delete_all_export_data()
         elif not self.datatype_settings.has_info:
             self._logger.debug('Could not load datatype_settings.txt. No file found?')
@@ -1684,7 +1811,7 @@ class WorkSpace(object):
             self.delete_alldata_export()
 
         if os.path.isfile(self.paths['directory_path_export_data'] + '/all_data.txt'): 
-            # Data file excist. Try to load it, or pickle if excisting
+            # Data file excist. Try to load it, or pickle if existing
             data_loaded, filetype = self.data_handler.load_all_datatxt()
             if data_loaded:
                 self._logger.debug('Data has been loaded from existing all_data.{} file.'.format(filetype))
@@ -1695,7 +1822,7 @@ class WorkSpace(object):
         else:
 #            print('load_all_data - else')
             # We know that all_data does not excist. We only want to load the datatypes that has been changed and then merge data. 
-            # Loop and load datatypes (if loaded are desided in method load datatype_data)
+            # Loop and load datatypes (if loaded are decided in method load datatype_data)
             for datatype in self.datatype_settings.get_datatype_list():
 #                print('-- datatype', datatype)
 #                print('-- force', force)

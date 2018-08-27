@@ -17,3 +17,5 @@ DEPH			NTOT
 PARAM			PTOT					
 VALUE								
 QFLAG								
+ALABO
+WADEP
