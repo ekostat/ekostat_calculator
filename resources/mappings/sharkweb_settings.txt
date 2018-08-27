@@ -1,0 +1,5 @@
+from_year	2000 
+to_year	
+datatypes	Chlorophyll;Physical and Chemical;Phytoplankton;Zoobenthos
+default_from_year	2007
+default_to_year	2017

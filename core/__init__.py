@@ -43,6 +43,7 @@ from .mapping import DataTypeMapping
 from .mapping import IndSetHomPar
 from .mapping import SimpleList 
 from .mapping import MappingObject
+from .mapping import SharkwebSettings
 
 from .parameters import ParameterSALT_CTD
 from .parameters import ParameterNTRA 

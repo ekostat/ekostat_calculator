@@ -66,6 +66,37 @@ class SimpleList(list):
                     self.append(line)
                     
 
+
+"""
+#==============================================================================
+#==============================================================================
+""" 
+class SharkwebSettings(dict):
+    """
+    Created     20180824    by Magnus Wenzer
+
+    """ 
+    def __init__(self, file_path, **kwargs): 
+        self.file_path = file_path 
+        
+        read_options = {'encoding': 'cp1252'}
+        
+        with codecs.open(self.file_path, **read_options) as fid:
+            for line in fid:
+                if line.startswith('#'):
+                    continue
+                key, value = [item.strip() for item in line.split('\t')] 
+                if not value:
+                    value = False
+                elif ';' in value:
+                    value = [item.strip() for item in value.split(';')]
+                else:
+                    try:
+                        value = int(value)
+                    except:
+                        pass
+                self[key] = value
+
 """
 #==============================================================================
 #==============================================================================
@@ -373,8 +404,8 @@ class WaterBody(AttributeDict):
         self.column_name['type_area'] = {'internal': 'TYPE_AREA_CODE', 
                                           'display': 'TYPE_AREA_NAME'}
         
-        self.column_name['water_district'] = {'internal': 'WATER_DISTRICT', 
-                                              'display': 'WATER_DISTRICT'}
+        self.column_name['water_district'] = {'internal': 'WATER_DISTRICT_CODE', 
+                                              'display': 'WATER_DISTRICT_NAME'}
         
         
         #TODO Add Parametermapping for water body names
@@ -470,7 +501,7 @@ class WaterBody(AttributeDict):
         """
         Created     20180315    by Magnus Wenzer
         Updated     20180315    by Magnus Wenzer
-        """
+        """ 
         if kwargs:
             area = list(kwargs.keys())[0] 
             value = kwargs[area]

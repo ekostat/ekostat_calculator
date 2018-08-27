@@ -207,6 +207,7 @@ class MissingPath(EkostatInternalException):
     code = 500   
     message = 'Missing path'     
 
+
 #==============================================================================
 class NoAreasSelected(EkostatUserException):
     """
@@ -214,6 +215,15 @@ class NoAreasSelected(EkostatUserException):
     """
     code = 'areas_missing'   
     message = 'No areas selected' 
+    
+
+#==============================================================================
+class InvalidArea(EkostatUserException):
+    """
+    Created     20180719    by Magnus Wenzer
+    """
+    code = 'areas_invalid'   
+    message = 'Invalid area selection' 
     
     
 #==============================================================================

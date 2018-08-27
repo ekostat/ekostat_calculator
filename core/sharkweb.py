@@ -12,11 +12,19 @@ class SharkWebReader():
     """ """
     def __init__(self, 
                  sharkweb_url='https://sharkweb.smhi.se',
-                 debug=False):
+                 debug=False, 
+                 load_all_options=True):
         """ """
         self.sharkweb_url = sharkweb_url
         self.debug = debug
         self.clear()
+        
+        if load_all_options:
+            self.read_location_options()
+            self.read_options()
+            self.read_view_options()
+        
+        
     
     def clear(self):
         """ """
@@ -82,6 +90,35 @@ class SharkWebReader():
     def set_data_params(self, data_params):
         """ """
         self.data_params = data_params
+    
+    
+    def get_available_datatypes(self): 
+        """
+        Created 20180824    by Magnus
+        """
+        return [item[0] for item in self.options['datatype_option']['rows']]
+    
+    
+    def get_available_water_body(self): 
+        """
+        Created 20180824    by Magnus
+        """
+        return [item[0] for item in self.location_options['svar_sea_area_option']['rows'] if item[0] != '-']
+    
+    
+    def get_available_water_district(self): 
+        """
+        Created 20180824    by Magnus
+        """
+        return [item[0] for item in self.location_options['water_district_option']['rows'] if item[0] != '-']
+    
+    
+    def get_available_type_area(self): 
+        """
+        Created 20180824    by Magnus
+        """
+        return [item[0] for item in self.location_options['type_area_option']['rows'] if item[0] != '-']
+    
         
     def get_data_params(self):
         """ """
@@ -183,3 +220,5 @@ class SharkWebReader():
         string = '[or]'.join(params[key])
         string = urllib.parse.quote(string, safe='~()*!.\'\\')
         params[key] = string
+              
+              

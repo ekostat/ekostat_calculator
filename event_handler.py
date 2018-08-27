@@ -86,6 +86,8 @@ class EventHandler(object):
         self.temp_directory = temp_directory
         self.reload_mapping_objects = reload_mapping_objects
         
+#        self.sharkweb_reader = None
+        
         
         self.log_id = 'event_handler'
         
@@ -156,6 +158,8 @@ class EventHandler(object):
             self.mapping_objects['indicator_settings_items_to_show_in_gui'] = core.SimpleList(file_path=os.path.join(self.resource_directory, 'mappings/indicator_settings_items_to_show_in_gui.txt'))
             self.mapping_objects['indicator_settings_items_editable_in_gui'] = core.SimpleList(file_path=os.path.join(self.resource_directory, 'mappings/indicator_settings_items_editable_in_gui.txt'))
             self.mapping_objects['datatype_list'] = core.MappingObject(file_path=os.path.join(self.resource_directory, 'mappings/datatype_list.txt'))
+            self.mapping_objects['sharkweb_mapping'] = core.MappingObject(file_path=os.path.join(self.resource_directory, 'mappings/sharkweb_mapping.txt'))
+            self.mapping_objects['sharkweb_settings'] = core.SharkwebSettings(file_path=os.path.join(self.resource_directory, 'mappings/sharkweb_settings.txt'))
             
             with open(mappings_pickle_file_path, "wb") as fid:
                 pickle.dump(self.mapping_objects, fid) 
@@ -587,6 +591,7 @@ class EventHandler(object):
         if subset_uuid == 'default_subset': 
             available_indicators = []
         else:
+            self.action_apply_data_filter(workspace_uuid=workspace_uuid, subset_uuid=subset_uuid, step='step_1')
             available_indicators = workspace_object.get_available_indicators(subset=subset_uuid, step='step_1')
             
         # Check request 
@@ -684,14 +689,21 @@ class EventHandler(object):
         Created     20180720   by Magnus Wenzer 
         
         """ 
+        from_year = self.mapping_objects['sharkweb_settings'].get('from_year')
+        if not from_year: 
+            from_year = 1990
+        to_year = self.mapping_objects['sharkweb_settings'].get('to_year')
+        if not to_year: 
+            to_year = datetime.datetime.now().year
         
-        choices = [int(item) for item in kwargs.get('year_choices', list(range(1980, datetime.datetime.now().year+1)))] # Cant be int64 for json to work
+        choices = [int(item) for item in kwargs.get('year_choices', list(range(from_year, to_year)))] # Cant be int64 for json to work
         
         response = {'key': 'year_interval', 
                     'label': 'Year interval', 
                     'choices': choices, 
                     'widget': 'interval:int', 
-                    'value': [2007, 2017]}
+                    'value': [self.mapping_objects['sharkweb_settings'].get('default_from_year'), 
+                              self.mapping_objects['sharkweb_settings'].get('default_to_year')]}
         
         return response
     
@@ -702,54 +714,141 @@ class EventHandler(object):
         Created     20180721   by Magnus Wenzer 
         
         """ 
-        choices = sorted(self.mapping_objects['datatype_list'].get_list('codelist_name'))
+#        choices = sorted(self.mapping_objects['datatype_list'].get_list('codelist_name'))
+        choices = [item for item in self.sharkweb_reader.get_available_datatypes() if item in self.mapping_objects['sharkweb_settings'].get('datatypes')]
         
         response = {'key': 'datatype', 
-                    'label': 'Data type', 
+                    'label': 'Datatype', 
                     'choices': choices, 
-                    'widget': 'select:str', 
+                    'widget': 'multiselect:str', 
                     'value': ''}
         
         return response
     
     
     #==========================================================================
-    def dict_select_water_body(self, **kwargs): 
+    def list_select_area(self, **kwargs):
         """
-        Created     20180721   by Magnus Wenzer 
-        
-        "location_svar_sea_area_code" in sharkweb
-        """ 
-        choices = self.mapping_objects['water_body'].get_list(area_level='water_body')
-        choices = [self._get_string_for_water_body(c) for c in choices] 
-        choices = sorted(choices)
-        
-        response = {'key': 'water_body', 
-                    'label': 'Water body', 
-                    'choices': choices, 
-                    'widget': 'multiselect:str', 
-                    'value': []}
-        
-        return response
-    
-    
-    #==========================================================================
-    def dict_select_type_area(self, **kwargs): 
-        """
-        Created     20180721   by Magnus Wenzer 
+        Created     20180824   by Magnus Wenzer 
         
         """ 
-        choices = self.mapping_objects['water_body'].get_list(area_level='type_area')
-        choices = [self._get_string_for_type_area(c) for c in choices]
-        choices = sorted(choices)
+        water_body_mapping = self.mapping_objects['water_body'] 
         
-        response = {'key': 'type_area', 
-                    'label': 'Type area', 
-                    'choices': choices, 
-                    'widget': 'multiselect:str', 
-                    'value': []}
         
-        return response
+        sharkweb_water_district_list = self.sharkweb_reader.get_available_water_district()
+        sharkweb_type_area_list = self.sharkweb_reader.get_available_type_area()
+        sharkweb_water_body_list = ['SE'+item for item in self.sharkweb_reader.get_available_water_body()] # without SE
+        
+        self.sharkweb_water_district_list = sharkweb_water_district_list
+        self.sharkweb_type_area_list = sharkweb_type_area_list
+        self.sharkweb_water_body_list = sharkweb_water_body_list                    
+        
+                               
+        mapping_water_district_code_list = water_body_mapping.get_list('water_district')
+        mapping_water_district_name_list = [water_body_mapping.get_display_name(water_district=water_district) for water_district in mapping_water_district_code_list]
+        self.mapping_water_district_name_list = mapping_water_district_name_list
+        
+        # method intersection get only matching items from the two lists
+        
+        water_district_list = []
+        #----------------------------------------------------------------------
+        for water_district in set(sharkweb_water_district_list).intersection(mapping_water_district_name_list): 
+#            print('water_district: {}'.format(water_district))
+            water_district_code = water_body_mapping.get_internal_name(water_district=water_district)
+            print('water_district: {} - {}'.format(water_district_code, water_district))
+            
+            mapping_type_area_code_list = water_body_mapping.get_list('type_area', water_district=water_district_code)
+            # Create type_area format matching sharkweb 
+            mapping_type_area_name_list_sharkweb = [self.mapping_objects['sharkweb_mapping'].get_mapping(item, 'internal', 'sharkweb') \
+                                                    for item in mapping_type_area_code_list]
+            
+            
+
+            
+            #------------------------------------------------------------------
+            type_area_list = []
+#            print(mapping_type_area_name_list_sharkweb)
+            self.mapping_type_area_name_list_sharkweb = mapping_type_area_name_list_sharkweb 
+            self.sharkweb_type_area_list = set(sharkweb_type_area_list)
+            for type_area in set(sharkweb_type_area_list).intersection(mapping_type_area_name_list_sharkweb): 
+                type_area_code = self.mapping_objects['sharkweb_mapping'].get_mapping(type_area, 'sharkweb', 'internal')
+#                print('\ttype_area: {}'.format(type_area)) 
+                self.type_area = type_area
+                mapping_water_body = water_body_mapping.get_list('water_body', type_area=type_area_code) 
+                self.mapping_water_body = mapping_water_body
+                #--------------------------------------------------------------
+                water_body_list = []
+                for water_body in set(sharkweb_water_body_list).intersection(mapping_water_body): 
+#                    print('\twater_body: {}'.format(water_body))
+                    label = '{} - {}'.format(water_body, water_body_mapping.get_display_name(water_body=water_body))
+                    water_body_dict = {"label": label,
+                                       "key": water_body,
+                                       "type": "water_body",
+                                       "status": "editable", 
+                                       "url": water_body_mapping.get_url(water_body), 
+                                       "active": False}
+                    
+                    water_body_list.append(water_body_dict)
+                #--------------------------------------------------------------
+#                label = 
+                type_area_dict = {"label": type_area,
+                                  "key": water_body_mapping.get_internal_name(type_area=type_area.lstrip('0')),
+                                  "type": "type_area",
+                                  "status": "editable", 
+                                  "active": False, 
+                                  "children": water_body_list[:]} 
+                
+                type_area_list.append(type_area_dict)
+                
+            #------------------------------------------------------------------ 
+            water_district_dict = {"label": water_district,
+                                   "key": water_body_mapping.get_internal_name(water_district=water_district),
+                                   "type": "water_district",
+                                   "status": "editable", 
+                                   "active": False, 
+                                   "children": type_area_list[:]}
+            
+            water_district_list.append(water_district_dict)
+#            return water_district_list
+        return water_district_list
+    
+#    #==========================================================================
+#    def dict_select_water_body(self, **kwargs): 
+#        """
+#        Created     20180721   by Magnus Wenzer 
+#        
+#        "location_svar_sea_area_code" in sharkweb
+#        """ 
+#        choices = self.mapping_objects['water_body'].get_list(area_level='water_body')
+#        choices = [self._get_string_for_water_body(c) for c in choices] 
+#        choices = sorted(choices)
+#        
+#        response = {'key': 'water_body', 
+#                    'label': 'Water body', 
+#                    'choices': choices, 
+#                    'widget': 'multiselect:str', 
+#                    'value': []}
+#        
+#        return response
+#    
+#    
+#    #==========================================================================
+#    def dict_select_type_area(self, **kwargs): 
+#        """
+#        Created     20180721   by Magnus Wenzer 
+#        
+#        """ 
+#        choices = self.mapping_objects['water_body'].get_list(area_level='type_area')
+#        choices = [self._get_string_for_type_area(c) for c in choices]
+#        choices = sorted(choices)
+#        
+#        response = {'key': 'type_area', 
+#                    'label': 'Type area', 
+#                    'choices': choices, 
+#                    'widget': 'multiselect:str', 
+#                    'value': []}
+#        
+#        return response
         
         
     #==========================================================================
@@ -1460,12 +1559,19 @@ class EventHandler(object):
     def dict_subset(self, workspace_uuid=None, subset_uuid=None, request={}, **kwargs):  
         """
         Created     20180222    by Magnus Wenzer
-        Updated     20180720    by Magnus Wenzer
+        Updated     20180824    by Magnus Wenzer
         
         Update 20180608 by MW: kwargs contains what to include. Currently options are: 
             inidcator_settings 
             quality_elements 
             supporting_elements 
+        
+        Update 20180824 by MW: 
+            Handle request. The request is not a full dict_subset but only lists of selection from data filter. 
+        Request is handle for: 
+            area 
+            time
+        
         Usage: 
             if kwargs.get('<include>'):
                 "INCLUDE"
@@ -1501,10 +1607,10 @@ class EventHandler(object):
                 workspace_object.uuid_mapping.set_active(subset_uuid)
             else:
                 workspace_object.uuid_mapping.set_inactive(subset_uuid)
- 
+        
         
         # Time
-        if kwargs.get('time'):
+        if kwargs.get('time'):                
             subset_dict['time'] = self.dict_time(workspace_uuid=workspace_uuid, 
                                                        subset_uuid=subset_uuid, 
                                                        request=request.get('time', {}), 
@@ -1516,11 +1622,13 @@ class EventHandler(object):
 #                                                   request=request.get('periods', {}))
         
 
-        # Areas (contains water_district, type_area and water_body in a tree structure) 
+        # Areas (contains water_district, type_area and water_body in a tree structure (or all in one list if request)) 
+        # OBS! If request is given the value for key 'area' is a list containing all levels of areas
         if kwargs.get('areas'): 
-            if request.get('areas'):
-                if len(self._get_active_values_in_list_with_dicts(request.get('areas'))) == 0:
-                    raise exceptions.NoAreasSelected
+            if 'areas' in request: 
+                area_list = request.get('areas')
+                if len(area_list) == 0:
+                    raise exceptions.NoAreasSelected   
                     
             subset_dict['areas'] = self.list_areas(workspace_uuid=workspace_uuid, 
                                                             subset_uuid=subset_uuid, 
@@ -1595,7 +1703,7 @@ class EventHandler(object):
     def dict_type_area(self, workspace_uuid=None, subset_uuid=None, type_area=None, request=None): 
         """
         Created     20180222    by Magnus Wenzer
-        Updated     20180611    by Magnus Wenzer
+        Updated     20180824    by Magnus Wenzer
         
         "editable" is not checked at the moment....
         """
@@ -1612,6 +1720,7 @@ class EventHandler(object):
                       "children": []}
             
         if request: 
+            return request # From 20180824 this is handled in a previous stage 
             # Add active water bodies to include filter. 
             # Set the data filter for water body here instead of adding one by one in dict_water_body 
             active_water_bodies = self._get_active_values_in_list_with_dicts(request['children'])
@@ -1655,7 +1764,7 @@ class EventHandler(object):
         
         
     #==========================================================================
-    def dict_water_district(self, workspace_uuid=None, subset_uuid=None, water_district=None, request=None): 
+    def dict_water_district(self, workspace_uuid=None, subset_uuid=None, water_district=None, request={}): 
         """
         Created     20180315    by Magnus Wenzer
         Updated     20180315    by Magnus Wenzer
@@ -2091,17 +2200,21 @@ class EventHandler(object):
                                 **kwargs): 
         """
         Created     20180321    by Magnus Wenzer
-        Updated     20180615    by Magnus Wenzer
+        Updated     20180824    by Magnus Wenzer
         
         request is a list of dicts. 
         """ 
         
-        # Get list of areas that the filters can b applied on. 
+        # Get list of areas that the filters can be applied on. 
         # This is a list with all water_bodies selected by the user 
-        selected_areas = kwargs.get('selected_areas', {'type_area_list': [], 
-                                                       'viss_eu_cd_list': []}) 
+        # New 20180824: 'selected_areas' in kwargs is a list of water bodies. 
+        water_body_list = kwargs.get('selected_areas', [])
+        type_area_list = self.mapping_objects['water_body'].get_list('type_area', water_body=water_body_list)
+        
+        selected_areas = {'type_area_list': type_area_list, 
+                          'viss_eu_cd_list': water_body_list} 
             
-        selected_areas_list = selected_areas['type_area_list'] + selected_areas['viss_eu_cd_list']
+#        selected_areas_list = selected_areas['type_area_list'] + selected_areas['viss_eu_cd_list']
         
         
         workspace_object = self.get_workspace(workspace_uuid) 
@@ -2122,8 +2235,8 @@ class EventHandler(object):
             # No settings for indicator 
             return []
             
-        self.selected_areas_2 = selected_areas
-        self.selected_areas_list = selected_areas_list
+#        self.selected_areas_2 = selected_areas
+#        self.selected_areas_list = selected_areas_list
         
         #----------------------------------------------------------------------
         # Check type_area
@@ -2398,7 +2511,7 @@ class EventHandler(object):
     def list_areas(self, workspace_uuid=None, subset_uuid=None, request=None, **kwargs): 
         """
         Created     20180315    by Magnus Wenzer
-        Updated     20180315    by Magnus Wenzer
+        Updated     20180824    by Magnus Wenzer
         
         Lists information for "areas". Areas are hierarchically structured like: 
             [
@@ -2430,29 +2543,73 @@ class EventHandler(object):
                ]
         """
         # Try to load subset if not loaded 
-#        subset_object = workspace_object.get_subset_object(subset_uuid) 
+        
+         
 #        if not subset_object:
 #            self.load_su
         
 #        print('request'.upper(), request.keys())
 #        if 'water_district' not in request
         area_list = [] 
-        self.temp_request = request
-        request_for_water_district = self._get_mapping_for_name_in_dict('key', request)
+        
+        if request:
+            # OBS! If request is given it is a list containing all levels of areas. 
+            # create a list of the water bodies from this list 
+            water_body_list = self._get_water_bodies_from_area_list(request)
+            
+            workspace_object = self.get_workspace(workspace_uuid)
+            subset_object = workspace_object.get_subset_object(subset_uuid)
+            subset_object.set_data_filter(step='step_1', 
+                                          filter_type='include_list', 
+                                          filter_name='VISS_EU_CD', 
+                                          data=water_body_list, 
+                                          append_items=False) 
+#        request_for_water_district = self._get_mapping_for_name_in_dict('key', request)
         
 
         for water_district in self.mapping_objects['water_body'].get_list('water_district'):
-            sub_request = request_for_water_district.get(water_district, None) 
+#            sub_request = request_for_water_district.get(water_district, None) 
         
             response = self.dict_water_district(workspace_uuid=workspace_uuid, 
                                                 subset_uuid=subset_uuid, 
                                                 water_district=water_district, 
-                                                request=sub_request)
+                                                request={})
             area_list.append(response)
         
         return area_list
         
         
+    #==========================================================================
+    def _get_water_bodies_from_area_list(self, area_list): 
+        """
+        Created     20180824    by Magnus Wenzer
+        Updated     
+        
+        Extracts water bodies from list of water districts, type areas and water bodies. 
+        """
+        
+        water_district_list = self.mapping_objects['water_body'].get_list('water_district') 
+        type_area_list = self.mapping_objects['water_body'].get_list('type_area') 
+        water_body_list = self.mapping_objects['water_body'].get_list('water_body') 
+        
+        water_bodies = set()
+        invalid_areas= []
+        for area in area_list: 
+            if area in water_district_list:
+                water_bodies.update(self.mapping_objects['water_body'].get_list('water_body', water_district=area))
+            elif area in type_area_list:
+                water_bodies.update(self.mapping_objects['water_body'].get_list('water_body', type_area=area))
+            elif area in water_body_list:
+                water_bodies.add(area)
+            else:
+                invalid_areas.append(area)
+            
+            if len(invalid_areas): 
+                raise exceptions.InvalidArea(';'.join(invalid_areas))
+        
+        return list(water_bodies)
+    
+    
     #==========================================================================
     def deprecated_list_type_areas(self, workspace_uuid=None, subset_uuid=None, request=None): 
         """
@@ -2852,20 +3009,24 @@ class EventHandler(object):
         
     #==========================================================================
     @timer 
-    def request_sharkweb_search(self, request={}):
+    def request_sharkweb_search(self, request):
         """
         Created     20180222    by Magnus Wenzer
         """ 
-        
-        if request:
+        self.sharkweb_reader = core.SharkWebReader()
+        if request: 
+#            self.import_sharkweb_data
+            #TODO: Här är request enklare listor mm.
             #self.load_data_from_sharkweb(request)
             pass
         else:
-            response = {} 
-            response['year_interval'] = self.dict_select_year_interval() 
-            response['datatype'] = self.dict_select_datatype()
-            response['water_body'] = self.dict_select_water_body()
-            response['type_area'] = self.dict_select_type_area()
+            # Create sharkweb reader 
+            
+            response = [] 
+            response.append(self.dict_select_year_interval())
+            response.append(self.dict_select_datatype())
+            response.append(self.list_select_area())
+            #TODO: Kolla hur utsäkningen fungerar i sharkweb 
             
             return response
         
@@ -2970,7 +3131,7 @@ class EventHandler(object):
     def request_subset_get_indicator_settings(self, request):
         """
         Created     20180608    by Magnus Wenzer
-        Updated     20180611    by Magnus Wenzer
+        Updated     20180824    by Magnus Wenzer
         
         "request" must contain: 
             workspace_uuid
@@ -2983,6 +3144,7 @@ class EventHandler(object):
         
             
         """
+        #TODO: Här är request enklare listor mm.
         self._logger.debug('Start: request_subset_get_indicator_settings')
         
         workspace_uuid = request.get('workspace_uuid', {}) 
@@ -3001,10 +3163,13 @@ class EventHandler(object):
         
         # Reset all data filters in step 1. 
         # This has to be done as water bodies are appended to current filter when looping throughtype areas. 
-        # So if data filters are removed from last request it wont automaticly be removed in the data filter files. 
-        self.action_reset_data_filter(workspace_uuid=workspace_uuid, 
-                                      subset_uuid=subset_uuid, 
-                                      step=1)
+        # So if data filters are removed from last request it won't automaticly be removed in the data filter files. 
+        
+        # Dont think we need to reset filter anymore. MW 20180824
+        if 0:
+            self.action_reset_data_filter(workspace_uuid=workspace_uuid, 
+                                          subset_uuid=subset_uuid, 
+                                          step=1)
         
         response = {} 
         
@@ -3021,8 +3186,12 @@ class EventHandler(object):
                                               areas=True) 
         
         # Check selected areas 
-        selected_areas = self._get_selected_areas_from_subset_request(request['subset'])
-        self.selected_areas = selected_areas
+        workspace_object = self.get_workspace(workspace_uuid) 
+        subset_object = workspace_object.get_subset_object(subset_uuid) 
+        data_filter_object = subset_object.get_data_filter_object(step=1)
+        selected_areas = data_filter_object.get_include_list_filter('VISS_EU_CD')
+#        selected_areas = self._get_selected_areas_from_subset_request(request['subset'])
+#        self.selected_areas = selected_areas
         
         
         # Apply data filter 
