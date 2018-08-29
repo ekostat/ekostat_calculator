@@ -1,1003 +1,344 @@
-2018-07-21 10:56:03,930	event_handler.py	2578	load_workspace	INFO	Workspace "5cf3719a-9d44-48e0-b228-496a6894d263" with alias "New test workspace loaded."
-2018-07-21 10:56:17,976	event_handler.py	51	f	DEBUG	Stop: "request_subset_get_data_filter". Time for running method was 14.320702314376831
-2018-07-21 10:59:42,867	event_handler.py	102	__init__	DEBUG	Start EventHandler: event_handler
-2018-07-21 10:59:42,867	event_handler.py	135	_load_mapping_objects	DEBUG	Loading mapping files from pickle file.
-2018-07-21 10:59:43,300	event_handler.py	113	__init__	DEBUG	Time for mapping: 0.43270301818847656
-2018-07-21 10:59:43,316	event_handler.py	118	__init__	DEBUG	Time for initiating EventHandler: 0.44830322265625
-2018-07-21 10:59:43,316	event_handler.py	47	f	DEBUG	Start: "request_subset_get_data_filter"
-2018-07-21 10:59:43,316	event_handler.py	2738	request_subset_get_data_filter	DEBUG	Start: request_subset_get_data_filter
-2018-07-21 10:59:43,331	event_handler.py	2562	load_workspace	DEBUG	Trying to load new workspace "5cf3719a-9d44-48e0-b228-496a6894d263" with alias "New test workspace"
-2018-07-21 10:59:43,593	event_handler.py	2580	load_workspace	INFO	Workspace "5cf3719a-9d44-48e0-b228-496a6894d263" with alias "New test workspace loaded."
-2018-07-21 10:59:45,146	event_handler.py	51	f	DEBUG	Stop: "request_subset_get_data_filter". Time for running method was 1.8304102420806885
-2018-07-21 11:00:07,557	event_handler.py	102	__init__	DEBUG	Start EventHandler: event_handler
-2018-07-21 11:00:07,559	event_handler.py	135	_load_mapping_objects	DEBUG	Loading mapping files from pickle file.
-2018-07-21 11:00:07,976	event_handler.py	113	__init__	DEBUG	Time for mapping: 0.4165031909942627
-2018-07-21 11:00:07,991	event_handler.py	118	__init__	DEBUG	Time for initiating EventHandler: 0.434603214263916
-2018-07-21 11:00:07,991	event_handler.py	47	f	DEBUG	Start: "request_subset_get_data_filter"
-2018-07-21 11:00:07,991	event_handler.py	2738	request_subset_get_data_filter	DEBUG	Start: request_subset_get_data_filter
-2018-07-21 11:00:08,023	event_handler.py	2562	load_workspace	DEBUG	Trying to load new workspace "5cf3719a-9d44-48e0-b228-496a6894d263" with alias "New test workspace"
-2018-07-21 11:00:08,272	event_handler.py	2580	load_workspace	INFO	Workspace "5cf3719a-9d44-48e0-b228-496a6894d263" with alias "New test workspace loaded."
-2018-07-21 11:00:09,905	event_handler.py	51	f	DEBUG	Stop: "request_subset_get_data_filter". Time for running method was 1.913712978363037
-2018-07-21 11:23:55,282	event_handler.py	102	__init__	DEBUG	Start EventHandler: event_handler
-2018-07-21 11:23:55,285	event_handler.py	135	_load_mapping_objects	DEBUG	Loading mapping files from pickle file.
-2018-07-21 11:23:55,838	event_handler.py	113	__init__	DEBUG	Time for mapping: 0.5529754161834717
-2018-07-21 11:23:55,856	event_handler.py	118	__init__	DEBUG	Time for initiating EventHandler: 0.5735747814178467
-2018-07-21 11:23:55,856	event_handler.py	47	f	DEBUG	Start: "request_subset_result_get"
-2018-07-21 11:23:55,876	event_handler.py	2562	load_workspace	DEBUG	Trying to load new workspace "5cf3719a-9d44-48e0-b228-496a6894d263" with alias "New test workspace"
-2018-07-21 11:23:56,230	event_handler.py	2580	load_workspace	INFO	Workspace "5cf3719a-9d44-48e0-b228-496a6894d263" with alias "New test workspace loaded."
-2018-07-21 11:24:48,966	event_handler.py	102	__init__	DEBUG	Start EventHandler: event_handler
-2018-07-21 11:24:48,966	event_handler.py	135	_load_mapping_objects	DEBUG	Loading mapping files from pickle file.
-2018-07-21 11:24:49,497	event_handler.py	113	__init__	DEBUG	Time for mapping: 0.5311558246612549
-2018-07-21 11:24:49,573	event_handler.py	118	__init__	DEBUG	Time for initiating EventHandler: 0.6067497730255127
-2018-07-21 11:24:49,573	event_handler.py	47	f	DEBUG	Start: "request_subset_result_get"
-2018-07-21 11:24:49,607	event_handler.py	2562	load_workspace	DEBUG	Trying to load new workspace "5cf3719a-9d44-48e0-b228-496a6894d263" with alias "New test workspace"
-2018-07-21 11:24:49,919	event_handler.py	2580	load_workspace	INFO	Workspace "5cf3719a-9d44-48e0-b228-496a6894d263" with alias "New test workspace loaded."
-2018-07-21 11:24:50,064	event_handler.py	51	f	DEBUG	Stop: "request_subset_result_get". Time for running method was 0.475161075592041
-2018-07-21 11:25:24,581	event_handler.py	102	__init__	DEBUG	Start EventHandler: event_handler
-2018-07-21 11:25:24,581	event_handler.py	135	_load_mapping_objects	DEBUG	Loading mapping files from pickle file.
-2018-07-21 11:25:25,060	event_handler.py	113	__init__	DEBUG	Time for mapping: 0.4787604808807373
-2018-07-21 11:25:25,063	event_handler.py	118	__init__	DEBUG	Time for initiating EventHandler: 0.4812602996826172
-2018-07-21 11:25:25,063	event_handler.py	47	f	DEBUG	Start: "request_subset_result_get"
-2018-07-21 11:25:25,083	event_handler.py	2562	load_workspace	DEBUG	Trying to load new workspace "5cf3719a-9d44-48e0-b228-496a6894d263" with alias "New test workspace"
-2018-07-21 11:25:25,435	event_handler.py	2580	load_workspace	INFO	Workspace "5cf3719a-9d44-48e0-b228-496a6894d263" with alias "New test workspace loaded."
-2018-07-21 11:25:25,563	event_handler.py	51	f	DEBUG	Stop: "request_subset_result_get". Time for running method was 0.4975590705871582
-2018-07-21 11:28:03,846	event_handler.py	102	__init__	DEBUG	Start EventHandler: event_handler
-2018-07-21 11:28:03,846	event_handler.py	135	_load_mapping_objects	DEBUG	Loading mapping files from pickle file.
-2018-07-21 11:28:04,323	event_handler.py	113	__init__	DEBUG	Time for mapping: 0.4774606227874756
-2018-07-21 11:28:04,341	event_handler.py	118	__init__	DEBUG	Time for initiating EventHandler: 0.4955589771270752
-2018-07-21 11:28:04,341	event_handler.py	47	f	DEBUG	Start: "request_subset_result_get"
-2018-07-21 11:28:04,359	event_handler.py	2562	load_workspace	DEBUG	Trying to load new workspace "5cf3719a-9d44-48e0-b228-496a6894d263" with alias "New test workspace"
-2018-07-21 11:28:04,642	event_handler.py	2580	load_workspace	INFO	Workspace "5cf3719a-9d44-48e0-b228-496a6894d263" with alias "New test workspace loaded."
-2018-07-21 11:28:04,660	event_handler.py	51	f	DEBUG	Stop: "request_subset_result_get". Time for running method was 0.3183739185333252
-2018-07-21 12:02:13,577	event_handler.py	102	__init__	DEBUG	Start EventHandler: event_handler
-2018-07-21 12:02:13,577	event_handler.py	142	_load_mapping_objects	DEBUG	Loading mapping files from original files.
-2018-07-21 12:03:09,654	event_handler.py	102	__init__	DEBUG	Start EventHandler: event_handler
-2018-07-21 12:03:09,654	event_handler.py	137	_load_mapping_objects	DEBUG	Loading mapping files from pickle file.
-2018-07-21 12:03:23,082	event_handler.py	102	__init__	DEBUG	Start EventHandler: event_handler
-2018-07-21 12:03:23,082	event_handler.py	142	_load_mapping_objects	DEBUG	Loading mapping files from original files.
-2018-07-21 12:06:29,146	event_handler.py	102	__init__	DEBUG	Start EventHandler: event_handler
-2018-07-21 12:06:29,146	event_handler.py	137	_load_mapping_objects	DEBUG	Loading mapping files from pickle file.
-2018-07-21 12:06:45,293	event_handler.py	102	__init__	DEBUG	Start EventHandler: event_handler
-2018-07-21 12:06:45,293	event_handler.py	142	_load_mapping_objects	DEBUG	Loading mapping files from original files.
-2018-07-21 12:07:29,747	logger.py	85	add_log	DEBUG	
-2018-07-21 12:07:29,747	logger.py	86	add_log	DEBUG	========================================================================================================================
-2018-07-21 12:07:29,747	logger.py	87	add_log	DEBUG	### Log added for log_id "event_handler" at locaton: ..\log\main_event_handler.log
-2018-07-21 12:07:29,750	logger.py	88	add_log	DEBUG	------------------------------------------------------------------------------------------------------------------------
-2018-07-21 12:07:29,750	event_handler.py	102	__init__	DEBUG	Start EventHandler: event_handler
-2018-07-21 12:07:29,750	event_handler.py	142	_load_mapping_objects	DEBUG	Loading mapping files from original files.
-2018-07-21 12:07:33,594	event_handler.py	113	__init__	DEBUG	Time for mapping: 3.844099998474121
-2018-07-21 12:07:33,610	event_handler.py	118	__init__	DEBUG	Time for initiating EventHandler: 3.8622000217437744
-2018-07-21 12:07:48,265	event_handler.py	102	__init__	DEBUG	Start EventHandler: event_handler
-2018-07-21 12:07:48,265	event_handler.py	142	_load_mapping_objects	DEBUG	Loading mapping files from original files.
-2018-07-21 12:07:52,006	event_handler.py	113	__init__	DEBUG	Time for mapping: 3.7411000728607178
-2018-07-21 12:07:52,021	event_handler.py	118	__init__	DEBUG	Time for initiating EventHandler: 3.756700277328491
-2018-07-21 12:08:15,014	event_handler.py	102	__init__	DEBUG	Start EventHandler: event_handler
-2018-07-21 12:08:15,014	event_handler.py	142	_load_mapping_objects	DEBUG	Loading mapping files from original files.
-2018-07-21 12:08:18,953	event_handler.py	113	__init__	DEBUG	Time for mapping: 3.939199924468994
-2018-07-21 12:08:18,969	event_handler.py	118	__init__	DEBUG	Time for initiating EventHandler: 3.9547996520996094
-2018-07-21 12:08:55,424	event_handler.py	102	__init__	DEBUG	Start EventHandler: event_handler
-2018-07-21 12:08:55,426	event_handler.py	137	_load_mapping_objects	DEBUG	Loading mapping files from pickle file.
-2018-07-21 12:08:55,932	event_handler.py	113	__init__	DEBUG	Time for mapping: 0.5055999755859375
-2018-07-21 12:08:55,934	event_handler.py	118	__init__	DEBUG	Time for initiating EventHandler: 0.5105998516082764
-2018-07-21 12:08:55,934	event_handler.py	47	f	DEBUG	Start: "request_subset_result_get"
-2018-07-21 12:08:55,957	event_handler.py	2565	load_workspace	DEBUG	Trying to load new workspace "5cf3719a-9d44-48e0-b228-496a6894d263" with alias "New test workspace"
-2018-07-21 12:08:56,355	event_handler.py	2583	load_workspace	INFO	Workspace "5cf3719a-9d44-48e0-b228-496a6894d263" with alias "New test workspace loaded."
-2018-07-21 12:08:56,380	event_handler.py	51	f	DEBUG	Stop: "request_subset_result_get". Time for running method was 0.44609999656677246
-2018-07-21 12:28:07,773	logger.py	85	add_log	DEBUG	
-2018-07-21 12:28:07,775	logger.py	86	add_log	DEBUG	========================================================================================================================
-2018-07-21 12:28:07,776	logger.py	87	add_log	DEBUG	### Log added for log_id "event_handler" at locaton: ..\log\main_event_handler.log
-2018-07-21 12:28:07,779	logger.py	88	add_log	DEBUG	------------------------------------------------------------------------------------------------------------------------
-2018-07-21 12:28:07,781	event_handler.py	102	__init__	DEBUG	Start EventHandler: event_handler
-2018-07-21 12:28:07,782	event_handler.py	137	_load_mapping_objects	DEBUG	Loading mapping files from pickle file.
-2018-07-21 12:28:08,157	event_handler.py	113	__init__	DEBUG	Time for mapping: 0.375
-2018-07-21 12:28:08,173	event_handler.py	118	__init__	DEBUG	Time for initiating EventHandler: 0.4006001949310303
-2018-07-21 12:28:08,173	event_handler.py	47	f	DEBUG	Start: "request_sharkweb_search"
-2018-07-21 12:28:12,190	event_handler.py	102	__init__	DEBUG	Start EventHandler: event_handler
-2018-07-21 12:28:12,190	event_handler.py	137	_load_mapping_objects	DEBUG	Loading mapping files from pickle file.
-2018-07-21 12:28:12,525	event_handler.py	113	__init__	DEBUG	Time for mapping: 0.3341999053955078
-2018-07-21 12:28:12,540	event_handler.py	118	__init__	DEBUG	Time for initiating EventHandler: 0.34980010986328125
-2018-07-21 12:28:12,541	event_handler.py	47	f	DEBUG	Start: "request_sharkweb_search"
-2018-07-21 12:28:30,110	logger.py	85	add_log	DEBUG	
-2018-07-21 12:28:30,111	logger.py	86	add_log	DEBUG	========================================================================================================================
-2018-07-21 12:28:30,113	logger.py	87	add_log	DEBUG	### Log added for log_id "event_handler" at locaton: ..\log\main_event_handler.log
-2018-07-21 12:28:30,115	logger.py	88	add_log	DEBUG	------------------------------------------------------------------------------------------------------------------------
-2018-07-21 12:28:30,117	event_handler.py	102	__init__	DEBUG	Start EventHandler: event_handler
-2018-07-21 12:28:30,120	event_handler.py	137	_load_mapping_objects	DEBUG	Loading mapping files from pickle file.
-2018-07-21 12:28:30,503	event_handler.py	113	__init__	DEBUG	Time for mapping: 0.3840000629425049
-2018-07-21 12:28:30,504	event_handler.py	118	__init__	DEBUG	Time for initiating EventHandler: 0.39499998092651367
-2018-07-21 12:28:30,504	event_handler.py	47	f	DEBUG	Start: "request_sharkweb_search"
-2018-07-21 12:28:45,898	event_handler.py	102	__init__	DEBUG	Start EventHandler: event_handler
-2018-07-21 12:28:45,900	event_handler.py	137	_load_mapping_objects	DEBUG	Loading mapping files from pickle file.
-2018-07-21 12:28:46,182	event_handler.py	113	__init__	DEBUG	Time for mapping: 0.2820000648498535
-2018-07-21 12:28:46,258	event_handler.py	118	__init__	DEBUG	Time for initiating EventHandler: 0.3599998950958252
-2018-07-21 12:28:46,259	event_handler.py	47	f	DEBUG	Start: "request_sharkweb_search"
-2018-07-21 12:28:50,527	event_handler.py	102	__init__	DEBUG	Start EventHandler: event_handler
-2018-07-21 12:28:50,527	event_handler.py	137	_load_mapping_objects	DEBUG	Loading mapping files from pickle file.
-2018-07-21 12:28:50,857	event_handler.py	113	__init__	DEBUG	Time for mapping: 0.32919979095458984
-2018-07-21 12:28:50,872	event_handler.py	118	__init__	DEBUG	Time for initiating EventHandler: 0.3447999954223633
-2018-07-21 12:28:50,872	event_handler.py	47	f	DEBUG	Start: "request_sharkweb_search"
-2018-07-21 14:53:48,874	logger.py	85	add_log	DEBUG	
-2018-07-21 14:53:48,874	logger.py	86	add_log	DEBUG	========================================================================================================================
-2018-07-21 14:53:48,874	logger.py	87	add_log	DEBUG	### Log added for log_id "event_handler" at locaton: ..\log\main_event_handler.log
-2018-07-21 14:53:48,874	logger.py	88	add_log	DEBUG	------------------------------------------------------------------------------------------------------------------------
-2018-07-21 14:53:48,874	event_handler.py	102	__init__	DEBUG	Start EventHandler: event_handler
-2018-07-21 14:53:48,874	event_handler.py	137	_load_mapping_objects	DEBUG	Loading mapping files from pickle file.
-2018-07-21 14:53:49,314	event_handler.py	113	__init__	DEBUG	Time for mapping: 0.43979811668395996
-2018-07-21 14:53:49,317	event_handler.py	118	__init__	DEBUG	Time for initiating EventHandler: 0.45839786529541016
-2018-07-21 14:53:49,323	event_handler.py	47	f	DEBUG	Start: "request_sharkweb_search"
-2018-07-21 14:54:14,615	event_handler.py	102	__init__	DEBUG	Start EventHandler: event_handler
-2018-07-21 14:54:14,615	event_handler.py	137	_load_mapping_objects	DEBUG	Loading mapping files from pickle file.
-2018-07-21 14:54:14,954	event_handler.py	113	__init__	DEBUG	Time for mapping: 0.33899831771850586
-2018-07-21 14:54:15,010	event_handler.py	118	__init__	DEBUG	Time for initiating EventHandler: 0.39499831199645996
-2018-07-21 14:54:15,012	event_handler.py	47	f	DEBUG	Start: "request_sharkweb_search"
-2018-07-21 14:54:30,765	logger.py	85	add_log	DEBUG	
-2018-07-21 14:54:30,765	logger.py	86	add_log	DEBUG	========================================================================================================================
-2018-07-21 14:54:30,765	logger.py	87	add_log	DEBUG	### Log added for log_id "event_handler" at locaton: ..\log\main_event_handler.log
-2018-07-21 14:54:30,765	logger.py	88	add_log	DEBUG	------------------------------------------------------------------------------------------------------------------------
-2018-07-21 14:54:30,765	event_handler.py	102	__init__	DEBUG	Start EventHandler: event_handler
-2018-07-21 14:54:30,765	event_handler.py	137	_load_mapping_objects	DEBUG	Loading mapping files from pickle file.
-2018-07-21 14:54:31,216	event_handler.py	113	__init__	DEBUG	Time for mapping: 0.4515984058380127
-2018-07-21 14:54:31,233	event_handler.py	118	__init__	DEBUG	Time for initiating EventHandler: 0.468198299407959
-2018-07-21 14:54:31,233	event_handler.py	47	f	DEBUG	Start: "request_sharkweb_search"
-2018-07-21 14:54:31,233	event_handler.py	51	f	DEBUG	Stop: "request_sharkweb_search". Time for running method was 0.0
-2018-07-21 15:04:55,008	logger.py	85	add_log	DEBUG	
-2018-07-21 15:04:55,024	logger.py	86	add_log	DEBUG	========================================================================================================================
-2018-07-21 15:04:55,024	logger.py	87	add_log	DEBUG	### Log added for log_id "event_handler" at locaton: ..\log\main_event_handler.log
-2018-07-21 15:04:55,024	logger.py	88	add_log	DEBUG	------------------------------------------------------------------------------------------------------------------------
-2018-07-21 15:04:55,024	event_handler.py	102	__init__	DEBUG	Start EventHandler: event_handler
-2018-07-21 15:04:55,024	event_handler.py	137	_load_mapping_objects	DEBUG	Loading mapping files from pickle file.
-2018-07-21 15:04:55,306	event_handler.py	113	__init__	DEBUG	Time for mapping: 0.281998872756958
-2018-07-21 15:04:55,357	event_handler.py	118	__init__	DEBUG	Time for initiating EventHandler: 0.3485987186431885
-2018-07-21 15:04:55,362	event_handler.py	47	f	DEBUG	Start: "request_sharkweb_search"
-2018-07-21 15:04:55,723	event_handler.py	51	f	DEBUG	Stop: "request_sharkweb_search". Time for running method was 0.35939812660217285
-2018-07-21 15:05:58,793	event_handler.py	102	__init__	DEBUG	Start EventHandler: event_handler
-2018-07-21 15:05:58,794	event_handler.py	137	_load_mapping_objects	DEBUG	Loading mapping files from pickle file.
-2018-07-21 15:05:59,080	event_handler.py	113	__init__	DEBUG	Time for mapping: 0.2869985103607178
-2018-07-21 15:05:59,145	event_handler.py	118	__init__	DEBUG	Time for initiating EventHandler: 0.3511984348297119
-2018-07-21 15:05:59,160	event_handler.py	47	f	DEBUG	Start: "request_sharkweb_search"
-2018-07-21 15:05:59,487	event_handler.py	51	f	DEBUG	Stop: "request_sharkweb_search". Time for running method was 0.3271982669830322
-2018-07-21 16:39:23,377	event_handler.py	104	__init__	DEBUG	Start EventHandler: event_handler
-2018-07-21 16:39:23,377	event_handler.py	139	_load_mapping_objects	DEBUG	Loading mapping files from pickle file.
-2018-07-21 16:39:23,801	event_handler.py	115	__init__	DEBUG	Time for mapping: 0.4239962100982666
-2018-07-21 16:39:23,802	event_handler.py	120	__init__	DEBUG	Time for initiating EventHandler: 0.42499613761901855
-2018-07-21 16:39:23,803	event_handler.py	47	f	DEBUG	Start: "request_workspace_add"
-2018-07-21 16:39:23,805	event_handler.py	3370	request_workspace_add	DEBUG	Start: request_workspace_add
-2018-07-21 16:39:23,827	event_handler.py	403	copy_workspace	DEBUG	Trying to copy workspace "default_workspace". Copy has alias "201807211639"
-2018-07-21 16:39:24,404	event_handler.py	2712	load_workspace	DEBUG	Trying to load new workspace "1f0aedc7-b5d1-4560-a828-315d544c9f6f" with alias "201807211639"
-2018-07-21 16:39:24,667	event_handler.py	2730	load_workspace	INFO	Workspace "1f0aedc7-b5d1-4560-a828-315d544c9f6f" with alias "201807211639 loaded."
-2018-07-21 16:39:24,667	event_handler.py	51	f	DEBUG	Stop: "request_workspace_add". Time for running method was 0.8619940280914307
-2018-07-21 16:39:25,668	event_handler.py	104	__init__	DEBUG	Start EventHandler: event_handler
-2018-07-21 16:39:25,668	event_handler.py	139	_load_mapping_objects	DEBUG	Loading mapping files from pickle file.
-2018-07-21 16:39:26,066	event_handler.py	115	__init__	DEBUG	Time for mapping: 0.39839649200439453
-2018-07-21 16:39:26,071	event_handler.py	120	__init__	DEBUG	Time for initiating EventHandler: 0.4033963680267334
-2018-07-21 16:39:26,073	event_handler.py	47	f	DEBUG	Start: "request_subset_add"
-2018-07-21 16:39:26,074	event_handler.py	2824	request_subset_add	DEBUG	Start: request_subset_add
-2018-07-21 16:39:26,100	event_handler.py	2712	load_workspace	DEBUG	Trying to load new workspace "1f0aedc7-b5d1-4560-a828-315d544c9f6f" with alias "201807211639"
-2018-07-21 16:39:26,347	event_handler.py	2730	load_workspace	INFO	Workspace "1f0aedc7-b5d1-4560-a828-315d544c9f6f" with alias "201807211639 loaded."
-2018-07-21 16:39:26,347	event_handler.py	367	copy_subset	DEBUG	Trying to copy subset "default_subset"
-2018-07-21 16:39:26,857	event_handler.py	51	f	DEBUG	Stop: "request_subset_add". Time for running method was 0.7825949192047119
-2018-07-21 16:40:31,322	logger.py	85	add_log	DEBUG	
-2018-07-21 16:40:31,325	logger.py	86	add_log	DEBUG	========================================================================================================================
-2018-07-21 16:40:31,327	logger.py	87	add_log	DEBUG	### Log added for log_id "event_handler" at locaton: ..\log\main_event_handler.log
-2018-07-21 16:40:31,329	logger.py	88	add_log	DEBUG	------------------------------------------------------------------------------------------------------------------------
-2018-07-21 16:40:31,332	event_handler.py	104	__init__	DEBUG	Start EventHandler: event_handler
-2018-07-21 16:40:31,334	event_handler.py	139	_load_mapping_objects	DEBUG	Loading mapping files from pickle file.
-2018-07-21 16:40:31,809	event_handler.py	115	__init__	DEBUG	Time for mapping: 0.47520017623901367
-2018-07-21 16:40:31,815	event_handler.py	120	__init__	DEBUG	Time for initiating EventHandler: 0.49320006370544434
-2018-07-21 16:40:31,818	event_handler.py	47	f	DEBUG	Start: "test_timer"
-2018-07-21 16:40:32,138	event_handler.py	51	f	DEBUG	Stop: "test_timer". Time for running method was 0.31840014457702637
-2018-07-21 16:40:51,324	event_handler.py	104	__init__	DEBUG	Start EventHandler: event_handler
-2018-07-21 16:40:51,326	event_handler.py	139	_load_mapping_objects	DEBUG	Loading mapping files from pickle file.
-2018-07-21 16:40:51,812	event_handler.py	115	__init__	DEBUG	Time for mapping: 0.48620009422302246
-2018-07-21 16:40:51,813	event_handler.py	120	__init__	DEBUG	Time for initiating EventHandler: 0.4892001152038574
-2018-07-21 16:41:42,118	event_handler.py	104	__init__	DEBUG	Start EventHandler: event_handler
-2018-07-21 16:41:42,120	event_handler.py	139	_load_mapping_objects	DEBUG	Loading mapping files from pickle file.
-2018-07-21 16:41:42,501	event_handler.py	115	__init__	DEBUG	Time for mapping: 0.38139986991882324
-2018-07-21 16:41:42,502	event_handler.py	120	__init__	DEBUG	Time for initiating EventHandler: 0.38540005683898926
-2018-07-21 16:42:45,607	event_handler.py	104	__init__	DEBUG	Start EventHandler: event_handler
-2018-07-21 16:42:45,607	event_handler.py	139	_load_mapping_objects	DEBUG	Loading mapping files from pickle file.
-2018-07-21 16:42:46,005	event_handler.py	115	__init__	DEBUG	Time for mapping: 0.39799976348876953
-2018-07-21 16:42:46,085	event_handler.py	120	__init__	DEBUG	Time for initiating EventHandler: 0.47819995880126953
-2018-07-21 16:43:52,019	logger.py	85	add_log	DEBUG	
-2018-07-21 16:43:52,019	logger.py	86	add_log	DEBUG	========================================================================================================================
-2018-07-21 16:43:52,019	logger.py	87	add_log	DEBUG	### Log added for log_id "event_handler" at locaton: ..\log\main_event_handler.log
-2018-07-21 16:43:52,019	logger.py	88	add_log	DEBUG	------------------------------------------------------------------------------------------------------------------------
-2018-07-21 16:43:52,035	event_handler.py	104	__init__	DEBUG	Start EventHandler: event_handler
-2018-07-21 16:43:52,035	event_handler.py	139	_load_mapping_objects	DEBUG	Loading mapping files from pickle file.
-2018-07-21 16:43:52,413	event_handler.py	115	__init__	DEBUG	Time for mapping: 0.37820005416870117
-2018-07-21 16:43:52,414	event_handler.py	120	__init__	DEBUG	Time for initiating EventHandler: 0.39479994773864746
-2018-07-21 16:43:52,417	event_handler.py	47	f	DEBUG	Start: "test_timer"
-2018-07-21 16:43:52,741	event_handler.py	51	f	DEBUG	Stop: "test_timer". Time for running method was 0.32180023193359375
-2018-07-21 16:46:50,817	event_handler.py	104	__init__	DEBUG	Start EventHandler: event_handler
-2018-07-21 16:46:50,818	event_handler.py	139	_load_mapping_objects	DEBUG	Loading mapping files from pickle file.
-2018-07-21 16:46:51,120	event_handler.py	115	__init__	DEBUG	Time for mapping: 0.3024001121520996
-2018-07-21 16:46:51,121	event_handler.py	120	__init__	DEBUG	Time for initiating EventHandler: 0.3043999671936035
-2018-07-21 16:48:56,504	logger.py	85	add_log	DEBUG	
-2018-07-21 16:48:56,504	logger.py	86	add_log	DEBUG	========================================================================================================================
-2018-07-21 16:48:56,504	logger.py	87	add_log	DEBUG	### Log added for log_id "event_handler" at locaton: ..\log\main_event_handler.log
-2018-07-21 16:48:56,504	logger.py	88	add_log	DEBUG	------------------------------------------------------------------------------------------------------------------------
-2018-07-21 16:48:56,504	event_handler.py	104	__init__	DEBUG	Start EventHandler: event_handler
-2018-07-21 16:48:56,504	event_handler.py	139	_load_mapping_objects	DEBUG	Loading mapping files from pickle file.
-2018-07-21 16:48:56,847	event_handler.py	115	__init__	DEBUG	Time for mapping: 0.3428001403808594
-2018-07-21 16:48:56,848	event_handler.py	120	__init__	DEBUG	Time for initiating EventHandler: 0.35940003395080566
-2018-07-21 16:48:56,848	event_handler.py	47	f	DEBUG	Start: "test_timer"
-2018-07-21 16:48:57,114	event_handler.py	51	f	DEBUG	Stop: "test_timer". Time for running method was 0.26600003242492676
-2018-07-21 16:49:03,096	event_handler.py	104	__init__	DEBUG	Start EventHandler: event_handler
-2018-07-21 16:49:03,112	event_handler.py	139	_load_mapping_objects	DEBUG	Loading mapping files from pickle file.
-2018-07-21 16:49:03,388	event_handler.py	115	__init__	DEBUG	Time for mapping: 0.27680015563964844
-2018-07-21 16:49:03,441	event_handler.py	120	__init__	DEBUG	Time for initiating EventHandler: 0.3453996181488037
-2018-07-21 16:50:56,032	logger.py	85	add_log	DEBUG	
-2018-07-21 16:50:56,032	logger.py	86	add_log	DEBUG	========================================================================================================================
-2018-07-21 16:50:56,032	logger.py	87	add_log	DEBUG	### Log added for log_id "event_handler" at locaton: ..\log\main_event_handler.log
-2018-07-21 16:50:56,032	logger.py	88	add_log	DEBUG	------------------------------------------------------------------------------------------------------------------------
-2018-07-21 16:50:56,032	event_handler.py	104	__init__	DEBUG	Start EventHandler: event_handler
-2018-07-21 16:50:56,032	event_handler.py	139	_load_mapping_objects	DEBUG	Loading mapping files from pickle file.
-2018-07-21 16:50:56,364	event_handler.py	115	__init__	DEBUG	Time for mapping: 0.3317997455596924
-2018-07-21 16:50:56,365	event_handler.py	120	__init__	DEBUG	Time for initiating EventHandler: 0.33280014991760254
-2018-07-21 16:50:56,365	event_handler.py	47	f	DEBUG	Start: "test_timer"
-2018-07-21 16:50:56,657	event_handler.py	51	f	DEBUG	Stop: "test_timer". Time for running method was 0.29179978370666504
-2018-07-21 16:51:02,792	event_handler.py	104	__init__	DEBUG	Start EventHandler: event_handler
-2018-07-21 16:51:02,792	event_handler.py	139	_load_mapping_objects	DEBUG	Loading mapping files from pickle file.
-2018-07-21 16:51:03,094	event_handler.py	115	__init__	DEBUG	Time for mapping: 0.30159997940063477
-2018-07-21 16:51:03,095	event_handler.py	120	__init__	DEBUG	Time for initiating EventHandler: 0.3025999069213867
-2018-07-21 16:51:03,096	event_handler.py	47	f	DEBUG	Start: "request_workspace_add"
-2018-07-21 16:51:03,099	event_handler.py	3427	request_workspace_add	DEBUG	Start: request_workspace_add
-2018-07-21 16:51:03,119	event_handler.py	403	copy_workspace	DEBUG	Trying to copy workspace "default_workspace". Copy has alias "201807211651"
-2018-07-21 16:51:03,577	event_handler.py	2715	load_workspace	DEBUG	Trying to load new workspace "f9218f1c-5e07-4f35-8795-d01a3275fc6b" with alias "201807211651"
-2018-07-21 16:51:03,791	event_handler.py	2733	load_workspace	INFO	Workspace "f9218f1c-5e07-4f35-8795-d01a3275fc6b" with alias "201807211651 loaded."
-2018-07-21 16:51:03,792	event_handler.py	51	f	DEBUG	Stop: "request_workspace_add". Time for running method was 0.6932001113891602
-2018-07-21 16:51:04,857	event_handler.py	104	__init__	DEBUG	Start EventHandler: event_handler
-2018-07-21 16:51:04,857	event_handler.py	139	_load_mapping_objects	DEBUG	Loading mapping files from pickle file.
-2018-07-21 16:51:05,158	event_handler.py	115	__init__	DEBUG	Time for mapping: 0.30119991302490234
-2018-07-21 16:51:05,159	event_handler.py	120	__init__	DEBUG	Time for initiating EventHandler: 0.3022000789642334
-2018-07-21 16:51:05,159	event_handler.py	47	f	DEBUG	Start: "request_subset_add"
-2018-07-21 16:51:05,159	event_handler.py	2881	request_subset_add	DEBUG	Start: request_subset_add
-2018-07-21 16:51:05,173	event_handler.py	2715	load_workspace	DEBUG	Trying to load new workspace "f9218f1c-5e07-4f35-8795-d01a3275fc6b" with alias "201807211651"
-2018-07-21 16:51:05,384	event_handler.py	2733	load_workspace	INFO	Workspace "f9218f1c-5e07-4f35-8795-d01a3275fc6b" with alias "201807211651 loaded."
-2018-07-21 16:51:05,384	event_handler.py	367	copy_subset	DEBUG	Trying to copy subset "default_subset"
-2018-07-21 16:51:05,784	event_handler.py	51	f	DEBUG	Stop: "request_subset_add". Time for running method was 0.6251997947692871
-2018-07-21 16:53:42,329	event_handler.py	104	__init__	DEBUG	Start EventHandler: event_handler
-2018-07-21 16:53:42,330	event_handler.py	139	_load_mapping_objects	DEBUG	Loading mapping files from pickle file.
-2018-07-21 16:53:42,678	event_handler.py	115	__init__	DEBUG	Time for mapping: 0.34819984436035156
-2018-07-21 16:53:42,679	event_handler.py	120	__init__	DEBUG	Time for initiating EventHandler: 0.3512001037597656
-2018-07-21 16:55:14,857	logger.py	85	add_log	DEBUG	
-2018-07-21 16:55:14,872	logger.py	86	add_log	DEBUG	========================================================================================================================
-2018-07-21 16:55:14,872	logger.py	87	add_log	DEBUG	### Log added for log_id "event_handler" at locaton: ..\log\main_event_handler.log
-2018-07-21 16:55:14,872	logger.py	88	add_log	DEBUG	------------------------------------------------------------------------------------------------------------------------
-2018-07-21 16:55:14,872	event_handler.py	104	__init__	DEBUG	Start EventHandler: event_handler
-2018-07-21 16:55:14,872	event_handler.py	139	_load_mapping_objects	DEBUG	Loading mapping files from pickle file.
-2018-07-21 16:55:15,204	event_handler.py	115	__init__	DEBUG	Time for mapping: 0.3317999839782715
-2018-07-21 16:55:15,220	event_handler.py	120	__init__	DEBUG	Time for initiating EventHandler: 0.36300015449523926
-2018-07-21 16:55:15,220	event_handler.py	47	f	DEBUG	Start: "test_timer"
-2018-07-21 16:55:15,500	event_handler.py	51	f	DEBUG	Stop: "test_timer". Time for running method was 0.27900004386901855
-2018-07-21 16:55:35,778	event_handler.py	104	__init__	DEBUG	Start EventHandler: event_handler
-2018-07-21 16:55:35,780	event_handler.py	139	_load_mapping_objects	DEBUG	Loading mapping files from pickle file.
-2018-07-21 16:55:36,120	event_handler.py	115	__init__	DEBUG	Time for mapping: 0.3416001796722412
-2018-07-21 16:55:36,121	event_handler.py	120	__init__	DEBUG	Time for initiating EventHandler: 0.3436000347137451
-2018-07-21 17:12:45,851	logger.py	85	add_log	DEBUG	
-2018-07-21 17:12:45,882	logger.py	86	add_log	DEBUG	========================================================================================================================
-2018-07-21 17:12:45,882	logger.py	87	add_log	DEBUG	### Log added for log_id "event_handler" at locaton: ..\log\main_event_handler.log
-2018-07-21 17:12:45,882	logger.py	88	add_log	DEBUG	------------------------------------------------------------------------------------------------------------------------
-2018-07-21 17:12:45,882	event_handler.py	104	__init__	DEBUG	Start EventHandler: event_handler
-2018-07-21 17:12:45,882	event_handler.py	139	_load_mapping_objects	DEBUG	Loading mapping files from pickle file.
-2018-07-21 17:12:46,288	event_handler.py	115	__init__	DEBUG	Time for mapping: 0.40599989891052246
-2018-07-21 17:12:46,304	event_handler.py	120	__init__	DEBUG	Time for initiating EventHandler: 0.4538002014160156
-2018-07-21 17:12:46,304	event_handler.py	47	f	DEBUG	Start: "test_timer"
-2018-07-21 17:12:46,695	event_handler.py	51	f	DEBUG	Stop: "test_timer". Time for running method was 0.39079976081848145
-2018-07-21 17:12:46,862	event_handler.py	104	__init__	DEBUG	Start EventHandler: event_handler
-2018-07-21 17:12:46,862	event_handler.py	139	_load_mapping_objects	DEBUG	Loading mapping files from pickle file.
-2018-07-21 17:12:47,220	event_handler.py	115	__init__	DEBUG	Time for mapping: 0.3580002784729004
-2018-07-21 17:12:47,239	event_handler.py	120	__init__	DEBUG	Time for initiating EventHandler: 0.3770003318786621
-2018-07-21 17:12:56,132	event_handler.py	104	__init__	DEBUG	Start EventHandler: event_handler
-2018-07-21 17:12:56,137	event_handler.py	139	_load_mapping_objects	DEBUG	Loading mapping files from pickle file.
-2018-07-21 17:12:56,586	event_handler.py	115	__init__	DEBUG	Time for mapping: 0.4498000144958496
-2018-07-21 17:12:56,587	event_handler.py	120	__init__	DEBUG	Time for initiating EventHandler: 0.4547998905181885
-2018-07-21 17:16:41,582	logger.py	85	add_log	DEBUG	
-2018-07-21 17:16:41,582	logger.py	86	add_log	DEBUG	========================================================================================================================
-2018-07-21 17:16:41,582	logger.py	87	add_log	DEBUG	### Log added for log_id "event_handler" at locaton: ..\log\main_event_handler.log
-2018-07-21 17:16:41,582	logger.py	88	add_log	DEBUG	------------------------------------------------------------------------------------------------------------------------
-2018-07-21 17:16:41,582	event_handler.py	104	__init__	DEBUG	Start EventHandler: event_handler
-2018-07-21 17:16:41,583	event_handler.py	144	_load_mapping_objects	DEBUG	Loading mapping files from original files.
-2018-07-21 17:18:43,861	event_handler.py	104	__init__	DEBUG	Start EventHandler: event_handler
-2018-07-21 17:18:43,863	event_handler.py	144	_load_mapping_objects	DEBUG	Loading mapping files from original files.
-2018-07-21 17:19:35,158	event_handler.py	104	__init__	DEBUG	Start EventHandler: event_handler
-2018-07-21 17:19:35,158	event_handler.py	144	_load_mapping_objects	DEBUG	Loading mapping files from original files.
-2018-07-21 17:19:38,335	event_handler.py	115	__init__	DEBUG	Time for mapping: 3.176999807357788
-2018-07-21 17:19:38,336	event_handler.py	120	__init__	DEBUG	Time for initiating EventHandler: 3.177999973297119
-2018-07-21 17:21:19,112	event_handler.py	104	__init__	DEBUG	Start EventHandler: event_handler
-2018-07-21 17:21:19,113	event_handler.py	139	_load_mapping_objects	DEBUG	Loading mapping files from pickle file.
-2018-07-21 17:21:19,463	event_handler.py	115	__init__	DEBUG	Time for mapping: 0.3493998050689697
-2018-07-21 17:21:19,478	event_handler.py	120	__init__	DEBUG	Time for initiating EventHandler: 0.3660001754760742
-2018-07-21 17:21:19,478	event_handler.py	47	f	DEBUG	Start: "request_workspace_add"
-2018-07-21 17:21:19,478	event_handler.py	3431	request_workspace_add	DEBUG	Start: request_workspace_add
-2018-07-21 17:21:19,479	event_handler.py	403	copy_workspace	DEBUG	Trying to copy workspace "default_workspace". Copy has alias "201807211721"
-2018-07-21 17:21:19,929	event_handler.py	2719	load_workspace	DEBUG	Trying to load new workspace "f61f6558-08a7-4b00-82ac-8fcb68ad0162" with alias "201807211721"
-2018-07-21 17:21:20,170	event_handler.py	2737	load_workspace	INFO	Workspace "f61f6558-08a7-4b00-82ac-8fcb68ad0162" with alias "201807211721 loaded."
-2018-07-21 17:21:20,170	event_handler.py	51	f	DEBUG	Stop: "request_workspace_add". Time for running method was 0.6919999122619629
-2018-07-21 17:21:21,188	event_handler.py	104	__init__	DEBUG	Start EventHandler: event_handler
-2018-07-21 17:21:21,188	event_handler.py	139	_load_mapping_objects	DEBUG	Loading mapping files from pickle file.
-2018-07-21 17:21:21,529	event_handler.py	115	__init__	DEBUG	Time for mapping: 0.34060025215148926
-2018-07-21 17:21:21,529	event_handler.py	120	__init__	DEBUG	Time for initiating EventHandler: 0.34060025215148926
-2018-07-21 17:21:21,530	event_handler.py	47	f	DEBUG	Start: "request_subset_add"
-2018-07-21 17:21:21,530	event_handler.py	2885	request_subset_add	DEBUG	Start: request_subset_add
-2018-07-21 17:21:21,534	event_handler.py	2719	load_workspace	DEBUG	Trying to load new workspace "f61f6558-08a7-4b00-82ac-8fcb68ad0162" with alias "201807211721"
-2018-07-21 17:21:21,735	event_handler.py	2737	load_workspace	INFO	Workspace "f61f6558-08a7-4b00-82ac-8fcb68ad0162" with alias "201807211721 loaded."
-2018-07-21 17:21:21,735	event_handler.py	367	copy_subset	DEBUG	Trying to copy subset "default_subset"
-2018-07-21 17:21:22,161	event_handler.py	51	f	DEBUG	Stop: "request_subset_add". Time for running method was 0.6313998699188232
-2018-07-21 17:24:48,848	logger.py	85	add_log	DEBUG	
-2018-07-21 17:24:48,850	logger.py	86	add_log	DEBUG	========================================================================================================================
-2018-07-21 17:24:48,851	logger.py	87	add_log	DEBUG	### Log added for log_id "event_handler" at locaton: ..\log\main_event_handler.log
-2018-07-21 17:24:48,853	logger.py	88	add_log	DEBUG	------------------------------------------------------------------------------------------------------------------------
-2018-07-21 17:24:48,854	event_handler.py	104	__init__	DEBUG	Start EventHandler: event_handler
-2018-07-21 17:24:48,856	event_handler.py	139	_load_mapping_objects	DEBUG	Loading mapping files from pickle file.
-2018-07-21 17:24:49,206	event_handler.py	115	__init__	DEBUG	Time for mapping: 0.350600004196167
-2018-07-21 17:24:49,207	event_handler.py	120	__init__	DEBUG	Time for initiating EventHandler: 0.3605997562408447
-2018-07-21 17:24:49,207	event_handler.py	47	f	DEBUG	Start: "test_timer"
-2018-07-21 17:24:49,494	event_handler.py	51	f	DEBUG	Stop: "test_timer". Time for running method was 0.28620004653930664
-2018-07-21 17:24:49,646	event_handler.py	104	__init__	DEBUG	Start EventHandler: event_handler
-2018-07-21 17:24:49,646	event_handler.py	139	_load_mapping_objects	DEBUG	Loading mapping files from pickle file.
-2018-07-21 17:24:49,966	event_handler.py	115	__init__	DEBUG	Time for mapping: 0.3206000328063965
-2018-07-21 17:24:49,966	event_handler.py	120	__init__	DEBUG	Time for initiating EventHandler: 0.3206000328063965
-2018-07-21 17:26:36,359	event_handler.py	104	__init__	DEBUG	Start EventHandler: event_handler
-2018-07-21 17:26:36,359	event_handler.py	139	_load_mapping_objects	DEBUG	Loading mapping files from pickle file.
-2018-07-21 17:26:36,662	event_handler.py	115	__init__	DEBUG	Time for mapping: 0.3025999069213867
-2018-07-21 17:26:36,677	event_handler.py	120	__init__	DEBUG	Time for initiating EventHandler: 0.31820011138916016
-2018-07-21 17:26:36,677	event_handler.py	47	f	DEBUG	Start: "request_workspace_add"
-2018-07-21 17:26:36,677	event_handler.py	3431	request_workspace_add	DEBUG	Start: request_workspace_add
-2018-07-21 17:26:36,678	event_handler.py	403	copy_workspace	DEBUG	Trying to copy workspace "default_workspace". Copy has alias "201807211726"
-2018-07-21 17:26:37,142	event_handler.py	2719	load_workspace	DEBUG	Trying to load new workspace "27689220-2492-4e82-86ca-152390a7be2b" with alias "201807211726"
-2018-07-21 17:26:37,343	event_handler.py	2737	load_workspace	INFO	Workspace "27689220-2492-4e82-86ca-152390a7be2b" with alias "201807211726 loaded."
-2018-07-21 17:26:37,343	event_handler.py	51	f	DEBUG	Stop: "request_workspace_add". Time for running method was 0.6653997898101807
-2018-07-21 17:26:37,510	event_handler.py	104	__init__	DEBUG	Start EventHandler: event_handler
-2018-07-21 17:26:37,512	event_handler.py	139	_load_mapping_objects	DEBUG	Loading mapping files from pickle file.
-2018-07-21 17:26:37,843	event_handler.py	115	__init__	DEBUG	Time for mapping: 0.33119988441467285
-2018-07-21 17:26:37,858	event_handler.py	120	__init__	DEBUG	Time for initiating EventHandler: 0.3487999439239502
-2018-07-21 17:26:37,858	event_handler.py	47	f	DEBUG	Start: "request_subset_add"
-2018-07-21 17:26:37,859	event_handler.py	2885	request_subset_add	DEBUG	Start: request_subset_add
-2018-07-21 17:26:37,863	event_handler.py	2719	load_workspace	DEBUG	Trying to load new workspace "27689220-2492-4e82-86ca-152390a7be2b" with alias "201807211726"
-2018-07-21 17:26:38,051	event_handler.py	2737	load_workspace	INFO	Workspace "27689220-2492-4e82-86ca-152390a7be2b" with alias "201807211726 loaded."
-2018-07-21 17:26:38,051	event_handler.py	367	copy_subset	DEBUG	Trying to copy subset "default_subset"
-2018-07-21 17:26:38,473	event_handler.py	51	f	DEBUG	Stop: "request_subset_add". Time for running method was 0.6138002872467041
-2018-07-21 17:26:51,538	event_handler.py	104	__init__	DEBUG	Start EventHandler: event_handler
-2018-07-21 17:26:51,540	event_handler.py	139	_load_mapping_objects	DEBUG	Loading mapping files from pickle file.
-2018-07-21 17:26:51,878	event_handler.py	115	__init__	DEBUG	Time for mapping: 0.33820009231567383
-2018-07-21 17:26:51,894	event_handler.py	120	__init__	DEBUG	Time for initiating EventHandler: 0.35580015182495117
-2018-07-21 17:29:16,458	event_handler.py	2719	load_workspace	DEBUG	Trying to load new workspace "27689220-2492-4e82-86ca-152390a7be2b" with alias "201807211726"
-2018-07-21 17:29:16,659	event_handler.py	2737	load_workspace	INFO	Workspace "27689220-2492-4e82-86ca-152390a7be2b" with alias "201807211726 loaded."
-2018-07-21 17:29:22,415	event_handler.py	2730	load_workspace	DEBUG	Workspace "27689220-2492-4e82-86ca-152390a7be2b" with alias "201807211726" is already loaded. Set reload=True if you want to reload the workspace.
-2018-07-21 17:29:51,663	event_handler.py	2730	load_workspace	DEBUG	Workspace "27689220-2492-4e82-86ca-152390a7be2b" with alias "201807211726" is already loaded. Set reload=True if you want to reload the workspace.
-2018-07-21 17:33:49,161	event_handler.py	104	__init__	DEBUG	Start EventHandler: event_handler
-2018-07-21 17:33:49,162	event_handler.py	139	_load_mapping_objects	DEBUG	Loading mapping files from pickle file.
-2018-07-21 17:33:49,548	event_handler.py	115	__init__	DEBUG	Time for mapping: 0.38599395751953125
-2018-07-21 17:33:49,549	event_handler.py	120	__init__	DEBUG	Time for initiating EventHandler: 0.38799405097961426
-2018-07-21 17:34:56,738	event_handler.py	2719	load_workspace	DEBUG	Trying to load new workspace "27689220-2492-4e82-86ca-152390a7be2b" with alias "201807211726"
-2018-07-21 17:34:56,970	event_handler.py	2737	load_workspace	INFO	Workspace "27689220-2492-4e82-86ca-152390a7be2b" with alias "201807211726 loaded."
-2018-07-21 17:38:38,911	event_handler.py	104	__init__	DEBUG	Start EventHandler: event_handler
-2018-07-21 17:38:38,913	event_handler.py	139	_load_mapping_objects	DEBUG	Loading mapping files from pickle file.
-2018-07-21 17:38:39,333	event_handler.py	115	__init__	DEBUG	Time for mapping: 0.42059874534606934
-2018-07-21 17:38:39,334	event_handler.py	120	__init__	DEBUG	Time for initiating EventHandler: 0.4235985279083252
-2018-07-21 17:38:39,334	event_handler.py	47	f	DEBUG	Start: "test_timer"
-2018-07-21 17:38:39,676	event_handler.py	51	f	DEBUG	Stop: "test_timer". Time for running method was 0.33879852294921875
-2018-07-21 17:39:43,052	event_handler.py	104	__init__	DEBUG	Start EventHandler: event_handler
-2018-07-21 17:39:43,053	event_handler.py	139	_load_mapping_objects	DEBUG	Loading mapping files from pickle file.
-2018-07-21 17:39:43,476	event_handler.py	115	__init__	DEBUG	Time for mapping: 0.42239809036254883
-2018-07-21 17:39:43,477	event_handler.py	120	__init__	DEBUG	Time for initiating EventHandler: 0.42439842224121094
-2018-07-21 17:40:05,619	event_handler.py	104	__init__	DEBUG	Start EventHandler: event_handler
-2018-07-21 17:40:05,621	event_handler.py	139	_load_mapping_objects	DEBUG	Loading mapping files from pickle file.
-2018-07-21 17:40:06,084	event_handler.py	115	__init__	DEBUG	Time for mapping: 0.4625983238220215
-2018-07-21 17:40:06,085	event_handler.py	120	__init__	DEBUG	Time for initiating EventHandler: 0.46559858322143555
-2018-07-21 17:40:22,894	event_handler.py	2720	load_workspace	DEBUG	Trying to load new workspace "27689220-2492-4e82-86ca-152390a7be2b" with alias "201807211726"
-2018-07-21 17:40:23,157	event_handler.py	2738	load_workspace	INFO	Workspace "27689220-2492-4e82-86ca-152390a7be2b" with alias "201807211726 loaded."
-2018-07-21 17:43:27,701	event_handler.py	104	__init__	DEBUG	Start EventHandler: event_handler
-2018-07-21 17:43:27,701	event_handler.py	144	_load_mapping_objects	DEBUG	Loading mapping files from original files.
-2018-07-21 17:43:31,812	event_handler.py	115	__init__	DEBUG	Time for mapping: 4.110974311828613
-2018-07-21 17:43:31,813	event_handler.py	120	__init__	DEBUG	Time for initiating EventHandler: 4.111974477767944
-2018-07-21 17:43:49,478	event_handler.py	2721	load_workspace	DEBUG	Trying to load new workspace "27689220-2492-4e82-86ca-152390a7be2b" with alias "201807211726"
-2018-07-21 17:43:49,738	event_handler.py	2739	load_workspace	INFO	Workspace "27689220-2492-4e82-86ca-152390a7be2b" with alias "201807211726 loaded."
-2018-07-21 17:45:43,668	event_handler.py	2732	load_workspace	DEBUG	Workspace "27689220-2492-4e82-86ca-152390a7be2b" with alias "201807211726" is already loaded. Set reload=True if you want to reload the workspace.
-2018-07-21 17:46:57,694	event_handler.py	2732	load_workspace	DEBUG	Workspace "27689220-2492-4e82-86ca-152390a7be2b" with alias "201807211726" is already loaded. Set reload=True if you want to reload the workspace.
-2018-07-21 17:47:31,923	event_handler.py	104	__init__	DEBUG	Start EventHandler: event_handler
-2018-07-21 17:47:31,924	event_handler.py	139	_load_mapping_objects	DEBUG	Loading mapping files from pickle file.
-2018-07-21 17:47:32,293	event_handler.py	115	__init__	DEBUG	Time for mapping: 0.3697998523712158
-2018-07-21 17:47:32,374	event_handler.py	120	__init__	DEBUG	Time for initiating EventHandler: 0.4514000415802002
-2018-07-21 17:48:16,259	event_handler.py	104	__init__	DEBUG	Start EventHandler: event_handler
-2018-07-21 17:48:16,261	event_handler.py	139	_load_mapping_objects	DEBUG	Loading mapping files from pickle file.
-2018-07-21 17:48:16,697	event_handler.py	115	__init__	DEBUG	Time for mapping: 0.4361999034881592
-2018-07-21 17:48:16,698	event_handler.py	120	__init__	DEBUG	Time for initiating EventHandler: 0.43919992446899414
-2018-07-21 17:49:38,554	event_handler.py	104	__init__	DEBUG	Start EventHandler: event_handler
-2018-07-21 17:49:38,556	event_handler.py	139	_load_mapping_objects	DEBUG	Loading mapping files from pickle file.
-2018-07-21 17:49:38,937	event_handler.py	115	__init__	DEBUG	Time for mapping: 0.38119983673095703
-2018-07-21 17:49:38,953	event_handler.py	120	__init__	DEBUG	Time for initiating EventHandler: 0.39980006217956543
-2018-07-21 17:49:56,065	event_handler.py	2721	load_workspace	DEBUG	Trying to load new workspace "27689220-2492-4e82-86ca-152390a7be2b" with alias "201807211726"
-2018-07-21 17:49:56,387	event_handler.py	2739	load_workspace	INFO	Workspace "27689220-2492-4e82-86ca-152390a7be2b" with alias "201807211726 loaded."
-2018-07-21 17:50:53,094	event_handler.py	104	__init__	DEBUG	Start EventHandler: event_handler
-2018-07-21 17:50:53,094	event_handler.py	139	_load_mapping_objects	DEBUG	Loading mapping files from pickle file.
-2018-07-21 17:50:53,414	event_handler.py	115	__init__	DEBUG	Time for mapping: 0.3205997943878174
-2018-07-21 17:50:53,430	event_handler.py	120	__init__	DEBUG	Time for initiating EventHandler: 0.3361999988555908
-2018-07-21 17:50:53,431	event_handler.py	2721	load_workspace	DEBUG	Trying to load new workspace "27689220-2492-4e82-86ca-152390a7be2b" with alias "201807211726"
-2018-07-21 17:50:53,669	event_handler.py	2739	load_workspace	INFO	Workspace "27689220-2492-4e82-86ca-152390a7be2b" with alias "201807211726 loaded."
-2018-07-21 17:51:45,136	event_handler.py	104	__init__	DEBUG	Start EventHandler: event_handler
-2018-07-21 17:51:45,137	event_handler.py	139	_load_mapping_objects	DEBUG	Loading mapping files from pickle file.
-2018-07-21 17:51:45,478	event_handler.py	115	__init__	DEBUG	Time for mapping: 0.3417999744415283
-2018-07-21 17:51:45,494	event_handler.py	120	__init__	DEBUG	Time for initiating EventHandler: 0.3584001064300537
-2018-07-21 17:51:45,495	event_handler.py	2721	load_workspace	DEBUG	Trying to load new workspace "27689220-2492-4e82-86ca-152390a7be2b" with alias "201807211726"
-2018-07-21 17:51:45,725	event_handler.py	2739	load_workspace	INFO	Workspace "27689220-2492-4e82-86ca-152390a7be2b" with alias "201807211726 loaded."
-2018-08-24 10:19:27,887	logger.py	85	add_log	DEBUG	
-2018-08-24 10:19:27,893	logger.py	86	add_log	DEBUG	========================================================================================================================
-2018-08-24 10:19:27,895	logger.py	87	add_log	DEBUG	### Log added for log_id "event_handler" at locaton: ..\log\main_event_handler.log
-2018-08-24 10:19:27,897	logger.py	88	add_log	DEBUG	------------------------------------------------------------------------------------------------------------------------
-2018-08-24 10:19:27,898	event_handler.py	104	__init__	DEBUG	Start EventHandler: event_handler
-2018-08-24 10:19:27,901	event_handler.py	139	_load_mapping_objects	DEBUG	Loading mapping files from pickle file.
-2018-08-24 10:19:28,293	event_handler.py	115	__init__	DEBUG	Time for mapping: 0.39300012588500977
-2018-08-24 10:19:28,319	event_handler.py	120	__init__	DEBUG	Time for initiating EventHandler: 0.43199992179870605
-2018-08-24 10:19:28,320	event_handler.py	47	f	DEBUG	Start: "test_timer"
-2018-08-24 10:19:28,615	event_handler.py	51	f	DEBUG	Stop: "test_timer". Time for running method was 0.2929999828338623
-2018-08-24 10:54:02,658	event_handler.py	104	__init__	DEBUG	Start EventHandler: event_handler
-2018-08-24 10:54:02,660	event_handler.py	139	_load_mapping_objects	DEBUG	Loading mapping files from pickle file.
-2018-08-24 10:54:02,986	event_handler.py	115	__init__	DEBUG	Time for mapping: 0.3260326385498047
-2018-08-24 10:55:29,871	event_handler.py	104	__init__	DEBUG	Start EventHandler: event_handler
-2018-08-24 10:55:29,873	event_handler.py	139	_load_mapping_objects	DEBUG	Loading mapping files from pickle file.
-2018-08-24 10:55:30,206	event_handler.py	115	__init__	DEBUG	Time for mapping: 0.33303308486938477
-2018-08-24 10:56:30,780	event_handler.py	104	__init__	DEBUG	Start EventHandler: event_handler
-2018-08-24 10:56:30,782	event_handler.py	139	_load_mapping_objects	DEBUG	Loading mapping files from pickle file.
-2018-08-24 10:56:31,122	event_handler.py	115	__init__	DEBUG	Time for mapping: 0.34003400802612305
-2018-08-24 10:59:41,829	event_handler.py	104	__init__	DEBUG	Start EventHandler: event_handler
-2018-08-24 10:59:41,831	event_handler.py	139	_load_mapping_objects	DEBUG	Loading mapping files from pickle file.
-2018-08-24 10:59:42,183	event_handler.py	115	__init__	DEBUG	Time for mapping: 0.3520350456237793
-2018-08-24 10:59:42,199	event_handler.py	120	__init__	DEBUG	Time for initiating EventHandler: 0.3700370788574219
-2018-08-24 10:59:42,203	event_handler.py	47	f	DEBUG	Start: "request_subset_get_indicator_settings"
-2018-08-24 10:59:42,205	event_handler.py	3008	request_subset_get_indicator_settings	DEBUG	Start: request_subset_get_indicator_settings
-2018-08-24 10:59:42,236	event_handler.py	2777	load_workspace	DEBUG	Trying to load new workspace "5cf3719a-9d44-48e0-b228-496a6894d263" with alias "New test workspace"
-2018-08-24 10:59:42,540	event_handler.py	2795	load_workspace	INFO	Workspace "5cf3719a-9d44-48e0-b228-496a6894d263" with alias "New test workspace loaded."
-2018-08-24 11:01:13,007	event_handler.py	104	__init__	DEBUG	Start EventHandler: event_handler
-2018-08-24 11:01:13,009	event_handler.py	139	_load_mapping_objects	DEBUG	Loading mapping files from pickle file.
-2018-08-24 11:01:13,360	event_handler.py	115	__init__	DEBUG	Time for mapping: 0.3509647846221924
-2018-08-24 11:01:13,375	event_handler.py	120	__init__	DEBUG	Time for initiating EventHandler: 0.3679630756378174
-2018-08-24 11:01:13,378	event_handler.py	47	f	DEBUG	Start: "request_subset_get_indicator_settings"
-2018-08-24 11:01:13,380	event_handler.py	3008	request_subset_get_indicator_settings	DEBUG	Start: request_subset_get_indicator_settings
-2018-08-24 11:01:13,396	event_handler.py	2777	load_workspace	DEBUG	Trying to load new workspace "5cf3719a-9d44-48e0-b228-496a6894d263" with alias "New test workspace"
-2018-08-24 11:01:13,619	event_handler.py	2795	load_workspace	INFO	Workspace "5cf3719a-9d44-48e0-b228-496a6894d263" with alias "New test workspace loaded."
-2018-08-24 11:01:13,972	event_handler.py	2788	load_workspace	DEBUG	Workspace "5cf3719a-9d44-48e0-b228-496a6894d263" with alias "New test workspace" is already loaded. Set reload=True if you want to reload the workspace.
-2018-08-24 11:35:32,497	event_handler.py	104	__init__	DEBUG	Start EventHandler: event_handler
-2018-08-24 11:35:32,498	event_handler.py	139	_load_mapping_objects	DEBUG	Loading mapping files from pickle file.
-2018-08-24 11:35:32,923	event_handler.py	115	__init__	DEBUG	Time for mapping: 0.42504286766052246
-2018-08-24 11:35:32,942	event_handler.py	120	__init__	DEBUG	Time for initiating EventHandler: 0.44504451751708984
-2018-08-24 11:35:32,944	event_handler.py	47	f	DEBUG	Start: "request_subset_get_indicator_settings"
-2018-08-24 11:35:32,947	event_handler.py	3008	request_subset_get_indicator_settings	DEBUG	Start: request_subset_get_indicator_settings
-2018-08-24 11:35:32,965	event_handler.py	2777	load_workspace	DEBUG	Trying to load new workspace "5cf3719a-9d44-48e0-b228-496a6894d263" with alias "New test workspace"
-2018-08-24 11:35:33,188	event_handler.py	2795	load_workspace	INFO	Workspace "5cf3719a-9d44-48e0-b228-496a6894d263" with alias "New test workspace loaded."
-2018-08-24 11:35:33,583	event_handler.py	2788	load_workspace	DEBUG	Workspace "5cf3719a-9d44-48e0-b228-496a6894d263" with alias "New test workspace" is already loaded. Set reload=True if you want to reload the workspace.
-2018-08-24 11:36:36,888	logger.py	85	add_log	DEBUG	
-2018-08-24 11:36:36,891	logger.py	86	add_log	DEBUG	========================================================================================================================
-2018-08-24 11:36:36,892	logger.py	87	add_log	DEBUG	### Log added for log_id "event_handler" at locaton: ..\log\main_event_handler.log
-2018-08-24 11:36:36,893	logger.py	88	add_log	DEBUG	------------------------------------------------------------------------------------------------------------------------
-2018-08-24 11:36:36,897	event_handler.py	104	__init__	DEBUG	Start EventHandler: event_handler
-2018-08-24 11:36:36,899	event_handler.py	139	_load_mapping_objects	DEBUG	Loading mapping files from pickle file.
-2018-08-24 11:36:37,275	event_handler.py	115	__init__	DEBUG	Time for mapping: 0.37603759765625
-2018-08-24 11:36:37,291	event_handler.py	120	__init__	DEBUG	Time for initiating EventHandler: 0.4040400981903076
-2018-08-24 11:36:37,294	event_handler.py	47	f	DEBUG	Start: "test_timer"
-2018-08-24 11:36:37,589	event_handler.py	51	f	DEBUG	Stop: "test_timer". Time for running method was 0.2930290699005127
-2018-08-24 11:36:46,110	event_handler.py	104	__init__	DEBUG	Start EventHandler: event_handler
-2018-08-24 11:36:46,112	event_handler.py	139	_load_mapping_objects	DEBUG	Loading mapping files from pickle file.
-2018-08-24 11:36:46,464	event_handler.py	115	__init__	DEBUG	Time for mapping: 0.3520350456237793
-2018-08-24 11:36:46,479	event_handler.py	120	__init__	DEBUG	Time for initiating EventHandler: 0.3690371513366699
-2018-08-24 11:36:46,485	event_handler.py	47	f	DEBUG	Start: "request_subset_get_indicator_settings"
-2018-08-24 11:36:46,487	event_handler.py	3043	request_subset_get_indicator_settings	DEBUG	Start: request_subset_get_indicator_settings
-2018-08-24 11:36:46,502	event_handler.py	2777	load_workspace	DEBUG	Trying to load new workspace "5cf3719a-9d44-48e0-b228-496a6894d263" with alias "New test workspace"
-2018-08-24 11:36:46,802	event_handler.py	2795	load_workspace	INFO	Workspace "5cf3719a-9d44-48e0-b228-496a6894d263" with alias "New test workspace loaded."
-2018-08-24 11:36:48,225	event_handler.py	2788	load_workspace	DEBUG	Workspace "5cf3719a-9d44-48e0-b228-496a6894d263" with alias "New test workspace" is already loaded. Set reload=True if you want to reload the workspace.
-2018-08-24 11:36:48,755	event_handler.py	51	f	DEBUG	Stop: "request_subset_get_indicator_settings". Time for running method was 2.2682266235351562
-2018-08-24 11:37:00,844	event_handler.py	104	__init__	DEBUG	Start EventHandler: event_handler
-2018-08-24 11:37:00,846	event_handler.py	139	_load_mapping_objects	DEBUG	Loading mapping files from pickle file.
-2018-08-24 11:37:01,199	event_handler.py	115	__init__	DEBUG	Time for mapping: 0.35303544998168945
-2018-08-24 11:37:01,215	event_handler.py	120	__init__	DEBUG	Time for initiating EventHandler: 0.37103700637817383
-2018-08-24 11:37:01,219	event_handler.py	47	f	DEBUG	Start: "request_subset_get_indicator_settings"
-2018-08-24 11:37:01,222	event_handler.py	3043	request_subset_get_indicator_settings	DEBUG	Start: request_subset_get_indicator_settings
-2018-08-24 11:37:01,238	event_handler.py	2777	load_workspace	DEBUG	Trying to load new workspace "5cf3719a-9d44-48e0-b228-496a6894d263" with alias "New test workspace"
-2018-08-24 11:37:01,466	event_handler.py	2795	load_workspace	INFO	Workspace "5cf3719a-9d44-48e0-b228-496a6894d263" with alias "New test workspace loaded."
-2018-08-24 11:37:02,914	event_handler.py	2788	load_workspace	DEBUG	Workspace "5cf3719a-9d44-48e0-b228-496a6894d263" with alias "New test workspace" is already loaded. Set reload=True if you want to reload the workspace.
-2018-08-24 11:37:03,404	event_handler.py	51	f	DEBUG	Stop: "request_subset_get_indicator_settings". Time for running method was 2.181217908859253
-2018-08-24 12:39:59,238	logger.py	85	add_log	DEBUG	
-2018-08-24 12:39:59,240	logger.py	86	add_log	DEBUG	========================================================================================================================
-2018-08-24 12:39:59,241	logger.py	87	add_log	DEBUG	### Log added for log_id "event_handler" at locaton: ..\log\main_event_handler.log
-2018-08-24 12:39:59,243	logger.py	88	add_log	DEBUG	------------------------------------------------------------------------------------------------------------------------
-2018-08-24 12:39:59,245	event_handler.py	104	__init__	DEBUG	Start EventHandler: event_handler
-2018-08-24 12:39:59,248	event_handler.py	139	_load_mapping_objects	DEBUG	Loading mapping files from pickle file.
-2018-08-24 12:39:59,685	event_handler.py	115	__init__	DEBUG	Time for mapping: 0.437000036239624
-2018-08-24 12:39:59,701	event_handler.py	120	__init__	DEBUG	Time for initiating EventHandler: 0.46399998664855957
-2018-08-24 12:39:59,705	event_handler.py	47	f	DEBUG	Start: "test_timer"
-2018-08-24 12:40:00,003	event_handler.py	51	f	DEBUG	Stop: "test_timer". Time for running method was 0.2950000762939453
-2018-08-24 12:40:21,165	event_handler.py	104	__init__	DEBUG	Start EventHandler: event_handler
-2018-08-24 12:40:21,167	event_handler.py	139	_load_mapping_objects	DEBUG	Loading mapping files from pickle file.
-2018-08-24 12:40:21,508	event_handler.py	115	__init__	DEBUG	Time for mapping: 0.34200000762939453
-2018-08-24 12:40:21,523	event_handler.py	120	__init__	DEBUG	Time for initiating EventHandler: 0.3580000400543213
-2018-08-24 12:40:21,530	event_handler.py	47	f	DEBUG	Start: "request_subset_get_indicator_settings"
-2018-08-24 12:40:21,532	event_handler.py	3044	request_subset_get_indicator_settings	DEBUG	Start: request_subset_get_indicator_settings
-2018-08-24 12:40:21,558	event_handler.py	2778	load_workspace	DEBUG	Trying to load new workspace "5cf3719a-9d44-48e0-b228-496a6894d263" with alias "New test workspace"
-2018-08-24 12:40:21,845	event_handler.py	2796	load_workspace	INFO	Workspace "5cf3719a-9d44-48e0-b228-496a6894d263" with alias "New test workspace loaded."
-2018-08-24 12:40:23,344	event_handler.py	2789	load_workspace	DEBUG	Workspace "5cf3719a-9d44-48e0-b228-496a6894d263" with alias "New test workspace" is already loaded. Set reload=True if you want to reload the workspace.
-2018-08-24 12:40:39,330	event_handler.py	104	__init__	DEBUG	Start EventHandler: event_handler
-2018-08-24 12:40:39,331	event_handler.py	139	_load_mapping_objects	DEBUG	Loading mapping files from pickle file.
-2018-08-24 12:40:39,778	event_handler.py	115	__init__	DEBUG	Time for mapping: 0.44699978828430176
-2018-08-24 12:40:39,799	event_handler.py	120	__init__	DEBUG	Time for initiating EventHandler: 0.4679999351501465
-2018-08-24 12:40:39,800	event_handler.py	47	f	DEBUG	Start: "request_subset_get_indicator_settings"
-2018-08-24 12:40:39,802	event_handler.py	3044	request_subset_get_indicator_settings	DEBUG	Start: request_subset_get_indicator_settings
-2018-08-24 12:40:39,822	event_handler.py	2778	load_workspace	DEBUG	Trying to load new workspace "5cf3719a-9d44-48e0-b228-496a6894d263" with alias "New test workspace"
-2018-08-24 12:40:40,109	event_handler.py	2796	load_workspace	INFO	Workspace "5cf3719a-9d44-48e0-b228-496a6894d263" with alias "New test workspace loaded."
-2018-08-24 12:40:41,898	event_handler.py	2789	load_workspace	DEBUG	Workspace "5cf3719a-9d44-48e0-b228-496a6894d263" with alias "New test workspace" is already loaded. Set reload=True if you want to reload the workspace.
-2018-08-24 12:40:42,373	event_handler.py	2789	load_workspace	DEBUG	Workspace "5cf3719a-9d44-48e0-b228-496a6894d263" with alias "New test workspace" is already loaded. Set reload=True if you want to reload the workspace.
-2018-08-24 12:40:42,717	event_handler.py	2789	load_workspace	DEBUG	Workspace "5cf3719a-9d44-48e0-b228-496a6894d263" with alias "New test workspace" is already loaded. Set reload=True if you want to reload the workspace.
-2018-08-24 12:40:43,062	event_handler.py	2789	load_workspace	DEBUG	Workspace "5cf3719a-9d44-48e0-b228-496a6894d263" with alias "New test workspace" is already loaded. Set reload=True if you want to reload the workspace.
-2018-08-24 12:40:43,419	event_handler.py	2789	load_workspace	DEBUG	Workspace "5cf3719a-9d44-48e0-b228-496a6894d263" with alias "New test workspace" is already loaded. Set reload=True if you want to reload the workspace.
-2018-08-24 12:40:43,774	event_handler.py	2789	load_workspace	DEBUG	Workspace "5cf3719a-9d44-48e0-b228-496a6894d263" with alias "New test workspace" is already loaded. Set reload=True if you want to reload the workspace.
-2018-08-24 12:40:44,129	event_handler.py	2789	load_workspace	DEBUG	Workspace "5cf3719a-9d44-48e0-b228-496a6894d263" with alias "New test workspace" is already loaded. Set reload=True if you want to reload the workspace.
-2018-08-24 12:40:44,499	event_handler.py	2789	load_workspace	DEBUG	Workspace "5cf3719a-9d44-48e0-b228-496a6894d263" with alias "New test workspace" is already loaded. Set reload=True if you want to reload the workspace.
-2018-08-24 12:40:44,866	event_handler.py	2789	load_workspace	DEBUG	Workspace "5cf3719a-9d44-48e0-b228-496a6894d263" with alias "New test workspace" is already loaded. Set reload=True if you want to reload the workspace.
-2018-08-24 12:40:45,207	event_handler.py	2789	load_workspace	DEBUG	Workspace "5cf3719a-9d44-48e0-b228-496a6894d263" with alias "New test workspace" is already loaded. Set reload=True if you want to reload the workspace.
-2018-08-24 12:40:45,556	event_handler.py	2789	load_workspace	DEBUG	Workspace "5cf3719a-9d44-48e0-b228-496a6894d263" with alias "New test workspace" is already loaded. Set reload=True if you want to reload the workspace.
-2018-08-24 12:40:45,887	event_handler.py	2789	load_workspace	DEBUG	Workspace "5cf3719a-9d44-48e0-b228-496a6894d263" with alias "New test workspace" is already loaded. Set reload=True if you want to reload the workspace.
-2018-08-24 12:40:46,233	event_handler.py	2789	load_workspace	DEBUG	Workspace "5cf3719a-9d44-48e0-b228-496a6894d263" with alias "New test workspace" is already loaded. Set reload=True if you want to reload the workspace.
-2018-08-24 12:40:46,555	event_handler.py	51	f	DEBUG	Stop: "request_subset_get_indicator_settings". Time for running method was 6.753000259399414
-2018-08-24 12:43:41,084	event_handler.py	2789	load_workspace	DEBUG	Workspace "5cf3719a-9d44-48e0-b228-496a6894d263" with alias "New test workspace" is already loaded. Set reload=True if you want to reload the workspace.
-2018-08-24 12:49:53,724	event_handler.py	2789	load_workspace	DEBUG	Workspace "5cf3719a-9d44-48e0-b228-496a6894d263" with alias "New test workspace" is already loaded. Set reload=True if you want to reload the workspace.
-2018-08-24 12:50:09,045	event_handler.py	2789	load_workspace	DEBUG	Workspace "5cf3719a-9d44-48e0-b228-496a6894d263" with alias "New test workspace" is already loaded. Set reload=True if you want to reload the workspace.
-2018-08-24 12:50:29,809	event_handler.py	2789	load_workspace	DEBUG	Workspace "5cf3719a-9d44-48e0-b228-496a6894d263" with alias "New test workspace" is already loaded. Set reload=True if you want to reload the workspace.
-2018-08-24 12:50:52,792	event_handler.py	2789	load_workspace	DEBUG	Workspace "5cf3719a-9d44-48e0-b228-496a6894d263" with alias "New test workspace" is already loaded. Set reload=True if you want to reload the workspace.
-2018-08-24 12:51:00,579	event_handler.py	2789	load_workspace	DEBUG	Workspace "5cf3719a-9d44-48e0-b228-496a6894d263" with alias "New test workspace" is already loaded. Set reload=True if you want to reload the workspace.
-2018-08-24 12:51:11,502	event_handler.py	2789	load_workspace	DEBUG	Workspace "5cf3719a-9d44-48e0-b228-496a6894d263" with alias "New test workspace" is already loaded. Set reload=True if you want to reload the workspace.
-2018-08-24 12:52:05,805	event_handler.py	104	__init__	DEBUG	Start EventHandler: event_handler
-2018-08-24 12:52:05,807	event_handler.py	139	_load_mapping_objects	DEBUG	Loading mapping files from pickle file.
-2018-08-24 12:52:06,089	event_handler.py	115	__init__	DEBUG	Time for mapping: 0.2820281982421875
-2018-08-24 12:52:06,171	event_handler.py	120	__init__	DEBUG	Time for initiating EventHandler: 0.36603641510009766
-2018-08-24 12:52:06,173	event_handler.py	47	f	DEBUG	Start: "request_subset_get_indicator_settings"
-2018-08-24 12:52:06,175	event_handler.py	3044	request_subset_get_indicator_settings	DEBUG	Start: request_subset_get_indicator_settings
-2018-08-24 12:52:06,192	event_handler.py	2778	load_workspace	DEBUG	Trying to load new workspace "5cf3719a-9d44-48e0-b228-496a6894d263" with alias "New test workspace"
-2018-08-24 12:52:06,408	event_handler.py	2796	load_workspace	INFO	Workspace "5cf3719a-9d44-48e0-b228-496a6894d263" with alias "New test workspace loaded."
-2018-08-24 12:52:07,923	event_handler.py	2789	load_workspace	DEBUG	Workspace "5cf3719a-9d44-48e0-b228-496a6894d263" with alias "New test workspace" is already loaded. Set reload=True if you want to reload the workspace.
-2018-08-24 12:52:08,502	event_handler.py	2789	load_workspace	DEBUG	Workspace "5cf3719a-9d44-48e0-b228-496a6894d263" with alias "New test workspace" is already loaded. Set reload=True if you want to reload the workspace.
-2018-08-24 12:52:08,877	event_handler.py	2789	load_workspace	DEBUG	Workspace "5cf3719a-9d44-48e0-b228-496a6894d263" with alias "New test workspace" is already loaded. Set reload=True if you want to reload the workspace.
-2018-08-24 12:52:09,248	event_handler.py	2789	load_workspace	DEBUG	Workspace "5cf3719a-9d44-48e0-b228-496a6894d263" with alias "New test workspace" is already loaded. Set reload=True if you want to reload the workspace.
-2018-08-24 12:52:09,600	event_handler.py	2789	load_workspace	DEBUG	Workspace "5cf3719a-9d44-48e0-b228-496a6894d263" with alias "New test workspace" is already loaded. Set reload=True if you want to reload the workspace.
-2018-08-24 12:52:09,982	event_handler.py	2789	load_workspace	DEBUG	Workspace "5cf3719a-9d44-48e0-b228-496a6894d263" with alias "New test workspace" is already loaded. Set reload=True if you want to reload the workspace.
-2018-08-24 13:04:16,819	event_handler.py	104	__init__	DEBUG	Start EventHandler: event_handler
-2018-08-24 13:04:16,821	event_handler.py	139	_load_mapping_objects	DEBUG	Loading mapping files from pickle file.
-2018-08-24 13:04:17,192	event_handler.py	115	__init__	DEBUG	Time for mapping: 0.370999813079834
-2018-08-24 13:04:17,208	event_handler.py	120	__init__	DEBUG	Time for initiating EventHandler: 0.38899993896484375
-2018-08-24 13:04:17,212	event_handler.py	47	f	DEBUG	Start: "request_subset_get_indicator_settings"
-2018-08-24 13:04:17,215	event_handler.py	3044	request_subset_get_indicator_settings	DEBUG	Start: request_subset_get_indicator_settings
-2018-08-24 13:04:17,238	event_handler.py	2782	load_workspace	DEBUG	Trying to load new workspace "5cf3719a-9d44-48e0-b228-496a6894d263" with alias "New test workspace"
-2018-08-24 13:04:17,468	event_handler.py	2800	load_workspace	INFO	Workspace "5cf3719a-9d44-48e0-b228-496a6894d263" with alias "New test workspace loaded."
-2018-08-24 13:04:18,863	event_handler.py	2793	load_workspace	DEBUG	Workspace "5cf3719a-9d44-48e0-b228-496a6894d263" with alias "New test workspace" is already loaded. Set reload=True if you want to reload the workspace.
-2018-08-24 13:04:19,313	event_handler.py	2793	load_workspace	DEBUG	Workspace "5cf3719a-9d44-48e0-b228-496a6894d263" with alias "New test workspace" is already loaded. Set reload=True if you want to reload the workspace.
-2018-08-24 13:04:19,682	event_handler.py	2793	load_workspace	DEBUG	Workspace "5cf3719a-9d44-48e0-b228-496a6894d263" with alias "New test workspace" is already loaded. Set reload=True if you want to reload the workspace.
-2018-08-24 13:04:20,058	event_handler.py	2793	load_workspace	DEBUG	Workspace "5cf3719a-9d44-48e0-b228-496a6894d263" with alias "New test workspace" is already loaded. Set reload=True if you want to reload the workspace.
-2018-08-24 13:04:20,414	event_handler.py	2793	load_workspace	DEBUG	Workspace "5cf3719a-9d44-48e0-b228-496a6894d263" with alias "New test workspace" is already loaded. Set reload=True if you want to reload the workspace.
-2018-08-24 13:04:20,791	event_handler.py	2793	load_workspace	DEBUG	Workspace "5cf3719a-9d44-48e0-b228-496a6894d263" with alias "New test workspace" is already loaded. Set reload=True if you want to reload the workspace.
-2018-08-24 13:05:00,454	event_handler.py	104	__init__	DEBUG	Start EventHandler: event_handler
-2018-08-24 13:05:00,455	event_handler.py	139	_load_mapping_objects	DEBUG	Loading mapping files from pickle file.
-2018-08-24 13:05:00,864	event_handler.py	115	__init__	DEBUG	Time for mapping: 0.4089999198913574
-2018-08-24 13:05:00,882	event_handler.py	120	__init__	DEBUG	Time for initiating EventHandler: 0.42799997329711914
-2018-08-24 13:05:00,883	event_handler.py	47	f	DEBUG	Start: "request_subset_get_indicator_settings"
-2018-08-24 13:05:00,886	event_handler.py	3044	request_subset_get_indicator_settings	DEBUG	Start: request_subset_get_indicator_settings
-2018-08-24 13:05:00,906	event_handler.py	2782	load_workspace	DEBUG	Trying to load new workspace "5cf3719a-9d44-48e0-b228-496a6894d263" with alias "New test workspace"
-2018-08-24 13:05:01,123	event_handler.py	2800	load_workspace	INFO	Workspace "5cf3719a-9d44-48e0-b228-496a6894d263" with alias "New test workspace loaded."
-2018-08-24 13:05:02,553	event_handler.py	2793	load_workspace	DEBUG	Workspace "5cf3719a-9d44-48e0-b228-496a6894d263" with alias "New test workspace" is already loaded. Set reload=True if you want to reload the workspace.
-2018-08-24 13:05:03,044	event_handler.py	2793	load_workspace	DEBUG	Workspace "5cf3719a-9d44-48e0-b228-496a6894d263" with alias "New test workspace" is already loaded. Set reload=True if you want to reload the workspace.
-2018-08-24 13:05:03,418	event_handler.py	2793	load_workspace	DEBUG	Workspace "5cf3719a-9d44-48e0-b228-496a6894d263" with alias "New test workspace" is already loaded. Set reload=True if you want to reload the workspace.
-2018-08-24 13:05:03,800	event_handler.py	2793	load_workspace	DEBUG	Workspace "5cf3719a-9d44-48e0-b228-496a6894d263" with alias "New test workspace" is already loaded. Set reload=True if you want to reload the workspace.
-2018-08-24 13:05:04,156	event_handler.py	2793	load_workspace	DEBUG	Workspace "5cf3719a-9d44-48e0-b228-496a6894d263" with alias "New test workspace" is already loaded. Set reload=True if you want to reload the workspace.
-2018-08-24 13:05:04,525	event_handler.py	2793	load_workspace	DEBUG	Workspace "5cf3719a-9d44-48e0-b228-496a6894d263" with alias "New test workspace" is already loaded. Set reload=True if you want to reload the workspace.
-2018-08-24 13:05:04,915	event_handler.py	2793	load_workspace	DEBUG	Workspace "5cf3719a-9d44-48e0-b228-496a6894d263" with alias "New test workspace" is already loaded. Set reload=True if you want to reload the workspace.
-2018-08-24 13:05:05,291	event_handler.py	2793	load_workspace	DEBUG	Workspace "5cf3719a-9d44-48e0-b228-496a6894d263" with alias "New test workspace" is already loaded. Set reload=True if you want to reload the workspace.
-2018-08-24 13:05:05,669	event_handler.py	2793	load_workspace	DEBUG	Workspace "5cf3719a-9d44-48e0-b228-496a6894d263" with alias "New test workspace" is already loaded. Set reload=True if you want to reload the workspace.
-2018-08-24 13:05:06,045	event_handler.py	2793	load_workspace	DEBUG	Workspace "5cf3719a-9d44-48e0-b228-496a6894d263" with alias "New test workspace" is already loaded. Set reload=True if you want to reload the workspace.
-2018-08-24 13:05:06,420	event_handler.py	2793	load_workspace	DEBUG	Workspace "5cf3719a-9d44-48e0-b228-496a6894d263" with alias "New test workspace" is already loaded. Set reload=True if you want to reload the workspace.
-2018-08-24 13:05:06,789	event_handler.py	2793	load_workspace	DEBUG	Workspace "5cf3719a-9d44-48e0-b228-496a6894d263" with alias "New test workspace" is already loaded. Set reload=True if you want to reload the workspace.
-2018-08-24 13:05:07,194	event_handler.py	2793	load_workspace	DEBUG	Workspace "5cf3719a-9d44-48e0-b228-496a6894d263" with alias "New test workspace" is already loaded. Set reload=True if you want to reload the workspace.
-2018-08-24 13:05:07,559	event_handler.py	51	f	DEBUG	Stop: "request_subset_get_indicator_settings". Time for running method was 6.672999858856201
-2018-08-24 15:07:43,164	event_handler.py	104	__init__	DEBUG	Start EventHandler: event_handler
-2018-08-24 15:07:43,166	event_handler.py	139	_load_mapping_objects	DEBUG	Loading mapping files from pickle file.
-2018-08-24 15:07:43,526	event_handler.py	115	__init__	DEBUG	Time for mapping: 0.36003613471984863
-2018-08-24 15:07:43,542	event_handler.py	120	__init__	DEBUG	Time for initiating EventHandler: 0.3780379295349121
-2018-08-24 15:07:43,545	event_handler.py	47	f	DEBUG	Start: "request_sharkweb_search"
-2018-08-24 15:09:53,131	event_handler.py	47	f	DEBUG	Start: "request_sharkweb_search"
-2018-08-24 15:10:02,452	event_handler.py	47	f	DEBUG	Start: "request_sharkweb_search"
-2018-08-24 15:10:48,219	event_handler.py	104	__init__	DEBUG	Start EventHandler: event_handler
-2018-08-24 15:10:48,220	event_handler.py	139	_load_mapping_objects	DEBUG	Loading mapping files from pickle file.
-2018-08-24 15:10:48,505	event_handler.py	115	__init__	DEBUG	Time for mapping: 0.28502869606018066
-2018-08-24 15:10:48,522	event_handler.py	120	__init__	DEBUG	Time for initiating EventHandler: 0.30303025245666504
-2018-08-24 15:10:48,525	event_handler.py	47	f	DEBUG	Start: "request_sharkweb_search"
-2018-08-24 15:11:34,387	event_handler.py	104	__init__	DEBUG	Start EventHandler: event_handler
-2018-08-24 15:11:34,389	event_handler.py	139	_load_mapping_objects	DEBUG	Loading mapping files from pickle file.
-2018-08-24 15:11:34,804	event_handler.py	115	__init__	DEBUG	Time for mapping: 0.415041446685791
-2018-08-24 15:11:34,822	event_handler.py	120	__init__	DEBUG	Time for initiating EventHandler: 0.4350433349609375
-2018-08-24 15:11:34,824	event_handler.py	47	f	DEBUG	Start: "request_sharkweb_search"
-2018-08-24 15:12:00,605	logger.py	85	add_log	DEBUG	
-2018-08-24 15:12:00,607	logger.py	86	add_log	DEBUG	========================================================================================================================
-2018-08-24 15:12:00,608	logger.py	87	add_log	DEBUG	### Log added for log_id "event_handler" at locaton: ..\log\main_event_handler.log
-2018-08-24 15:12:00,610	logger.py	88	add_log	DEBUG	------------------------------------------------------------------------------------------------------------------------
-2018-08-24 15:12:00,613	event_handler.py	104	__init__	DEBUG	Start EventHandler: event_handler
-2018-08-24 15:12:00,615	event_handler.py	139	_load_mapping_objects	DEBUG	Loading mapping files from pickle file.
-2018-08-24 15:12:00,986	event_handler.py	115	__init__	DEBUG	Time for mapping: 0.3700368404388428
-2018-08-24 15:12:01,002	event_handler.py	120	__init__	DEBUG	Time for initiating EventHandler: 0.3980398178100586
-2018-08-24 15:12:01,004	event_handler.py	47	f	DEBUG	Start: "test_timer"
-2018-08-24 15:12:01,312	event_handler.py	51	f	DEBUG	Stop: "test_timer". Time for running method was 0.30503058433532715
-2018-08-24 15:12:15,873	event_handler.py	104	__init__	DEBUG	Start EventHandler: event_handler
-2018-08-24 15:12:15,875	event_handler.py	139	_load_mapping_objects	DEBUG	Loading mapping files from pickle file.
-2018-08-24 15:12:16,210	event_handler.py	115	__init__	DEBUG	Time for mapping: 0.335033655166626
-2018-08-24 15:12:16,226	event_handler.py	120	__init__	DEBUG	Time for initiating EventHandler: 0.35303521156311035
-2018-08-24 15:12:16,232	event_handler.py	47	f	DEBUG	Start: "request_sharkweb_search"
-2018-08-24 15:12:57,807	event_handler.py	104	__init__	DEBUG	Start EventHandler: event_handler
-2018-08-24 15:12:57,808	event_handler.py	139	_load_mapping_objects	DEBUG	Loading mapping files from pickle file.
-2018-08-24 15:12:58,157	event_handler.py	115	__init__	DEBUG	Time for mapping: 0.34903502464294434
-2018-08-24 15:12:58,173	event_handler.py	120	__init__	DEBUG	Time for initiating EventHandler: 0.36603641510009766
-2018-08-24 15:12:58,175	event_handler.py	47	f	DEBUG	Start: "request_sharkweb_search"
-2018-08-24 15:13:05,866	event_handler.py	104	__init__	DEBUG	Start EventHandler: event_handler
-2018-08-24 15:13:05,867	event_handler.py	139	_load_mapping_objects	DEBUG	Loading mapping files from pickle file.
-2018-08-24 15:13:06,237	event_handler.py	115	__init__	DEBUG	Time for mapping: 0.3700370788574219
-2018-08-24 15:13:06,252	event_handler.py	120	__init__	DEBUG	Time for initiating EventHandler: 0.38603854179382324
-2018-08-24 15:13:06,255	event_handler.py	47	f	DEBUG	Start: "request_sharkweb_search"
-2018-08-24 15:13:21,394	logger.py	85	add_log	DEBUG	
-2018-08-24 15:13:21,396	logger.py	86	add_log	DEBUG	========================================================================================================================
-2018-08-24 15:13:21,397	logger.py	87	add_log	DEBUG	### Log added for log_id "event_handler" at locaton: ..\log\main_event_handler.log
-2018-08-24 15:13:21,399	logger.py	88	add_log	DEBUG	------------------------------------------------------------------------------------------------------------------------
-2018-08-24 15:13:21,401	event_handler.py	104	__init__	DEBUG	Start EventHandler: event_handler
-2018-08-24 15:13:21,403	event_handler.py	139	_load_mapping_objects	DEBUG	Loading mapping files from pickle file.
-2018-08-24 15:13:21,771	event_handler.py	115	__init__	DEBUG	Time for mapping: 0.36803650856018066
-2018-08-24 15:13:21,791	event_handler.py	120	__init__	DEBUG	Time for initiating EventHandler: 0.39703965187072754
-2018-08-24 15:13:21,792	event_handler.py	47	f	DEBUG	Start: "request_sharkweb_search"
-2018-08-24 15:15:07,986	event_handler.py	104	__init__	DEBUG	Start EventHandler: event_handler
-2018-08-24 15:15:07,988	event_handler.py	139	_load_mapping_objects	DEBUG	Loading mapping files from pickle file.
-2018-08-24 15:15:08,341	event_handler.py	115	__init__	DEBUG	Time for mapping: 0.35303544998168945
-2018-08-24 15:15:08,357	event_handler.py	120	__init__	DEBUG	Time for initiating EventHandler: 0.37103724479675293
-2018-08-24 15:15:08,360	event_handler.py	47	f	DEBUG	Start: "request_sharkweb_search"
-2018-08-24 15:15:09,390	event_handler.py	51	f	DEBUG	Stop: "request_sharkweb_search". Time for running method was 1.0281031131744385
-2018-08-24 15:16:12,354	event_handler.py	104	__init__	DEBUG	Start EventHandler: event_handler
-2018-08-24 15:16:12,355	event_handler.py	139	_load_mapping_objects	DEBUG	Loading mapping files from pickle file.
-2018-08-24 15:16:12,702	event_handler.py	115	__init__	DEBUG	Time for mapping: 0.3470346927642822
-2018-08-24 15:16:12,718	event_handler.py	120	__init__	DEBUG	Time for initiating EventHandler: 0.36403656005859375
-2018-08-24 15:16:12,726	event_handler.py	47	f	DEBUG	Start: "request_sharkweb_search"
-2018-08-24 15:16:13,743	event_handler.py	51	f	DEBUG	Stop: "request_sharkweb_search". Time for running method was 1.016101598739624
-2018-08-24 15:16:45,043	event_handler.py	104	__init__	DEBUG	Start EventHandler: event_handler
-2018-08-24 15:16:45,045	event_handler.py	139	_load_mapping_objects	DEBUG	Loading mapping files from pickle file.
-2018-08-24 15:16:45,399	event_handler.py	115	__init__	DEBUG	Time for mapping: 0.3540353775024414
-2018-08-24 15:16:45,415	event_handler.py	120	__init__	DEBUG	Time for initiating EventHandler: 0.3720371723175049
-2018-08-24 15:16:45,423	event_handler.py	47	f	DEBUG	Start: "request_sharkweb_search"
-2018-08-24 15:16:46,633	event_handler.py	51	f	DEBUG	Stop: "request_sharkweb_search". Time for running method was 1.2061207294464111
-2018-08-24 16:19:51,609	logger.py	85	add_log	DEBUG	
-2018-08-24 16:19:51,611	logger.py	86	add_log	DEBUG	========================================================================================================================
-2018-08-24 16:19:51,612	logger.py	87	add_log	DEBUG	### Log added for log_id "event_handler" at locaton: ..\log\main_event_handler.log
-2018-08-24 16:19:51,614	logger.py	88	add_log	DEBUG	------------------------------------------------------------------------------------------------------------------------
-2018-08-24 16:19:51,616	event_handler.py	104	__init__	DEBUG	Start EventHandler: event_handler
-2018-08-24 16:19:51,617	event_handler.py	139	_load_mapping_objects	DEBUG	Loading mapping files from pickle file.
-2018-08-24 16:19:51,981	event_handler.py	115	__init__	DEBUG	Time for mapping: 0.36403632164001465
-2018-08-24 16:19:51,996	event_handler.py	120	__init__	DEBUG	Time for initiating EventHandler: 0.38803863525390625
-2018-08-24 16:19:52,002	event_handler.py	47	f	DEBUG	Start: "test_timer"
-2018-08-24 16:19:52,287	event_handler.py	51	f	DEBUG	Stop: "test_timer". Time for running method was 0.2820281982421875
-2018-08-24 16:33:36,306	logger.py	85	add_log	DEBUG	
-2018-08-24 16:33:36,308	logger.py	86	add_log	DEBUG	========================================================================================================================
-2018-08-24 16:33:36,309	logger.py	87	add_log	DEBUG	### Log added for log_id "event_handler" at locaton: ..\log\main_event_handler.log
-2018-08-24 16:33:36,311	logger.py	88	add_log	DEBUG	------------------------------------------------------------------------------------------------------------------------
-2018-08-24 16:33:36,313	event_handler.py	104	__init__	DEBUG	Start EventHandler: event_handler
-2018-08-24 16:33:36,315	event_handler.py	139	_load_mapping_objects	DEBUG	Loading mapping files from pickle file.
-2018-08-24 16:33:36,690	event_handler.py	115	__init__	DEBUG	Time for mapping: 0.37599992752075195
-2018-08-24 16:33:36,707	event_handler.py	120	__init__	DEBUG	Time for initiating EventHandler: 0.40000009536743164
-2018-08-24 16:33:36,714	event_handler.py	47	f	DEBUG	Start: "test_timer"
-2018-08-24 16:33:37,072	event_handler.py	51	f	DEBUG	Stop: "test_timer". Time for running method was 0.35500025749206543
-2018-08-24 16:34:39,275	event_handler.py	104	__init__	DEBUG	Start EventHandler: event_handler
-2018-08-24 16:34:39,277	event_handler.py	139	_load_mapping_objects	DEBUG	Loading mapping files from pickle file.
-2018-08-24 16:34:39,582	event_handler.py	115	__init__	DEBUG	Time for mapping: 0.30499982833862305
-2018-08-24 16:34:39,603	event_handler.py	120	__init__	DEBUG	Time for initiating EventHandler: 0.3279998302459717
-2018-08-24 16:34:39,606	event_handler.py	47	f	DEBUG	Start: "test_timer"
-2018-08-24 16:34:39,896	event_handler.py	51	f	DEBUG	Stop: "test_timer". Time for running method was 0.2869999408721924
-2018-08-24 16:35:44,041	event_handler.py	104	__init__	DEBUG	Start EventHandler: event_handler
-2018-08-24 16:35:44,043	event_handler.py	144	_load_mapping_objects	DEBUG	Loading mapping files from original files.
-2018-08-24 16:36:04,579	event_handler.py	104	__init__	DEBUG	Start EventHandler: event_handler
-2018-08-24 16:36:04,580	event_handler.py	144	_load_mapping_objects	DEBUG	Loading mapping files from original files.
-2018-08-24 16:36:48,395	event_handler.py	104	__init__	DEBUG	Start EventHandler: event_handler
-2018-08-24 16:36:48,397	event_handler.py	144	_load_mapping_objects	DEBUG	Loading mapping files from original files.
-2018-08-24 16:39:06,049	logger.py	85	add_log	DEBUG	
-2018-08-24 16:39:06,050	logger.py	86	add_log	DEBUG	========================================================================================================================
-2018-08-24 16:39:06,052	logger.py	87	add_log	DEBUG	### Log added for log_id "event_handler" at locaton: ..\log\main_event_handler.log
-2018-08-24 16:39:06,054	logger.py	88	add_log	DEBUG	------------------------------------------------------------------------------------------------------------------------
-2018-08-24 16:39:06,057	event_handler.py	104	__init__	DEBUG	Start EventHandler: event_handler
-2018-08-24 16:39:06,060	event_handler.py	144	_load_mapping_objects	DEBUG	Loading mapping files from original files.
-2018-08-24 16:39:09,784	event_handler.py	115	__init__	DEBUG	Time for mapping: 3.7239999771118164
-2018-08-24 16:39:09,801	event_handler.py	120	__init__	DEBUG	Time for initiating EventHandler: 3.753000020980835
-2018-08-24 16:39:09,803	event_handler.py	47	f	DEBUG	Start: "test_timer"
-2018-08-24 16:39:10,086	event_handler.py	51	f	DEBUG	Stop: "test_timer". Time for running method was 0.2799999713897705
-2018-08-24 16:39:19,196	event_handler.py	104	__init__	DEBUG	Start EventHandler: event_handler
-2018-08-24 16:39:19,198	event_handler.py	139	_load_mapping_objects	DEBUG	Loading mapping files from pickle file.
-2018-08-24 16:39:19,490	event_handler.py	115	__init__	DEBUG	Time for mapping: 0.29200005531311035
-2018-08-24 16:39:19,508	event_handler.py	120	__init__	DEBUG	Time for initiating EventHandler: 0.312000036239624
-2018-08-24 16:39:31,516	event_handler.py	104	__init__	DEBUG	Start EventHandler: event_handler
-2018-08-24 16:39:31,517	event_handler.py	139	_load_mapping_objects	DEBUG	Loading mapping files from pickle file.
-2018-08-24 16:39:31,897	event_handler.py	115	__init__	DEBUG	Time for mapping: 0.37999987602233887
-2018-08-24 16:39:31,915	event_handler.py	120	__init__	DEBUG	Time for initiating EventHandler: 0.3989999294281006
-2018-08-24 16:46:41,032	logger.py	85	add_log	DEBUG	
-2018-08-24 16:46:41,034	logger.py	86	add_log	DEBUG	========================================================================================================================
-2018-08-24 16:46:41,035	logger.py	87	add_log	DEBUG	### Log added for log_id "event_handler" at locaton: ..\log\main_event_handler.log
-2018-08-24 16:46:41,040	logger.py	88	add_log	DEBUG	------------------------------------------------------------------------------------------------------------------------
-2018-08-24 16:46:41,042	event_handler.py	104	__init__	DEBUG	Start EventHandler: event_handler
-2018-08-24 16:46:41,045	event_handler.py	144	_load_mapping_objects	DEBUG	Loading mapping files from original files.
-2018-08-24 16:46:45,099	event_handler.py	115	__init__	DEBUG	Time for mapping: 4.055000066757202
-2018-08-24 16:46:45,116	event_handler.py	120	__init__	DEBUG	Time for initiating EventHandler: 4.085000038146973
-2018-08-24 16:46:45,127	event_handler.py	47	f	DEBUG	Start: "test_timer"
-2018-08-24 16:46:45,471	event_handler.py	51	f	DEBUG	Stop: "test_timer". Time for running method was 0.33899998664855957
-2018-08-24 16:46:52,286	event_handler.py	104	__init__	DEBUG	Start EventHandler: event_handler
-2018-08-24 16:46:52,288	event_handler.py	139	_load_mapping_objects	DEBUG	Loading mapping files from pickle file.
-2018-08-24 16:46:52,729	event_handler.py	115	__init__	DEBUG	Time for mapping: 0.44099998474121094
-2018-08-24 16:46:52,749	event_handler.py	120	__init__	DEBUG	Time for initiating EventHandler: 0.4630000591278076
-2018-08-24 17:10:17,226	event_handler.py	106	__init__	DEBUG	Start EventHandler: event_handler
-2018-08-24 17:10:17,229	event_handler.py	141	_load_mapping_objects	DEBUG	Loading mapping files from pickle file.
-2018-08-24 17:10:17,590	event_handler.py	117	__init__	DEBUG	Time for mapping: 0.3619999885559082
-2018-08-24 17:10:17,609	event_handler.py	122	__init__	DEBUG	Time for initiating EventHandler: 0.38300013542175293
-2018-08-24 17:10:17,617	event_handler.py	47	f	DEBUG	Start: "request_sharkweb_search"
-2018-08-24 17:13:20,497	logger.py	85	add_log	DEBUG	
-2018-08-24 17:13:20,499	logger.py	86	add_log	DEBUG	========================================================================================================================
-2018-08-24 17:13:20,500	logger.py	87	add_log	DEBUG	### Log added for log_id "event_handler" at locaton: ..\log\main_event_handler.log
-2018-08-24 17:13:20,502	logger.py	88	add_log	DEBUG	------------------------------------------------------------------------------------------------------------------------
-2018-08-24 17:13:20,504	event_handler.py	106	__init__	DEBUG	Start EventHandler: event_handler
-2018-08-24 17:13:20,506	event_handler.py	141	_load_mapping_objects	DEBUG	Loading mapping files from pickle file.
-2018-08-24 17:13:20,913	event_handler.py	117	__init__	DEBUG	Time for mapping: 0.40600013732910156
-2018-08-24 17:13:20,931	event_handler.py	122	__init__	DEBUG	Time for initiating EventHandler: 0.434999942779541
-2018-08-24 17:13:20,932	event_handler.py	47	f	DEBUG	Start: "test_timer"
-2018-08-24 17:13:21,243	event_handler.py	51	f	DEBUG	Stop: "test_timer". Time for running method was 0.3080000877380371
-2018-08-24 17:13:28,765	event_handler.py	106	__init__	DEBUG	Start EventHandler: event_handler
-2018-08-24 17:13:28,767	event_handler.py	141	_load_mapping_objects	DEBUG	Loading mapping files from pickle file.
-2018-08-24 17:13:29,147	event_handler.py	117	__init__	DEBUG	Time for mapping: 0.38000011444091797
-2018-08-24 17:13:29,165	event_handler.py	122	__init__	DEBUG	Time for initiating EventHandler: 0.3990001678466797
-2018-08-24 17:13:29,173	event_handler.py	47	f	DEBUG	Start: "request_sharkweb_search"
-2018-08-24 17:13:30,133	event_handler.py	51	f	DEBUG	Stop: "request_sharkweb_search". Time for running method was 0.9579999446868896
-2018-08-27 10:25:30,155	logger.py	85	add_log	DEBUG	
-2018-08-27 10:25:30,157	logger.py	86	add_log	DEBUG	========================================================================================================================
-2018-08-27 10:25:30,159	logger.py	87	add_log	DEBUG	### Log added for log_id "event_handler" at locaton: ..\log\main_event_handler.log
-2018-08-27 10:25:30,162	logger.py	88	add_log	DEBUG	------------------------------------------------------------------------------------------------------------------------
-2018-08-27 10:25:30,163	event_handler.py	106	__init__	DEBUG	Start EventHandler: event_handler
-2018-08-27 10:25:30,166	event_handler.py	141	_load_mapping_objects	DEBUG	Loading mapping files from pickle file.
-2018-08-27 10:25:30,569	event_handler.py	117	__init__	DEBUG	Time for mapping: 0.40399980545043945
-2018-08-27 10:25:30,595	event_handler.py	122	__init__	DEBUG	Time for initiating EventHandler: 0.44099998474121094
-2018-08-27 10:25:30,597	event_handler.py	47	f	DEBUG	Start: "test_timer"
-2018-08-27 10:25:30,941	event_handler.py	51	f	DEBUG	Stop: "test_timer". Time for running method was 0.34200000762939453
-2018-08-27 10:26:11,826	event_handler.py	106	__init__	DEBUG	Start EventHandler: event_handler
-2018-08-27 10:26:11,828	event_handler.py	141	_load_mapping_objects	DEBUG	Loading mapping files from pickle file.
-2018-08-27 10:26:12,229	event_handler.py	117	__init__	DEBUG	Time for mapping: 0.4010000228881836
-2018-08-27 10:26:12,249	event_handler.py	122	__init__	DEBUG	Time for initiating EventHandler: 0.42299985885620117
-2018-08-27 10:26:12,254	event_handler.py	47	f	DEBUG	Start: "request_sharkweb_search"
-2018-08-27 10:26:47,085	event_handler.py	106	__init__	DEBUG	Start EventHandler: event_handler
-2018-08-27 10:26:47,087	event_handler.py	141	_load_mapping_objects	DEBUG	Loading mapping files from pickle file.
-2018-08-27 10:26:47,471	event_handler.py	117	__init__	DEBUG	Time for mapping: 0.38499999046325684
-2018-08-27 10:26:47,496	event_handler.py	122	__init__	DEBUG	Time for initiating EventHandler: 0.41100025177001953
-2018-08-27 10:26:47,498	event_handler.py	47	f	DEBUG	Start: "request_sharkweb_search"
-2018-08-27 10:26:49,684	event_handler.py	51	f	DEBUG	Stop: "request_sharkweb_search". Time for running method was 2.184000015258789
-2018-08-27 10:27:37,639	event_handler.py	106	__init__	DEBUG	Start EventHandler: event_handler
-2018-08-27 10:27:37,641	event_handler.py	141	_load_mapping_objects	DEBUG	Loading mapping files from pickle file.
-2018-08-27 10:27:38,026	event_handler.py	117	__init__	DEBUG	Time for mapping: 0.38500022888183594
-2018-08-27 10:27:38,046	event_handler.py	122	__init__	DEBUG	Time for initiating EventHandler: 0.4070000648498535
-2018-08-27 10:27:38,054	event_handler.py	47	f	DEBUG	Start: "request_sharkweb_search"
-2018-08-27 10:27:38,407	event_handler.py	51	f	DEBUG	Stop: "request_sharkweb_search". Time for running method was 0.3510000705718994
-2018-08-27 10:32:56,097	event_handler.py	106	__init__	DEBUG	Start EventHandler: event_handler
-2018-08-27 10:32:56,099	event_handler.py	141	_load_mapping_objects	DEBUG	Loading mapping files from pickle file.
-2018-08-27 10:32:56,480	event_handler.py	117	__init__	DEBUG	Time for mapping: 0.3809998035430908
-2018-08-27 10:32:56,499	event_handler.py	122	__init__	DEBUG	Time for initiating EventHandler: 0.40200018882751465
-2018-08-27 10:32:56,506	event_handler.py	47	f	DEBUG	Start: "request_sharkweb_search"
-2018-08-27 10:32:56,942	event_handler.py	51	f	DEBUG	Stop: "request_sharkweb_search". Time for running method was 0.4330000877380371
-2018-08-27 10:40:45,848	logger.py	85	add_log	DEBUG	
-2018-08-27 10:40:45,848	logger.py	86	add_log	DEBUG	========================================================================================================================
-2018-08-27 10:40:45,848	logger.py	87	add_log	DEBUG	### Log added for log_id "event_handler" at locaton: ..\log\main_event_handler.log
-2018-08-27 10:40:45,848	logger.py	88	add_log	DEBUG	------------------------------------------------------------------------------------------------------------------------
-2018-08-27 10:40:45,848	event_handler.py	106	__init__	DEBUG	Start EventHandler: event_handler
-2018-08-27 10:40:45,848	event_handler.py	146	_load_mapping_objects	DEBUG	Loading mapping files from original files.
-2018-08-27 10:40:49,839	event_handler.py	117	__init__	DEBUG	Time for mapping: 3.990382194519043
-2018-08-27 10:40:49,840	event_handler.py	122	__init__	DEBUG	Time for initiating EventHandler: 3.991382122039795
-2018-08-27 10:40:49,846	event_handler.py	47	f	DEBUG	Start: "test_timer"
-2018-08-27 10:40:50,241	event_handler.py	51	f	DEBUG	Stop: "test_timer". Time for running method was 0.39319825172424316
-2018-08-27 10:41:03,982	event_handler.py	106	__init__	DEBUG	Start EventHandler: event_handler
-2018-08-27 10:41:03,982	event_handler.py	141	_load_mapping_objects	DEBUG	Loading mapping files from pickle file.
-2018-08-27 10:41:04,352	event_handler.py	117	__init__	DEBUG	Time for mapping: 0.37059855461120605
-2018-08-27 10:41:04,369	event_handler.py	122	__init__	DEBUG	Time for initiating EventHandler: 0.38719820976257324
-2018-08-27 10:41:04,369	event_handler.py	47	f	DEBUG	Start: "request_sharkweb_search"
-2018-08-27 10:41:04,798	event_handler.py	51	f	DEBUG	Stop: "request_sharkweb_search". Time for running method was 0.4291977882385254
-2018-08-27 10:44:10,446	event_handler.py	106	__init__	DEBUG	Start EventHandler: event_handler
-2018-08-27 10:44:10,449	event_handler.py	141	_load_mapping_objects	DEBUG	Loading mapping files from pickle file.
-2018-08-27 10:44:11,143	event_handler.py	117	__init__	DEBUG	Time for mapping: 0.6940000057220459
-2018-08-27 10:44:11,168	event_handler.py	122	__init__	DEBUG	Time for initiating EventHandler: 0.7229998111724854
-2018-08-27 10:44:11,177	event_handler.py	47	f	DEBUG	Start: "request_sharkweb_search"
-2018-08-27 10:44:11,569	event_handler.py	51	f	DEBUG	Stop: "request_sharkweb_search". Time for running method was 0.38919925689697266
-2018-08-27 11:09:42,889	event_handler.py	106	__init__	DEBUG	Start EventHandler: event_handler
-2018-08-27 11:09:42,891	event_handler.py	141	_load_mapping_objects	DEBUG	Loading mapping files from pickle file.
-2018-08-27 11:09:43,207	event_handler.py	117	__init__	DEBUG	Time for mapping: 0.31603169441223145
-2018-08-27 11:09:43,224	event_handler.py	122	__init__	DEBUG	Time for initiating EventHandler: 0.335033655166626
-2018-08-27 11:09:43,230	event_handler.py	47	f	DEBUG	Start: "request_sharkweb_search"
-2018-08-27 11:09:43,712	event_handler.py	51	f	DEBUG	Stop: "request_sharkweb_search". Time for running method was 0.4790480136871338
-2018-08-27 11:26:06,501	event_handler.py	106	__init__	DEBUG	Start EventHandler: event_handler
-2018-08-27 11:26:06,503	event_handler.py	141	_load_mapping_objects	DEBUG	Loading mapping files from pickle file.
-2018-08-27 11:26:06,828	event_handler.py	117	__init__	DEBUG	Time for mapping: 0.3249998092651367
-2018-08-27 11:26:06,843	event_handler.py	122	__init__	DEBUG	Time for initiating EventHandler: 0.34200000762939453
-2018-08-27 11:26:06,850	event_handler.py	47	f	DEBUG	Start: "request_sharkweb_search"
-2018-08-27 11:26:07,336	event_handler.py	51	f	DEBUG	Stop: "request_sharkweb_search". Time for running method was 0.48199987411499023
-2018-08-27 11:29:10,929	event_handler.py	106	__init__	DEBUG	Start EventHandler: event_handler
-2018-08-27 11:29:10,930	event_handler.py	141	_load_mapping_objects	DEBUG	Loading mapping files from pickle file.
-2018-08-27 11:29:11,261	event_handler.py	117	__init__	DEBUG	Time for mapping: 0.33099985122680664
-2018-08-27 11:29:11,277	event_handler.py	122	__init__	DEBUG	Time for initiating EventHandler: 0.34800004959106445
-2018-08-27 11:29:11,285	event_handler.py	47	f	DEBUG	Start: "request_sharkweb_search"
-2018-08-27 11:29:11,755	event_handler.py	51	f	DEBUG	Stop: "request_sharkweb_search". Time for running method was 0.46700024604797363
-2018-08-27 11:41:14,637	event_handler.py	106	__init__	DEBUG	Start EventHandler: event_handler
-2018-08-27 11:41:14,639	event_handler.py	141	_load_mapping_objects	DEBUG	Loading mapping files from pickle file.
-2018-08-27 11:41:14,955	event_handler.py	117	__init__	DEBUG	Time for mapping: 0.31599998474121094
-2018-08-27 11:41:14,970	event_handler.py	122	__init__	DEBUG	Time for initiating EventHandler: 0.33299994468688965
-2018-08-27 11:41:14,977	event_handler.py	47	f	DEBUG	Start: "request_sharkweb_search"
-2018-08-27 11:41:15,506	event_handler.py	51	f	DEBUG	Stop: "request_sharkweb_search". Time for running method was 0.5269999504089355
-2018-08-27 11:41:58,986	logger.py	85	add_log	DEBUG	
-2018-08-27 11:41:58,988	logger.py	86	add_log	DEBUG	========================================================================================================================
-2018-08-27 11:41:58,989	logger.py	87	add_log	DEBUG	### Log added for log_id "event_handler" at locaton: ..\log\main_event_handler.log
-2018-08-27 11:41:58,992	logger.py	88	add_log	DEBUG	------------------------------------------------------------------------------------------------------------------------
-2018-08-27 11:41:58,994	event_handler.py	106	__init__	DEBUG	Start EventHandler: event_handler
-2018-08-27 11:41:58,996	event_handler.py	146	_load_mapping_objects	DEBUG	Loading mapping files from original files.
-2018-08-27 11:42:02,339	event_handler.py	117	__init__	DEBUG	Time for mapping: 3.3431999683380127
-2018-08-27 11:42:02,340	event_handler.py	122	__init__	DEBUG	Time for initiating EventHandler: 3.3552000522613525
-2018-08-27 11:42:02,340	event_handler.py	47	f	DEBUG	Start: "test_timer"
-2018-08-27 11:42:02,651	event_handler.py	51	f	DEBUG	Stop: "test_timer". Time for running method was 0.3113999366760254
-2018-08-27 11:42:09,329	event_handler.py	106	__init__	DEBUG	Start EventHandler: event_handler
-2018-08-27 11:42:09,344	event_handler.py	141	_load_mapping_objects	DEBUG	Loading mapping files from pickle file.
-2018-08-27 11:42:09,662	event_handler.py	117	__init__	DEBUG	Time for mapping: 0.3171999454498291
-2018-08-27 11:42:09,663	event_handler.py	122	__init__	DEBUG	Time for initiating EventHandler: 0.3338000774383545
-2018-08-27 11:42:09,663	event_handler.py	47	f	DEBUG	Start: "request_sharkweb_search"
-2018-08-27 11:42:10,122	event_handler.py	51	f	DEBUG	Stop: "request_sharkweb_search". Time for running method was 0.45799970626831055
-2018-08-27 11:42:17,025	event_handler.py	106	__init__	DEBUG	Start EventHandler: event_handler
-2018-08-27 11:42:17,025	event_handler.py	141	_load_mapping_objects	DEBUG	Loading mapping files from pickle file.
-2018-08-27 11:42:17,342	event_handler.py	117	__init__	DEBUG	Time for mapping: 0.3172001838684082
-2018-08-27 11:42:17,343	event_handler.py	122	__init__	DEBUG	Time for initiating EventHandler: 0.31820011138916016
-2018-08-27 11:42:17,343	event_handler.py	47	f	DEBUG	Start: "request_sharkweb_search"
-2018-08-27 11:42:17,823	event_handler.py	51	f	DEBUG	Stop: "request_sharkweb_search". Time for running method was 0.4793999195098877
-2018-08-27 11:43:30,813	event_handler.py	106	__init__	DEBUG	Start EventHandler: event_handler
-2018-08-27 11:43:30,814	event_handler.py	141	_load_mapping_objects	DEBUG	Loading mapping files from pickle file.
-2018-08-27 11:43:31,214	event_handler.py	117	__init__	DEBUG	Time for mapping: 0.39999985694885254
-2018-08-27 11:43:31,232	event_handler.py	122	__init__	DEBUG	Time for initiating EventHandler: 0.41899991035461426
-2018-08-27 11:43:31,239	event_handler.py	47	f	DEBUG	Start: "request_sharkweb_search"
-2018-08-27 11:43:31,672	event_handler.py	51	f	DEBUG	Stop: "request_sharkweb_search". Time for running method was 0.4311971664428711
-2018-08-27 11:44:37,399	event_handler.py	106	__init__	DEBUG	Start EventHandler: event_handler
-2018-08-27 11:44:37,400	event_handler.py	141	_load_mapping_objects	DEBUG	Loading mapping files from pickle file.
-2018-08-27 11:44:37,720	event_handler.py	117	__init__	DEBUG	Time for mapping: 0.31999993324279785
-2018-08-27 11:44:37,796	event_handler.py	122	__init__	DEBUG	Time for initiating EventHandler: 0.3969998359680176
-2018-08-27 11:44:37,804	event_handler.py	47	f	DEBUG	Start: "request_sharkweb_search"
-2018-08-27 11:44:38,283	event_handler.py	51	f	DEBUG	Stop: "request_sharkweb_search". Time for running method was 0.4779999256134033
-2018-08-27 11:49:45,537	event_handler.py	106	__init__	DEBUG	Start EventHandler: event_handler
-2018-08-27 11:49:45,538	event_handler.py	141	_load_mapping_objects	DEBUG	Loading mapping files from pickle file.
-2018-08-27 11:49:45,856	event_handler.py	117	__init__	DEBUG	Time for mapping: 0.31799983978271484
-2018-08-27 11:49:45,874	event_handler.py	122	__init__	DEBUG	Time for initiating EventHandler: 0.33699989318847656
-2018-08-27 11:49:45,880	event_handler.py	47	f	DEBUG	Start: "request_sharkweb_search"
-2018-08-27 11:49:46,421	event_handler.py	51	f	DEBUG	Stop: "request_sharkweb_search". Time for running method was 0.5390000343322754
-2018-08-27 12:53:47,584	event_handler.py	106	__init__	DEBUG	Start EventHandler: event_handler
-2018-08-27 12:53:47,599	event_handler.py	141	_load_mapping_objects	DEBUG	Loading mapping files from pickle file.
-2018-08-27 12:53:47,878	event_handler.py	117	__init__	DEBUG	Time for mapping: 0.27861618995666504
-2018-08-27 12:53:47,893	event_handler.py	122	__init__	DEBUG	Time for initiating EventHandler: 0.3098170757293701
-2018-08-27 12:53:47,894	event_handler.py	47	f	DEBUG	Start: "request_sharkweb_search"
-2018-08-27 12:53:48,454	event_handler.py	51	f	DEBUG	Stop: "request_sharkweb_search". Time for running method was 0.5596232414245605
-2018-08-27 12:56:21,641	event_handler.py	106	__init__	DEBUG	Start EventHandler: event_handler
-2018-08-27 12:56:21,642	event_handler.py	141	_load_mapping_objects	DEBUG	Loading mapping files from pickle file.
-2018-08-27 12:56:21,964	event_handler.py	117	__init__	DEBUG	Time for mapping: 0.32203197479248047
-2018-08-27 12:56:21,986	event_handler.py	122	__init__	DEBUG	Time for initiating EventHandler: 0.3450345993041992
-2018-08-27 12:56:21,996	event_handler.py	47	f	DEBUG	Start: "request_sharkweb_search"
-2018-08-27 12:56:22,452	event_handler.py	51	f	DEBUG	Stop: "request_sharkweb_search". Time for running method was 0.45404553413391113
-2018-08-27 12:57:36,667	event_handler.py	106	__init__	DEBUG	Start EventHandler: event_handler
-2018-08-27 12:57:36,668	event_handler.py	141	_load_mapping_objects	DEBUG	Loading mapping files from pickle file.
-2018-08-27 12:57:36,943	event_handler.py	117	__init__	DEBUG	Time for mapping: 0.2750272750854492
-2018-08-27 12:57:36,958	event_handler.py	122	__init__	DEBUG	Time for initiating EventHandler: 0.2910294532775879
-2018-08-27 12:57:36,964	event_handler.py	47	f	DEBUG	Start: "request_sharkweb_search"
-2018-08-27 12:57:37,448	event_handler.py	51	f	DEBUG	Stop: "request_sharkweb_search". Time for running method was 0.4810481071472168
-2018-08-27 12:58:10,731	event_handler.py	106	__init__	DEBUG	Start EventHandler: event_handler
-2018-08-27 12:58:10,733	event_handler.py	141	_load_mapping_objects	DEBUG	Loading mapping files from pickle file.
-2018-08-27 12:58:11,063	event_handler.py	117	__init__	DEBUG	Time for mapping: 0.3300330638885498
-2018-08-27 12:58:11,085	event_handler.py	122	__init__	DEBUG	Time for initiating EventHandler: 0.3540353775024414
-2018-08-27 12:58:11,092	event_handler.py	47	f	DEBUG	Start: "request_sharkweb_search"
-2018-08-27 12:58:11,536	event_handler.py	51	f	DEBUG	Stop: "request_sharkweb_search". Time for running method was 0.4420442581176758
-2018-08-27 13:00:21,687	event_handler.py	106	__init__	DEBUG	Start EventHandler: event_handler
-2018-08-27 13:00:21,688	event_handler.py	141	_load_mapping_objects	DEBUG	Loading mapping files from pickle file.
-2018-08-27 13:00:21,985	event_handler.py	117	__init__	DEBUG	Time for mapping: 0.2970294952392578
-2018-08-27 13:00:22,001	event_handler.py	122	__init__	DEBUG	Time for initiating EventHandler: 0.31403136253356934
-2018-08-27 13:00:22,009	event_handler.py	47	f	DEBUG	Start: "request_sharkweb_search"
-2018-08-27 13:00:22,472	event_handler.py	51	f	DEBUG	Stop: "request_sharkweb_search". Time for running method was 0.46004629135131836
-2018-08-27 13:00:40,237	event_handler.py	106	__init__	DEBUG	Start EventHandler: event_handler
-2018-08-27 13:00:40,239	event_handler.py	141	_load_mapping_objects	DEBUG	Loading mapping files from pickle file.
-2018-08-27 13:00:40,543	event_handler.py	117	__init__	DEBUG	Time for mapping: 0.30503058433532715
-2018-08-27 13:00:40,602	event_handler.py	122	__init__	DEBUG	Time for initiating EventHandler: 0.3650364875793457
-2018-08-27 13:00:40,608	event_handler.py	47	f	DEBUG	Start: "request_sharkweb_search"
-2018-08-27 13:00:41,074	event_handler.py	51	f	DEBUG	Stop: "request_sharkweb_search". Time for running method was 0.46504664421081543
-2018-08-27 13:01:14,243	event_handler.py	106	__init__	DEBUG	Start EventHandler: event_handler
-2018-08-27 13:01:14,244	event_handler.py	141	_load_mapping_objects	DEBUG	Loading mapping files from pickle file.
-2018-08-27 13:01:14,569	event_handler.py	117	__init__	DEBUG	Time for mapping: 0.32503271102905273
-2018-08-27 13:01:14,584	event_handler.py	122	__init__	DEBUG	Time for initiating EventHandler: 0.341033935546875
-2018-08-27 13:01:14,589	event_handler.py	47	f	DEBUG	Start: "request_sharkweb_search"
-2018-08-27 13:01:15,022	event_handler.py	51	f	DEBUG	Stop: "request_sharkweb_search". Time for running method was 0.43004322052001953
-2018-08-27 13:03:51,595	event_handler.py	106	__init__	DEBUG	Start EventHandler: event_handler
-2018-08-27 13:03:51,595	event_handler.py	141	_load_mapping_objects	DEBUG	Loading mapping files from pickle file.
-2018-08-27 13:03:51,888	event_handler.py	117	__init__	DEBUG	Time for mapping: 0.2930145263671875
-2018-08-27 13:03:51,922	event_handler.py	122	__init__	DEBUG	Time for initiating EventHandler: 0.32701802253723145
-2018-08-27 13:03:51,928	event_handler.py	47	f	DEBUG	Start: "request_sharkweb_search"
-2018-08-27 13:03:52,392	event_handler.py	51	f	DEBUG	Stop: "request_sharkweb_search". Time for running method was 0.4632139205932617
-2018-08-27 13:04:40,753	event_handler.py	106	__init__	DEBUG	Start EventHandler: event_handler
-2018-08-27 13:04:40,755	event_handler.py	141	_load_mapping_objects	DEBUG	Loading mapping files from pickle file.
-2018-08-27 13:04:41,088	event_handler.py	117	__init__	DEBUG	Time for mapping: 0.33303308486938477
-2018-08-27 13:04:41,105	event_handler.py	122	__init__	DEBUG	Time for initiating EventHandler: 0.3520352840423584
-2018-08-27 13:04:41,110	event_handler.py	47	f	DEBUG	Start: "request_sharkweb_search"
-2018-08-27 13:04:41,564	event_handler.py	51	f	DEBUG	Stop: "request_sharkweb_search". Time for running method was 0.45104527473449707
-2018-08-27 13:05:25,781	event_handler.py	106	__init__	DEBUG	Start EventHandler: event_handler
-2018-08-27 13:05:25,782	event_handler.py	141	_load_mapping_objects	DEBUG	Loading mapping files from pickle file.
-2018-08-27 13:05:26,076	event_handler.py	117	__init__	DEBUG	Time for mapping: 0.29402923583984375
-2018-08-27 13:05:26,142	event_handler.py	122	__init__	DEBUG	Time for initiating EventHandler: 0.36203598976135254
-2018-08-27 13:05:26,148	event_handler.py	47	f	DEBUG	Start: "request_sharkweb_search"
-2018-08-27 13:05:26,522	event_handler.py	51	f	DEBUG	Stop: "request_sharkweb_search". Time for running method was 0.3720371723175049
-2018-08-27 13:06:26,187	event_handler.py	106	__init__	DEBUG	Start EventHandler: event_handler
-2018-08-27 13:06:26,189	event_handler.py	141	_load_mapping_objects	DEBUG	Loading mapping files from pickle file.
-2018-08-27 13:06:26,513	event_handler.py	117	__init__	DEBUG	Time for mapping: 0.32400012016296387
-2018-08-27 13:06:26,529	event_handler.py	122	__init__	DEBUG	Time for initiating EventHandler: 0.34200024604797363
-2018-08-27 13:06:26,535	event_handler.py	47	f	DEBUG	Start: "request_sharkweb_search"
-2018-08-27 13:06:27,007	event_handler.py	51	f	DEBUG	Stop: "request_sharkweb_search". Time for running method was 0.4700000286102295
-2018-08-27 13:11:36,786	event_handler.py	106	__init__	DEBUG	Start EventHandler: event_handler
-2018-08-27 13:11:36,786	event_handler.py	141	_load_mapping_objects	DEBUG	Loading mapping files from pickle file.
-2018-08-27 13:11:37,060	event_handler.py	117	__init__	DEBUG	Time for mapping: 0.2745997905731201
-2018-08-27 13:11:37,077	event_handler.py	122	__init__	DEBUG	Time for initiating EventHandler: 0.2911999225616455
-2018-08-27 13:11:37,077	event_handler.py	47	f	DEBUG	Start: "request_sharkweb_search"
-2018-08-27 13:11:37,641	event_handler.py	51	f	DEBUG	Stop: "request_sharkweb_search". Time for running method was 0.5639998912811279
-2018-08-27 13:14:03,002	logger.py	85	add_log	DEBUG	
-2018-08-27 13:14:03,017	logger.py	86	add_log	DEBUG	========================================================================================================================
-2018-08-27 13:14:03,017	logger.py	87	add_log	DEBUG	### Log added for log_id "event_handler" at locaton: ..\log\main_event_handler.log
-2018-08-27 13:14:03,017	logger.py	88	add_log	DEBUG	------------------------------------------------------------------------------------------------------------------------
-2018-08-27 13:14:03,017	event_handler.py	106	__init__	DEBUG	Start EventHandler: event_handler
-2018-08-27 13:14:03,017	event_handler.py	146	_load_mapping_objects	DEBUG	Loading mapping files from original files.
-2018-08-27 13:14:06,527	event_handler.py	117	__init__	DEBUG	Time for mapping: 3.5094001293182373
-2018-08-27 13:14:06,552	event_handler.py	122	__init__	DEBUG	Time for initiating EventHandler: 3.549999952316284
-2018-08-27 13:14:06,558	event_handler.py	47	f	DEBUG	Start: "test_timer"
-2018-08-27 13:14:06,888	event_handler.py	51	f	DEBUG	Stop: "test_timer". Time for running method was 0.32960009574890137
-2018-08-27 13:14:13,270	event_handler.py	106	__init__	DEBUG	Start EventHandler: event_handler
-2018-08-27 13:14:13,271	event_handler.py	141	_load_mapping_objects	DEBUG	Loading mapping files from pickle file.
-2018-08-27 13:14:13,625	event_handler.py	117	__init__	DEBUG	Time for mapping: 0.35339999198913574
-2018-08-27 13:14:13,626	event_handler.py	122	__init__	DEBUG	Time for initiating EventHandler: 0.35539984703063965
-2018-08-27 13:14:13,626	event_handler.py	47	f	DEBUG	Start: "request_sharkweb_search"
-2018-08-27 13:14:14,066	event_handler.py	51	f	DEBUG	Stop: "request_sharkweb_search". Time for running method was 0.44080018997192383
-2018-08-27 13:15:44,383	event_handler.py	106	__init__	DEBUG	Start EventHandler: event_handler
-2018-08-27 13:15:44,384	event_handler.py	141	_load_mapping_objects	DEBUG	Loading mapping files from pickle file.
-2018-08-27 13:15:44,721	event_handler.py	117	__init__	DEBUG	Time for mapping: 0.33699989318847656
-2018-08-27 13:15:44,738	event_handler.py	122	__init__	DEBUG	Time for initiating EventHandler: 0.35500001907348633
-2018-08-27 13:15:44,743	event_handler.py	47	f	DEBUG	Start: "request_sharkweb_search"
-2018-08-27 13:16:00,015	event_handler.py	106	__init__	DEBUG	Start EventHandler: event_handler
-2018-08-27 13:16:00,016	event_handler.py	141	_load_mapping_objects	DEBUG	Loading mapping files from pickle file.
-2018-08-27 13:16:00,355	event_handler.py	117	__init__	DEBUG	Time for mapping: 0.33899998664855957
-2018-08-27 13:16:00,370	event_handler.py	122	__init__	DEBUG	Time for initiating EventHandler: 0.35500001907348633
-2018-08-27 13:16:00,377	event_handler.py	47	f	DEBUG	Start: "request_sharkweb_search"
-2018-08-27 13:16:00,820	event_handler.py	51	f	DEBUG	Stop: "request_sharkweb_search". Time for running method was 0.44099974632263184
-2018-08-27 13:16:19,943	event_handler.py	106	__init__	DEBUG	Start EventHandler: event_handler
-2018-08-27 13:16:19,944	event_handler.py	141	_load_mapping_objects	DEBUG	Loading mapping files from pickle file.
-2018-08-27 13:16:20,257	event_handler.py	117	__init__	DEBUG	Time for mapping: 0.312999963760376
-2018-08-27 13:16:20,313	event_handler.py	122	__init__	DEBUG	Time for initiating EventHandler: 0.370999813079834
-2018-08-27 13:16:20,319	event_handler.py	47	f	DEBUG	Start: "request_sharkweb_search"
-2018-08-27 13:16:20,821	event_handler.py	51	f	DEBUG	Stop: "request_sharkweb_search". Time for running method was 0.501000165939331
-2018-08-27 13:37:11,055	logger.py	85	add_log	DEBUG	
-2018-08-27 13:37:11,056	logger.py	86	add_log	DEBUG	========================================================================================================================
-2018-08-27 13:37:11,057	logger.py	87	add_log	DEBUG	### Log added for log_id "event_handler" at locaton: ..\log\main_event_handler.log
-2018-08-27 13:37:11,060	logger.py	88	add_log	DEBUG	------------------------------------------------------------------------------------------------------------------------
-2018-08-27 13:37:11,062	event_handler.py	106	__init__	DEBUG	Start EventHandler: event_handler
-2018-08-27 13:37:11,064	event_handler.py	146	_load_mapping_objects	DEBUG	Loading mapping files from original files.
-2018-08-27 13:37:14,863	event_handler.py	117	__init__	DEBUG	Time for mapping: 3.7990002632141113
-2018-08-27 13:37:14,879	event_handler.py	122	__init__	DEBUG	Time for initiating EventHandler: 3.8249998092651367
-2018-08-27 13:37:14,882	event_handler.py	47	f	DEBUG	Start: "test_timer"
-2018-08-27 13:37:15,171	event_handler.py	51	f	DEBUG	Stop: "test_timer". Time for running method was 0.2869999408721924
-2018-08-27 13:37:15,745	event_handler.py	106	__init__	DEBUG	Start EventHandler: event_handler
-2018-08-27 13:37:15,746	event_handler.py	141	_load_mapping_objects	DEBUG	Loading mapping files from pickle file.
-2018-08-27 13:37:16,078	event_handler.py	117	__init__	DEBUG	Time for mapping: 0.3320000171661377
-2018-08-27 13:37:16,093	event_handler.py	122	__init__	DEBUG	Time for initiating EventHandler: 0.34800004959106445
-2018-08-27 13:37:16,097	event_handler.py	47	f	DEBUG	Start: "request_sharkweb_search"
-2018-08-27 13:37:17,180	event_handler.py	51	f	DEBUG	Stop: "request_sharkweb_search". Time for running method was 1.0800001621246338
-2018-08-27 13:42:06,459	event_handler.py	106	__init__	DEBUG	Start EventHandler: event_handler
-2018-08-27 13:42:06,459	event_handler.py	141	_load_mapping_objects	DEBUG	Loading mapping files from pickle file.
-2018-08-27 13:42:06,813	event_handler.py	117	__init__	DEBUG	Time for mapping: 0.35360002517700195
-2018-08-27 13:42:06,814	event_handler.py	122	__init__	DEBUG	Time for initiating EventHandler: 0.3545999526977539
-2018-08-27 13:42:06,814	event_handler.py	47	f	DEBUG	Start: "request_sharkweb_search"
-2018-08-27 13:42:08,507	event_handler.py	51	f	DEBUG	Stop: "request_sharkweb_search". Time for running method was 1.6926000118255615
-2018-08-27 13:46:42,667	event_handler.py	106	__init__	DEBUG	Start EventHandler: event_handler
-2018-08-27 13:46:42,668	event_handler.py	141	_load_mapping_objects	DEBUG	Loading mapping files from pickle file.
-2018-08-27 13:46:43,000	event_handler.py	117	__init__	DEBUG	Time for mapping: 0.3320000171661377
-2018-08-27 13:46:43,017	event_handler.py	122	__init__	DEBUG	Time for initiating EventHandler: 0.34999990463256836
-2018-08-27 13:46:43,024	event_handler.py	47	f	DEBUG	Start: "request_sharkweb_search"
-2018-08-27 13:46:44,377	event_handler.py	51	f	DEBUG	Stop: "request_sharkweb_search". Time for running method was 1.3499999046325684
+2018-08-27 19:57:17,361	logger.py	88	add_log	DEBUG	------------------------------------------------------------------------------------------------------------------------
+2018-08-27 19:57:17,376	event_handler.py	106	__init__	DEBUG	Start EventHandler: event_handler
+2018-08-27 19:57:17,376	event_handler.py	141	_load_mapping_objects	DEBUG	Loading mapping files from pickle file.
+2018-08-27 19:57:17,771	event_handler.py	117	__init__	DEBUG	Time for mapping: 0.39478111267089844
+2018-08-27 19:57:17,788	event_handler.py	122	__init__	DEBUG	Time for initiating EventHandler: 0.42787957191467285
+2018-08-27 19:57:17,796	event_handler.py	47	f	DEBUG	Start: "test_timer"
+2018-08-27 19:57:18,115	event_handler.py	51	f	DEBUG	Stop: "test_timer". Time for running method was 0.3166844844818115
+2018-08-27 19:57:41,751	event_handler.py	106	__init__	DEBUG	Start EventHandler: event_handler
+2018-08-27 19:57:41,753	event_handler.py	141	_load_mapping_objects	DEBUG	Loading mapping files from pickle file.
+2018-08-27 19:57:42,109	event_handler.py	117	__init__	DEBUG	Time for mapping: 0.3558804988861084
+2018-08-27 19:57:42,112	event_handler.py	122	__init__	DEBUG	Time for initiating EventHandler: 0.36088013648986816
+2018-08-27 19:57:42,112	event_handler.py	47	f	DEBUG	Start: "request_sharkweb_import"
+2018-08-27 19:57:42,142	event_handler.py	2889	load_workspace	DEBUG	Trying to load new workspace "5cf3719a-9d44-48e0-b228-496a6894d263" with alias "New test workspace"
+2018-08-27 19:57:42,489	event_handler.py	2907	load_workspace	INFO	Workspace "5cf3719a-9d44-48e0-b228-496a6894d263" with alias "New test workspace loaded."
+2018-08-27 20:01:04,180	event_handler.py	106	__init__	DEBUG	Start EventHandler: event_handler
+2018-08-27 20:01:04,180	event_handler.py	141	_load_mapping_objects	DEBUG	Loading mapping files from pickle file.
+2018-08-27 20:01:04,580	event_handler.py	117	__init__	DEBUG	Time for mapping: 0.3994898796081543
+2018-08-27 20:01:04,582	event_handler.py	122	__init__	DEBUG	Time for initiating EventHandler: 0.4019899368286133
+2018-08-27 20:01:04,582	event_handler.py	47	f	DEBUG	Start: "request_sharkweb_import"
+2018-08-27 20:01:26,092	event_handler.py	106	__init__	DEBUG	Start EventHandler: event_handler
+2018-08-27 20:01:26,092	event_handler.py	141	_load_mapping_objects	DEBUG	Loading mapping files from pickle file.
+2018-08-27 20:01:26,459	event_handler.py	117	__init__	DEBUG	Time for mapping: 0.3670921325683594
+2018-08-27 20:01:26,479	event_handler.py	122	__init__	DEBUG	Time for initiating EventHandler: 0.38709211349487305
+2018-08-27 20:01:26,481	event_handler.py	47	f	DEBUG	Start: "request_sharkweb_import"
+2018-08-27 20:01:26,504	event_handler.py	2891	load_workspace	DEBUG	Trying to load new workspace "5cf3719a-9d44-48e0-b228-496a6894d263" with alias "New test workspace"
+2018-08-27 20:01:26,774	event_handler.py	2909	load_workspace	INFO	Workspace "5cf3719a-9d44-48e0-b228-496a6894d263" with alias "New test workspace loaded."
+2018-08-28 11:43:17,237	logger.py	85	add_log	DEBUG	
+2018-08-28 11:43:17,239	logger.py	86	add_log	DEBUG	========================================================================================================================
+2018-08-28 11:43:17,240	logger.py	87	add_log	DEBUG	### Log added for log_id "event_handler" at locaton: ..\log\main_event_handler.log
+2018-08-28 11:43:17,245	logger.py	88	add_log	DEBUG	------------------------------------------------------------------------------------------------------------------------
+2018-08-28 11:43:17,247	event_handler.py	106	__init__	DEBUG	Start EventHandler: event_handler
+2018-08-28 11:43:17,250	event_handler.py	146	_load_mapping_objects	DEBUG	Loading mapping files from original files.
+2018-08-28 11:43:53,575	event_handler.py	106	__init__	DEBUG	Start EventHandler: event_handler
+2018-08-28 11:43:53,579	event_handler.py	146	_load_mapping_objects	DEBUG	Loading mapping files from original files.
+2018-08-28 11:43:57,816	event_handler.py	117	__init__	DEBUG	Time for mapping: 4.23799991607666
+2018-08-28 11:43:58,028	event_handler.py	122	__init__	DEBUG	Time for initiating EventHandler: 4.452999830245972
+2018-08-28 11:43:58,028	event_handler.py	47	f	DEBUG	Start: "test_timer"
+2018-08-28 11:43:58,386	event_handler.py	51	f	DEBUG	Stop: "test_timer". Time for running method was 0.34219980239868164
+2018-08-28 11:44:13,388	event_handler.py	106	__init__	DEBUG	Start EventHandler: event_handler
+2018-08-28 11:44:13,389	event_handler.py	141	_load_mapping_objects	DEBUG	Loading mapping files from pickle file.
+2018-08-28 11:44:13,813	event_handler.py	117	__init__	DEBUG	Time for mapping: 0.4238002300262451
+2018-08-28 11:44:13,853	event_handler.py	122	__init__	DEBUG	Time for initiating EventHandler: 0.46580028533935547
+2018-08-28 11:44:13,855	event_handler.py	47	f	DEBUG	Start: "request_sharkweb_import"
+2018-08-28 11:44:13,888	event_handler.py	2891	load_workspace	DEBUG	Trying to load new workspace "5cf3719a-9d44-48e0-b228-496a6894d263" with alias "New test workspace"
+2018-08-28 11:44:14,295	event_handler.py	2909	load_workspace	INFO	Workspace "5cf3719a-9d44-48e0-b228-496a6894d263" with alias "New test workspace loaded."
+2018-08-28 11:45:14,794	event_handler.py	106	__init__	DEBUG	Start EventHandler: event_handler
+2018-08-28 11:45:14,795	event_handler.py	141	_load_mapping_objects	DEBUG	Loading mapping files from pickle file.
+2018-08-28 11:45:15,266	event_handler.py	117	__init__	DEBUG	Time for mapping: 0.470599889755249
+2018-08-28 11:45:15,267	event_handler.py	122	__init__	DEBUG	Time for initiating EventHandler: 0.47260022163391113
+2018-08-28 11:45:15,267	event_handler.py	47	f	DEBUG	Start: "request_sharkweb_import"
+2018-08-28 11:45:15,298	event_handler.py	2891	load_workspace	DEBUG	Trying to load new workspace "5cf3719a-9d44-48e0-b228-496a6894d263" with alias "New test workspace"
+2018-08-28 11:45:15,597	event_handler.py	2909	load_workspace	INFO	Workspace "5cf3719a-9d44-48e0-b228-496a6894d263" with alias "New test workspace loaded."
+2018-08-28 11:45:36,057	logger.py	85	add_log	DEBUG	
+2018-08-28 11:45:36,060	logger.py	86	add_log	DEBUG	========================================================================================================================
+2018-08-28 11:45:36,062	logger.py	87	add_log	DEBUG	### Log added for log_id "event_handler" at locaton: ..\log\main_event_handler.log
+2018-08-28 11:45:36,063	logger.py	88	add_log	DEBUG	------------------------------------------------------------------------------------------------------------------------
+2018-08-28 11:45:36,065	event_handler.py	106	__init__	DEBUG	Start EventHandler: event_handler
+2018-08-28 11:45:36,067	event_handler.py	141	_load_mapping_objects	DEBUG	Loading mapping files from pickle file.
+2018-08-28 11:45:36,500	event_handler.py	117	__init__	DEBUG	Time for mapping: 0.43340015411376953
+2018-08-28 11:45:36,515	event_handler.py	122	__init__	DEBUG	Time for initiating EventHandler: 0.4594001770019531
+2018-08-28 11:45:36,516	event_handler.py	47	f	DEBUG	Start: "test_timer"
+2018-08-28 11:45:36,848	event_handler.py	51	f	DEBUG	Stop: "test_timer". Time for running method was 0.32899999618530273
+2018-08-28 11:45:41,711	event_handler.py	106	__init__	DEBUG	Start EventHandler: event_handler
+2018-08-28 11:45:41,712	event_handler.py	141	_load_mapping_objects	DEBUG	Loading mapping files from pickle file.
+2018-08-28 11:45:42,117	event_handler.py	117	__init__	DEBUG	Time for mapping: 0.4047999382019043
+2018-08-28 11:45:42,118	event_handler.py	122	__init__	DEBUG	Time for initiating EventHandler: 0.4068000316619873
+2018-08-28 11:45:42,118	event_handler.py	47	f	DEBUG	Start: "request_sharkweb_import"
+2018-08-28 11:45:42,139	event_handler.py	2891	load_workspace	DEBUG	Trying to load new workspace "5cf3719a-9d44-48e0-b228-496a6894d263" with alias "New test workspace"
+2018-08-28 11:45:42,517	event_handler.py	2909	load_workspace	INFO	Workspace "5cf3719a-9d44-48e0-b228-496a6894d263" with alias "New test workspace loaded."
+2018-08-28 11:45:51,243	event_handler.py	2902	load_workspace	DEBUG	Workspace "5cf3719a-9d44-48e0-b228-496a6894d263" with alias "New test workspace" is already loaded. Set reload=True if you want to reload the workspace.
+2018-08-28 11:54:15,665	event_handler.py	51	f	DEBUG	Stop: "request_sharkweb_import". Time for running method was 513.5460271835327
+2018-08-28 13:15:55,057	event_handler.py	106	__init__	DEBUG	Start EventHandler: event_handler
+2018-08-28 13:15:55,058	event_handler.py	141	_load_mapping_objects	DEBUG	Loading mapping files from pickle file.
+2018-08-28 13:15:55,462	event_handler.py	117	__init__	DEBUG	Time for mapping: 0.4036118984222412
+2018-08-28 13:15:55,463	event_handler.py	122	__init__	DEBUG	Time for initiating EventHandler: 0.4056119918823242
+2018-08-28 13:16:56,478	event_handler.py	106	__init__	DEBUG	Start EventHandler: event_handler
+2018-08-28 13:16:56,480	event_handler.py	141	_load_mapping_objects	DEBUG	Loading mapping files from pickle file.
+2018-08-28 13:16:56,952	event_handler.py	117	__init__	DEBUG	Time for mapping: 0.47182297706604004
+2018-08-28 13:16:56,969	event_handler.py	122	__init__	DEBUG	Time for initiating EventHandler: 0.49042320251464844
+2018-08-28 13:16:56,985	event_handler.py	2891	load_workspace	DEBUG	Trying to load new workspace "5cf3719a-9d44-48e0-b228-496a6894d263" with alias "New test workspace"
+2018-08-28 13:16:57,278	event_handler.py	2909	load_workspace	INFO	Workspace "5cf3719a-9d44-48e0-b228-496a6894d263" with alias "New test workspace loaded."
+2018-08-28 13:17:30,587	event_handler.py	106	__init__	DEBUG	Start EventHandler: event_handler
+2018-08-28 13:17:30,604	event_handler.py	141	_load_mapping_objects	DEBUG	Loading mapping files from pickle file.
+2018-08-28 13:17:31,032	event_handler.py	117	__init__	DEBUG	Time for mapping: 0.44341158866882324
+2018-08-28 13:17:31,033	event_handler.py	122	__init__	DEBUG	Time for initiating EventHandler: 0.4464120864868164
+2018-08-28 13:17:31,050	event_handler.py	2891	load_workspace	DEBUG	Trying to load new workspace "5cf3719a-9d44-48e0-b228-496a6894d263" with alias "New test workspace"
+2018-08-28 13:17:31,298	event_handler.py	2909	load_workspace	INFO	Workspace "5cf3719a-9d44-48e0-b228-496a6894d263" with alias "New test workspace loaded."
+2018-08-28 13:17:51,651	event_handler.py	106	__init__	DEBUG	Start EventHandler: event_handler
+2018-08-28 13:17:51,652	event_handler.py	141	_load_mapping_objects	DEBUG	Loading mapping files from pickle file.
+2018-08-28 13:17:52,170	event_handler.py	117	__init__	DEBUG	Time for mapping: 0.5174188613891602
+2018-08-28 13:17:52,171	event_handler.py	122	__init__	DEBUG	Time for initiating EventHandler: 0.5204193592071533
+2018-08-28 13:17:52,185	event_handler.py	2891	load_workspace	DEBUG	Trying to load new workspace "5cf3719a-9d44-48e0-b228-496a6894d263" with alias "New test workspace"
+2018-08-28 13:17:52,489	event_handler.py	2909	load_workspace	INFO	Workspace "5cf3719a-9d44-48e0-b228-496a6894d263" with alias "New test workspace loaded."
+2018-08-28 13:32:40,827	event_handler.py	106	__init__	DEBUG	Start EventHandler: event_handler
+2018-08-28 13:32:40,829	event_handler.py	141	_load_mapping_objects	DEBUG	Loading mapping files from pickle file.
+2018-08-28 13:32:41,324	event_handler.py	117	__init__	DEBUG	Time for mapping: 0.4945688247680664
+2018-08-28 13:32:41,325	event_handler.py	122	__init__	DEBUG	Time for initiating EventHandler: 0.49756884574890137
+2018-08-28 13:32:41,325	event_handler.py	47	f	DEBUG	Start: "request_sharkweb_import"
+2018-08-28 13:32:41,341	event_handler.py	2891	load_workspace	DEBUG	Trying to load new workspace "5cf3719a-9d44-48e0-b228-496a6894d263" with alias "New test workspace"
+2018-08-28 13:32:41,623	event_handler.py	2909	load_workspace	INFO	Workspace "5cf3719a-9d44-48e0-b228-496a6894d263" with alias "New test workspace loaded."
+2018-08-28 13:32:52,584	event_handler.py	2902	load_workspace	DEBUG	Workspace "5cf3719a-9d44-48e0-b228-496a6894d263" with alias "New test workspace" is already loaded. Set reload=True if you want to reload the workspace.
+2018-08-28 13:33:07,933	logger.py	85	add_log	DEBUG	
+2018-08-28 13:33:07,935	logger.py	86	add_log	DEBUG	========================================================================================================================
+2018-08-28 13:33:07,938	logger.py	87	add_log	DEBUG	### Log added for log_id "event_handler" at locaton: ..\log\main_event_handler.log
+2018-08-28 13:33:07,942	logger.py	88	add_log	DEBUG	------------------------------------------------------------------------------------------------------------------------
+2018-08-28 13:33:07,945	event_handler.py	106	__init__	DEBUG	Start EventHandler: event_handler
+2018-08-28 13:33:07,947	event_handler.py	141	_load_mapping_objects	DEBUG	Loading mapping files from pickle file.
+2018-08-28 13:33:08,380	event_handler.py	117	__init__	DEBUG	Time for mapping: 0.43238329887390137
+2018-08-28 13:33:08,401	event_handler.py	122	__init__	DEBUG	Time for initiating EventHandler: 0.47138333320617676
+2018-08-28 13:33:08,402	event_handler.py	47	f	DEBUG	Start: "test_timer"
+2018-08-28 13:33:08,822	event_handler.py	51	f	DEBUG	Stop: "test_timer". Time for running method was 0.41799402236938477
+2018-08-28 13:33:16,874	event_handler.py	106	__init__	DEBUG	Start EventHandler: event_handler
+2018-08-28 13:33:16,876	event_handler.py	141	_load_mapping_objects	DEBUG	Loading mapping files from pickle file.
+2018-08-28 13:33:17,284	event_handler.py	117	__init__	DEBUG	Time for mapping: 0.4093773365020752
+2018-08-28 13:33:17,300	event_handler.py	122	__init__	DEBUG	Time for initiating EventHandler: 0.4259757995605469
+2018-08-28 13:33:17,300	event_handler.py	47	f	DEBUG	Start: "request_sharkweb_import"
+2018-08-28 13:33:17,311	event_handler.py	2893	load_workspace	DEBUG	Trying to load new workspace "5cf3719a-9d44-48e0-b228-496a6894d263" with alias "New test workspace"
+2018-08-28 13:33:17,700	event_handler.py	2911	load_workspace	INFO	Workspace "5cf3719a-9d44-48e0-b228-496a6894d263" with alias "New test workspace loaded."
+2018-08-28 13:33:27,687	event_handler.py	2904	load_workspace	DEBUG	Workspace "5cf3719a-9d44-48e0-b228-496a6894d263" with alias "New test workspace" is already loaded. Set reload=True if you want to reload the workspace.
+2018-08-28 13:33:28,206	event_handler.py	51	f	DEBUG	Stop: "request_sharkweb_import". Time for running method was 10.906639575958252
+2018-08-28 13:33:56,468	event_handler.py	106	__init__	DEBUG	Start EventHandler: event_handler
+2018-08-28 13:33:56,470	event_handler.py	141	_load_mapping_objects	DEBUG	Loading mapping files from pickle file.
+2018-08-28 13:33:56,846	event_handler.py	117	__init__	DEBUG	Time for mapping: 0.37617945671081543
+2018-08-28 13:33:56,877	event_handler.py	122	__init__	DEBUG	Time for initiating EventHandler: 0.4093773365020752
+2018-08-28 13:33:56,877	event_handler.py	47	f	DEBUG	Start: "request_sharkweb_import"
+2018-08-28 13:33:56,881	event_handler.py	2893	load_workspace	DEBUG	Trying to load new workspace "5cf3719a-9d44-48e0-b228-496a6894d263" with alias "New test workspace"
+2018-08-28 13:33:57,193	event_handler.py	2911	load_workspace	INFO	Workspace "5cf3719a-9d44-48e0-b228-496a6894d263" with alias "New test workspace loaded."
+2018-08-28 13:34:05,939	event_handler.py	2904	load_workspace	DEBUG	Workspace "5cf3719a-9d44-48e0-b228-496a6894d263" with alias "New test workspace" is already loaded. Set reload=True if you want to reload the workspace.
+2018-08-28 13:34:06,386	event_handler.py	51	f	DEBUG	Stop: "request_sharkweb_import". Time for running method was 9.508507490158081
+2018-08-28 13:35:19,821	logger.py	85	add_log	DEBUG	
+2018-08-28 13:35:19,823	logger.py	86	add_log	DEBUG	========================================================================================================================
+2018-08-28 13:35:19,825	logger.py	87	add_log	DEBUG	### Log added for log_id "event_handler" at locaton: ..\log\main_event_handler.log
+2018-08-28 13:35:19,828	logger.py	88	add_log	DEBUG	------------------------------------------------------------------------------------------------------------------------
+2018-08-28 13:35:19,830	event_handler.py	106	__init__	DEBUG	Start EventHandler: event_handler
+2018-08-28 13:35:19,833	event_handler.py	141	_load_mapping_objects	DEBUG	Loading mapping files from pickle file.
+2018-08-28 13:35:20,250	event_handler.py	117	__init__	DEBUG	Time for mapping: 0.41718578338623047
+2018-08-28 13:35:20,268	event_handler.py	122	__init__	DEBUG	Time for initiating EventHandler: 0.44818544387817383
+2018-08-28 13:35:20,271	event_handler.py	47	f	DEBUG	Start: "test_timer"
+2018-08-28 13:35:20,645	event_handler.py	51	f	DEBUG	Stop: "test_timer". Time for running method was 0.3697962760925293
+2018-08-28 13:35:43,759	event_handler.py	106	__init__	DEBUG	Start EventHandler: event_handler
+2018-08-28 13:35:43,764	event_handler.py	141	_load_mapping_objects	DEBUG	Loading mapping files from pickle file.
+2018-08-28 13:35:44,176	event_handler.py	117	__init__	DEBUG	Time for mapping: 0.4113771915435791
+2018-08-28 13:35:44,191	event_handler.py	122	__init__	DEBUG	Time for initiating EventHandler: 0.4319758415222168
+2018-08-28 13:35:44,192	event_handler.py	47	f	DEBUG	Start: "request_sharkweb_import"
+2018-08-28 13:35:44,208	event_handler.py	2893	load_workspace	DEBUG	Trying to load new workspace "5cf3719a-9d44-48e0-b228-496a6894d263" with alias "New test workspace"
+2018-08-28 13:35:44,593	event_handler.py	2911	load_workspace	INFO	Workspace "5cf3719a-9d44-48e0-b228-496a6894d263" with alias "New test workspace loaded."
+2018-08-28 13:35:45,029	event_handler.py	51	f	DEBUG	Stop: "request_sharkweb_import". Time for running method was 0.8365747928619385
+2018-08-28 13:38:17,169	event_handler.py	106	__init__	DEBUG	Start EventHandler: event_handler
+2018-08-28 13:38:17,185	event_handler.py	141	_load_mapping_objects	DEBUG	Loading mapping files from pickle file.
+2018-08-28 13:38:17,566	event_handler.py	117	__init__	DEBUG	Time for mapping: 0.38098978996276855
+2018-08-28 13:38:17,582	event_handler.py	122	__init__	DEBUG	Time for initiating EventHandler: 0.413189172744751
+2018-08-28 13:38:17,583	event_handler.py	47	f	DEBUG	Start: "request_sharkweb_import"
+2018-08-28 13:38:17,596	event_handler.py	2893	load_workspace	DEBUG	Trying to load new workspace "5cf3719a-9d44-48e0-b228-496a6894d263" with alias "New test workspace"
+2018-08-28 13:38:17,872	event_handler.py	2911	load_workspace	INFO	Workspace "5cf3719a-9d44-48e0-b228-496a6894d263" with alias "New test workspace loaded."
+2018-08-28 13:38:18,403	event_handler.py	51	f	DEBUG	Stop: "request_sharkweb_import". Time for running method was 0.8203954696655273
+2018-08-28 13:39:55,754	logger.py	85	add_log	DEBUG	
+2018-08-28 13:39:55,759	logger.py	86	add_log	DEBUG	========================================================================================================================
+2018-08-28 13:39:55,762	logger.py	87	add_log	DEBUG	### Log added for log_id "event_handler" at locaton: ..\log\main_event_handler.log
+2018-08-28 13:39:55,765	logger.py	88	add_log	DEBUG	------------------------------------------------------------------------------------------------------------------------
+2018-08-28 13:39:55,768	event_handler.py	106	__init__	DEBUG	Start EventHandler: event_handler
+2018-08-28 13:39:55,771	event_handler.py	146	_load_mapping_objects	DEBUG	Loading mapping files from original files.
+2018-08-28 13:40:01,637	event_handler.py	117	__init__	DEBUG	Time for mapping: 5.867059230804443
+2018-08-28 13:40:01,638	event_handler.py	122	__init__	DEBUG	Time for initiating EventHandler: 5.886059045791626
+2018-08-28 13:40:01,642	event_handler.py	47	f	DEBUG	Start: "test_timer"
+2018-08-28 13:40:02,164	event_handler.py	51	f	DEBUG	Stop: "test_timer". Time for running method was 0.5195894241333008
+2018-08-28 13:40:13,567	event_handler.py	106	__init__	DEBUG	Start EventHandler: event_handler
+2018-08-28 13:40:13,586	event_handler.py	141	_load_mapping_objects	DEBUG	Loading mapping files from pickle file.
+2018-08-28 13:40:14,179	event_handler.py	117	__init__	DEBUG	Time for mapping: 0.5927858352661133
+2018-08-28 13:40:14,196	event_handler.py	122	__init__	DEBUG	Time for initiating EventHandler: 0.6293854713439941
+2018-08-28 13:40:14,196	event_handler.py	47	f	DEBUG	Start: "request_sharkweb_import"
+2018-08-28 13:40:14,223	event_handler.py	2893	load_workspace	DEBUG	Trying to load new workspace "5cf3719a-9d44-48e0-b228-496a6894d263" with alias "New test workspace"
+2018-08-28 13:40:14,771	event_handler.py	2911	load_workspace	INFO	Workspace "5cf3719a-9d44-48e0-b228-496a6894d263" with alias "New test workspace loaded."
+2018-08-28 13:40:15,234	event_handler.py	51	f	DEBUG	Stop: "request_sharkweb_import". Time for running method was 1.0383930206298828
+2018-08-28 13:41:38,850	event_handler.py	106	__init__	DEBUG	Start EventHandler: event_handler
+2018-08-28 13:41:38,854	event_handler.py	141	_load_mapping_objects	DEBUG	Loading mapping files from pickle file.
+2018-08-28 13:41:39,302	event_handler.py	117	__init__	DEBUG	Time for mapping: 0.44879651069641113
+2018-08-28 13:41:39,306	event_handler.py	122	__init__	DEBUG	Time for initiating EventHandler: 0.4577963352203369
+2018-08-28 13:41:39,308	event_handler.py	47	f	DEBUG	Start: "request_sharkweb_import"
+2018-08-28 13:41:39,341	event_handler.py	2893	load_workspace	DEBUG	Trying to load new workspace "5cf3719a-9d44-48e0-b228-496a6894d263" with alias "New test workspace"
+2018-08-28 13:41:39,631	event_handler.py	2911	load_workspace	INFO	Workspace "5cf3719a-9d44-48e0-b228-496a6894d263" with alias "New test workspace loaded."
+2018-08-28 13:41:48,082	event_handler.py	2904	load_workspace	DEBUG	Workspace "5cf3719a-9d44-48e0-b228-496a6894d263" with alias "New test workspace" is already loaded. Set reload=True if you want to reload the workspace.
+2018-08-28 13:41:48,619	event_handler.py	51	f	DEBUG	Stop: "request_sharkweb_import". Time for running method was 9.308704137802124
+2018-08-28 13:48:43,422	logger.py	85	add_log	DEBUG	
+2018-08-28 13:48:43,424	logger.py	86	add_log	DEBUG	========================================================================================================================
+2018-08-28 13:48:43,427	logger.py	87	add_log	DEBUG	### Log added for log_id "event_handler" at locaton: ..\log\main_event_handler.log
+2018-08-28 13:48:43,430	logger.py	88	add_log	DEBUG	------------------------------------------------------------------------------------------------------------------------
+2018-08-28 13:48:43,432	event_handler.py	106	__init__	DEBUG	Start EventHandler: event_handler
+2018-08-28 13:48:43,435	event_handler.py	141	_load_mapping_objects	DEBUG	Loading mapping files from pickle file.
+2018-08-28 13:48:43,907	event_handler.py	117	__init__	DEBUG	Time for mapping: 0.47119140625
+2018-08-28 13:48:43,922	event_handler.py	122	__init__	DEBUG	Time for initiating EventHandler: 0.5007908344268799
+2018-08-28 13:48:43,922	event_handler.py	47	f	DEBUG	Start: "test_timer"
+2018-08-28 13:48:44,240	event_handler.py	51	f	DEBUG	Stop: "test_timer". Time for running method was 0.3169972896575928
+2018-08-28 13:48:49,051	event_handler.py	106	__init__	DEBUG	Start EventHandler: event_handler
+2018-08-28 13:48:49,055	event_handler.py	141	_load_mapping_objects	DEBUG	Loading mapping files from pickle file.
+2018-08-28 13:48:49,615	event_handler.py	117	__init__	DEBUG	Time for mapping: 0.5597860813140869
+2018-08-28 13:48:49,630	event_handler.py	122	__init__	DEBUG	Time for initiating EventHandler: 0.5793852806091309
+2018-08-28 13:48:49,630	event_handler.py	47	f	DEBUG	Start: "request_sharkweb_import"
+2018-08-28 13:48:49,637	event_handler.py	2894	load_workspace	DEBUG	Trying to load new workspace "5cf3719a-9d44-48e0-b228-496a6894d263" with alias "New test workspace"
+2018-08-28 13:48:50,075	event_handler.py	2912	load_workspace	INFO	Workspace "5cf3719a-9d44-48e0-b228-496a6894d263" with alias "New test workspace loaded."
+2018-08-28 13:48:58,606	event_handler.py	2905	load_workspace	DEBUG	Workspace "5cf3719a-9d44-48e0-b228-496a6894d263" with alias "New test workspace" is already loaded. Set reload=True if you want to reload the workspace.
+2018-08-28 13:48:59,148	event_handler.py	51	f	DEBUG	Stop: "request_sharkweb_import". Time for running method was 9.5173921585083
+2018-08-28 16:29:13,464	event_handler.py	106	__init__	DEBUG	Start EventHandler: event_handler
+2018-08-28 16:29:13,466	event_handler.py	141	_load_mapping_objects	DEBUG	Loading mapping files from pickle file.
+2018-08-28 16:29:13,836	event_handler.py	117	__init__	DEBUG	Time for mapping: 0.3708000183105469
+2018-08-28 16:29:13,837	event_handler.py	122	__init__	DEBUG	Time for initiating EventHandler: 0.37379980087280273
+2018-08-28 16:29:13,837	event_handler.py	47	f	DEBUG	Start: "request_sharkweb_import"
+2018-08-28 16:29:13,856	event_handler.py	2894	load_workspace	DEBUG	Trying to load new workspace "5cf3719a-9d44-48e0-b228-496a6894d263" with alias "New test workspace"
+2018-08-28 16:29:14,093	event_handler.py	2912	load_workspace	INFO	Workspace "5cf3719a-9d44-48e0-b228-496a6894d263" with alias "New test workspace loaded."
+2018-08-28 16:29:15,498	event_handler.py	51	f	DEBUG	Stop: "request_sharkweb_import". Time for running method was 1.660600185394287
+2018-08-28 16:31:31,048	event_handler.py	106	__init__	DEBUG	Start EventHandler: event_handler
+2018-08-28 16:31:31,049	event_handler.py	141	_load_mapping_objects	DEBUG	Loading mapping files from pickle file.
+2018-08-28 16:31:31,395	event_handler.py	117	__init__	DEBUG	Time for mapping: 0.3451998233795166
+2018-08-28 16:31:31,396	event_handler.py	122	__init__	DEBUG	Time for initiating EventHandler: 0.3471999168395996
+2018-08-28 16:31:31,396	event_handler.py	47	f	DEBUG	Start: "request_sharkweb_import"
+2018-08-28 16:31:31,407	event_handler.py	2894	load_workspace	DEBUG	Trying to load new workspace "5cf3719a-9d44-48e0-b228-496a6894d263" with alias "New test workspace"
+2018-08-28 16:31:31,635	event_handler.py	2912	load_workspace	INFO	Workspace "5cf3719a-9d44-48e0-b228-496a6894d263" with alias "New test workspace loaded."
+2018-08-28 16:31:32,240	event_handler.py	51	f	DEBUG	Stop: "request_sharkweb_import". Time for running method was 0.8443999290466309
+2018-08-28 16:36:42,275	logger.py	85	add_log	DEBUG	
+2018-08-28 16:36:42,291	logger.py	86	add_log	DEBUG	========================================================================================================================
+2018-08-28 16:36:42,291	logger.py	87	add_log	DEBUG	### Log added for log_id "event_handler" at locaton: ..\log\main_event_handler.log
+2018-08-28 16:36:42,291	logger.py	88	add_log	DEBUG	------------------------------------------------------------------------------------------------------------------------
+2018-08-28 16:36:42,291	event_handler.py	106	__init__	DEBUG	Start EventHandler: event_handler
+2018-08-28 16:36:42,291	event_handler.py	141	_load_mapping_objects	DEBUG	Loading mapping files from pickle file.
+2018-08-28 16:36:42,633	event_handler.py	117	__init__	DEBUG	Time for mapping: 0.3419933319091797
+2018-08-28 16:36:42,649	event_handler.py	122	__init__	DEBUG	Time for initiating EventHandler: 0.3887908458709717
+2018-08-28 16:36:42,649	event_handler.py	47	f	DEBUG	Start: "test_timer"
+2018-08-28 16:36:42,898	event_handler.py	51	f	DEBUG	Stop: "test_timer". Time for running method was 0.2489931583404541
+2018-08-28 16:37:10,142	logger.py	85	add_log	DEBUG	
+2018-08-28 16:37:10,142	logger.py	86	add_log	DEBUG	========================================================================================================================
+2018-08-28 16:37:10,142	logger.py	87	add_log	DEBUG	### Log added for log_id "event_handler" at locaton: ..\log\main_event_handler.log
+2018-08-28 16:37:10,142	logger.py	88	add_log	DEBUG	------------------------------------------------------------------------------------------------------------------------
+2018-08-28 16:37:10,143	event_handler.py	106	__init__	DEBUG	Start EventHandler: event_handler
+2018-08-28 16:37:10,143	event_handler.py	146	_load_mapping_objects	DEBUG	Loading mapping files from original files.
+2018-08-28 16:37:13,800	event_handler.py	117	__init__	DEBUG	Time for mapping: 3.6569368839263916
+2018-08-28 16:37:13,822	event_handler.py	122	__init__	DEBUG	Time for initiating EventHandler: 3.6799371242523193
+2018-08-28 16:37:13,829	event_handler.py	47	f	DEBUG	Start: "test_timer"
+2018-08-28 16:37:14,132	event_handler.py	51	f	DEBUG	Stop: "test_timer". Time for running method was 0.29979443550109863
+2018-08-28 16:37:20,531	event_handler.py	106	__init__	DEBUG	Start EventHandler: event_handler
+2018-08-28 16:37:20,533	event_handler.py	141	_load_mapping_objects	DEBUG	Loading mapping files from pickle file.
+2018-08-28 16:37:20,869	event_handler.py	117	__init__	DEBUG	Time for mapping: 0.33579087257385254
+2018-08-28 16:37:20,885	event_handler.py	122	__init__	DEBUG	Time for initiating EventHandler: 0.3533902168273926
+2018-08-28 16:37:20,885	event_handler.py	47	f	DEBUG	Start: "request_sharkweb_import"
+2018-08-28 16:37:20,889	event_handler.py	2894	load_workspace	DEBUG	Trying to load new workspace "5cf3719a-9d44-48e0-b228-496a6894d263" with alias "New test workspace"
+2018-08-28 16:37:21,162	event_handler.py	2912	load_workspace	INFO	Workspace "5cf3719a-9d44-48e0-b228-496a6894d263" with alias "New test workspace loaded."
+2018-08-28 18:16:29,673	logger.py	85	add_log	DEBUG	
+2018-08-28 18:16:29,673	logger.py	86	add_log	DEBUG	========================================================================================================================
+2018-08-28 18:16:29,673	logger.py	87	add_log	DEBUG	### Log added for log_id "event_handler" at locaton: ..\log\main_event_handler.log
+2018-08-28 18:16:29,689	logger.py	88	add_log	DEBUG	------------------------------------------------------------------------------------------------------------------------
+2018-08-28 18:16:29,689	event_handler.py	106	__init__	DEBUG	Start EventHandler: event_handler
+2018-08-28 18:16:29,689	event_handler.py	141	_load_mapping_objects	DEBUG	Loading mapping files from pickle file.
+2018-08-28 18:16:30,071	event_handler.py	117	__init__	DEBUG	Time for mapping: 0.3822002410888672
+2018-08-28 18:16:30,089	event_handler.py	122	__init__	DEBUG	Time for initiating EventHandler: 0.41589999198913574
+2018-08-28 18:16:30,089	event_handler.py	47	f	DEBUG	Start: "test_timer"
+2018-08-28 18:16:30,424	event_handler.py	51	f	DEBUG	Stop: "test_timer". Time for running method was 0.33459997177124023
+2018-08-29 06:58:31,988	logger.py	85	add_log	DEBUG	
+2018-08-29 06:58:31,991	logger.py	86	add_log	DEBUG	========================================================================================================================
+2018-08-29 06:58:31,991	logger.py	87	add_log	DEBUG	### Log added for log_id "event_handler" at locaton: ..\log\main_event_handler.log
+2018-08-29 06:58:31,996	logger.py	88	add_log	DEBUG	------------------------------------------------------------------------------------------------------------------------
+2018-08-29 06:58:31,998	event_handler.py	106	__init__	DEBUG	Start EventHandler: event_handler
+2018-08-29 06:58:32,003	event_handler.py	141	_load_mapping_objects	DEBUG	Loading mapping files from pickle file.
+2018-08-29 06:58:32,376	event_handler.py	117	__init__	DEBUG	Time for mapping: 0.3753032684326172
+2018-08-29 06:58:32,412	event_handler.py	122	__init__	DEBUG	Time for initiating EventHandler: 0.42650294303894043
+2018-08-29 06:58:32,415	event_handler.py	47	f	DEBUG	Start: "test_timer"
+2018-08-29 06:58:32,736	event_handler.py	51	f	DEBUG	Stop: "test_timer". Time for running method was 0.3184018135070801
+2018-08-29 06:59:02,960	event_handler.py	106	__init__	DEBUG	Start EventHandler: event_handler
+2018-08-29 06:59:02,962	event_handler.py	141	_load_mapping_objects	DEBUG	Loading mapping files from pickle file.
+2018-08-29 06:59:03,319	event_handler.py	117	__init__	DEBUG	Time for mapping: 0.3571019172668457
+2018-08-29 06:59:03,335	event_handler.py	122	__init__	DEBUG	Time for initiating EventHandler: 0.375201940536499
+2018-08-29 06:59:03,369	event_handler.py	2894	load_workspace	DEBUG	Trying to load new workspace "5cf3719a-9d44-48e0-b228-496a6894d263" with alias "New test workspace"
+2018-08-29 06:59:03,693	event_handler.py	2912	load_workspace	INFO	Workspace "5cf3719a-9d44-48e0-b228-496a6894d263" with alias "New test workspace loaded."
+2018-08-29 07:45:24,399	event_handler.py	106	__init__	DEBUG	Start EventHandler: event_handler
+2018-08-29 07:45:24,399	event_handler.py	141	_load_mapping_objects	DEBUG	Loading mapping files from pickle file.
+2018-08-29 07:45:24,784	event_handler.py	117	__init__	DEBUG	Time for mapping: 0.38520264625549316
+2018-08-29 07:45:24,800	event_handler.py	122	__init__	DEBUG	Time for initiating EventHandler: 0.4008023738861084
+2018-08-29 07:45:24,831	event_handler.py	2922	load_workspace	DEBUG	Trying to load new workspace "5cf3719a-9d44-48e0-b228-496a6894d263" with alias "New test workspace"
+2018-08-29 07:45:25,058	event_handler.py	2940	load_workspace	INFO	Workspace "5cf3719a-9d44-48e0-b228-496a6894d263" with alias "New test workspace loaded."
+2018-08-29 07:45:38,750	event_handler.py	106	__init__	DEBUG	Start EventHandler: event_handler
+2018-08-29 07:45:38,750	event_handler.py	141	_load_mapping_objects	DEBUG	Loading mapping files from pickle file.
+2018-08-29 07:45:39,122	event_handler.py	117	__init__	DEBUG	Time for mapping: 0.3721020221710205
+2018-08-29 07:45:39,138	event_handler.py	122	__init__	DEBUG	Time for initiating EventHandler: 0.38770222663879395
+2018-08-29 07:45:39,153	event_handler.py	2922	load_workspace	DEBUG	Trying to load new workspace "5cf3719a-9d44-48e0-b228-496a6894d263" with alias "New test workspace"
+2018-08-29 07:45:39,396	event_handler.py	2940	load_workspace	INFO	Workspace "5cf3719a-9d44-48e0-b228-496a6894d263" with alias "New test workspace loaded."
+2018-08-29 07:46:02,081	event_handler.py	106	__init__	DEBUG	Start EventHandler: event_handler
+2018-08-29 07:46:02,081	event_handler.py	141	_load_mapping_objects	DEBUG	Loading mapping files from pickle file.
+2018-08-29 07:46:02,479	event_handler.py	117	__init__	DEBUG	Time for mapping: 0.39820146560668945
+2018-08-29 07:46:02,495	event_handler.py	122	__init__	DEBUG	Time for initiating EventHandler: 0.4138014316558838
+2018-08-29 07:46:02,525	event_handler.py	2922	load_workspace	DEBUG	Trying to load new workspace "5cf3719a-9d44-48e0-b228-496a6894d263" with alias "New test workspace"
+2018-08-29 07:46:02,757	event_handler.py	2940	load_workspace	INFO	Workspace "5cf3719a-9d44-48e0-b228-496a6894d263" with alias "New test workspace loaded."
+2018-08-29 07:46:43,857	event_handler.py	106	__init__	DEBUG	Start EventHandler: event_handler
+2018-08-29 07:46:43,857	event_handler.py	141	_load_mapping_objects	DEBUG	Loading mapping files from pickle file.
+2018-08-29 07:46:44,296	event_handler.py	117	__init__	DEBUG	Time for mapping: 0.43900465965270996
+2018-08-29 07:46:44,385	event_handler.py	122	__init__	DEBUG	Time for initiating EventHandler: 0.5283052921295166
+2018-08-29 07:46:44,405	event_handler.py	2922	load_workspace	DEBUG	Trying to load new workspace "5cf3719a-9d44-48e0-b228-496a6894d263" with alias "New test workspace"
+2018-08-29 07:46:44,651	event_handler.py	2940	load_workspace	INFO	Workspace "5cf3719a-9d44-48e0-b228-496a6894d263" with alias "New test workspace loaded."
+2018-08-29 07:47:16,930	event_handler.py	106	__init__	DEBUG	Start EventHandler: event_handler
+2018-08-29 07:47:16,930	event_handler.py	141	_load_mapping_objects	DEBUG	Loading mapping files from pickle file.
+2018-08-29 07:47:17,356	event_handler.py	117	__init__	DEBUG	Time for mapping: 0.42510199546813965
+2018-08-29 07:47:17,371	event_handler.py	122	__init__	DEBUG	Time for initiating EventHandler: 0.440701961517334
+2018-08-29 07:47:17,387	event_handler.py	2922	load_workspace	DEBUG	Trying to load new workspace "5cf3719a-9d44-48e0-b228-496a6894d263" with alias "New test workspace"
+2018-08-29 07:47:17,632	event_handler.py	2940	load_workspace	INFO	Workspace "5cf3719a-9d44-48e0-b228-496a6894d263" with alias "New test workspace loaded."
+2018-08-29 07:47:54,869	logger.py	85	add_log	DEBUG	
+2018-08-29 07:47:54,869	logger.py	86	add_log	DEBUG	========================================================================================================================
+2018-08-29 07:47:54,872	logger.py	87	add_log	DEBUG	### Log added for log_id "event_handler" at locaton: ..\log\main_event_handler.log
+2018-08-29 07:47:54,872	logger.py	88	add_log	DEBUG	------------------------------------------------------------------------------------------------------------------------
+2018-08-29 07:47:54,872	event_handler.py	106	__init__	DEBUG	Start EventHandler: event_handler
+2018-08-29 07:47:54,872	event_handler.py	141	_load_mapping_objects	DEBUG	Loading mapping files from pickle file.
+2018-08-29 07:47:55,299	event_handler.py	117	__init__	DEBUG	Time for mapping: 0.42710304260253906
+2018-08-29 07:47:55,330	event_handler.py	122	__init__	DEBUG	Time for initiating EventHandler: 0.4633035659790039
+2018-08-29 07:47:55,330	event_handler.py	47	f	DEBUG	Start: "test_timer"
+2018-08-29 07:47:55,673	event_handler.py	51	f	DEBUG	Stop: "test_timer". Time for running method was 0.327303409576416
+2018-08-29 07:48:10,640	event_handler.py	106	__init__	DEBUG	Start EventHandler: event_handler
+2018-08-29 07:48:10,640	event_handler.py	141	_load_mapping_objects	DEBUG	Loading mapping files from pickle file.
+2018-08-29 07:48:10,977	event_handler.py	117	__init__	DEBUG	Time for mapping: 0.337202787399292
+2018-08-29 07:48:11,089	event_handler.py	122	__init__	DEBUG	Time for initiating EventHandler: 0.4490039348602295
+2018-08-29 07:48:11,105	event_handler.py	2922	load_workspace	DEBUG	Trying to load new workspace "5cf3719a-9d44-48e0-b228-496a6894d263" with alias "New test workspace"
+2018-08-29 07:48:11,418	event_handler.py	2940	load_workspace	INFO	Workspace "5cf3719a-9d44-48e0-b228-496a6894d263" with alias "New test workspace loaded."
+2018-08-29 08:16:34,055	logger.py	85	add_log	DEBUG	
+2018-08-29 08:16:34,055	logger.py	86	add_log	DEBUG	========================================================================================================================
+2018-08-29 08:16:34,055	logger.py	87	add_log	DEBUG	### Log added for log_id "event_handler" at locaton: ..\log\main_event_handler.log
+2018-08-29 08:16:34,055	logger.py	88	add_log	DEBUG	------------------------------------------------------------------------------------------------------------------------
+2018-08-29 08:16:34,055	event_handler.py	106	__init__	DEBUG	Start EventHandler: event_handler
+2018-08-29 08:16:34,070	event_handler.py	141	_load_mapping_objects	DEBUG	Loading mapping files from pickle file.
+2018-08-29 08:16:34,499	event_handler.py	117	__init__	DEBUG	Time for mapping: 0.4290037155151367
+2018-08-29 08:16:34,515	event_handler.py	122	__init__	DEBUG	Time for initiating EventHandler: 0.4602034091949463
+2018-08-29 08:16:34,515	event_handler.py	47	f	DEBUG	Start: "test_timer"
+2018-08-29 08:16:34,864	event_handler.py	51	f	DEBUG	Stop: "test_timer". Time for running method was 0.3486042022705078
+2018-08-29 10:04:33,842	logger.py	85	add_log	DEBUG	
+2018-08-29 10:04:33,844	logger.py	86	add_log	DEBUG	========================================================================================================================
+2018-08-29 10:04:33,845	logger.py	87	add_log	DEBUG	### Log added for log_id "event_handler" at locaton: ..\log\main_event_handler.log
+2018-08-29 10:04:33,847	logger.py	88	add_log	DEBUG	------------------------------------------------------------------------------------------------------------------------
+2018-08-29 10:04:33,849	event_handler.py	106	__init__	DEBUG	Start EventHandler: event_handler
+2018-08-29 10:04:33,852	event_handler.py	141	_load_mapping_objects	DEBUG	Loading mapping files from pickle file.
+2018-08-29 10:04:34,216	event_handler.py	117	__init__	DEBUG	Time for mapping: 0.3643918037414551
+2018-08-29 10:04:34,217	event_handler.py	122	__init__	DEBUG	Time for initiating EventHandler: 0.37539148330688477
+2018-08-29 10:04:34,217	event_handler.py	47	f	DEBUG	Start: "test_timer"
+2018-08-29 10:04:34,507	event_handler.py	51	f	DEBUG	Stop: "test_timer". Time for running method was 0.29079198837280273
+2018-08-29 10:04:46,288	event_handler.py	106	__init__	DEBUG	Start EventHandler: event_handler
+2018-08-29 10:04:46,289	event_handler.py	141	_load_mapping_objects	DEBUG	Loading mapping files from pickle file.
+2018-08-29 10:04:46,627	event_handler.py	117	__init__	DEBUG	Time for mapping: 0.33759045600891113
+2018-08-29 10:04:46,643	event_handler.py	122	__init__	DEBUG	Time for initiating EventHandler: 0.3541898727416992
+2018-08-29 10:04:46,644	event_handler.py	47	f	DEBUG	Start: "request_sharkweb_import"
+2018-08-29 10:04:46,658	event_handler.py	2946	load_workspace	DEBUG	Trying to load new workspace "5cf3719a-9d44-48e0-b228-496a6894d263" with alias "New test workspace"
+2018-08-29 10:04:46,977	event_handler.py	2964	load_workspace	INFO	Workspace "5cf3719a-9d44-48e0-b228-496a6894d263" with alias "New test workspace loaded."
+2018-08-29 10:05:12,215	event_handler.py	51	f	DEBUG	Stop: "request_sharkweb_import". Time for running method was 25.571115016937256

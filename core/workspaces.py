@@ -361,16 +361,16 @@ class WorkStep(object):
         
     
     #==========================================================================
-    def load_results(self, force_loading_txt=False): 
+    def get_results(self, force_loading_txt=False, **kwargs): 
         """
-        Created 20180720    by Magnus 
+        Created 20180828    by Magnus 
         
         Loads all files in the results-directory. 
         pkl-files are loaded by default if present. 
         Override this by setting force_loading_txt == True 
-        Data is stored in self.result_data
+        Data is returned in a dictinary. 
         """
-        self.result_data = {}
+        result_data = {}
         results_directory = self.paths.get('directory_paths', {}).get('results', None)
         if results_directory == None:
             raise exceptions.MissingPath
@@ -384,11 +384,17 @@ class WorkStep(object):
         save_load_object = core.SaveLoadDelete(results_directory)
         
         for key in key_list: 
+            if kwargs.get('by'): 
+                if 'by_' + kwargs.get('by') not in key:
+                    continue
             df = save_load_object.load_df(key, load_txt=force_loading_txt)
-            self.result_data[key] = df
+            result_data[key] = df
         
-        if not self.result_data: 
+        if not result_data: 
             exceptions.NoResultsInResultDirectory
+            
+        return result_data
+    
         
     #==========================================================================
     def set_indicator_settings_data_filter(self, indicator=None, filter_settings=None):

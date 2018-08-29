@@ -1,5 +1,13 @@
 from_year	2000 
 to_year	
 datatypes	Chlorophyll;Physical and Chemical;Phytoplankton;Zoobenthos
-default_from_year	2007
-default_to_year	2017
+default_from_year	2013
+default_to_year	2018
+Chlorophyll_parameter	Chlorophyll-a
+Phytoplankton_parameter	Biovolume concentration
+Zoobenthos_parameter	BQIm
+Chlorophyll_sample_table_view	sample_col_chlorophyll
+Phytoplankton_sample_table_view	sample_col_phytoplankton
+Zoobenthos_sample_table_view	sample_col_zoobenthos
+Physical and Chemical_sample_table_view	sample_col_physicalchemical_columnparams
+headerlang	internal

@@ -899,6 +899,7 @@ class DataHandler(object):
     #==========================================================================
     def add_df(self, pd_df, data_type, add_columns=False):
         """
+        Updated 20180828    by Magnus 
         Adds data to the internal data structure. 
         """
         # Add columns (time etc.)
@@ -907,8 +908,13 @@ class DataHandler(object):
         
         if 'col' in data_type:
             self.column_data = self.column_data.append(pd_df, ignore_index=True)
+            # Remove duplicate rows 
+            self.column_data.drop_duplicates(inplace=True) # MW: 20180828  
+            
         elif 'row' in data_type:
             self.row_data = self.row_data.append(pd_df, ignore_index=True).fillna('')
+            # Remove duplicate rows 
+            self.row_data.drop_duplicates(inplace=True) # MW: 20180828  
 #        print(self.data_phys_chem.head())
     
 
@@ -1095,7 +1101,8 @@ class DataHandler(object):
                     self.all_data = sld_object.load_df('all_data_raw', load_txt=False) # 20180525    by Magnus Wenzer
 #                    self.all_data = pickle.load(open(self.export_directory + "/all_data_raw.pickle", "rb"))
                 except (OSError, IOError) as e:
-                    raise(OSError, IOError, 'Raw data pickle file does not exist! This is created during in "merge_all_data".')
+                    raise(OSError, IOError, 'Raw data pickle file does not exist! This is created during in "merge_all_data".') 
+                
 #                    self.all_data = load_data_file(self.export_directory + '/all_data.txt')
 #                self.all_data = core.Load().load_txt(self.export_directory + '/all_data.txt', sep=sep, encoding=encoding, fill_nan=u'')
                 #TODO: better way to say which columns should be converted to float and int?

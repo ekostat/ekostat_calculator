@@ -1,0 +1,5 @@
+{"workspace_uuid": "5cf3719a-9d44-48e0-b228-496a6894d263", 
+ "year_from": 2013, 
+ "year_to": 2014, 
+ "datatypes": ["Physical and Chemical"],  
+ "areas": ["02 - Västkustens fjordar", "SE570900-121060 - Balgöarkipelagen"]}

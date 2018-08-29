@@ -13,3 +13,4 @@ log/*
 
 log/main_event_handler.log
 log/main_event_handler.log
+temp/*
