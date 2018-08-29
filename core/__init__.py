@@ -24,6 +24,13 @@ from .indicators import IndicatorOxygen
 from .indicators import IndicatorPhytoplankton
 from .indicators import IndicatorSecchi
 
+#from .indicators_old import IndicatorBase
+#from .indicators_old import IndicatorBQI
+#from .indicators_old import IndicatorNutrients
+#from .indicators_old import IndicatorOxygen
+#from .indicators_old import IndicatorPhytoplankton
+#from .indicators_old import IndicatorSecchi
+
 from .lists import StationList 
 from .lists import ParameterList
 from .lists import AreaList
@@ -53,7 +60,7 @@ from .parameters import ParameterDIN
 from .parameters import ParameterTOTN
 from .parameters import CalculatedParameterDIN
 
-from .quality_factors import QualityFactorNP
+from .quality_factors import QualityElementNutrients
 
 from .ref_values import create_type_area_object
 from .ref_values import RefValues
