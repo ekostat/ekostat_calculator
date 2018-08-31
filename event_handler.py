@@ -160,6 +160,9 @@ class EventHandler(object):
             self.mapping_objects['datatype_list'] = core.MappingObject(file_path=os.path.join(self.resource_directory, 'mappings/datatype_list.txt'))
             self.mapping_objects['sharkweb_mapping'] = core.MappingObject(file_path=os.path.join(self.resource_directory, 'mappings/sharkweb_mapping.txt'))
             self.mapping_objects['sharkweb_settings'] = core.SharkwebSettings(file_path=os.path.join(self.resource_directory, 'mappings/sharkweb_settings.txt'))
+            self.mapping_objects['label_mapping'] = core.MappingObject(file_path=os.path.join(self.resource_directory, 'mappings/internal_external_labels_col.txt'), 
+                                                                       from_column='internal', 
+                                                                       to_column='label')
             
             with open(mappings_pickle_file_path, "wb") as fid:
                 pickle.dump(self.mapping_objects, fid) 
@@ -1902,34 +1905,44 @@ class EventHandler(object):
         for viss_eu_cd in viss_eu_cd_list:
             result_dict[viss_eu_cd] = {}
             result_dict[viss_eu_cd]['value'] = viss_eu_cd 
-            result_dict[viss_eu_cd]['label'] = '' # ADD MAPPING HERE 
+            result_dict[viss_eu_cd]['label'] = '{} ({})'.format(self.mapping_objects['water_body'].get_display_name(water_body=viss_eu_cd), 
+                                                         viss_eu_cd)
             result_dict[viss_eu_cd]['worse_status'] = ''
             result_dict[viss_eu_cd]['result'] = {} 
             
             for item, data in result_data.items(): 
-                key = item.split('by')[0][:-1] 
+                key = item.split('-')[0] 
                 
                 # Extend combined dict 
-                result_dict['all']['result'][key] = {} 
-                result_dict['all']['result'][key]['status'] = ''
-                result_dict['all']['result'][key]['active'] = False
+                if key not in result_dict['all']['result'].keys():
+                    result_dict['all']['result'][key] = {} 
+                    result_dict['all']['result'][key]['status'] = ''
+                if 'active' not in result_dict['all']['result'][key].keys():
+#                    print('---', result_dict['all']['result'][key].keys())
+                    result_dict['all']['result'][key]['active'] = False
+#                    print('===', result_dict['all']['result'][key]['active'])  
+                    
                 result_dict['all']['result'][key]['value'] = key
-                result_dict['all']['result'][key]['label'] = key # ADD MAPPING HERE 
+                result_dict['all']['result'][key]['label'] = self.mapping_objects['label_mapping'].get_mapping(key) 
                 
                 result_dict[viss_eu_cd]['result'][key] = {} 
                 result_dict[viss_eu_cd]['result'][key]['status'] = '' 
                 result_dict[viss_eu_cd]['result'][key]['active'] = False
                 result_dict[viss_eu_cd]['result'][key]['value'] = key
-                result_dict[viss_eu_cd]['result'][key]['label'] = key # ADD MAPPING HERE         
+                result_dict[viss_eu_cd]['result'][key]['label'] = self.mapping_objects['label_mapping'].get_mapping(key)         
                 
                 if viss_eu_cd in data['VISS_EU_CD'].values: 
                     status_list = data.loc[data['VISS_EU_CD']==viss_eu_cd, 'STATUS'].values
                     if len(status_list) == 1:
-                        status = status_list[0]
+                        status = status_list[0].strip()
                         result_dict[viss_eu_cd]['result'][key]['status'] = status 
+#                        print()
+#                        print('key:', key)
+#                        print('viss_eu_cd', viss_eu_cd)
                         result_dict[viss_eu_cd]['worse_status'] = self._get_worse_status(status, result_dict[viss_eu_cd]['worse_status'])
                         result_dict[viss_eu_cd]['result'][key]['active'] = True 
                         result_dict['all']['result'][key]['active'] = True
+#                print(result_dict['all']['result'][key]['active'])
                                    
             result_dict[viss_eu_cd]['label'] = result_dict[viss_eu_cd]['label'] + ' ({})'.format(result_dict[viss_eu_cd]['worse_status'])
        

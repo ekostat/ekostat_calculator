@@ -103,11 +103,15 @@ class SharkwebSettings(dict):
 """ 
 class MappingObject(list):
     """
-    Created     20180721    by Magnus Wenzer
+    Created     20180721    by Magnus Wenzer 
+    Updated     20180831    by Magnus
 
     """ 
-    def __init__(self, file_path, **kwargs): 
+    def __init__(self, file_path, from_column=None, to_column=None, **kwargs): 
         self.file_path = file_path 
+        
+        self.from_column = from_column
+        self.to_column = to_column
         
         read_options = {'sep': '\t', 
                         'encoding': 'cp1252'}
@@ -122,6 +126,11 @@ class MappingObject(list):
         Created     20180721    by Magnus Wenzer
             
         """ 
+        if not from_column:
+            from_column = self.from_column 
+        if not to_column:
+            to_column = self.to_column
+        
         result = self.df.loc[self.df[from_column]==item, to_column]
         if len(result):
             return result.values[0]
