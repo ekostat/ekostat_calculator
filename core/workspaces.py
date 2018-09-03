@@ -491,9 +491,10 @@ class WorkStep(object):
         Loads all files in the results-directory. 
         pkl-files are loaded by default if present. 
         Override this by setting force_loading_txt == True 
-        Data is stored in self.result_data
+        Data is returned in a dictionary
         """
-        self.result_data = {}
+        #self.result_data = {}
+        result_data = {}
         results_directory = self.paths.get('directory_paths', {}).get('results', None)
         if results_directory == None:
             raise exceptions.MissingPath
@@ -507,9 +508,12 @@ class WorkStep(object):
         save_load_object = core.SaveLoadDelete(results_directory)
         
         for key in key_list: 
+            if kwargs.get('by'): 
+                if 'by_' + kwargs.get('by') not in key:
+                    continue
             df = save_load_object.load_df(key, load_txt=force_loading_txt)
-            self.result_data[key] = df
-        
+            result_data[key] = df
+            
         if not self.result_data: 
             exceptions.NoResultsInResultDirectory
         
@@ -2389,12 +2393,4 @@ if __name__ == '__main__':
     if 1:
         workspace_path = 'D:/Utveckling/g_ekostat_calculator/ekostat_calculator_lena/workspaces'
         w = WorkSpace(name='default', parent_directory=workspace_path)
-                    
-                    
-                    
-                    
-                    
-                    
-                    
-                    
-                
+

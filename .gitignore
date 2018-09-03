@@ -13,6 +13,9 @@ log/*
 
 log/main_event_handler.log
 log/main_event_handler.log
+
+temp/*
 .project
 .pydevproject
 *.prefs
+resources/mapping_objects.pkl

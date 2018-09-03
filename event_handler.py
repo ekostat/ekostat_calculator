@@ -160,6 +160,9 @@ class EventHandler(object):
             self.mapping_objects['datatype_list'] = core.MappingObject(file_path=os.path.join(self.resource_directory, 'mappings/datatype_list.txt'))
             self.mapping_objects['sharkweb_mapping'] = core.MappingObject(file_path=os.path.join(self.resource_directory, 'mappings/sharkweb_mapping.txt'))
             self.mapping_objects['sharkweb_settings'] = core.SharkwebSettings(file_path=os.path.join(self.resource_directory, 'mappings/sharkweb_settings.txt'))
+            self.mapping_objects['label_mapping'] = core.MappingObject(file_path=os.path.join(self.resource_directory, 'mappings/internal_external_labels_col.txt'), 
+                                                                       from_column='internal', 
+                                                                       to_column='label')
             
             with open(mappings_pickle_file_path, "wb") as fid:
                 pickle.dump(self.mapping_objects, fid) 
@@ -727,11 +730,16 @@ class EventHandler(object):
     
     
     #==========================================================================
-    def list_select_area(self, **kwargs):
+    def dict_select_area(self, **kwargs):
         """
         Created     20180824   by Magnus Wenzer 
         
         """ 
+        return_dict = {'key': 'area', 
+                       'label': 'Areas'}
+        
+        
+        
         water_body_mapping = self.mapping_objects['water_body'] 
         
         
@@ -739,14 +747,14 @@ class EventHandler(object):
         sharkweb_type_area_list = self.sharkweb_reader.get_available_type_area()
         sharkweb_water_body_list = ['SE'+item for item in self.sharkweb_reader.get_available_water_body()] # without SE
         
-        self.sharkweb_water_district_list = sharkweb_water_district_list
-        self.sharkweb_type_area_list = sharkweb_type_area_list
-        self.sharkweb_water_body_list = sharkweb_water_body_list                    
+#        self.sharkweb_water_district_list = sharkweb_water_district_list
+#        self.sharkweb_type_area_list = sharkweb_type_area_list
+#        self.sharkweb_water_body_list = sharkweb_water_body_list                    
         
                                
         mapping_water_district_code_list = water_body_mapping.get_list('water_district')
         mapping_water_district_name_list = [water_body_mapping.get_display_name(water_district=water_district) for water_district in mapping_water_district_code_list]
-        self.mapping_water_district_name_list = mapping_water_district_name_list
+#        self.mapping_water_district_name_list = mapping_water_district_name_list
         
         # method intersection get only matching items from the two lists
         
@@ -755,7 +763,7 @@ class EventHandler(object):
         for water_district in set(sharkweb_water_district_list).intersection(mapping_water_district_name_list): 
 #            print('water_district: {}'.format(water_district))
             water_district_code = water_body_mapping.get_internal_name(water_district=water_district)
-            print('water_district: {} - {}'.format(water_district_code, water_district))
+#            print('water_district: {} - {}'.format(water_district_code, water_district))
             
             mapping_type_area_code_list = water_body_mapping.get_list('type_area', water_district=water_district_code)
             # Create type_area format matching sharkweb 
@@ -768,14 +776,14 @@ class EventHandler(object):
             #------------------------------------------------------------------
             type_area_list = []
 #            print(mapping_type_area_name_list_sharkweb)
-            self.mapping_type_area_name_list_sharkweb = mapping_type_area_name_list_sharkweb 
-            self.sharkweb_type_area_list = set(sharkweb_type_area_list)
+#            self.mapping_type_area_name_list_sharkweb = mapping_type_area_name_list_sharkweb 
+#            self.sharkweb_type_area_list = set(sharkweb_type_area_list)
             for type_area in set(sharkweb_type_area_list).intersection(mapping_type_area_name_list_sharkweb): 
                 type_area_code = self.mapping_objects['sharkweb_mapping'].get_mapping(type_area, 'sharkweb', 'internal')
 #                print('\ttype_area: {}'.format(type_area)) 
-                self.type_area = type_area
+#                self.type_area = type_area
                 mapping_water_body = water_body_mapping.get_list('water_body', type_area=type_area_code) 
-                self.mapping_water_body = mapping_water_body
+#                self.mapping_water_body = mapping_water_body
                 #--------------------------------------------------------------
                 water_body_list = []
                 for water_body in set(sharkweb_water_body_list).intersection(mapping_water_body): 
@@ -790,9 +798,9 @@ class EventHandler(object):
                     
                     water_body_list.append(water_body_dict)
                 #--------------------------------------------------------------
-#                label = 
+#                key = water_body_mapping.get_internal_name(type_area=type_area_code)
                 type_area_dict = {"label": type_area,
-                                  "key": water_body_mapping.get_internal_name(type_area=type_area.lstrip('0')),
+                                  "key": type_area_code,
                                   "type": "type_area",
                                   "status": "editable", 
                                   "active": False, 
@@ -810,7 +818,8 @@ class EventHandler(object):
             
             water_district_list.append(water_district_dict)
 #            return water_district_list
-        return water_district_list
+        return_dict['children'] = water_district_list
+        return return_dict
     
 #    #==========================================================================
 #    def dict_select_water_body(self, **kwargs): 
@@ -934,9 +943,9 @@ class EventHandler(object):
                                                                            filter_type='tolerance') 
         
         item_mapping = self._get_mapping_for_name_in_dict('key', request) 
-#         if type_area == '2' and indicator=='din_winter':
-#             self.item_mapping = item_mapping
-#             self.request = request
+        if type_area == '2' and indicator=='din_winter':
+            self.item_mapping = item_mapping
+            self.request = request
             
         # Loop and add filters 
         for settings_item in self.mapping_objects['indicator_settings_items_to_show_in_gui']:
@@ -1862,6 +1871,12 @@ class EventHandler(object):
     
     
     #==========================================================================
+    def _get_worse_status(self, *args): 
+        status_list = ['BAD', 'POOR', 'MODERATE', 'GOOD', 'HIGH', ''] 
+        return status_list[min([status_list.index(item) for item in args])]
+    
+    
+    #==========================================================================
     def dict_result(self, workspace_uuid=None, subset_uuid=None, **kwargs): 
         """
         Created     20180720    by Magnus Wenzer
@@ -1870,10 +1885,70 @@ class EventHandler(object):
         workspace_object = self.get_workspace(workspace_uuid) 
         self._check_valid_uuid(workspace_uuid, subset_uuid)
         
+        # Loading saved  
         step3_object = workspace_object.get_step_object(step=3, subset=subset_uuid)
+        result_data = step3_object.get_results(by=kwargs.get('by', 'period'))
         
-        # Loading saved results
-        step3_object.load_results()
+        # Get list of viss_eu_cd from data filter step 1 
+        step1 = workspace_object.get_step_object(step=1, subset=subset_uuid) 
+        data_filter_object = step1.get_data_filter_object()
+        viss_eu_cd_list = data_filter_object.get_include_list_filter('VISS_EU_CD') 
+        
+        result_dict = {} 
+        # Setup combined dict 
+        result_dict['all'] = {}
+        result_dict['all']['value'] = 'all'
+        result_dict['all']['label'] = 'all'
+        result_dict['all']['result'] = {}
+        
+        # Loopar viss_eu_cd
+        for viss_eu_cd in viss_eu_cd_list:
+            result_dict[viss_eu_cd] = {}
+            result_dict[viss_eu_cd]['value'] = viss_eu_cd 
+            result_dict[viss_eu_cd]['label'] = '{} ({})'.format(self.mapping_objects['water_body'].get_display_name(water_body=viss_eu_cd), 
+                                                         viss_eu_cd)
+            result_dict[viss_eu_cd]['worse_status'] = ''
+            result_dict[viss_eu_cd]['result'] = {} 
+            
+            for item, data in result_data.items(): 
+                key = item.split('-')[0] 
+                
+                # Extend combined dict 
+                if key not in result_dict['all']['result'].keys():
+                    result_dict['all']['result'][key] = {} 
+                    result_dict['all']['result'][key]['status'] = ''
+                if 'active' not in result_dict['all']['result'][key].keys():
+#                    print('---', result_dict['all']['result'][key].keys())
+                    result_dict['all']['result'][key]['active'] = False
+#                    print('===', result_dict['all']['result'][key]['active'])  
+                    
+                result_dict['all']['result'][key]['value'] = key
+                result_dict['all']['result'][key]['label'] = self.mapping_objects['label_mapping'].get_mapping(key) 
+                
+                result_dict[viss_eu_cd]['result'][key] = {} 
+                result_dict[viss_eu_cd]['result'][key]['status'] = '' 
+                result_dict[viss_eu_cd]['result'][key]['active'] = False
+                result_dict[viss_eu_cd]['result'][key]['value'] = key
+                result_dict[viss_eu_cd]['result'][key]['label'] = self.mapping_objects['label_mapping'].get_mapping(key)         
+                
+                if viss_eu_cd in data['VISS_EU_CD'].values: 
+                    status_list = data.loc[data['VISS_EU_CD']==viss_eu_cd, 'STATUS'].values
+                    if len(status_list) == 1:
+                        status = status_list[0].strip()
+                        result_dict[viss_eu_cd]['result'][key]['status'] = status 
+#                        print()
+#                        print('key:', key)
+#                        print('viss_eu_cd', viss_eu_cd)
+                        result_dict[viss_eu_cd]['worse_status'] = self._get_worse_status(status, result_dict[viss_eu_cd]['worse_status'])
+                        result_dict[viss_eu_cd]['result'][key]['active'] = True 
+                        result_dict['all']['result'][key]['active'] = True
+#                print(result_dict['all']['result'][key]['active'])
+                                   
+            result_dict[viss_eu_cd]['label'] = result_dict[viss_eu_cd]['label'] + ' ({})'.format(result_dict[viss_eu_cd]['worse_status'])
+       
+    
+        
+#        if kwargs.get('status')
         
 #        labels = {}
 #        for key in step3_object.result_data.keys():
@@ -1883,9 +1958,7 @@ class EventHandler(object):
 #        return_dict = {'dataframes': step3_object.result_data, 
 #                       'labels': labels}
         
-        return_dict = {'dataframes': step3_object.result_data}
-        
-        return return_dict 
+        return result_dict 
         
         
     #==========================================================================
@@ -2025,13 +2098,14 @@ class EventHandler(object):
     #==========================================================================
     def import_sharkweb_data(self, 
                               workspace_uuid=None, 
-                              file_name='', 
                               **kwargs): 
         """
         Created     20180721    by Magnus Wenzer
         
         Loads data from sharkweb. 
         """
+        print('===', workspace_uuid) 
+        print(kwargs)
         self.action_load_workspace(workspace_uuid)
         reader = core.SharkWebReader(debug=True)
         data_params = reader.get_data_params()
@@ -2053,13 +2127,21 @@ class EventHandler(object):
 #        try:            
         # Read data 
         reader.read_data(data_params=data_params) 
-        
+        self.data = reader.data
         # Find datatype
         datatype = reader.data.split('\n')[1].split('\t')[0] 
         internal_datatype_name = self.mapping_objects['datatype_list'].get_mapping(datatype, 'codelist_name', 'internal_name')
-        
+        print('datatype', datatype)
+        print('internal_datatype_name', internal_datatype_name)
         # Save file 
-        full_file_name = '{}_sharkweb_data_{}_{}.txt'.format(internal_datatype_name, self.user_id, file_name)
+        parameter = kwargs.get('parameter', 'all')
+        if not parameter:
+            parameter = 'all'
+        full_file_name = '{}_sharkweb_data_{}_{}-{}_{}.txt'.format(internal_datatype_name, 
+                                                                   parameter, 
+                                                                   kwargs.get('year_from'), 
+                                                                   kwargs.get('year_to'), 
+                                                                   datetime.datetime.now().strftime('%Y%m%d'))
         file_path = os.path.join(self.temp_directory, full_file_name) 
         reader.save_data(file_path) 
         
@@ -3009,26 +3091,69 @@ class EventHandler(object):
         
     #==========================================================================
     @timer 
-    def request_sharkweb_search(self, request):
+    def request_sharkweb_import(self, request):
         """
-        Created     20180222    by Magnus Wenzer
+        Created     20180827    by Magnus Wenzer
         """ 
-        self.sharkweb_reader = core.SharkWebReader()
-        if request: 
+        workspace_uuid = request.get('workspace_uuid') 
+        from_year = request.get('year_from')
+        to_year = request.get('year_to')
+        datatype_list = request.get('datatypes') 
+        area_list = request.get('areas')
+        
+        # Check area and devide into "area level" 
+        water_district_list = [] 
+        type_area_list = [] 
+        water_body_list = [] 
+        
+        water_districts = self.mapping_objects['water_body'].get_list('water_district')
+        type_areas = self.mapping_objects['water_body'].get_list('type_area')
+        water_bodies = self.mapping_objects['water_body'].get_list('water_body')
+        
+        for area in area_list: 
+            if area in water_districts:
+                water_district_list.append(area)
+            elif area in type_areas:
+                type_area_list.append(area)
+            elif area in water_bodies:
+                water_body_list.append(area)
+        
+        
+        for datatype in datatype_list: 
+            selection_dict = {'year_from': from_year, 
+                              'year_to': to_year, 
+                              'datatype': datatype, 
+                              self.mapping_objects['sharkweb_mapping'].get_mapping('WATER_DISTRICT', 'internal', 'sharkweb'): water_district_list, 
+                              self.mapping_objects['sharkweb_mapping'].get_mapping('WATER_TYPE_AREA', 'internal', 'sharkweb'): type_area_list, 
+                              self.mapping_objects['sharkweb_mapping'].get_mapping('VISS_EU_CD', 'internal', 'sharkweb'): water_body_list, 
+                              'encoding': 'utf8',  #Windows-cp1252
+                              'lineend': 'windows', 
+                              'delimiters': 'point-tab', 
+                              'sample_table_view': self.mapping_objects['sharkweb_settings'].get('{}_sample_table_view'.format(datatype)), 
+                              'parameter': self.mapping_objects['sharkweb_settings'].get('{}_parameter'.format(datatype)), 
+                              'headerlang': self.mapping_objects['sharkweb_settings'].get('headerlang')} 
+            
+            
+            self.import_sharkweb_data(workspace_uuid=workspace_uuid, 
+                                      **selection_dict)
 #            self.import_sharkweb_data
             #TODO: Här är request enklare listor mm.
             #self.load_data_from_sharkweb(request)
-            pass
-        else:
-            # Create sharkweb reader 
-            
-            response = [] 
-            response.append(self.dict_select_year_interval())
-            response.append(self.dict_select_datatype())
-            response.append(self.list_select_area())
-            #TODO: Kolla hur utsäkningen fungerar i sharkweb 
-            
-            return response
+    #==========================================================================
+    @timer 
+    def request_sharkweb_search(self, *arg, **kwargs):
+        """
+        Created     20180827    by Magnus Wenzer
+        """ 
+        # Create sharkweb reader 
+        self.sharkweb_reader = core.SharkWebReader()
+        response = [] 
+        response.append(self.dict_select_year_interval())
+        response.append(self.dict_select_datatype())
+        response.append(self.dict_select_area())
+        #TODO: Kolla hur utsökningen fungerar i sharkweb 
+        
+        return response
         
         
         
@@ -3554,32 +3679,38 @@ class EventHandler(object):
     
     #==========================================================================
     @timer
-    def request_subset_result_get(self, request):
+    def request_workspace_result(self, request):
         """
         Created     20180720    by Magnus Wenzer
+        Updated     20180828    by Magnus Wenzer
         
         "request" must contain: 
             workspace_uuid
-            subset_uuid
             
         """
         
         workspace_uuid = request['workspace_uuid'] 
-        subset_uuid = request['subset_uuid'] 
         
         self.action_load_workspace(workspace_uuid)
+        
+        
+        subset_uuid = request.get('subset_uuid') 
+        if subset_uuid: 
+            subset_uuid_list = [subset_uuid] 
+        else:
+            subset_uuid_list = self.get_subset_list(workspace_uuid)
+        
+        
         
         response = {} 
         response['workspace_uuid'] = workspace_uuid
         response['workspace'] = self.dict_workspace(workspace_uuid) 
-        response['subset'] = self.dict_subset(workspace_uuid=workspace_uuid, 
-                                    subset_uuid=subset_uuid, 
-                                    include_indicator_settings=False, 
-                                    time=False, 
-                                    areas=False, 
-                                    quality_elements=False, 
-                                    supporting_elements=False, 
-                                    result=True)
+        response['subset'] = {}
+        
+        for subset_uuid in subset_uuid_list: 
+            response['subset'][subset_uuid] = self.dict_subset(workspace_uuid=workspace_uuid, 
+                                                                subset_uuid=subset_uuid, 
+                                                                result=True)
         return response
         
     
@@ -4100,13 +4231,4 @@ if __name__ == '__main__':
 ##    default_workspace = ekos.get_workspace('default')
     
 
-        
-        
-        
-        
-        
-        
-        
-        
-        
         
