@@ -11,6 +11,7 @@ import numpy as np
 import utils
 import re 
 import datetime 
+import time
 
 
 #if current_path not in sys.path: 
@@ -22,6 +23,19 @@ except:
 
 import core.exceptions as exceptions
 
+###############################################################################
+def timer(func):
+    """
+    Created     20180719    by Magnus Wenzer
+        
+    """
+    def f(*args, **kwargs):
+        from_time = time.time()
+        rv = func(*args, **kwargs)
+        to_time = time.time()
+        print('Stop: "{.__name__}". Time for running method was {}'.format(func, to_time-from_time))
+        return rv
+    return f
 
 ###############################################################################
 class DataFilter(object):
@@ -1311,7 +1325,13 @@ class SettingsRef(SettingsBase):
         self.settings.connected_to_ref_settings_object = True
         self.allowed_variables = self.settings.ref_columns
     
-     
+    def eval_linear_salinity_eq(self, eq_str, s):
+        
+        k_m = eq_str.split('+')
+        k = float(k_m[0].strip('*s'))
+        m = float(k_m[1])
+        return k*s+m
+        
     #==========================================================================    
     def get_ref_value(self, type_area = None, water_body = None, salinity = None):
         """
@@ -1343,7 +1363,8 @@ class SettingsRef(SettingsBase):
                 if s > max_s:
                     s = max_s
                 #print(s, ref_value)
-                ref_value = eval(ref_value)
+                ref_value = self.eval_salinity_eq(ref_value, s)
+                #ref_value = eval(ref_value)
                 #print('resulting ref value: {}'.format(ref_value))
             except TypeError as e:
                 raise TypeError('{}\nSalinity TypeError, salinity must be int, float or nan but is {}'.format(e, repr(s)))
@@ -1359,7 +1380,7 @@ class SettingsRef(SettingsBase):
         return ref_value
     
 
-    #==========================================================================    
+    #==========================================================================  
     def get_boundarie(self, type_area = None, water_body = None, salinity = None, variable = None):
         """
         Created     20180326    by Lena Viktorsson
@@ -1371,11 +1392,11 @@ class SettingsRef(SettingsBase):
             boundarie = self.get_value(variable = variable, water_body = water_body)
         else:
             boundarie = self.get_value(variable = variable, type_area = type_area)
-        try:
-#            print(ref_value)
-            boundarie = float(boundarie)
-        except (ValueError, TypeError):
-            pass
+#         try:
+# #            print(ref_value)
+#             boundarie = float(boundarie)
+#         except (ValueError, TypeError):
+#             pass
 
         if type(boundarie) is float:
             boundarie = boundarie
@@ -1389,15 +1410,16 @@ class SettingsRef(SettingsBase):
                 if s > max_s:
                     s = max_s
                 #print(s, ref_value)
-                exp_as_func = eval('lambda s: ' + boundarie)
-                boundarie = exp_as_func(s)
-#                boundarie = eval(boundarie)
+                #boundarie = self.eval_salinity_eq(boundarie, s)
+                #exp_as_func = eval('lambda s: ' + boundarie)
+                #boundarie = exp_as_func(s)
+                boundarie = eval(boundarie)
                 #print('resulting ref value: {}'.format(ref_value))
             except TypeError as e:
                 raise TypeError('{}\nSalinity TypeError, salinity must be int, float or nan but is {}'.format(e, repr(s)))
                 #TODO: add closes matching salinity somewhere here
         elif type(boundarie) is pd.Series:
-            raise InputError('In SettingsRef get_ref_value','returned pd.Series for ref_value, give more specific info to get the right row')
+            raise exceptions.UnexpectedInputVariable('In SettingsRef get_ref_value','returned pd.Series for boundarie, give more specific info to get the correct row')
         elif not boundarie:
             return False
         else:

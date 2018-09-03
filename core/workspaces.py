@@ -246,16 +246,16 @@ class WorkStep(object):
 #                print('Total time to calculate status for water body {}:'.format(water_body), time_wb)
 #                print('-'*50)
                 if type(by_date) is not bool:
-                    status_by_date = concat_df(by_date, status_by_date, indicator_name + '_by_date',
+                    status_by_date = concat_df(by_date, status_by_date, 'indicator_' + indicator_name + '-by_date',
                           water_body, self.indicator_objects[indicator])
                 if type(by_year_pos) is not bool:
-                    status_by_year_pos = concat_df(by_year_pos, status_by_year_pos, indicator_name + '_by_year_pos',
+                    status_by_year_pos = concat_df(by_year_pos, status_by_year_pos, indicator_name + '-by_year_pos',
                           water_body, self.indicator_objects[indicator])
                 if type(by_year) is not bool:
-                    status_by_year = concat_df(by_year, status_by_year, indicator_name + '_by_year',
+                    status_by_year = concat_df(by_year, status_by_year, 'indicator_' + indicator_name + '-by_year',
                           water_body, self.indicator_objects[indicator])
                 if type(by_period) is not bool:
-                    status_by_period = concat_df(by_period, status_by_period, indicator_name + '_by_period',
+                    status_by_period = concat_df(by_period, status_by_period, 'indicator_' + indicator_name + '-by_period',
                           water_body, self.indicator_objects[indicator])
                 
                 
@@ -272,19 +272,20 @@ class WorkStep(object):
 #                        status_by_date = pd.concat([status_by_date, by_date])
 #                    else:
 #                        status_by_date = by_date 
+            
             time_ind = time.time() - t_ind
             print('-'*50)
             print('Total time to calculate status for indicator {}:'.format(indicator), time_ind)
             print('-'*50)    
             
             if type(status_by_date) is not bool:                                  
-                self.indicator_objects[indicator].sld.save_df(status_by_date, file_name = indicator_name + '_by_date', force_save_txt=True)
+                self.indicator_objects[indicator].sld.save_df(status_by_date, file_name = indicator_name + '-by_date', force_save_txt=True)
             if type(status_by_year_pos) is not bool:
-                self.indicator_objects[indicator].sld.save_df(status_by_year_pos, file_name = indicator_name + '_by_year', force_save_txt=True)
+                self.indicator_objects[indicator].sld.save_df(status_by_year_pos, file_name = indicator_name + '-by_year', force_save_txt=True)
             if type(status_by_year) is not bool:
-                self.indicator_objects[indicator].sld.save_df(status_by_year, file_name = indicator_name + '_by_year_pos', force_save_txt=True)
+                self.indicator_objects[indicator].sld.save_df(status_by_year, file_name = indicator_name + '-by_year_pos', force_save_txt=True)
             if type(status_by_period) is not bool:
-                self.indicator_objects[indicator].sld.save_df(status_by_period, file_name = indicator_name + '_by_period', force_save_txt=True)
+                self.indicator_objects[indicator].sld.save_df(status_by_period, file_name = indicator_name + '-by_period', force_save_txt=True)
         
     def calculate_quality_element(self, subset_unique_id, quality_element, class_name):
         

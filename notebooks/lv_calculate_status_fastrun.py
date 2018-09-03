@@ -127,7 +127,7 @@ ekos.load_workspace(unique_id = workspace_uuid)
 
 #%%timeit
 # ÄNDRAT
-ekos.load_data(workspace_uuid = workspace_uuid, force = True)
+ekos.load_data(workspace_uuid = workspace_uuid)
 
 
 # In[14]:
@@ -177,6 +177,11 @@ w.set_data_filter(subset = subset_uuid, step=1,
                          filter_type='include_list', 
                          filter_name='MYEAR', 
                          data=['2007', '2008', '2009', '2010', '2011', '2012']) 
+w.set_data_filter(subset = subset_uuid, step=1, 
+                         filter_type='include_list', 
+                         filter_name='viss_eu_cd', data = [])
+                         #data=['SE584340-174401', 'SE581700-113000', 'SE654470-222700', 'SE633000-195000', 'SE625180-181655']) 
+                         #wb with no data for din 'SE591400-182320'
 
 
 f1 = w.get_data_filter_object(subset = subset_uuid, step=1) 
@@ -227,12 +232,14 @@ w.get_available_indicators(subset= subset_uuid, step=2)
 
 #list(zip(typeA_list, df_step1.WATER_TYPE_AREA.unique()))
 #indicator_list = w.get_available_indicators(subset= subset_uuid, step=2)
-#indicator_list = ['oxygen','din_winter','ntot_summer', 'ntot_winter', 'dip_winter', 'ptot_summer', 'ptot_winter','bqi', 'biov', 'chl', 'secchi']
-indicator_list = ['din_winter','ntot_summer', 'ntot_winter', 'dip_winter', 'ptot_summer', 'ptot_winter']
+indicator_list = ['oxygen','din_winter','ntot_summer', 'ntot_winter', 'dip_winter', 'ptot_summer', 'ptot_winter','bqi', 'biov', 'chl', 'secchi']
+#indicator_list = ['din_winter','ntot_summer', 'ntot_winter', 'dip_winter', 'ptot_summer', 'ptot_winter']
 #indicator_list = ['biov', 'chl']
 #indicator_list = ['bqi', 'secchi']
 #indicator_list = ['bqi', 'secchi'] + ['biov', 'chl'] + ['din_winter']
-#indicator_list = ['din_winter']
+indicator_list.remove('din_winter')
+# indicator_list = ['dip_winter', 'ntot_winter', 'ptot_winter']
+indicator_list = ['indicator_' + indicator for indicator in indicator_list]
 
 # In[ ]:
 print('apply indicator data filter to {}'.format(indicator_list))
@@ -244,8 +251,10 @@ for indicator in indicator_list:
     #print(w.mapping_objects['water_body'][wb])
     #print('*************************************')
 
+df = w.get_filtered_data(subset = subset_uuid, step = 'step_2', water_body = 'SE625180-181655', indicator = 'indicator_din_winter').dropna(subset = ['DIN'])
 
 # # Step 3 
+
 # ### Set up indicator objects
 
 # In[ ]:

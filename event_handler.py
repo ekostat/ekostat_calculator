@@ -934,9 +934,9 @@ class EventHandler(object):
                                                                            filter_type='tolerance') 
         
         item_mapping = self._get_mapping_for_name_in_dict('key', request) 
-        if type_area == '2' and indicator=='din_winter':
-            self.item_mapping = item_mapping
-            self.request = request
+#         if type_area == '2' and indicator=='din_winter':
+#             self.item_mapping = item_mapping
+#             self.request = request
             
         # Loop and add filters 
         for settings_item in self.mapping_objects['indicator_settings_items_to_show_in_gui']:
