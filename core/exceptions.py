@@ -234,7 +234,12 @@ class NoResultsInResultDirectory(EkostatUserException):
     code = 'results_missing'   
     message = 'No results in result directory' 
     
-    
+class NoResultsForIndicator(EkostatUserException):
+    """
+    Created     20180721    by Magnus Wenzer
+    """
+    code = 'results_missing'   
+    message = 'No results for indicator'    
 #==============================================================================
 class NoDataSelected(EkostatUserException):
     """

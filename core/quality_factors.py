@@ -79,12 +79,15 @@ class QualityElementBase(object):
     def _load_indicator_results(self):
         
         self.indicator_dict = {}
+        # TODO update resultfilenames and here!
         for indicator in self.indicator_list:
-            try:
-                self.indicator_dict[indicator] = self.sld.load_df(file_name = indicator + '_by_period')         
-#                self.indicator_dict[indicator] = self.step_object.indicator_objects[indicator].sld.load_df(file_name = indicator + '_by_period')
-            except FileNotFoundError:
-                print('No status results for {}. Cannot calculate status without it'.format(indicator))
+            if not os.path.exists(self.sld.directory + indicator + '-by_period.pkl') or not os.path.exists(self.sld.directory +indicator + '-by_period.txt'):
+#                 raise core.exceptions.NoResultsForIndicator()
+                self.indicator_dict[indicator] = None
+            else:
+                self.indicator_dict[indicator] = self.sld.load_df(file_name = indicator + '-by_period')         
+                
+#                 print('No status results for {}. Cannot calculate status without it'.format(indicator))
               
     #==========================================================================
     def _set_directories(self):
@@ -119,6 +122,74 @@ class QualityElementNutrients(QualityElementBase):
     
     #==========================================================================
     def calculate_quality_factor(self):
+        """
+        5) EK vägs samman för ingående parametrar (tot-N, tot-P, DIN och DIP) för slutlig statusklassificering av 
+        hela kvalitetsfaktorn Näringsämnen.
+        """
+        """
+        GAMLA FÖRESKRIFTEN
+        Ett medelvärde av de numeriska klassningarna (Nklass) beräknas för 
+        DIN, DIP, tot-N, tot-P under vintern och ett medelvärde för tot-N, tot-P under sommaren. 
+        Därefter beräknas medelvärdet av sommar och vinter, vilket blir den sammanvägda klassificeringen av näringsämnen. 
+        
+        NYA FÖRESKRIFTEN
+        Ett medelvärde av de numeriska klasserna (global_EQR) beräknas separat för N och P. Först ett medelvärde för vintern 
+        (N_vinter = medel(din_vinter, ntot_vinter) reps P_vinter = medel(dip_vinter, ptot_vinter)). 
+        Sedan beräknas medelvärde för N_vinter och ntot_summer respektive P_vinter och ptot_summer och efter det medelvärde av N och P, 
+        vilket blir den sammanvägda klassificeringen av näringsämnen. 
+        
+        Statusklassificeringen avgörs av medelvärdet för den numeriska klassningen enligt tabell 2.1, ett värde 0-1.
+        Dessa värden kan sedan jämföras med övriga kvalitetsfaktorer och ingå i sammansvägningen.
+        """
+            
+        ###### Results #####
+        # how keyword:
+            # - outer: use union of keys from both frames, similar to a SQL full outer join; sort keys lexicographically
+            # - inner: use intersection of keys from both frames, similar to a SQL inner join; preserve the order of the left keys
+        # TODO: replace merge by join? 
+        merge_on = ['VISS_EU_CD', 'WATER_BODY_NAME', 'WATER_TYPE_AREA']
+#         for indicator in self.indicator_list:
+#             col_list = list(self.indicator_dict[indicator].columns)
+#             [col_list.remove(r) for r in merge_on]
+#             {k: k+'_'+indicator for k in col_list}
+#             self.indicator_dict[indicator].rename(columns = {k: k+'_'+indicator for k in col_list}, inplace = True)
+#       
+        def mean_of_indicators(indicator_name):
+#             print(self.mapping_objects['quality_element'].indicator_config.loc[indicator_name]['parameters'])
+            parameters = self.mapping_objects['quality_element'].indicator_config.loc[indicator_name]['parameters'].split(', ') 
+            if 'indicator_' not in parameters[0]: 
+                if 'qe_' not in parameters[0]:
+                    return False
+#             print(indicator_name, parameters)
+            if len(parameters) == 2:
+                print(self.indicator_dict[parameters[0]].columns)    
+                mean_of_indicators = self.indicator_dict[parameters[0]].merge(self.indicator_dict[parameters[1]], on = merge_on, how = 'inner', copy=True, suffixes = ['_' + par for par in parameters])
+                print('columns 1 merge', mean_of_indicators.columns)
+                mean_of_indicators['global_EQR_'+indicator_name] = mean_of_indicators[['global_EQR' + '_' + parameters[0],'global_EQR' +'_' + parameters[0]]].mean(axis = 1, skipna = False)
+                mean_of_indicators['STATUS_'+indicator_name] = mean_of_indicators['global_EQR_'+indicator_name].apply(lambda x: self.get_status_from_global_EQR(x))
+                print('columns 2', mean_of_indicators.columns)
+                self.indicator_dict[indicator_name] = mean_of_indicators
+                self.sld.save_df(mean_of_indicators, indicator_name)
+            elif len(parameters) == 1:
+                col_list = list(self.indicator_dict[parameters[0]].columns)
+                [col_list.remove(r) for r in merge_on]
+                {k: k+'_'+parameters[0] for k in col_list}
+                self.indicator_dict[indicator_name] = self.indicator_dict[parameters[0]].rename(columns = {k: k+'_'+indicator_name for k in col_list})
+                self.sld.save_df(self.indicator_dict[indicator_name], indicator_name)
+    
+        for indicator in self.mapping_objects['quality_element'].indicator_config.index:
+            if self.mapping_objects['quality_element'].indicator_config.loc[indicator]['quality element'] == 'nutrients':
+                mean_of_indicators(indicator)
+#         mean_of_indicators('indicator_p_winter')
+#         mean_of_indicators('indicator_p_summer')
+#         mean_of_indicators('indicator_p')
+#         mean_of_indicators('indicator_n_winter')
+#         mean_of_indicators('indicator_n_summer')
+#         mean_of_indicators('indicator_n')
+#         mean_of_indicators('qe_nutrients')
+
+    #==========================================================================
+    def old_calculate_quality_factor(self):
         """
         5) EK vägs samman för ingående parametrar (tot-N, tot-P, DIN och DIP) för slutlig statusklassificering av 
         hela kvalitetsfaktorn Näringsämnen.
@@ -219,20 +290,35 @@ class QualityElementPhytoplankton(QualityElementBase):
         super().__init__(subset_uuid, parent_workspace_object, quality_element)  
         
     def calculate_quality_factor(self):
-        
+        print(self.name)
         merge_on = ['VISS_EU_CD', 'WATER_BODY_NAME', 'WATER_TYPE_AREA']
-        for indicator in self.indicator_list:
-            col_list = list(self.indicator_dict[indicator].columns)
-            #print(col_list)
-            [col_list.remove(r) for r in merge_on]
-            {k: k+'_'+indicator for k in col_list}
-            self.indicator_dict[indicator].rename(columns = {k: k+'_'+indicator for k in col_list}, inplace = True)
-            
-        results = self.indicator_dict[self.indicator_list[0]].merge(self.indicator_dict[self.indicator_list[2]], on = merge_on, how = 'inner', copy=True)
-        results['mean_EQR'] = results[['global_EQR'+'_'+self.indicator_list[0],'global_EQR'+'_'+self.indicator_list[1]]].mean(axis = 1, skipna = False)
-        results['STATUS_PHYTOPLANKTON'] = results['mean_EQR'].apply(lambda x: self.get_status_from_global_EQR(x))
         
-        self.results = results
+        def mean_of_indicators(indicator_name):
+#             print(self.mapping_objects['quality_element'].indicator_config.loc[indicator_name]['parameters'])
+            parameters = self.mapping_objects['quality_element'].indicator_config.loc[indicator_name]['parameters'].split(', ') 
+            if 'indicator_' not in parameters[0]: 
+                if 'qe_' not in parameters[0]:
+                    return False
+#             print(indicator_name, parameters)
+            if len(parameters) == 2:
+#                 print(self.indicator_dict[parameters[0]].columns)    
+                mean_of_indicators = self.indicator_dict[parameters[0]].merge(self.indicator_dict[parameters[1]], on = merge_on, how = 'inner', copy=True, suffixes = ['_' + par for par in parameters])
+#                 print('columns 1 merge', mean_of_indicators.columns)
+                mean_of_indicators['global_EQR_'+indicator_name] = mean_of_indicators[['global_EQR' + '_' + parameters[0],'global_EQR' +'_' + parameters[0]]].mean(axis = 1, skipna = False)
+                mean_of_indicators['STATUS_'+indicator_name] = mean_of_indicators['global_EQR_'+indicator_name].apply(lambda x: self.get_status_from_global_EQR(x))
+#                 print('columns 2', mean_of_indicators.columns)
+                self.indicator_dict[indicator_name] = mean_of_indicators
+                self.sld.save_df(mean_of_indicators, indicator_name)
+            elif len(parameters) == 1:
+                col_list = list(self.indicator_dict[parameters[0]].columns)
+                [col_list.remove(r) for r in merge_on]
+                {k: k+'_'+parameters[0] for k in col_list}
+                self.indicator_dict[indicator_name] = self.indicator_dict[parameters[0]].rename(columns = {k: k+'_'+indicator_name for k in col_list})
+                self.sld.save_df(self.indicator_dict[indicator_name], indicator_name)
+    
+        for indicator in self.mapping_objects['quality_element'].indicator_config.index:
+            if self.mapping_objects['quality_element'].indicator_config.loc[indicator]['quality element'] == self.name:
+                mean_of_indicators(indicator)
     
 ###############################################################################
 if __name__ == '__main__':

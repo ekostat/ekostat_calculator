@@ -61,6 +61,7 @@ from .parameters import ParameterTOTN
 from .parameters import CalculatedParameterDIN
 
 from .quality_factors import QualityElementNutrients
+from .quality_factors import QualityElementPhytoplankton
 
 from .ref_values import create_type_area_object
 from .ref_values import RefValues

@@ -294,7 +294,7 @@ class WorkStep(object):
         try:
             class_ = getattr(core, class_name)
         except AttributeError as e:
-            raise AttributeError('{}\nClass does not exist'.foramt(e))
+            raise AttributeError('{}\nClass does not exist'.format(e))
         #print(class_)
         #instance = class_()
         # add indicator objects to dictionary
