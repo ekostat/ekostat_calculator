@@ -73,7 +73,8 @@ class WorkStep(object):
         
         self._create_folder_structure()
         self.load_all_files()
-        self._check_folder_structure()        
+        self._check_folder_structure()     
+           
         
 #        print('Initiating WorkStep: {}'.format(self.paths['step_directory']))    
         
@@ -289,7 +290,8 @@ class WorkStep(object):
         
     def calculate_quality_element(self, subset_unique_id, quality_element, class_name):
         
-        self.quality_element = {}
+        if not hasattr(self, 'quality_element'):
+            self.quality_element = {}
         #print(class_name)
         try:
             class_ = getattr(core, class_name)

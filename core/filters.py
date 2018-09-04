@@ -1508,7 +1508,14 @@ class SettingsTolerance(SettingsBase):
         else:
             raise NameError('MIN_NR_YEARS not in tolerance settings')
     
-    
+    def get_min_nr_stations(self, type_area = None, water_body = None):
+        
+        get_variable = 'MIN_NR_STATIONS'
+        if get_variable in self.allowed_variables:
+            return self.get_value(variable = get_variable, type_area = type_area, water_body = water_body)
+        else:
+            raise NameError('MIN_NR_STATIONS not in tolerance settings')
+            
     def get_min_nr_values(self, type_area = None, water_body = None):
         
         get_variable = 'MIN_NR_VALUES'

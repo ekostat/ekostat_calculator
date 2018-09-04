@@ -165,13 +165,14 @@ w.apply_data_filter(step = 0) # This sets the first level of data filter in the 
 # In[18]:
 
 
-#w.copy_subset(source_uuid='default_subset', target_alias='period_2007-2012_refvalues_2017')
+# w.copy_subset(source_uuid='default_subset', target_alias='test_subset')
 
 
 # In[19]:
 
 
-subset_alias = 'period_2007-2012_refvalues_2017'
+# subset_alias = 'period_2007-2012_refvalues_2017'
+subset_alias = 'test_subset'
 subset_uuid = ekos.get_unique_id_for_alias(workspace_alias = workspace_alias, subset_alias = subset_alias)
 w.set_data_filter(subset = subset_uuid, step=1, 
                          filter_type='include_list', 
@@ -179,9 +180,9 @@ w.set_data_filter(subset = subset_uuid, step=1,
                          data=['2007', '2008', '2009', '2010', '2011', '2012']) 
 w.set_data_filter(subset = subset_uuid, step=1, 
                          filter_type='include_list', 
-                         filter_name='viss_eu_cd', data = [])
-                         #data=['SE584340-174401', 'SE581700-113000', 'SE654470-222700', 'SE633000-195000', 'SE625180-181655']) 
-                         #wb with no data for din 'SE591400-182320'
+                         filter_name='viss_eu_cd', data = ['SE584340-174401', 'SE581700-113000', 'SE654470-222700', 'SE633000-195000', 'SE625180-181655'])
+#                          data=['SE584340-174401', 'SE581700-113000', 'SE654470-222700', 'SE633000-195000', 'SE625180-181655']) 
+#                          wb with no data for din 'SE591400-182320'
 
 
 f1 = w.get_data_filter_object(subset = subset_uuid, step=1) 
@@ -237,7 +238,6 @@ indicator_list = ['oxygen','din_winter','ntot_summer', 'ntot_winter', 'dip_winte
 #indicator_list = ['biov', 'chl']
 #indicator_list = ['bqi', 'secchi']
 #indicator_list = ['bqi', 'secchi'] + ['biov', 'chl'] + ['din_winter']
-indicator_list.remove('din_winter')
 # indicator_list = ['dip_winter', 'ntot_winter', 'ptot_winter']
 indicator_list = ['indicator_' + indicator for indicator in indicator_list]
 

@@ -1060,7 +1060,7 @@ class IndicatorBQI(IndicatorBase):
             by_station_result_list.append((station, percentile, global_EQR, status, ref_value, hg_value, gm_value, mp_value, pb_value))
             
         ##### Create dataframes for saving #####
-        by_year_pos = pd.DataFrame(data = by_year_pos_result_list, columns = ['YEAR', 'station', 'BQI_station_mean', 'global_EQR','STATUS','ref_value', 'hg_value', 'gm_value', 'mp_value', 'pb_value'])
+        by_year_pos = pd.DataFrame(data = by_year_pos_result_list, columns = ['YEAR', 'STATN', 'BQI_station_mean', 'global_EQR','STATUS','ref_value', 'hg_value', 'gm_value', 'mp_value', 'pb_value'])
         by_year_pos['WATER_BODY_NAME'] = wb_name
         by_year_pos['VISS_EU_CD'] = water_body
         by_year_pos['WATER_TYPE_AREA'] = type_area
@@ -1071,10 +1071,18 @@ class IndicatorBQI(IndicatorBase):
         by_pos['WATER_TYPE_AREA'] = type_area
         
         global_EQR_by_period = np.mean(by_pos.global_EQR)
+#         STATIONS_USED =  ', '.join(by_pos.STATN.unique())
+#         STATN_count = len(by_pos.STATN.unique())
         status_by_period = self.get_status_from_global_EQR(global_EQR_by_period)
         by_period = pd.DataFrame({'VISS_EU_CD': [water_body], 'WATER_BODY_NAME': [wb_name],'WATER_TYPE_AREA': [type_area],
                                   'global_EQR': [global_EQR_by_period],  'STATUS': [status_by_period]})
-        by_period['STAIONS_USED'] = ', '.join(by_pos.STATN.unique())
+        by_period['STATIONS_USED'] = ', '.join(by_pos.STATN.unique())
+        by_period['STATN_count'] = len(by_pos.STATN.unique())
+        
+        min_nr_stations = self.tolerance_settings.get_min_nr_stations(water_body = water_body) 
+        boolean_list = by_period['STATN_count'] >= min_nr_stations
+        by_period['ok'] = False
+        by_period.loc[boolean_list, 'ok'] = True                     
         
         by_period['variance'] = np.nan
         by_period['p_ges'] = np.nan
@@ -1187,12 +1195,7 @@ class IndicatorNutrients(IndicatorBase):
         
         if 'winter_YEAR' in self.column_list:
             self.column_list.remove('winter_YEAR')
-            
-        # Set up result class
-#        self.classification_results.add_info('parameter', self.indicator_parameter)
-#        self.classification_results.add_info('salt_parameter', self.salt_parameter)
-        #self.classification_results.add_info('water_body', water_body)
-        
+                    
         #self._set_water_body_indicator_df(water_body)
         # get data to be used for status calculation
         if water_body not in self.water_body_indicator_df.keys():
@@ -1271,11 +1274,6 @@ class IndicatorNutrients(IndicatorBase):
         by_date = df.groupby(['SDATE', 'YEAR', 'STATN']).agg({**agg_dict1, **agg_dict2}).reset_index()
         by_date.rename(columns={'DEPH':'DEPH_count'}, inplace=True)
         
-        #by_date = df.groupby(['SDATE', 'YEAR'],).local_EQR.agg(['count', 'min', 'max', 'mean']).reset_index()
-        # by_occasion.to_csv(self.paths['results'] +'/' + self.name + water_body +'by_occation.txt', sep='\t')
-        #by_date.rename(columns={'mean':'local_EQR', 'count': 'number_of_values'}, inplace=True) # Cant use "mean" below
-        #by_date['WATER_TYPE_AREA'] = type_area
-        #by_date['VISS_EU_CD'] = water_body
                
         if type_area in ['1','1s','1n','2','3','4','5','6','25'] and 'winter' in self.name:
             if self.indicator_parameter == 'NTOT' or self.indicator_parameter == 'DIN':
@@ -1293,25 +1291,7 @@ class IndicatorNutrients(IndicatorBase):
         by_date['local_EQR'] = by_date.REFERENCE_VALUE/by_date[self.indicator_parameter]
         by_date['local_EQR'] = by_date['local_EQR'].apply(set_value_above_one)
         by_date['global_EQR'], by_date['STATUS'] = zip(*by_date['local_EQR'].apply(self._calculate_global_EQR_from_local_EQR, water_body = water_body))
-        #by_date.set_index(keys = 'VISS_EU_CD', append =True, drop = False, inplace = True)
         
-        #SAVE by_date results
-#        if type(self.classification_results['status_by_date']) is pd.DataFrame:
-#            if water_body in self.classification_results['status_by_date'].VISS_EU_CD.unique():
-#                self.classification_results['status_by_date'].drop(self.classification_results['status_by_date'].loc[self.classification_results['status_by_date'].VISS_EU_CD == water_body].index, inplace = True)
-#            self.classification_results['status_by_date'] = pd.concat([self.classification_results['status_by_date'], by_date])
-#        elif os.path.exists(self.result_directory + self.name+'_by_date.txt'):
-#            self.classification_results['status_by_date'] = self.sld.load_df(file_name=self.name+'_by_date')
-#            if water_body in self.classification_results['status_by_date'].VISS_EU_CD.unique():
-#                self.classification_results['status_by_date'].drop(self.classification_results['status_by_date'].loc[self.classification_results['status_by_date'].VISS_EU_CD == water_body].index, inplace = True)
-#            self.classification_results['status_by_date'] = pd.concat([self.classification_results['status_by_date'], by_date])
-#        else:
-#            self.classification_results['status_by_date'] = by_date 
-#                                       
-#        self.sld.save_df(self.classification_results['status_by_date'], file_name=self.name+'_by_date', force_save_txt=True)
-#        self.classification_results['status_by_date'] = pd.concat([self.classification_results['status_by_date'], by_date])
-
-        #pd.DataFrame(columns = ['VISS_EU_CD', 'WATER_TYPE_AREA', 'DATE', 'STATUS	VALUE', 'REF VALUE', 'local_EQR','	global_EQR'])
         # Remove occations with not enough samples
         # Or use count as a flag for what to display for the user?
         
@@ -1326,24 +1306,7 @@ class IndicatorNutrients(IndicatorBase):
         by_year.rename(columns={'SDATE':'DATE_count'}, inplace=True)
         by_year['global_EQR'], by_year['STATUS'] = zip(*by_year['local_EQR'].apply(self._calculate_global_EQR_from_local_EQR, water_body = water_body))
         by_year['STATIONS_USED'] = ', '.join(by_date.STATN.unique())
-        #by_year.set_index(keys = 'VISS_EU_CD', append =True, drop = False, inplace = True)
-        
-#        by_year = by_date.groupby('YEAR').local_EQR.agg(['count', 'min', 'max', 'mean'])
-#        by_year.rename(columns={'mean':'local_EQR', 'count': 'number_of_dates'}, inplace=True)
-#        by_year['WATER_TYPE_AREA'] = type_area
-#        by_year['VISS_EU_CD'] = water_body      
-        
-#        if type(self.classification_results['status_by_year']) is pd.DataFrame:
-#            self.classification_results['status_by_year'] = pd.concat([self.classification_results['status_by_year'], by_year])
-#        else:
-#            self.classification_results['status_by_year'] = by_year 
 
-#        self.classification_results['status_by_year'] = pd.concat([self.classification_results['status_by_year'], by_year])
-
-        # by_year.to_csv(self.paths['results'] +'/' + self.name + water_body + 'by_year.txt', sep='\t')
-        #by_year['all_ok'] = True
-        #ix = by_year.loc[by_year['number_of_dates'] < self.tolerance_settings.get_min_nr_values(type_area), 'all_ok'].index
-        #by_year.set_value(ix, 'all_ok', False)
         
         """
         3) Medelvärdet av EK för varje parameter och vattenförekomst (beräknas för minst
@@ -1353,41 +1316,20 @@ class IndicatorNutrients(IndicatorBase):
         
         by_period = by_year.groupby(['VISS_EU_CD']).agg({**agg_dict1}).reset_index() #, **agg_dict2
         by_period.rename(columns={year_variable:'YEAR_count'}, inplace=True)
+        
         by_period['global_EQR'], by_period['STATUS'] = zip(*by_period['local_EQR'].apply(self._calculate_global_EQR_from_local_EQR, water_body = water_body))
         S = ', '.join(by_year.STATIONS_USED.unique())
         by_period['STATIONS_USED'] = ', '.join(set(S.split(', '))) 
-        #by_period.set_index(keys = 'VISS_EU_CD', append =True, drop = False, inplace = True)
         
-        
-#        by_period = by_year[['local_EQR']].describe()
-#        by_period = by_period.transpose()
-#        limit = self.tolerance_settings.get_value(variable = 'MIN_NR_YEARS', water_body = water_body)
-#        #limit = self.tolerance_settings.get_min_nr_years(type_area = type_area)
-#        if by_period['count'].get_value('local_EQR') >= limit:
-#            by_period['all_ok'] = False
-#        else:
-#            by_period['all_ok']  = True
-#                     
-#        all_ok = by_period['all_ok']    
-#        print('\t\t\t{} status calculated'.format(self.name)) 
-        #print(by_period)
+        min_nr_years = self.tolerance_settings.get_min_nr_years(water_body = water_body) 
+        boolean_list = by_period['YEAR_count'] >= min_nr_years
+        by_period['ok'] = False
+        by_period.loc[boolean_list, 'ok'] = True
          
         """
         4) Statusklassificeringen för respektive parameter görs genom att medelvärdet av
         EK jämförs med de angivna EK-klassgränserna i tabellerna 6.2-6.7. 
         """
-        
-#        global_EQR, status = self._calculate_global_EQR_from_local_EQR(water_body = water_body, local_EQR = by_period['mean'].get_value('local_EQR')) 
-#        temp_dict = {'VISS_EU_CD': [water_body], 'WATER_TYPE_AREA': [type_area],
-#                                'PERIOD': ['x'], 'STATUS': [status],'global_EQR': [global_EQR], 'Number of YEARS': [by_period['count'].get_value('local_EQR')], 'YEARS INCLUDED': ['x']}
-#        values = [water_body, type_area, 'x', status, global_EQR, by_period['count'].get_value('local_EQR'), 'x']
-#        temp = pd.DataFrame.from_dict(temp_dict)
-#        if type(self.classification_results['status_by_period']) is pd.DataFrame:
-#            self.classification_results['status_by_period'] = pd.concat([self.classification_results['status_by_period'], temp])
-#        else:
-#            self.classification_results['status_by_period'] = temp 
-
-#        self.classification_results['status_by_period'] = pd.concat([self.classification_results['status_by_period'], temp])
         
         by_year_pos = False
         by_period['variance'] = np.nan
@@ -1878,10 +1820,12 @@ class IndicatorPhytoplankton(IndicatorBase):
         by_period['global_EQR'], by_period['STATUS'] = zip(*by_period['local_EQR'].apply(self._calculate_global_EQR_from_local_EQR, water_body = water_body))
         S = ', '.join(by_year.STATIONS_USED.unique())
         by_period['STATIONS_USED'] = ', '.join(set(S.split(', '))) 
-        #by_period.set_index(keys = 'VISS_EU_CD', append =True, drop = False, inplace = True)
-            
-#        print('\t\t\t{} status calculated'.format(self.name)) 
-
+        
+        min_nr_years = self.tolerance_settings.get_min_nr_years(water_body = water_body) 
+        boolean_list = by_period['YEAR_count'] >= min_nr_years
+        by_period['ok'] = False
+        by_period.loc[boolean_list, 'ok'] = True
+        
         """
         4) Statusklassificeringen för respektive parameter görs genom att medelvärdet av
         EK jämförs med de angivna EK-klassgränserna i tabellerna 6.2-6.7. 
@@ -1989,16 +1933,12 @@ class IndicatorSecchi(IndicatorBase):
         by_period.rename(columns={'YEAR':'YEAR_count'}, inplace=True)
         by_period['global_EQR'], by_period['STATUS'] = zip(*by_period['local_EQR'].apply(self._calculate_global_EQR_from_local_EQR, water_body = water_body))
         by_period['STATIONS_USED'] = ', '.join(by_date.STATN.unique())      	        
-#        limit = self.tolerance_settings.get_value(variable = 'MIN_NR_YEARS', water_body = water_body)
-        #limit = self.tolerance_settings.get_min_nr_years(type_area = type_area)
-#        if len(df['YEAR'].unique()) >= limit:
-#            by_period['all_ok'] = False
-#        else:
-#            by_period['all_ok']  = True
-                     
-#        all_ok = by_period['all_ok']    
         
-#        print('\t\t\t{} status calculated'.format(self.name)) 
+        min_nr_years = self.tolerance_settings.get_min_nr_years(water_body = water_body) 
+        boolean_list = by_period['YEAR_count'] >= min_nr_years
+        by_period['ok'] = False
+        by_period.loc[boolean_list, 'ok'] = True
+        
         by_period['variance'] = np.nan
         by_period['p_ges'] = np.nan
         return by_date, by_year_pos, by_year, by_period
