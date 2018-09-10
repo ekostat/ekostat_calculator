@@ -304,6 +304,8 @@ class WorkStep(object):
                                                                   parent_workspace_object = self.parent_workspace_object,
                                                                   quality_element = quality_element)
         
+        #self.quality_element[quality_element].calculate_quality_factor()
+        print('senaste calculate_quality_factor')
         self.quality_element[quality_element].calculate_quality_factor()
             
     #==========================================================================

@@ -82,7 +82,7 @@ print(workspace_uuid)
 
 # In[9]:
 
-# ÄNDRAT
+# ï¿½NDRAT
 workspace_alias = ekos.get_alias_for_unique_id(workspace_uuid = workspace_uuid)
 
 

@@ -1,4 +1,4 @@
-Indicator	Type_Area_number	Type_Area_suffix	VISS_EU_CD	level_DEPH_INTERVAL_int	tolerance_MIN_NR_YEARS_int	tolerance_MIN_NR_VALUES_int	filter_MONTH_LIST_int	ref_HG_value_limit_float	ref_GM_value_limit_float	ref_MP_value_limit_float	ref_PB_value_limit_float	ref_ref_value_limit	ref_HG_EQR_limit_float	ref_GM_EQR_llimit_float	ref_MP_EQR_llimit_float	ref_PB_EQR_limit_float	Param	QualityElement						
+Indicator	Type_Area_number	Type_Area_suffix	VISS_EU_CD	level_DEPH_INTERVAL_int	tolerance_MIN_NR_YEARS_int	tolerance_MIN_NR_STATIONS_int	filter_MONTH_LIST_int	ref_HG_value_limit_float	ref_GM_value_limit_float	ref_MP_value_limit_float	ref_PB_value_limit_float	ref_ref_value_limit	ref_HG_EQR_limit_float	ref_GM_EQR_llimit_float	ref_MP_EQR_llimit_float	ref_PB_EQR_limit_float	Param	QualityElement						
 BQI	1		unspecified	5-20	3	5	5;6	13.9	10.3	6.9	3.4	15.7	0.89	0.66	0.44	0.22	BQI	Bottom fauna						
 BQI	1		unspecified	20-500	3	5	5;6	15.7	12	8	4	17.6	0.89	0.68	0.45	0.23	BQI	Bottom fauna						
 BQI	2		unspecified	5-20	3	5	5;6	13.9	10.3	6.9	3.4	15.7	0.89	0.66	0.44	0.22	BQI	Bottom fauna						
