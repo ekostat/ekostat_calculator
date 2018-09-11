@@ -288,7 +288,10 @@ class WorkStep(object):
             if type(status_by_period) is not bool:
                 self.indicator_objects[indicator].sld.save_df(status_by_period, file_name = indicator_name + '-by_period', force_save_txt=True)
         
-    def calculate_quality_element(self, subset_unique_id, quality_element, class_name):
+    def calculate_quality_element(self, subset_unique_id, quality_element):
+        
+        class_name = self.parent_workspace_object.mapping_objects['quality_element'].indicator_config.loc['qe_'+quality_element.lower()]['indicator_class']
+        print(class_name)
         
         if not hasattr(self, 'quality_element'):
             self.quality_element = {}
