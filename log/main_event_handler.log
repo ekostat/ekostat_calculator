@@ -933,3 +933,25 @@
 2018-09-14 09:47:28,105	event_handler.py	122	__init__	DEBUG	Time for initiating EventHandler: 0.7488012313842773
 2018-09-14 09:47:28,105	event_handler.py	47	f	DEBUG	Start: "request_sharkweb_search"
 2018-09-14 09:47:30,242	event_handler.py	51	f	DEBUG	Stop: "request_sharkweb_search". Time for running method was 2.121603488922119
+2018-09-14 10:32:21,107	logger.py	85	add_log	DEBUG	
+2018-09-14 10:32:21,122	logger.py	86	add_log	DEBUG	========================================================================================================================
+2018-09-14 10:32:21,122	logger.py	87	add_log	DEBUG	### Log added for log_id "event_handler" at locaton: ..\log\main_event_handler.log
+2018-09-14 10:32:21,122	logger.py	88	add_log	DEBUG	------------------------------------------------------------------------------------------------------------------------
+2018-09-14 10:32:21,122	event_handler.py	106	__init__	DEBUG	Start EventHandler: event_handler
+2018-09-14 10:32:21,138	event_handler.py	141	_load_mapping_objects	DEBUG	Loading mapping files from pickle file.
+2018-09-14 10:32:21,840	event_handler.py	117	__init__	DEBUG	Time for mapping: 0.7020010948181152
+2018-09-14 10:32:21,887	event_handler.py	122	__init__	DEBUG	Time for initiating EventHandler: 0.780001163482666
+2018-09-14 10:32:21,902	event_handler.py	47	f	DEBUG	Start: "test_timer"
+2018-09-14 10:32:22,558	event_handler.py	51	f	DEBUG	Stop: "test_timer". Time for running method was 0.6552009582519531
+2018-09-14 10:33:13,883	event_handler.py	106	__init__	DEBUG	Start EventHandler: event_handler
+2018-09-14 10:33:13,883	event_handler.py	141	_load_mapping_objects	DEBUG	Loading mapping files from pickle file.
+2018-09-14 10:33:14,429	event_handler.py	117	__init__	DEBUG	Time for mapping: 0.5460011959075928
+2018-09-14 10:33:14,475	event_handler.py	122	__init__	DEBUG	Time for initiating EventHandler: 0.5928010940551758
+2018-09-14 10:33:14,475	event_handler.py	47	f	DEBUG	Start: "request_sharkweb_search"
+2018-09-14 10:33:16,613	event_handler.py	51	f	DEBUG	Stop: "request_sharkweb_search". Time for running method was 2.1372036933898926
+2018-09-14 10:33:19,452	event_handler.py	106	__init__	DEBUG	Start EventHandler: event_handler
+2018-09-14 10:33:19,452	event_handler.py	141	_load_mapping_objects	DEBUG	Loading mapping files from pickle file.
+2018-09-14 10:33:20,076	event_handler.py	117	__init__	DEBUG	Time for mapping: 0.6240010261535645
+2018-09-14 10:33:20,123	event_handler.py	122	__init__	DEBUG	Time for initiating EventHandler: 0.6708011627197266
+2018-09-14 10:33:20,138	event_handler.py	47	f	DEBUG	Start: "request_sharkweb_search"
+2018-09-14 10:33:20,138	event_handler.py	51	f	DEBUG	Stop: "request_sharkweb_search". Time for running method was 0.0

@@ -1820,7 +1820,10 @@ class EventHandler(object):
             if water_district in water_district_active_list:
                 active = True
                 
-            return_dict = {"label": water_body_mapping.get_display_name(water_district=water_district),
+            label = water_body_mapping.get_display_name(water_district=water_district) 
+            if not label:
+                label = water_district
+            return_dict = {"label": label,
                           'key': water_district,
                           "type": "water_district",
                           "status": "editable", 
@@ -2157,7 +2160,7 @@ class EventHandler(object):
         # Remove temp file 
 #            os.remove(file_path)
         print('Done')
-        return True
+        return full_file_name
             
 #        except:
 #            exceptions.SharkwebLoadError
@@ -3161,8 +3164,10 @@ class EventHandler(object):
                               'headerlang': self.mapping_objects['sharkweb_settings'].get('headerlang')} 
             
             
-            self.import_sharkweb_data(workspace_uuid=workspace_uuid, 
-                                      **selection_dict)
+            file_name = self.import_sharkweb_data(workspace_uuid=workspace_uuid, 
+                                                  **selection_dict)
+        
+        return {'file_name': file_name}
 #            self.import_sharkweb_data
             #TODO: Här är request enklare listor mm.
             #self.load_data_from_sharkweb(request)
@@ -3868,7 +3873,7 @@ class EventHandler(object):
             response['message'] = 'Workspace does not belong to user'
             return response
             
-        print()
+#        print()
         all_ok = self.delete_workspace(unique_id=unique_id, permanently=False)
         if not all_ok:
             response['all_ok'] = False
