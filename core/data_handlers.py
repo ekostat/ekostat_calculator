@@ -884,7 +884,13 @@ class DataHandler(object):
                                                 export_directory=self.export_directory,
                                                 parameter_mapping=self.parameter_mapping)
         
-        
+        self.float_parameters = []
+        for data_type in [self.chlorophyll, self.physicalchemical, self.physicalchemicalmodel, self.phytoplankton, self.zoobenthos]:
+            if isinstance(data_type.filter_parameters.use_parameters, str):
+                self.float_parameters = self.float_parameters + [data_type.filter_parameters.use_parameters]
+            else:
+                self.float_parameters = self.float_parameters + data_type.filter_parameters.use_parameters
+                                
 #        self.all_data = None
         self.all_data = pd.DataFrame() # MW
 
@@ -1164,6 +1170,8 @@ class DataHandler(object):
 #                            self.all_data[par] = self.all_data[par].apply(lambda x: float(x) if x else np.nan) 
 #                        except ValueError as e:
 #                            self.all_data[par] = self.all_data[par].apply(convert)
+                    elif col in self.float_parameters:
+                        self.all_data[col] = self.all_data[col].apply(float_convert)
                     elif col == 'VISS_EU_CD':
                         self.all_data[col] = self.all_data[col].apply(lambda x: 'SE' + x if 'SE' not in x else x)
                         
