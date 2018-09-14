@@ -1,10 +1,15 @@
 compulsory_fields	fields_index	sort_by_fields	use_parameters	visit_id_key	depth_key	parameter_key	value_key	qflag_key
-VISS_EU_ID		VISS_EU_ID	SALT_BTL		DEPH	PARAM		
-SDATE		SDATE	DOXY_BTL					
-DEPH		DEPH	PHOS					
-			NTRA					
-			AMON					
-			CPHL					
-			SECCHI					
-			NTOT					
-			PTOT					
+VISS_EU_ID		SDATE	SALT		DEPH	PARAM	VALUE	
+MYEAR		DEPH	DOXY					
+DEPH			PHOS					
+SDATE			NTRA					
+STIME			NTRZ					
+STATN			NTRI					
+VISS_EU_CD			AMON					
+WATER_BODY_NAME			NTOT					
+WATER_DISTRICT			PTOT					
+WATER_TYPE_AREA			CPHL_BTL					
+ALABO			SECCHI					
+LATIT_DD								
+LONGI_DD								
+WADEP								

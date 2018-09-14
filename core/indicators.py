@@ -181,7 +181,7 @@ class IndicatorBase(object):
         Nutrient reference values: Det aktuella referensvärdet erhålls utifrån den salthalt som är observerad vidvarje enskilt prov.
         Chl, Biov, Secchi in type 8, 12, 13, 24: Det aktuella referensvärdet erhålls utifrån den salthalt som är observerad vidvarje enskilt prov.
         """
-        
+#         print('add_boundaries')
         #print(water_body,len(self.ref_settings.settings.refvalue_column))
         if len(self.ref_settings.settings.refvalue_column) == 0:
             return df
@@ -195,6 +195,7 @@ class IndicatorBase(object):
 #             gm_values = []
 #             mp_values = []
 #             pb_values = []
+#             print('this is where the SettingWithCopyWarning i raised')
             df.loc[:,'REFERENCE_VALUE'] = df[[self.salt_parameter, 'VISS_EU_CD']].apply(lambda x: self.get_boundarie(water_body = x['VISS_EU_CD'], salinity = x[self.salt_parameter], variable = 'REF_VALUE_LIMIT'), axis=1)
 #             df.loc[:,'HG_VALUE_LIMIT'] = df[[self.salt_parameter, 'VISS_EU_CD']].apply(lambda x: self.get_boundarie(water_body = x['VISS_EU_CD'], salinity = x[self.salt_parameter], variable = 'HG_VALUE_LIMIT'), axis=1)
 #             df.loc[:,'GM_VALUE_LIMIT'] = df[[self.salt_parameter, 'VISS_EU_CD']].apply(lambda x: self.get_boundarie(water_body = x['VISS_EU_CD'], salinity = x[self.salt_parameter], variable = 'GM_VALUE_LIMIT'), axis=1)
@@ -555,7 +556,7 @@ class IndicatorBase(object):
 #        if water_body:
         
         for water_body in dict.fromkeys(water_body_list, True):
-            filtered_data = self.get_filtered_data(subset = self.subset, step = 'step_2', water_body = water_body, indicator = self.name)[self.column_list]
+            filtered_data = self.get_filtered_data(subset = self.subset, step = 'step_2', water_body = water_body, indicator = self.name)[self.column_list].copy()
             if filtered_data.empty:
                 self.water_body_indicator_df[water_body] = filtered_data 
                 continue           
@@ -572,25 +573,26 @@ class IndicatorBase(object):
                 continue
 #            df = df[self.column_list]
             if self.name == 'indicator_chl':
-                df = filtered_data.dropna(subset = self.parameter_list[0:1], how = 'all')
+                df = filtered_data.dropna(subset = self.parameter_list[0:1], how = 'all').copy()
             elif self.name == 'indicator_secchi':
-                df = filtered_data.dropna(subset = [self.indicator_parameter]).drop_duplicates(subset = ['SDATE', 'VISS_EU_CD', 'SECCHI'])
+                df = filtered_data.dropna(subset = [self.indicator_parameter]).drop_duplicates(subset = ['SDATE', 'VISS_EU_CD', 'SECCHI']).copy()
             elif self.name == 'indicator_oxygen':
-                df = filtered_data.dropna(subset = [self.indicator_parameter])
+                df = filtered_data.dropna(subset = [self.indicator_parameter]).copy()
                 tol_BW = 5
                 maxD = self.Hypsographs.get_max_depth_of_water_body(water_body)
                 if maxD:
-                    self.df_bottomwater[water_body] = df.loc[df['DEPH'] > maxD-tol_BW]
+                    self.df_bottomwater[water_body] = df.loc[df['DEPH'] > maxD-tol_BW].copy()
                 else:
-                    self.df_bottomwater[water_body] = df
+                    self.df_bottomwater[water_body] = df.copy()
 #                self.df_bottomwater[water_body] = df.loc[df['DEPH'] > maxD-tol_BW]
             else:
-                df = filtered_data.dropna(subset = [self.indicator_parameter])
+                df = filtered_data.dropna(subset = [self.indicator_parameter]).copy()
             if df.empty:
                 self.water_body_indicator_df[water_body] = df 
                 continue 
 #            if hasattr(self, 'salt_parameter'):
             if self.name != 'indicator_oxygen':
+#                 print('this is where the SettingCopyWithWarning is raised!!!')
                 self._add_boundaries_to_df(df, water_body)
             self.water_body_indicator_df[water_body] = df 
             

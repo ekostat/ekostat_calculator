@@ -98,7 +98,7 @@ subset_alias = 'period_2007-2012_refvalues_2017'
 subset_uuid = ekos.get_unique_id_for_alias(workspace_alias = workspace_alias, subset_alias = subset_alias)
 
 
-w.get_step_object(step = 3, subset = subset_uuid).calculate_quality_element(subset_unique_id = subset_uuid, quality_element = 'Nutrients', class_name = 'QualityElementNutrients')
+w.get_step_object(step = 3, subset = subset_uuid).calculate_quality_element(subset_unique_id = subset_uuid, quality_element = 'Phytoplankton', class_name = 'QualityElementPhytoplankton')
 
 
 

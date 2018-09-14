@@ -60,6 +60,7 @@ from .parameters import ParameterDIN
 from .parameters import ParameterTOTN
 from .parameters import CalculatedParameterDIN
 
+from .quality_factors import QualityElementBase
 from .quality_factors import QualityElementNutrients
 from .quality_factors import QualityElementPhytoplankton
 

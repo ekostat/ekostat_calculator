@@ -308,7 +308,6 @@ class WorkStep(object):
                                                                   quality_element = quality_element)
         
         #self.quality_element[quality_element].calculate_quality_factor()
-        print('senaste calculate_quality_factor')
         self.quality_element[quality_element].calculate_quality_factor()
             
     #==========================================================================
@@ -1783,7 +1782,7 @@ class WorkSpace(object):
     
     #==========================================================================
     def initiate_quality_factors(self, ):
-        self.quality_factor_NP = core.QualityFactorNP()
+        return False
         
        
     
