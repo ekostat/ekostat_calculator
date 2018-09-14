@@ -19,3 +19,4 @@ temp/*
 .pydevproject
 *.prefs
 resources/mapping_objects.pkl
+*.pkl
