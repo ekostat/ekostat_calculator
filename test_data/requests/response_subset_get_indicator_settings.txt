@@ -1,13 +1,13 @@
 {
-    "workspace_uuid": "5cf3719a-9d44-48e0-b228-496a6894d263",
+    "workspace_uuid": "8b13b250-8179-4638-ba88-21425ef7b576",
     "workspace": {
         "alias": "New test workspace",
-        "workspace_uuid": "5cf3719a-9d44-48e0-b228-496a6894d263",
+        "workspace_uuid": "8b13b250-8179-4638-ba88-21425ef7b576",
         "status": "editable"
     },
     "subset": {
         "alias": "subset_20180615",
-        "subset_uuid": "1645d1d3-b7c2-495d-b30f-3a6b09ed7935",
+        "subset_uuid": "5bc4bfa0-b5ee-48cf-a4f9-00ecb0862eb3",
         "status": "editable",
         "value": true,
         "time": {
@@ -59,14 +59,14 @@
         },
         "areas": [
             {
-                "label": "SE1",
+                "label": "Bottenvikens vattendistrikt",
                 "key": "SE1",
                 "type": "water_district",
                 "status": "editable",
                 "active": false,
                 "children": [
                     {
-                        "label": "20 - Norra Kvarkens inre kustvatten",
+                        "label": "Norra Kvarkens inre kustvatten",
                         "key": "20",
                         "type": "type_area",
                         "status": "editable",
@@ -195,7 +195,7 @@
                         ]
                     },
                     {
-                        "label": "21 - Norra Kvarkens yttre kustvatten",
+                        "label": "Norra Kvarkens yttre kustvatten",
                         "key": "21",
                         "type": "type_area",
                         "status": "editable",
@@ -220,7 +220,7 @@
                         ]
                     },
                     {
-                        "label": "22 - Bottenviken, inre kustvatten",
+                        "label": "Bottenviken, inre kustvatten",
                         "key": "22",
                         "type": "type_area",
                         "status": "editable",
@@ -925,7 +925,7 @@
                         ]
                     },
                     {
-                        "label": "23 - Bottenviken, yttre kustvatten",
+                        "label": "Bottenviken, yttre kustvatten",
                         "key": "23",
                         "type": "type_area",
                         "status": "editable",
@@ -1008,14 +1008,14 @@
                 ]
             },
             {
-                "label": "SE1TO",
+                "label": "",
                 "key": "SE1TO",
                 "type": "water_district",
                 "status": "editable",
                 "active": false,
                 "children": [
                     {
-                        "label": "22 - Bottenviken, inre kustvatten",
+                        "label": "Bottenviken, inre kustvatten",
                         "key": "22",
                         "type": "type_area",
                         "status": "editable",
@@ -1720,7 +1720,7 @@
                         ]
                     },
                     {
-                        "label": "23 - Bottenviken, yttre kustvatten",
+                        "label": "Bottenviken, yttre kustvatten",
                         "key": "23",
                         "type": "type_area",
                         "status": "editable",
@@ -1803,14 +1803,14 @@
                 ]
             },
             {
-                "label": "SE2",
+                "label": "Bottenhavets vattendistrikt",
                 "key": "SE2",
                 "type": "water_district",
                 "status": "editable",
                 "active": false,
                 "children": [
                     {
-                        "label": "16 - S\u00f6dra Bottenhavet, inre kustvatten",
+                        "label": "S\u00f6dra Bottenhavet, inre kustvatten",
                         "key": "16",
                         "type": "type_area",
                         "status": "editable",
@@ -2179,7 +2179,7 @@
                         ]
                     },
                     {
-                        "label": "17 - S\u00f6dra Bottenhavet, yttre kustvatten",
+                        "label": "S\u00f6dra Bottenhavet, yttre kustvatten",
                         "key": "17",
                         "type": "type_area",
                         "status": "editable",
@@ -2252,7 +2252,7 @@
                         ]
                     },
                     {
-                        "label": "18 - Norra Bottenhavet, H\u00f6ga kusten, inre kustvatten",
+                        "label": "Norra Bottenhavet, H\u00f6ga kusten, inre kustvatten",
                         "key": "18",
                         "type": "type_area",
                         "status": "editable",
@@ -2669,7 +2669,7 @@
                         ]
                     },
                     {
-                        "label": "19 - Norra Bottenhavet, H\u00f6ga kusten, yttre kustvatten",
+                        "label": "Norra Bottenhavet, H\u00f6ga kusten, yttre kustvatten",
                         "key": "19",
                         "type": "type_area",
                         "status": "editable",
@@ -2720,14 +2720,14 @@
                 ]
             },
             {
-                "label": "SE3",
+                "label": "Norra \u00d6stersj\u00f6ns vattendistrikt",
                 "key": "SE3",
                 "type": "water_district",
                 "status": "editable",
                 "active": false,
                 "children": [
                     {
-                        "label": "12n - \u00d6sterg\u00f6tlands samt Stockholms sk\u00e4rg\u00e5rd, mellankustvatten, norra",
+                        "label": "\u00d6sterg\u00f6tlands samt Stockholms sk\u00e4rg\u00e5rd, mellankustvatten, norra",
                         "key": "12n",
                         "type": "type_area",
                         "status": "editable",
@@ -3584,7 +3584,7 @@
                         ]
                     },
                     {
-                        "label": "14 - \u00d6sterg\u00f6tlands yttre kustvatten",
+                        "label": "\u00d6sterg\u00f6tlands yttre kustvatten",
                         "key": "14",
                         "type": "type_area",
                         "status": "editable",
@@ -3665,7 +3665,7 @@
                         ]
                     },
                     {
-                        "label": "15 - Stockholms sk\u00e4rg\u00e5rd, yttre kustvatten",
+                        "label": "Stockholms sk\u00e4rg\u00e5rd, yttre kustvatten",
                         "key": "15",
                         "type": "type_area",
                         "status": "editable",
@@ -3850,7 +3850,7 @@
                         ]
                     },
                     {
-                        "label": "16 - S\u00f6dra Bottenhavet, inre kustvatten",
+                        "label": "S\u00f6dra Bottenhavet, inre kustvatten",
                         "key": "16",
                         "type": "type_area",
                         "status": "editable",
@@ -4219,7 +4219,7 @@
                         ]
                     },
                     {
-                        "label": "17 - S\u00f6dra Bottenhavet, yttre kustvatten",
+                        "label": "S\u00f6dra Bottenhavet, yttre kustvatten",
                         "key": "17",
                         "type": "type_area",
                         "status": "editable",
@@ -4292,7 +4292,7 @@
                         ]
                     },
                     {
-                        "label": "24 - Stockholms inre sk\u00e4rg\u00e5rd och Hallsfj\u00e4rden",
+                        "label": "Stockholms inre sk\u00e4rg\u00e5rd och Hallsfj\u00e4rden",
                         "key": "24",
                         "type": "type_area",
                         "status": "editable",
@@ -4455,14 +4455,14 @@
                 ]
             },
             {
-                "label": "SE4",
+                "label": "S\u00f6dra \u00d6stersj\u00f6ns vattendistrikt",
                 "key": "SE4",
                 "type": "water_district",
                 "status": "editable",
                 "active": false,
                 "children": [
                     {
-                        "label": "10 - \u00d6stra \u00d6lands, syd\u00f6stra Gotlands kustvatten samt Gotska sand\u00f6n",
+                        "label": "\u00d6stra \u00d6lands, syd\u00f6stra Gotlands kustvatten samt Gotska sand\u00f6n",
                         "key": "10",
                         "type": "type_area",
                         "status": "editable",
@@ -4639,7 +4639,7 @@
                         ]
                     },
                     {
-                        "label": "11 - Gotlands v\u00e4stra och norra kustvatten",
+                        "label": "Gotlands v\u00e4stra och norra kustvatten",
                         "key": "11",
                         "type": "type_area",
                         "status": "editable",
@@ -4696,7 +4696,7 @@
                         ]
                     },
                     {
-                        "label": "12n - \u00d6sterg\u00f6tlands samt Stockholms sk\u00e4rg\u00e5rd, mellankustvatten, norra",
+                        "label": "\u00d6sterg\u00f6tlands samt Stockholms sk\u00e4rg\u00e5rd, mellankustvatten, norra",
                         "key": "12n",
                         "type": "type_area",
                         "status": "editable",
@@ -5553,7 +5553,7 @@
                         ]
                     },
                     {
-                        "label": "12s - \u00d6sterg\u00f6tlands samt Stockholms sk\u00e4rg\u00e5rd, mellankustvatten, s\u00f6dra",
+                        "label": "\u00d6sterg\u00f6tlands samt Stockholms sk\u00e4rg\u00e5rd, mellankustvatten, s\u00f6dra",
                         "key": "12s",
                         "type": "type_area",
                         "status": "editable",
@@ -6010,7 +6010,7 @@
                         ]
                     },
                     {
-                        "label": "13 - \u00d6sterg\u00f6tlands inre sk\u00e4rg\u00e5rd",
+                        "label": "\u00d6sterg\u00f6tlands inre sk\u00e4rg\u00e5rd",
                         "key": "13",
                         "type": "type_area",
                         "status": "editable",
@@ -6083,7 +6083,7 @@
                         ]
                     },
                     {
-                        "label": "14 - \u00d6sterg\u00f6tlands yttre kustvatten",
+                        "label": "\u00d6sterg\u00f6tlands yttre kustvatten",
                         "key": "14",
                         "type": "type_area",
                         "status": "editable",
@@ -6164,7 +6164,7 @@
                         ]
                     },
                     {
-                        "label": "5 - S\u00f6dra Halland och norra \u00d6resunds kustvatten",
+                        "label": "S\u00f6dra Halland och norra \u00d6resunds kustvatten",
                         "key": "5",
                         "type": "type_area",
                         "status": "editable",
@@ -6221,7 +6221,7 @@
                         ]
                     },
                     {
-                        "label": "6 - \u00d6resunds kustvatten",
+                        "label": "\u00d6resunds kustvatten",
                         "key": "6",
                         "type": "type_area",
                         "status": "editable",
@@ -6278,7 +6278,7 @@
                         ]
                     },
                     {
-                        "label": "7 - Sk\u00e5nes kustvatten",
+                        "label": "Sk\u00e5nes kustvatten",
                         "key": "7",
                         "type": "type_area",
                         "status": "editable",
@@ -6383,7 +6383,7 @@
                         ]
                     },
                     {
-                        "label": "8 - Blekinge sk\u00e4rg\u00e5rd och Kalmarsund, inre kustvatten",
+                        "label": "Blekinge sk\u00e4rg\u00e5rd och Kalmarsund, inre kustvatten",
                         "key": "8",
                         "type": "type_area",
                         "status": "editable",
@@ -6752,7 +6752,7 @@
                         ]
                     },
                     {
-                        "label": "9 - Blekinge sk\u00e4rg\u00e5rd och Kalmarsund, yttre kustvatten",
+                        "label": "Blekinge sk\u00e4rg\u00e5rd och Kalmarsund, yttre kustvatten",
                         "key": "9",
                         "type": "type_area",
                         "status": "editable",
@@ -6843,14 +6843,14 @@
                 ]
             },
             {
-                "label": "SE5",
+                "label": "V\u00e4sterhavets vattendistrikt",
                 "key": "SE5",
                 "type": "water_district",
                 "status": "editable",
                 "active": false,
                 "children": [
                     {
-                        "label": "1n - V\u00e4stkustens inre kustvatten, norra",
+                        "label": "V\u00e4stkustens inre kustvatten, norra",
                         "key": "1n",
                         "type": "type_area",
                         "status": "editable",
@@ -7195,7 +7195,7 @@
                         ]
                     },
                     {
-                        "label": "1s - V\u00e4stkustens inre kustvatten, s\u00f6dra",
+                        "label": "V\u00e4stkustens inre kustvatten, s\u00f6dra",
                         "key": "1s",
                         "type": "type_area",
                         "status": "editable",
@@ -7396,7 +7396,7 @@
                         ]
                     },
                     {
-                        "label": "2 - V\u00e4stkustens fjordar",
+                        "label": "V\u00e4stkustens fjordar",
                         "key": "2",
                         "type": "type_area",
                         "status": "editable",
@@ -7573,7 +7573,7 @@
                         ]
                     },
                     {
-                        "label": "25 - G\u00f6ta \u00c4lvs- och Nordre \u00c4lvs estuarie",
+                        "label": "G\u00f6ta \u00c4lvs- och Nordre \u00c4lvs estuarie",
                         "key": "25",
                         "type": "type_area",
                         "status": "editable",
@@ -7606,7 +7606,7 @@
                         ]
                     },
                     {
-                        "label": "3 - V\u00e4stkustens yttre kustvatten, Skagerrak",
+                        "label": "V\u00e4stkustens yttre kustvatten, Skagerrak",
                         "key": "3",
                         "type": "type_area",
                         "status": "editable",
@@ -7703,7 +7703,7 @@
                         ]
                     },
                     {
-                        "label": "4 - V\u00e4stkustens yttre kustvatten, Kattegatt",
+                        "label": "V\u00e4stkustens yttre kustvatten, Kattegatt",
                         "key": "4",
                         "type": "type_area",
                         "status": "editable",
@@ -7752,7 +7752,7 @@
                         ]
                     },
                     {
-                        "label": "5 - S\u00f6dra Halland och norra \u00d6resunds kustvatten",
+                        "label": "S\u00f6dra Halland och norra \u00d6resunds kustvatten",
                         "key": "5",
                         "type": "type_area",
                         "status": "editable",
@@ -7817,10 +7817,10 @@
             "label": "bottom fauna",
             "children": [
                 {
-                    "label": "BQI",
+                    "label": "indicator_bqi",
                     "status": "readable",
                     "value": false,
-                    "key": "bqi",
+                    "key": "indicator_bqi",
                     "settings": []
                 }
             ]
@@ -7829,10 +7829,10 @@
             "label": "macroalgae and macrophytes",
             "children": [
                 {
-                    "label": "MSMDI",
+                    "label": "indicator_msmdi",
                     "status": "readable",
                     "value": false,
-                    "key": "msmdi",
+                    "key": "indicator_msmdi",
                     "settings": []
                 }
             ]
@@ -7841,36 +7841,22 @@
             "label": "phytoplankton",
             "children": [
                 {
-                    "label": "Biovolume",
+                    "label": "indicator_biov",
                     "status": "readable",
                     "value": false,
-                    "key": "biov",
+                    "key": "indicator_biov",
                     "settings": []
                 },
                 {
-                    "label": "Chlorophyll",
-                    "status": "readable",
-                    "value": false,
-                    "key": "chl",
-                    "settings": []
-                }
-            ]
-        }
-    ],
-    "supporting_elements": [
-        {
-            "label": "secchi depth",
-            "children": [
-                {
-                    "label": "Secchi ",
+                    "label": "indicator_chl",
                     "status": "editable",
                     "value": true,
-                    "key": "secchi",
+                    "key": "indicator_chl",
                     "settings": [
                         {
                             "area_type": "type_area",
                             "key": "20",
-                            "label": "20 - Norra Kvarkens inre kustvatten",
+                            "label": "Norra Kvarkens inre kustvatten",
                             "children": [
                                 {
                                     "key": "MIN_NR_YEARS",
@@ -7896,7 +7882,7 @@
                         {
                             "area_type": "type_area",
                             "key": "21",
-                            "label": "21 - Norra Kvarkens yttre kustvatten",
+                            "label": "Norra Kvarkens yttre kustvatten",
                             "children": [
                                 {
                                     "key": "MIN_NR_YEARS",
@@ -7922,7 +7908,7 @@
                         {
                             "area_type": "type_area",
                             "key": "22",
-                            "label": "22 - Bottenviken, inre kustvatten",
+                            "label": "Bottenviken, inre kustvatten",
                             "children": [
                                 {
                                     "key": "MIN_NR_YEARS",
@@ -7948,7 +7934,133 @@
                         {
                             "area_type": "type_area",
                             "key": "23",
-                            "label": "23 - Bottenviken, yttre kustvatten",
+                            "label": "Bottenviken, yttre kustvatten",
+                            "children": [
+                                {
+                                    "key": "MIN_NR_YEARS",
+                                    "label": "Minimum number of years",
+                                    "unit": "years",
+                                    "status": "editable",
+                                    "widget": "number:int",
+                                    "value": 3
+                                },
+                                {
+                                    "key": "MONTH_LIST",
+                                    "label": "Month interval ",
+                                    "unit": "",
+                                    "status": "editable",
+                                    "widget": "interval:int",
+                                    "value": [
+                                        6,
+                                        8
+                                    ]
+                                }
+                            ]
+                        }
+                    ]
+                },
+                {
+                    "label": "qe_phytoplankton",
+                    "status": "readable",
+                    "value": false,
+                    "key": "qe_phytoplankton",
+                    "settings": []
+                }
+            ]
+        }
+    ],
+    "supporting_elements": [
+        {
+            "label": "secchi depth",
+            "children": [
+                {
+                    "label": "indicator_secchi",
+                    "status": "editable",
+                    "value": true,
+                    "key": "indicator_secchi",
+                    "settings": [
+                        {
+                            "area_type": "type_area",
+                            "key": "20",
+                            "label": "Norra Kvarkens inre kustvatten",
+                            "children": [
+                                {
+                                    "key": "MIN_NR_YEARS",
+                                    "label": "Minimum number of years",
+                                    "unit": "years",
+                                    "status": "editable",
+                                    "widget": "number:int",
+                                    "value": 3
+                                },
+                                {
+                                    "key": "MONTH_LIST",
+                                    "label": "Month interval ",
+                                    "unit": "",
+                                    "status": "editable",
+                                    "widget": "interval:int",
+                                    "value": [
+                                        6,
+                                        8
+                                    ]
+                                }
+                            ]
+                        },
+                        {
+                            "area_type": "type_area",
+                            "key": "21",
+                            "label": "Norra Kvarkens yttre kustvatten",
+                            "children": [
+                                {
+                                    "key": "MIN_NR_YEARS",
+                                    "label": "Minimum number of years",
+                                    "unit": "years",
+                                    "status": "editable",
+                                    "widget": "number:int",
+                                    "value": 3
+                                },
+                                {
+                                    "key": "MONTH_LIST",
+                                    "label": "Month interval ",
+                                    "unit": "",
+                                    "status": "editable",
+                                    "widget": "interval:int",
+                                    "value": [
+                                        6,
+                                        8
+                                    ]
+                                }
+                            ]
+                        },
+                        {
+                            "area_type": "type_area",
+                            "key": "22",
+                            "label": "Bottenviken, inre kustvatten",
+                            "children": [
+                                {
+                                    "key": "MIN_NR_YEARS",
+                                    "label": "Minimum number of years",
+                                    "unit": "years",
+                                    "status": "editable",
+                                    "widget": "number:int",
+                                    "value": 3
+                                },
+                                {
+                                    "key": "MONTH_LIST",
+                                    "label": "Month interval ",
+                                    "unit": "",
+                                    "status": "editable",
+                                    "widget": "interval:int",
+                                    "value": [
+                                        6,
+                                        8
+                                    ]
+                                }
+                            ]
+                        },
+                        {
+                            "area_type": "type_area",
+                            "key": "23",
+                            "label": "Bottenviken, yttre kustvatten",
                             "children": [
                                 {
                                     "key": "MIN_NR_YEARS",
@@ -7979,15 +8091,15 @@
             "label": "nutrients",
             "children": [
                 {
-                    "label": "DIN winter",
+                    "label": "indicator_din_winter",
                     "status": "editable",
                     "value": true,
-                    "key": "din_winter",
+                    "key": "indicator_din_winter",
                     "settings": [
                         {
                             "area_type": "type_area",
                             "key": "20",
-                            "label": "20 - Norra Kvarkens inre kustvatten",
+                            "label": "Norra Kvarkens inre kustvatten",
                             "children": [
                                 {
                                     "key": "MIN_NR_YEARS",
@@ -8024,7 +8136,7 @@
                         {
                             "area_type": "type_area",
                             "key": "21",
-                            "label": "21 - Norra Kvarkens yttre kustvatten",
+                            "label": "Norra Kvarkens yttre kustvatten",
                             "children": [
                                 {
                                     "key": "MIN_NR_YEARS",
@@ -8061,7 +8173,7 @@
                         {
                             "area_type": "type_area",
                             "key": "22",
-                            "label": "22 - Bottenviken, inre kustvatten",
+                            "label": "Bottenviken, inre kustvatten",
                             "children": [
                                 {
                                     "key": "MIN_NR_YEARS",
@@ -8098,7 +8210,7 @@
                         {
                             "area_type": "type_area",
                             "key": "23",
-                            "label": "23 - Bottenviken, yttre kustvatten",
+                            "label": "Bottenviken, yttre kustvatten",
                             "children": [
                                 {
                                     "key": "MIN_NR_YEARS",
@@ -8135,15 +8247,15 @@
                     ]
                 },
                 {
-                    "label": "DIP winter",
+                    "label": "indicator_dip_winter",
                     "status": "editable",
                     "value": true,
-                    "key": "dip_winter",
+                    "key": "indicator_dip_winter",
                     "settings": [
                         {
                             "area_type": "type_area",
                             "key": "20",
-                            "label": "20 - Norra Kvarkens inre kustvatten",
+                            "label": "Norra Kvarkens inre kustvatten",
                             "children": [
                                 {
                                     "key": "MIN_NR_YEARS",
@@ -8180,7 +8292,7 @@
                         {
                             "area_type": "type_area",
                             "key": "21",
-                            "label": "21 - Norra Kvarkens yttre kustvatten",
+                            "label": "Norra Kvarkens yttre kustvatten",
                             "children": [
                                 {
                                     "key": "MIN_NR_YEARS",
@@ -8217,7 +8329,7 @@
                         {
                             "area_type": "type_area",
                             "key": "22",
-                            "label": "22 - Bottenviken, inre kustvatten",
+                            "label": "Bottenviken, inre kustvatten",
                             "children": [
                                 {
                                     "key": "MIN_NR_YEARS",
@@ -8254,7 +8366,7 @@
                         {
                             "area_type": "type_area",
                             "key": "23",
-                            "label": "23 - Bottenviken, yttre kustvatten",
+                            "label": "Bottenviken, yttre kustvatten",
                             "children": [
                                 {
                                     "key": "MIN_NR_YEARS",
@@ -8291,15 +8403,36 @@
                     ]
                 },
                 {
-                    "label": "Ntot summer",
+                    "label": "indicator_n",
+                    "status": "readable",
+                    "value": false,
+                    "key": "indicator_n",
+                    "settings": []
+                },
+                {
+                    "label": "indicator_n_summer",
+                    "status": "readable",
+                    "value": false,
+                    "key": "indicator_n_summer",
+                    "settings": []
+                },
+                {
+                    "label": "indicator_n_winter",
+                    "status": "readable",
+                    "value": false,
+                    "key": "indicator_n_winter",
+                    "settings": []
+                },
+                {
+                    "label": "indicator_ntot_summer",
                     "status": "editable",
                     "value": true,
-                    "key": "ntot_summer",
+                    "key": "indicator_ntot_summer",
                     "settings": [
                         {
                             "area_type": "type_area",
                             "key": "20",
-                            "label": "20 - Norra Kvarkens inre kustvatten",
+                            "label": "Norra Kvarkens inre kustvatten",
                             "children": [
                                 {
                                     "key": "MIN_NR_YEARS",
@@ -8336,7 +8469,7 @@
                         {
                             "area_type": "type_area",
                             "key": "21",
-                            "label": "21 - Norra Kvarkens yttre kustvatten",
+                            "label": "Norra Kvarkens yttre kustvatten",
                             "children": [
                                 {
                                     "key": "MIN_NR_YEARS",
@@ -8373,7 +8506,7 @@
                         {
                             "area_type": "type_area",
                             "key": "22",
-                            "label": "22 - Bottenviken, inre kustvatten",
+                            "label": "Bottenviken, inre kustvatten",
                             "children": [
                                 {
                                     "key": "MIN_NR_YEARS",
@@ -8410,7 +8543,7 @@
                         {
                             "area_type": "type_area",
                             "key": "23",
-                            "label": "23 - Bottenviken, yttre kustvatten",
+                            "label": "Bottenviken, yttre kustvatten",
                             "children": [
                                 {
                                     "key": "MIN_NR_YEARS",
@@ -8447,15 +8580,15 @@
                     ]
                 },
                 {
-                    "label": "Ntot winter",
+                    "label": "indicator_ntot_winter",
                     "status": "editable",
                     "value": true,
-                    "key": "ntot_winter",
+                    "key": "indicator_ntot_winter",
                     "settings": [
                         {
                             "area_type": "type_area",
                             "key": "20",
-                            "label": "20 - Norra Kvarkens inre kustvatten",
+                            "label": "Norra Kvarkens inre kustvatten",
                             "children": [
                                 {
                                     "key": "MIN_NR_YEARS",
@@ -8492,7 +8625,7 @@
                         {
                             "area_type": "type_area",
                             "key": "21",
-                            "label": "21 - Norra Kvarkens yttre kustvatten",
+                            "label": "Norra Kvarkens yttre kustvatten",
                             "children": [
                                 {
                                     "key": "MIN_NR_YEARS",
@@ -8529,7 +8662,7 @@
                         {
                             "area_type": "type_area",
                             "key": "22",
-                            "label": "22 - Bottenviken, inre kustvatten",
+                            "label": "Bottenviken, inre kustvatten",
                             "children": [
                                 {
                                     "key": "MIN_NR_YEARS",
@@ -8566,7 +8699,7 @@
                         {
                             "area_type": "type_area",
                             "key": "23",
-                            "label": "23 - Bottenviken, yttre kustvatten",
+                            "label": "Bottenviken, yttre kustvatten",
                             "children": [
                                 {
                                     "key": "MIN_NR_YEARS",
@@ -8603,15 +8736,36 @@
                     ]
                 },
                 {
-                    "label": "Ptot summer",
+                    "label": "indicator_p",
+                    "status": "readable",
+                    "value": false,
+                    "key": "indicator_p",
+                    "settings": []
+                },
+                {
+                    "label": "indicator_p_summer",
+                    "status": "readable",
+                    "value": false,
+                    "key": "indicator_p_summer",
+                    "settings": []
+                },
+                {
+                    "label": "indicator_p_winter",
+                    "status": "readable",
+                    "value": false,
+                    "key": "indicator_p_winter",
+                    "settings": []
+                },
+                {
+                    "label": "indicator_ptot_summer",
                     "status": "editable",
                     "value": true,
-                    "key": "ptot_summer",
+                    "key": "indicator_ptot_summer",
                     "settings": [
                         {
                             "area_type": "type_area",
                             "key": "20",
-                            "label": "20 - Norra Kvarkens inre kustvatten",
+                            "label": "Norra Kvarkens inre kustvatten",
                             "children": [
                                 {
                                     "key": "MIN_NR_YEARS",
@@ -8648,7 +8802,7 @@
                         {
                             "area_type": "type_area",
                             "key": "21",
-                            "label": "21 - Norra Kvarkens yttre kustvatten",
+                            "label": "Norra Kvarkens yttre kustvatten",
                             "children": [
                                 {
                                     "key": "MIN_NR_YEARS",
@@ -8685,7 +8839,7 @@
                         {
                             "area_type": "type_area",
                             "key": "22",
-                            "label": "22 - Bottenviken, inre kustvatten",
+                            "label": "Bottenviken, inre kustvatten",
                             "children": [
                                 {
                                     "key": "MIN_NR_YEARS",
@@ -8722,7 +8876,7 @@
                         {
                             "area_type": "type_area",
                             "key": "23",
-                            "label": "23 - Bottenviken, yttre kustvatten",
+                            "label": "Bottenviken, yttre kustvatten",
                             "children": [
                                 {
                                     "key": "MIN_NR_YEARS",
@@ -8759,15 +8913,15 @@
                     ]
                 },
                 {
-                    "label": "Ptot winter ",
+                    "label": "indicator_ptot_winter",
                     "status": "editable",
                     "value": true,
-                    "key": "ptot_winter",
+                    "key": "indicator_ptot_winter",
                     "settings": [
                         {
                             "area_type": "type_area",
                             "key": "20",
-                            "label": "20 - Norra Kvarkens inre kustvatten",
+                            "label": "Norra Kvarkens inre kustvatten",
                             "children": [
                                 {
                                     "key": "MIN_NR_YEARS",
@@ -8804,7 +8958,7 @@
                         {
                             "area_type": "type_area",
                             "key": "21",
-                            "label": "21 - Norra Kvarkens yttre kustvatten",
+                            "label": "Norra Kvarkens yttre kustvatten",
                             "children": [
                                 {
                                     "key": "MIN_NR_YEARS",
@@ -8841,7 +8995,7 @@
                         {
                             "area_type": "type_area",
                             "key": "22",
-                            "label": "22 - Bottenviken, inre kustvatten",
+                            "label": "Bottenviken, inre kustvatten",
                             "children": [
                                 {
                                     "key": "MIN_NR_YEARS",
@@ -8878,7 +9032,7 @@
                         {
                             "area_type": "type_area",
                             "key": "23",
-                            "label": "23 - Bottenviken, yttre kustvatten",
+                            "label": "Bottenviken, yttre kustvatten",
                             "children": [
                                 {
                                     "key": "MIN_NR_YEARS",
@@ -8913,6 +9067,13 @@
                             ]
                         }
                     ]
+                },
+                {
+                    "label": "qe_nutrients",
+                    "status": "readable",
+                    "value": false,
+                    "key": "qe_nutrients",
+                    "settings": []
                 }
             ]
         },
@@ -8920,15 +9081,15 @@
             "label": "oxygen balance",
             "children": [
                 {
-                    "label": "Oxygen",
+                    "label": "indicator_oxygen",
                     "status": "editable",
                     "value": true,
-                    "key": "oxygen",
+                    "key": "indicator_oxygen",
                     "settings": [
                         {
                             "area_type": "type_area",
                             "key": "20",
-                            "label": "20 - Norra Kvarkens inre kustvatten",
+                            "label": "Norra Kvarkens inre kustvatten",
                             "children": [
                                 {
                                     "key": "MIN_NR_YEARS",
@@ -8951,7 +9112,7 @@
                         {
                             "area_type": "type_area",
                             "key": "21",
-                            "label": "21 - Norra Kvarkens yttre kustvatten",
+                            "label": "Norra Kvarkens yttre kustvatten",
                             "children": [
                                 {
                                     "key": "MIN_NR_YEARS",
@@ -8974,7 +9135,7 @@
                         {
                             "area_type": "type_area",
                             "key": "22",
-                            "label": "22 - Bottenviken, inre kustvatten",
+                            "label": "Bottenviken, inre kustvatten",
                             "children": [
                                 {
                                     "key": "MIN_NR_YEARS",
@@ -8997,7 +9158,7 @@
                         {
                             "area_type": "type_area",
                             "key": "23",
-                            "label": "23 - Bottenviken, yttre kustvatten",
+                            "label": "Bottenviken, yttre kustvatten",
                             "children": [
                                 {
                                     "key": "MIN_NR_YEARS",

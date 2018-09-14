@@ -7,7 +7,7 @@
                     "label": "BQI",
                     "status": "readable",
                     "value": false,
-                    "key": "bqi",
+                    "key": "indicator_bqi",
                     "settings": []
                 }
             ]
@@ -19,7 +19,7 @@
                     "label": "MSMDI",
                     "status": "readable",
                     "value": false,
-                    "key": "msmdi",
+                    "key": "indicator_msmdi",
                     "settings": []
                 }
             ]
@@ -31,14 +31,48 @@
                     "label": "Biovolume",
                     "status": "readable",
                     "value": false,
-                    "key": "biov",
+                    "key": "indicator_biov",
                     "settings": []
                 },
                 {
                     "label": "Chlorophyll",
+                    "status": "editable",
+                    "value": true,
+                    "key": "indicator_chl",
+                    "settings": [
+                        {
+                            "area_type": "type_area",
+                            "key": "2",
+                            "label": "V\u00e4stkustens fjordar",
+                            "children": [
+                                {
+                                    "key": "MIN_NR_YEARS",
+                                    "label": "Minimum number of years",
+                                    "unit": "years",
+                                    "status": "editable",
+                                    "widget": "number:int",
+                                    "value": 3
+                                },
+                                {
+                                    "key": "MONTH_LIST",
+                                    "label": "Month interval ",
+                                    "unit": "",
+                                    "status": "editable",
+                                    "widget": "interval:int",
+                                    "value": [
+                                        6,
+                                        8
+                                    ]
+                                }
+                            ]
+                        }
+                    ]
+                },
+                {
+                    "label": "Phytplankton",
                     "status": "readable",
                     "value": false,
-                    "key": "chl",
+                    "key": "qe_phytoplankton",
                     "settings": []
                 }
             ]
@@ -49,67 +83,15 @@
             "label": "secchi depth",
             "children": [
                 {
-                    "label": "Secchi ",
+                    "label": "Secchi depth",
                     "status": "editable",
                     "value": true,
-                    "key": "secchi",
+                    "key": "indicator_secchi",
                     "settings": [
                         {
                             "area_type": "type_area",
                             "key": "2",
-                            "label": "2 - V\u00e4stkustens fjordar",
-                            "children": [
-                                {
-                                    "key": "MIN_NR_YEARS",
-                                    "label": "Minimum number of years",
-                                    "unit": "years",
-                                    "status": "editable",
-                                    "widget": "number:int",
-                                    "value": 3
-                                },
-                                {
-                                    "key": "MONTH_LIST",
-                                    "label": "Month interval ",
-                                    "unit": "",
-                                    "status": "editable",
-                                    "widget": "interval:int",
-                                    "value": [
-                                        6,
-                                        8
-                                    ]
-                                }
-                            ]
-                        },
-                        {
-                            "area_type": "viss_eu_cd",
-                            "key": "SE580688-114860",
-                            "label": "Halsefjorden",
-                            "children": [
-                                {
-                                    "key": "MIN_NR_YEARS",
-                                    "label": "Minimum number of years",
-                                    "unit": "years",
-                                    "status": "editable",
-                                    "widget": "number:int",
-                                    "value": 3
-                                },
-                                {
-                                    "key": "MONTH_LIST",
-                                    "label": "Month interval ",
-                                    "unit": "",
-                                    "status": "editable",
-                                    "widget": "interval:int",
-                                    "value": [
-                                        6,
-                                        8
-                                    ]
-                                }
-                            ]
-                        },
-                        {
-                            "area_type": "viss_eu_cd",
-                            "key": "SE582000-115270",
-                            "label": "Byfjorden",
+                            "label": "V\u00e4stkustens fjordar",
                             "children": [
                                 {
                                     "key": "MIN_NR_YEARS",
@@ -143,223 +125,12 @@
                     "label": "DIN winter",
                     "status": "editable",
                     "value": true,
-                    "key": "din_winter",
+                    "key": "indicator_din_winter",
                     "settings": [
                         {
                             "area_type": "type_area",
                             "key": "2",
-                            "label": "2 - V\u00e4stkustens fjordar",
-                            "children": [
-                                {
-                                    "key": "MIN_NR_YEARS",
-                                    "label": "Minimum number of years",
-                                    "unit": "years",
-                                    "status": "editable",
-                                    "widget": "number:int",
-                                    "value": 9
-                                },
-                                {
-                                    "key": "DEPH_INTERVAL",
-                                    "label": "Depth interval ",
-                                    "unit": "m",
-                                    "status": "editable",
-                                    "widget": "interval:int",
-                                    "value": [
-                                        0,
-                                        15
-                                    ]
-                                },
-                                {
-                                    "key": "MONTHDAY_INTERVAL",
-                                    "label": "Season ",
-                                    "unit": "",
-                                    "status": "editable",
-                                    "widget": "interval:monthday",
-                                    "value": [
-                                        [
-                                            11,
-                                            1
-                                        ],
-                                        [
-                                            3,
-                                            31
-                                        ]
-                                    ]
-                                }
-                            ]
-                        },
-                        {
-                            "area_type": "viss_eu_cd",
-                            "key": "SE580688-114860",
-                            "label": "Halsefjorden",
-                            "children": [
-                                {
-                                    "key": "MIN_NR_YEARS",
-                                    "label": "Minimum number of years",
-                                    "unit": "years",
-                                    "status": "editable",
-                                    "widget": "number:int",
-                                    "value": 9
-                                },
-                                {
-                                    "key": "DEPH_INTERVAL",
-                                    "label": "Depth interval ",
-                                    "unit": "m",
-                                    "status": "editable",
-                                    "widget": "interval:int",
-                                    "value": [
-                                        0,
-                                        15
-                                    ]
-                                },
-                                {
-                                    "key": "MONTHDAY_INTERVAL",
-                                    "label": "Season ",
-                                    "unit": "",
-                                    "status": "editable",
-                                    "widget": "interval:monthday",
-                                    "value": [
-                                        [
-                                            11,
-                                            1
-                                        ],
-                                        [
-                                            3,
-                                            31
-                                        ]
-                                    ]
-                                }
-                            ]
-                        },
-                        {
-                            "area_type": "viss_eu_cd",
-                            "key": "SE582000-115270",
-                            "label": "Byfjorden",
-                            "children": [
-                                {
-                                    "key": "MIN_NR_YEARS",
-                                    "label": "Minimum number of years",
-                                    "unit": "years",
-                                    "status": "editable",
-                                    "widget": "number:int",
-                                    "value": 9
-                                },
-                                {
-                                    "key": "DEPH_INTERVAL",
-                                    "label": "Depth interval ",
-                                    "unit": "m",
-                                    "status": "editable",
-                                    "widget": "interval:int",
-                                    "value": [
-                                        0,
-                                        15
-                                    ]
-                                },
-                                {
-                                    "key": "MONTHDAY_INTERVAL",
-                                    "label": "Season ",
-                                    "unit": "",
-                                    "status": "editable",
-                                    "widget": "interval:monthday",
-                                    "value": [
-                                        [
-                                            11,
-                                            1
-                                        ],
-                                        [
-                                            3,
-                                            31
-                                        ]
-                                    ]
-                                }
-                            ]
-                        }
-                    ]
-                },
-                {
-                    "label": "DIP winter",
-                    "status": "editable",
-                    "value": true,
-                    "key": "dip_winter",
-                    "settings": [
-                        {
-                            "area_type": "type_area",
-                            "key": "2",
-                            "label": "2 - V\u00e4stkustens fjordar",
-                            "children": [
-                                {
-                                    "key": "MIN_NR_YEARS",
-                                    "label": "Minimum number of years",
-                                    "unit": "years",
-                                    "status": "editable",
-                                    "widget": "number:int",
-                                    "value": 3
-                                },
-                                {
-                                    "key": "MONTH_LIST",
-                                    "label": "Month interval ",
-                                    "unit": "",
-                                    "status": "editable",
-                                    "widget": "interval:int",
-                                    "value": [
-                                        12,
-                                        3
-                                    ]
-                                },
-                                {
-                                    "key": "DEPH_INTERVAL",
-                                    "label": "Depth interval ",
-                                    "unit": "m",
-                                    "status": "editable",
-                                    "widget": "interval:int",
-                                    "value": [
-                                        0,
-                                        10
-                                    ]
-                                }
-                            ]
-                        },
-                        {
-                            "area_type": "viss_eu_cd",
-                            "key": "SE580688-114860",
-                            "label": "Halsefjorden",
-                            "children": [
-                                {
-                                    "key": "MIN_NR_YEARS",
-                                    "label": "Minimum number of years",
-                                    "unit": "years",
-                                    "status": "editable",
-                                    "widget": "number:int",
-                                    "value": 3
-                                },
-                                {
-                                    "key": "MONTH_LIST",
-                                    "label": "Month interval ",
-                                    "unit": "",
-                                    "status": "editable",
-                                    "widget": "interval:int",
-                                    "value": [
-                                        12,
-                                        3
-                                    ]
-                                },
-                                {
-                                    "key": "DEPH_INTERVAL",
-                                    "label": "Depth interval ",
-                                    "unit": "m",
-                                    "status": "editable",
-                                    "widget": "interval:int",
-                                    "value": [
-                                        0,
-                                        10
-                                    ]
-                                }
-                            ]
-                        },
-                        {
-                            "area_type": "viss_eu_cd",
-                            "key": "SE582000-115270",
-                            "label": "Byfjorden",
+                            "label": "V\u00e4stkustens fjordar",
                             "children": [
                                 {
                                     "key": "MIN_NR_YEARS",
@@ -396,226 +167,15 @@
                     ]
                 },
                 {
-                    "label": "Ntot summer",
+                    "label": "DIP winter",
                     "status": "editable",
                     "value": true,
-                    "key": "ntot_summer",
+                    "key": "indicator_dip_winter",
                     "settings": [
                         {
                             "area_type": "type_area",
                             "key": "2",
-                            "label": "2 - V\u00e4stkustens fjordar",
-                            "children": [
-                                {
-                                    "key": "MIN_NR_YEARS",
-                                    "label": "Minimum number of years",
-                                    "unit": "years",
-                                    "status": "editable",
-                                    "widget": "number:int",
-                                    "value": 3
-                                },
-                                {
-                                    "key": "DEPH_INTERVAL",
-                                    "label": "Depth interval ",
-                                    "unit": "m",
-                                    "status": "editable",
-                                    "widget": "interval:int",
-                                    "value": [
-                                        0,
-                                        10
-                                    ]
-                                },
-                                {
-                                    "key": "MONTHDAY_INTERVAL",
-                                    "label": "Season ",
-                                    "unit": "",
-                                    "status": "editable",
-                                    "widget": "interval:monthday",
-                                    "value": [
-                                        [
-                                            6,
-                                            1
-                                        ],
-                                        [
-                                            8,
-                                            31
-                                        ]
-                                    ]
-                                }
-                            ]
-                        },
-                        {
-                            "area_type": "viss_eu_cd",
-                            "key": "SE580688-114860",
-                            "label": "Halsefjorden",
-                            "children": [
-                                {
-                                    "key": "MIN_NR_YEARS",
-                                    "label": "Minimum number of years",
-                                    "unit": "years",
-                                    "status": "editable",
-                                    "widget": "number:int",
-                                    "value": 3
-                                },
-                                {
-                                    "key": "DEPH_INTERVAL",
-                                    "label": "Depth interval ",
-                                    "unit": "m",
-                                    "status": "editable",
-                                    "widget": "interval:int",
-                                    "value": [
-                                        0,
-                                        10
-                                    ]
-                                },
-                                {
-                                    "key": "MONTHDAY_INTERVAL",
-                                    "label": "Season ",
-                                    "unit": "",
-                                    "status": "editable",
-                                    "widget": "interval:monthday",
-                                    "value": [
-                                        [
-                                            6,
-                                            1
-                                        ],
-                                        [
-                                            8,
-                                            31
-                                        ]
-                                    ]
-                                }
-                            ]
-                        },
-                        {
-                            "area_type": "viss_eu_cd",
-                            "key": "SE582000-115270",
-                            "label": "Byfjorden",
-                            "children": [
-                                {
-                                    "key": "MIN_NR_YEARS",
-                                    "label": "Minimum number of years",
-                                    "unit": "years",
-                                    "status": "editable",
-                                    "widget": "number:int",
-                                    "value": 3
-                                },
-                                {
-                                    "key": "DEPH_INTERVAL",
-                                    "label": "Depth interval ",
-                                    "unit": "m",
-                                    "status": "editable",
-                                    "widget": "interval:int",
-                                    "value": [
-                                        0,
-                                        10
-                                    ]
-                                },
-                                {
-                                    "key": "MONTHDAY_INTERVAL",
-                                    "label": "Season ",
-                                    "unit": "",
-                                    "status": "editable",
-                                    "widget": "interval:monthday",
-                                    "value": [
-                                        [
-                                            6,
-                                            1
-                                        ],
-                                        [
-                                            8,
-                                            31
-                                        ]
-                                    ]
-                                }
-                            ]
-                        }
-                    ]
-                },
-                {
-                    "label": "Ntot winter",
-                    "status": "editable",
-                    "value": true,
-                    "key": "ntot_winter",
-                    "settings": [
-                        {
-                            "area_type": "type_area",
-                            "key": "2",
-                            "label": "2 - V\u00e4stkustens fjordar",
-                            "children": [
-                                {
-                                    "key": "MIN_NR_YEARS",
-                                    "label": "Minimum number of years",
-                                    "unit": "years",
-                                    "status": "editable",
-                                    "widget": "number:int",
-                                    "value": 3
-                                },
-                                {
-                                    "key": "MONTH_LIST",
-                                    "label": "Month interval ",
-                                    "unit": "",
-                                    "status": "editable",
-                                    "widget": "interval:int",
-                                    "value": [
-                                        12,
-                                        3
-                                    ]
-                                },
-                                {
-                                    "key": "DEPH_INTERVAL",
-                                    "label": "Depth interval ",
-                                    "unit": "m",
-                                    "status": "editable",
-                                    "widget": "interval:int",
-                                    "value": [
-                                        0,
-                                        10
-                                    ]
-                                }
-                            ]
-                        },
-                        {
-                            "area_type": "viss_eu_cd",
-                            "key": "SE580688-114860",
-                            "label": "Halsefjorden",
-                            "children": [
-                                {
-                                    "key": "MIN_NR_YEARS",
-                                    "label": "Minimum number of years",
-                                    "unit": "years",
-                                    "status": "editable",
-                                    "widget": "number:int",
-                                    "value": 3
-                                },
-                                {
-                                    "key": "MONTH_LIST",
-                                    "label": "Month interval ",
-                                    "unit": "",
-                                    "status": "editable",
-                                    "widget": "interval:int",
-                                    "value": [
-                                        12,
-                                        3
-                                    ]
-                                },
-                                {
-                                    "key": "DEPH_INTERVAL",
-                                    "label": "Depth interval ",
-                                    "unit": "m",
-                                    "status": "editable",
-                                    "widget": "interval:int",
-                                    "value": [
-                                        0,
-                                        10
-                                    ]
-                                }
-                            ]
-                        },
-                        {
-                            "area_type": "viss_eu_cd",
-                            "key": "SE582000-115270",
-                            "label": "Byfjorden",
+                            "label": "V\u00e4stkustens fjordar",
                             "children": [
                                 {
                                     "key": "MIN_NR_YEARS",
@@ -652,89 +212,36 @@
                     ]
                 },
                 {
-                    "label": "Ptot summer",
+                    "label": "N",
+                    "status": "readable",
+                    "value": false,
+                    "key": "indicator_n",
+                    "settings": []
+                },
+                {
+                    "label": "N summer",
+                    "status": "readable",
+                    "value": false,
+                    "key": "indicator_n_summer",
+                    "settings": []
+                },
+                {
+                    "label": "N winter",
+                    "status": "readable",
+                    "value": false,
+                    "key": "indicator_n_winter",
+                    "settings": []
+                },
+                {
+                    "label": "TN summer",
                     "status": "editable",
                     "value": true,
-                    "key": "ptot_summer",
+                    "key": "indicator_ntot_summer",
                     "settings": [
                         {
                             "area_type": "type_area",
                             "key": "2",
-                            "label": "2 - V\u00e4stkustens fjordar",
-                            "children": [
-                                {
-                                    "key": "MIN_NR_YEARS",
-                                    "label": "Minimum number of years",
-                                    "unit": "years",
-                                    "status": "editable",
-                                    "widget": "number:int",
-                                    "value": 3
-                                },
-                                {
-                                    "key": "MONTH_LIST",
-                                    "label": "Month interval ",
-                                    "unit": "",
-                                    "status": "editable",
-                                    "widget": "interval:int",
-                                    "value": [
-                                        6,
-                                        8
-                                    ]
-                                },
-                                {
-                                    "key": "DEPH_INTERVAL",
-                                    "label": "Depth interval ",
-                                    "unit": "m",
-                                    "status": "editable",
-                                    "widget": "interval:int",
-                                    "value": [
-                                        0,
-                                        10
-                                    ]
-                                }
-                            ]
-                        },
-                        {
-                            "area_type": "viss_eu_cd",
-                            "key": "SE580688-114860",
-                            "label": "Halsefjorden",
-                            "children": [
-                                {
-                                    "key": "MIN_NR_YEARS",
-                                    "label": "Minimum number of years",
-                                    "unit": "years",
-                                    "status": "editable",
-                                    "widget": "number:int",
-                                    "value": 3
-                                },
-                                {
-                                    "key": "MONTH_LIST",
-                                    "label": "Month interval ",
-                                    "unit": "",
-                                    "status": "editable",
-                                    "widget": "interval:int",
-                                    "value": [
-                                        6,
-                                        8
-                                    ]
-                                },
-                                {
-                                    "key": "DEPH_INTERVAL",
-                                    "label": "Depth interval ",
-                                    "unit": "m",
-                                    "status": "editable",
-                                    "widget": "interval:int",
-                                    "value": [
-                                        0,
-                                        10
-                                    ]
-                                }
-                            ]
-                        },
-                        {
-                            "area_type": "viss_eu_cd",
-                            "key": "SE582000-115270",
-                            "label": "Byfjorden",
+                            "label": "V\u00e4stkustens fjordar",
                             "children": [
                                 {
                                     "key": "MIN_NR_YEARS",
@@ -771,89 +278,15 @@
                     ]
                 },
                 {
-                    "label": "Ptot winter ",
+                    "label": "TN winter",
                     "status": "editable",
                     "value": true,
-                    "key": "ptot_winter",
+                    "key": "indicator_ntot_winter",
                     "settings": [
                         {
                             "area_type": "type_area",
                             "key": "2",
-                            "label": "2 - V\u00e4stkustens fjordar",
-                            "children": [
-                                {
-                                    "key": "MIN_NR_YEARS",
-                                    "label": "Minimum number of years",
-                                    "unit": "years",
-                                    "status": "editable",
-                                    "widget": "number:int",
-                                    "value": 3
-                                },
-                                {
-                                    "key": "MONTH_LIST",
-                                    "label": "Month interval ",
-                                    "unit": "",
-                                    "status": "editable",
-                                    "widget": "interval:int",
-                                    "value": [
-                                        12,
-                                        3
-                                    ]
-                                },
-                                {
-                                    "key": "DEPH_INTERVAL",
-                                    "label": "Depth interval ",
-                                    "unit": "m",
-                                    "status": "editable",
-                                    "widget": "interval:int",
-                                    "value": [
-                                        0,
-                                        10
-                                    ]
-                                }
-                            ]
-                        },
-                        {
-                            "area_type": "viss_eu_cd",
-                            "key": "SE580688-114860",
-                            "label": "Halsefjorden",
-                            "children": [
-                                {
-                                    "key": "MIN_NR_YEARS",
-                                    "label": "Minimum number of years",
-                                    "unit": "years",
-                                    "status": "editable",
-                                    "widget": "number:int",
-                                    "value": 3
-                                },
-                                {
-                                    "key": "MONTH_LIST",
-                                    "label": "Month interval ",
-                                    "unit": "",
-                                    "status": "editable",
-                                    "widget": "interval:int",
-                                    "value": [
-                                        12,
-                                        3
-                                    ]
-                                },
-                                {
-                                    "key": "DEPH_INTERVAL",
-                                    "label": "Depth interval ",
-                                    "unit": "m",
-                                    "status": "editable",
-                                    "widget": "interval:int",
-                                    "value": [
-                                        0,
-                                        10
-                                    ]
-                                }
-                            ]
-                        },
-                        {
-                            "area_type": "viss_eu_cd",
-                            "key": "SE582000-115270",
-                            "label": "Byfjorden",
+                            "label": "V\u00e4stkustens fjordar",
                             "children": [
                                 {
                                     "key": "MIN_NR_YEARS",
@@ -888,6 +321,124 @@
                             ]
                         }
                     ]
+                },
+                {
+                    "label": "P",
+                    "status": "readable",
+                    "value": false,
+                    "key": "indicator_p",
+                    "settings": []
+                },
+                {
+                    "label": "P summer",
+                    "status": "readable",
+                    "value": false,
+                    "key": "indicator_p_summer",
+                    "settings": []
+                },
+                {
+                    "label": "P winter",
+                    "status": "readable",
+                    "value": false,
+                    "key": "indicator_p_winter",
+                    "settings": []
+                },
+                {
+                    "label": "TP summer",
+                    "status": "editable",
+                    "value": true,
+                    "key": "indicator_ptot_summer",
+                    "settings": [
+                        {
+                            "area_type": "type_area",
+                            "key": "2",
+                            "label": "V\u00e4stkustens fjordar",
+                            "children": [
+                                {
+                                    "key": "MIN_NR_YEARS",
+                                    "label": "Minimum number of years",
+                                    "unit": "years",
+                                    "status": "editable",
+                                    "widget": "number:int",
+                                    "value": 3
+                                },
+                                {
+                                    "key": "MONTH_LIST",
+                                    "label": "Month interval ",
+                                    "unit": "",
+                                    "status": "editable",
+                                    "widget": "interval:int",
+                                    "value": [
+                                        6,
+                                        8
+                                    ]
+                                },
+                                {
+                                    "key": "DEPH_INTERVAL",
+                                    "label": "Depth interval ",
+                                    "unit": "m",
+                                    "status": "editable",
+                                    "widget": "interval:int",
+                                    "value": [
+                                        0,
+                                        10
+                                    ]
+                                }
+                            ]
+                        }
+                    ]
+                },
+                {
+                    "label": "TP winter",
+                    "status": "editable",
+                    "value": true,
+                    "key": "indicator_ptot_winter",
+                    "settings": [
+                        {
+                            "area_type": "type_area",
+                            "key": "2",
+                            "label": "V\u00e4stkustens fjordar",
+                            "children": [
+                                {
+                                    "key": "MIN_NR_YEARS",
+                                    "label": "Minimum number of years",
+                                    "unit": "years",
+                                    "status": "editable",
+                                    "widget": "number:int",
+                                    "value": 3
+                                },
+                                {
+                                    "key": "MONTH_LIST",
+                                    "label": "Month interval ",
+                                    "unit": "",
+                                    "status": "editable",
+                                    "widget": "interval:int",
+                                    "value": [
+                                        12,
+                                        3
+                                    ]
+                                },
+                                {
+                                    "key": "DEPH_INTERVAL",
+                                    "label": "Depth interval ",
+                                    "unit": "m",
+                                    "status": "editable",
+                                    "widget": "interval:int",
+                                    "value": [
+                                        0,
+                                        10
+                                    ]
+                                }
+                            ]
+                        }
+                    ]
+                },
+                {
+                    "label": "Nutrients",
+                    "status": "readable",
+                    "value": false,
+                    "key": "qe_nutrients",
+                    "settings": []
                 }
             ]
         },
@@ -898,35 +449,12 @@
                     "label": "Oxygen",
                     "status": "editable",
                     "value": true,
-                    "key": "oxygen",
+                    "key": "indicator_oxygen",
                     "settings": [
                         {
                             "area_type": "type_area",
                             "key": "2",
-                            "label": "2 - V\u00e4stkustens fjordar",
-                            "children": [
-                                {
-                                    "key": "MIN_NR_YEARS",
-                                    "label": "Minimum number of years",
-                                    "unit": "years",
-                                    "status": "editable",
-                                    "widget": "number:int",
-                                    "value": 3
-                                },
-                                {
-                                    "key": "BOTTOM_WATER",
-                                    "label": "Bottom layer",
-                                    "unit": "m",
-                                    "status": "editable",
-                                    "widget": "number:int",
-                                    "value": 10
-                                }
-                            ]
-                        },
-                        {
-                            "area_type": "viss_eu_cd",
-                            "key": "SE580688-114860",
-                            "label": "Halsefjorden",
+                            "label": "V\u00e4stkustens fjordar",
                             "children": [
                                 {
                                     "key": "MIN_NR_YEARS",

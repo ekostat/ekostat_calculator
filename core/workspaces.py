@@ -186,6 +186,7 @@ class WorkStep(object):
         
         self.load_all_files()    
     
+    
     #==========================================================================
     def calculate_status(self, indicator_list = None, water_body_list = None):
         """
@@ -288,7 +289,9 @@ class WorkStep(object):
             if type(status_by_period) is not bool:
                 self.indicator_objects[indicator].sld.save_df(status_by_period, file_name = indicator_name + '-by_period', force_save_txt=True)
         
-    def calculate_quality_element(self, subset_unique_id, quality_element):
+        
+    #==========================================================================
+    def calculate_quality_element(self, quality_element=None):
         
         class_name = self.parent_workspace_object.mapping_objects['quality_element'].indicator_config.loc['qe_'+quality_element.lower()]['indicator_class']
         print(class_name)
@@ -303,9 +306,9 @@ class WorkStep(object):
         #print(class_)
         #instance = class_()
         # add indicator objects to dictionary
-        self.quality_element[quality_element] = class_(subset_uuid = subset_unique_id, 
-                                                                  parent_workspace_object = self.parent_workspace_object,
-                                                                  quality_element = quality_element)
+        self.quality_element[quality_element] = class_(subset_uuid=self.parent_subset_object.unique_id, 
+                                                       parent_workspace_object = self.parent_workspace_object,
+                                                       quality_element = quality_element)
         
         #self.quality_element[quality_element].calculate_quality_factor()
         print('senaste calculate_quality_factor')
@@ -381,7 +384,7 @@ class WorkStep(object):
         return sorted(self.indicator_settings.keys())
    
     #==========================================================================
-    def indicator_setup(self, subset_unique_id = None, indicator_list = None):  
+    def indicator_setup(self, indicator_list=None):  
         """
         when step 3 is initiated indicator objects should be instantiated for all  indicators selected in step 2 as default
         where do we save info on selected indicators? in step_2/datafilters folder?
@@ -389,10 +392,13 @@ class WorkStep(object):
         """ 
         """
         Created:        20180215     by Lena
-        Last modified:  20180720     by Magnus
+        Last modified:  20180913     by Magnus
         create dict containing indicator objects according to data availability or choice?
         Should be run accesed only for step 3.
-        """
+        """ 
+        subset_unique_id =self.parent_subset_object.unique_id
+        # TODO: assert step 3
+        
         if indicator_list == None:
 
             indicator_list = self.parent_workspace_object.available_indicators
@@ -1372,6 +1378,7 @@ class WorkSpace(object):
         
         all_ok = self.index_handler.add_filter(filter_object=filter_object, step=step, subset=subset, water_body=water_body)
         return all_ok
+        
         
     #==========================================================================
     def copy_subset(self, source_uuid=None, target_alias=None):

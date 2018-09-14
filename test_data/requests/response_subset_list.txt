@@ -1,7 +1,7 @@
 {
     "workspace": {
         "alias": "New test workspace",
-        "workspace_uuid": "5cf3719a-9d44-48e0-b228-496a6894d263",
+        "workspace_uuid": "8b13b250-8179-4638-ba88-21425ef7b576",
         "status": "editable"
     },
     "subsets": [
@@ -12,5 +12,5 @@
             "value": false
         }
     ],
-    "workspace_uuid": "5cf3719a-9d44-48e0-b228-496a6894d263"
+    "workspace_uuid": "8b13b250-8179-4638-ba88-21425ef7b576"
 }

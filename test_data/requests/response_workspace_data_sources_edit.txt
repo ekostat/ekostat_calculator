@@ -1,9 +1,9 @@
 {
-    "workspace_uuid": "5cf3719a-9d44-48e0-b228-496a6894d263",
+    "workspace_uuid": "8b13b250-8179-4638-ba88-21425ef7b576",
     "data_sources": [
         {
-            "status": false,
-            "loaded": false,
+            "status": true,
+            "loaded": true,
             "filename": "chlorophyll_sharkweb_data_chlorophyll_wb_2007-2017_20180320.txt",
             "datatype": "chlorophyll"
         },
