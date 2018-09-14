@@ -539,6 +539,7 @@ class WaterBody(AttributeDict):
             area = list(kwargs.keys())[0] 
             value = kwargs[area]
             if type(value) != list:
+#                print(type(value), value)
                 value = [value]
             result = self.water_bodies.loc[self.water_bodies[self.column_name[area]['internal']].isin(value), self.column_name[area_level]['internal']]
             if len(result):

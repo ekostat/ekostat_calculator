@@ -1,0 +1,8 @@
+{
+    "workspace_uuid": "8b13b250-8179-4638-ba88-21425ef7b576",
+    "subset_uuid": "5bc4bfa0-b5ee-48cf-a4f9-00ecb0862eb3", 
+    "indicators": ["din_winter"], 
+    "areas": ["SE633000-195000", 
+              "SE633550-200700", 
+              "SE633710-200500"]
+}

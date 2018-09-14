@@ -160,7 +160,7 @@ class EventHandler(object):
             self.mapping_objects['datatype_list'] = core.MappingObject(file_path=os.path.join(self.resource_directory, 'mappings/datatype_list.txt'))
             self.mapping_objects['sharkweb_mapping'] = core.MappingObject(file_path=os.path.join(self.resource_directory, 'mappings/sharkweb_mapping.txt'))
             self.mapping_objects['sharkweb_settings'] = core.SharkwebSettings(file_path=os.path.join(self.resource_directory, 'mappings/sharkweb_settings.txt'))
-            self.mapping_objects['label_mapping'] = core.MappingObject(file_path=os.path.join(self.resource_directory, 'mappings/internal_external_labels_col.txt'), 
+            self.mapping_objects['label_mapping'] = core.MappingObject(file_path=os.path.join(self.resource_directory, 'mappings/display_mapping.txt'), 
                                                                        from_column='internal', 
                                                                        to_column='label')
             
@@ -610,7 +610,8 @@ class EventHandler(object):
             selected = False
             
         
-        return_dict["label"] = self.mapping_objects['display_mapping'].get_mapping(indicator, 'internal_name', 'display_en')
+#        return_dict["label"] = self.mapping_objects['display_mapping'].get_mapping(indicator, 'internal_name', 'display_en')
+        return_dict["label"] = self.mapping_objects['label_mapping'].get_mapping(indicator)
         return_dict["status"] = status
         return_dict['value'] = selected
         return_dict['key'] = indicator
@@ -736,7 +737,8 @@ class EventHandler(object):
         
         """ 
         return_dict = {'key': 'area', 
-                       'label': 'Areas'}
+                       'label': 'Areas', 
+                       'widget': 'selection_tree'}
         
         
         
@@ -1818,7 +1820,10 @@ class EventHandler(object):
             if water_district in water_district_active_list:
                 active = True
                 
-            return_dict = {"label": water_body_mapping.get_display_name(water_district=water_district),
+            label = water_body_mapping.get_display_name(water_district=water_district) 
+            if not label:
+                label = water_district
+            return_dict = {"label": label,
                           'key': water_district,
                           "type": "water_district",
                           "status": "editable", 
@@ -2155,7 +2160,7 @@ class EventHandler(object):
         # Remove temp file 
 #            os.remove(file_path)
         print('Done')
-        return True
+        return full_file_name
             
 #        except:
 #            exceptions.SharkwebLoadError
@@ -2356,7 +2361,7 @@ class EventHandler(object):
         #----------------------------------------------------------------------
         # Check water_body (VISS_EU_CD)
         if selected_areas['viss_eu_cd_list']: 
-            # Updated 20180615 by MW: Only viss_eu_cd present in the settings files chould be shown. 
+            # Updated 20180615 by MW: Only viss_eu_cd present in the settings files should be shown. 
             # water_body_list = [item for item in selected_areas['viss_eu_cd_list'] if item in indicator_settings_object.get_viss_eu_cd_list()]
             # Correction: This does not work if viss_eu_cd is added. the check needs to be done later 
             # and only applied on calls without request. UPDATED 20180620: Implemented below.
@@ -2665,7 +2670,7 @@ class EventHandler(object):
     def _get_water_bodies_from_area_list(self, area_list): 
         """
         Created     20180824    by Magnus Wenzer
-        Updated     
+        Updated     20180913    by Magnus Wenzer
         
         Extracts water bodies from list of water districts, type areas and water bodies. 
         """
@@ -2686,8 +2691,9 @@ class EventHandler(object):
             else:
                 invalid_areas.append(area)
             
-            if len(invalid_areas): 
-                raise exceptions.InvalidArea(';'.join(invalid_areas))
+#        print('invalid_areas', invalid_areas)
+        if len(invalid_areas): 
+            raise exceptions.InvalidArea(';'.join(invalid_areas))
         
         return list(water_bodies)
     
@@ -3011,6 +3017,30 @@ class EventHandler(object):
         
         
     #==========================================================================
+    def action_calculate_status(self, workspace_uuid=None, subset_uuid=None, indicator_list=None, water_body_list=None):
+        """
+        Created     20180913    by Magnus Wenzer
+        
+        Calculates status for the given subset. 
+        """
+        self.action_load_workspace(workspace_uuid=workspace_uuid) 
+        workspace_object = self.get_workspace(workspace_uuid) 
+        step_object_calculate = workspace_object.get_step_object(subset_uuid=subset_uuid, step=3) 
+        
+        # Setup indicators 
+        step_object_calculate.indicator_setup(indicator_list=indicator_list)
+        # Calculate status 
+        step_object_calculate.calculate_status(indicator_list=indicator_list, 
+                                               water_body_list=water_body_list) 
+        
+        # Calculate quaity elements  
+        # TODO: Hur väljer vi quality elements
+        quality_elements = ['Nutrients', 'Phytoplankton']
+        step_object_calculate.calculate_quality_element(subset_unique_id=subset_uuid, 
+                                                        quality_element=quality_elements)
+        
+        
+    #==========================================================================
     def action_reset_data_filter(self, workspace_uuid=None, subset_uuid=None, step=1): 
         """
         Created     20180608    by Magnus Wenzer
@@ -3044,7 +3074,7 @@ class EventHandler(object):
     def action_load_data(self, workspace_uuid, force=False): 
         """
         Created     20180605    by Magnus Wenzer
-        Updated      
+        Updated     
         
         Action to load data in the given workspace. 
         """
@@ -3134,8 +3164,10 @@ class EventHandler(object):
                               'headerlang': self.mapping_objects['sharkweb_settings'].get('headerlang')} 
             
             
-            self.import_sharkweb_data(workspace_uuid=workspace_uuid, 
-                                      **selection_dict)
+            file_name = self.import_sharkweb_data(workspace_uuid=workspace_uuid, 
+                                                  **selection_dict)
+        
+        return {'file_name': file_name}
 #            self.import_sharkweb_data
             #TODO: Här är request enklare listor mm.
             #self.load_data_from_sharkweb(request)
@@ -3145,14 +3177,21 @@ class EventHandler(object):
         """
         Created     20180827    by Magnus Wenzer
         """ 
-        # Create sharkweb reader 
-        self.sharkweb_reader = core.SharkWebReader()
-        response = [] 
-        response.append(self.dict_select_year_interval())
-        response.append(self.dict_select_datatype())
-        response.append(self.dict_select_area())
-        #TODO: Kolla hur utsökningen fungerar i sharkweb 
-        
+        pkl_file_path = os.path.join(self.resource_directory, 'pkl/request_sharkweb_search.pkl')
+        if kwargs.get('force_update') or not os.path.exists(pkl_file_path): 
+            # Create sharkweb reader 
+            self.sharkweb_reader = core.SharkWebReader()
+            response = {}
+            response['options'] = [] 
+            response['options'].append(self.dict_select_year_interval())
+            response['options'].append(self.dict_select_datatype())
+            response['options'].append(self.dict_select_area())
+            # Save as pickle 
+            with open(pkl_file_path, "wb") as fid:
+                pickle.dump(response, fid) 
+        else:
+            with open(pkl_file_path, "rb") as fid: 
+                response = pickle.load(fid)
         return response
         
         
@@ -3195,6 +3234,49 @@ class EventHandler(object):
                                    subset_uuid=subset_uuid)
         
         return response
+    
+    #==========================================================================
+    @timer
+    def request_subset_calculate_status(self, request):
+        """
+        Created     20180913    by Magnus Wenzer
+        Updated     
+        
+        "request" must contain: 
+            workspace_uuid
+            subset_uuid 
+            indicators
+            areas (any level)
+        
+        Calculates status for the given indicators and area.
+            
+        """
+        self._logger.debug('Start: request_subset_calculate_status')
+        
+        workspace_uuid = request['workspace_uuid']
+        subset_uuid = request['subset_uuid']
+        
+        # Load workspace 
+        self.action_load_data(workspace_uuid) 
+        
+        self._check_valid_uuid(workspace_uuid, subset_uuid)
+        
+        workspace_object = self.get_workspace(workspace_uuid)  
+        
+        if not workspace_object.data_is_loaded():
+            raise exceptions.NoDataSelected 
+            
+        # Extract water bodies from "areas" 
+        water_body_list = self._get_water_bodies_from_area_list(request['areas']) 
+        
+        self.action_calculate_status(workspace_uuid=workspace_uuid, 
+                                     subset_uuid=subset_uuid, 
+                                     indicator_list=request.get('indicators', None), 
+                                     water_body_list=water_body_list)
+            
+        return {'all_ok': True, 
+                'message': ''}
+    
     
     
     #==========================================================================
@@ -3383,6 +3465,8 @@ class EventHandler(object):
 #                                      subset_uuid=subset_uuid)
         
         response = {} 
+        response['workspace_uuid'] = workspace_uuid 
+        response['subset_uuid'] = subset_uuid
         
         # Set data filter 
 #        response['subset'] = self.dict_subset(workspace_uuid=workspace_uuid, 
@@ -3391,9 +3475,19 @@ class EventHandler(object):
 #                                     time=True, 
 #                                     areas=True) 
         
-        # Check selected areas 
-        selected_areas = self._get_selected_areas_from_subset_request(request['subset'])
-        self.selected_areas = selected_areas
+        # Check selected areas. Updated by MW 20180913. Could be better 
+        areas = request.get('subset', {}).get('areas')
+        self.areas = areas
+#        return response
+        if type(areas) == list and len(areas) and type(areas[0]) == str:
+            print('areas[0]:', areas[0])
+            viss_eu_cd_list = self._get_water_bodies_from_area_list(areas)
+        elif type(areas):
+            selected_areas = self._get_selected_areas_from_subset_request(request['subset']) 
+            viss_eu_cd_list = selected_areas['viss_eu_cd_list'] 
+        else:
+            viss_eu_cd_list = None
+        
         
         
         
@@ -3402,14 +3496,14 @@ class EventHandler(object):
                                                                   subset_uuid=subset_uuid, 
                                                                   request=request['quality_elements'], 
                                                                   indicator_settings=True, 
-                                                                  selected_areas=selected_areas)
+                                                                  selected_areas=viss_eu_cd_list)
         
         # Supporting elements 
         response['supporting_elements'] = self.list_supporting_elements(workspace_uuid=workspace_uuid, 
                                                                         subset_uuid=subset_uuid, 
                                                                         request=request['supporting_elements'], 
                                                                         indicator_settings=True, 
-                                                                        selected_areas=selected_areas) 
+                                                                        selected_areas=viss_eu_cd_list) 
         
         # Apply data filter 
         self.action_apply_data_filter(workspace_uuid=workspace_uuid, 
@@ -3779,7 +3873,7 @@ class EventHandler(object):
             response['message'] = 'Workspace does not belong to user'
             return response
             
-        print()
+#        print()
         all_ok = self.delete_workspace(unique_id=unique_id, permanently=False)
         if not all_ok:
             response['all_ok'] = False

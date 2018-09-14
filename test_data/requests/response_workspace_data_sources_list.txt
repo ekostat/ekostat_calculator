@@ -1,5 +1,5 @@
 {
-    "workspace_uuid": "327bbf4f-f367-4d85-80f4-e9151907eadc",
+    "workspace_uuid": "8b13b250-8179-4638-ba88-21425ef7b576",
     "data_sources": [
         {
             "status": false,
@@ -14,7 +14,7 @@
             "datatype": "physicalchemicalmodel"
         },
         {
-            "status": false,
+            "status": true,
             "loaded": false,
             "filename": "physicalchemicalmodel_120004_PROFILER_alldepths_SE612520-172080_toolbox.dat",
             "datatype": "physicalchemicalmodel"
