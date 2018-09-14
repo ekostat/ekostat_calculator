@@ -156,13 +156,15 @@ class AttributeDict(dict):
     #==========================================================================
     def _add_arrays_to_entries(self, **entries): 
         """
+        Updated 20180912 by Lena. Added list(set(array)) to remove duplicates in array
         """
         for key, array in entries.items():
+            array_set = list(set(array))
 #            array = [v for v in array if v] # if you are using '' as nan value
 #            array = array[np.logical_and(array!='', ~pd.isnull(array))] 
-            if len(array)==1:
-                array = array[0]
-            setattr(self, key, array)
+            if len(array_set)==1:
+                array_set = array_set[0]
+            setattr(self, key, array_set)
 
     #==========================================================================
     def add_corresponding_arrays(self, df=None, first_key=u'', 
