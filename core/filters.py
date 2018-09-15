@@ -12,6 +12,7 @@ import utils
 import re 
 import datetime 
 import time
+import pickle
 
 
 #if current_path not in sys.path: 
@@ -455,7 +456,7 @@ class SettingsFile(object):
         self._prefix_list = ['FILTER', 'REF', 'TOLERANCE', 'LEVEL'] 
         self._suffix_list = ['INT', 'EQ', 'FLOAT', 'STR']
         
-        self._load_file()    
+        self._load_file()     
     
     
     #==========================================================================
@@ -639,11 +640,11 @@ class SettingsFile(object):
             try:
                 type_area = self.mapping_water_body.get_type_area_for_water_body(water_body, include_suffix=True)
                 if type_area == None:
-                    print('waterbody matching file does not recognise water body with VISS_EU_CD {}'.format(water_body))
+#                     print('waterbody matching file does not recognise water body with VISS_EU_CD {}'.format(water_body))
                     return False
             except AttributeError as e:
                 print(e)
-                print('waterbody matching file does not recognise water body with VISS_EU_CD {}'.format(water_body))
+#                 print('waterbody matching file does not recognise water body with VISS_EU_CD {}'.format(water_body))
                 return False
         num, suf = get_type_area_parts(type_area)
         
@@ -1324,7 +1325,19 @@ class SettingsRef(SettingsBase):
         self.settings = settings_file_object 
         self.settings.connected_to_ref_settings_object = True
         self.allowed_variables = self.settings.ref_columns
+        self._set_refval_dict()
     
+    def _set_refval_dict(self):
+        
+#         self.settings.indicator 
+        self.refval_pkl_path = self.settings.file_path.rstrip('.set')+'.pkl'
+        if not hasattr(self, 'refval_dict'):
+            if os.path.exists(self.refval_pkl_path):
+                with open(self.refval_pkl_path, "rb") as fid: 
+                    self.refval_dict = pickle.load(fid)
+            else:
+                self.refval_dict = {}
+            
     def eval_linear_salinity_eq(self, eq_str, s):
         
         k_m = eq_str.split('+')
@@ -1379,7 +1392,66 @@ class SettingsRef(SettingsBase):
         
         return ref_value
     
+#==========================================================================  
+    def test_get_boundarie(self, type_area = None, water_body = None, salinity = None, variable = None):
+        """
+        Created     20180326    by Lena Viktorsson
+        Updated     20180621    by Lena Viktorsson (added float(ref_value in the first try/except statement))
+        """
+        
+        
+        if len(self.settings.refvalue_column) == 0:
+            return False
+        if water_body:
+            boundarie = self.get_value(variable = variable, water_body = water_body)
+        else:
+            boundarie = self.get_value(variable = variable, type_area = type_area)
+#         try:
+# #            print(ref_value)
+#             boundarie = float(boundarie)
+#         except (ValueError, TypeError):
+#             pass
+        
+        if type(boundarie) is float:
+            boundarie = boundarie
+        elif type(boundarie) is str:
+            try:
+                s = salinity
+                if water_body:
+                    max_s = self.get_value(variable = 'SALINITY_MAX', water_body = water_body)
+                else:
+                    max_s = self.get_value(variable = 'SALINITY_MAX', type_area = type_area)
+                if s > max_s:
+                    s = max_s
+            except TypeError as e:
+                raise TypeError('{}\nSalinity TypeError, salinity must be int, float or nan but is {}'.format(e, repr(s)))
+            eq_str = boundarie
+            s_str = str(s)
+            if self.refval_dict.get(eq_str):
+                if self.refval_dict.get(eq_str).get(s_str):
+                    boundarie = self.refval_dict.get(eq_str).get(s_str)
+                else:
+                    boundarie = eval(eq_str)
+                    self.refval_dict.get(eq_str).setdefault(s_str, boundarie)
+                    with open(self.refval_pkl_path, "wb") as fid:
+                        pickle.dump(self.refval_dict, fid)
+            else:
+                boundarie = eval(eq_str)
+                self.refval_dict[eq_str] = {}
+                self.refval_dict.get(eq_str).setdefault(s_str, boundarie)
+                with open(self.refval_pkl_path, "wb") as fid:
+                    pickle.dump(self.refval_dict, fid)
+            #TODO: add closest matching salinity somewhere here
+        elif type(boundarie) is pd.Series:
+            raise exceptions.UnexpectedInputVariable('In SettingsRef get_ref_value','returned pd.Series for boundarie, give more specific info to get the correct row')
+        elif not boundarie:
+            return False
+        else:
+            raise TypeError('Unknown Type of reference value, must be either equation as string or float. Given reference value {} is {}. Or salinity missing, given salinity value is {}'.format(boundarie, type(boundarie), salinity))
+        
+        return boundarie
 
+    
     #==========================================================================  
     def get_boundarie(self, type_area = None, water_body = None, salinity = None, variable = None):
         """

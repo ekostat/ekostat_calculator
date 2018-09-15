@@ -84,7 +84,7 @@ class QualityElementBase(object):
         for indicator in self.indicator_list:
             if not os.path.exists(self.sld.directory + indicator + '-by_period.pkl') or not os.path.exists(self.sld.directory +indicator + '-by_period.txt'):
 #                 raise core.exceptions.NoResultsForIndicator()
-                self.indicator_dict[indicator] = None
+                pass #self.indicator_dict[indicator] = False
             else:
                 self.indicator_dict[indicator] = self.sld.load_df(file_name = indicator + '-by_period')         
                 
@@ -96,6 +96,66 @@ class QualityElementBase(object):
         self.paths = {}
         self.paths['output'] = self.step_object.paths['directory_paths']['output'] 
         self.paths['results'] = self.step_object.paths['directory_paths']['results']
+    #==========================================================================
+    def calculate_quality_factor(self):
+
+        """
+        Calculates quality element based on included indicators
+        
+        GAMLA FÖRESKRIFTEN
+        Ett medelvärde av de numeriska klassningarna (Nklass) beräknas för 
+        DIN, DIP, tot-N, tot-P under vintern och ett medelvärde för tot-N, tot-P under sommaren. 
+        Därefter beräknas medelvärdet av sommar och vinter, vilket blir den sammanvägda klassificeringen av näringsämnen. 
+        
+        NYA FÖRESKRIFTEN
+        Ett medelvärde av de numeriska klasserna (global_EQR) beräknas separat för N och P. Först ett medelvärde för vintern 
+        (N_vinter = medel(din_vinter, ntot_vinter) reps P_vinter = medel(dip_vinter, ptot_vinter)). 
+        Sedan beräknas medelvärde för N_vinter och ntot_summer respektive P_vinter och ptot_summer och efter det medelvärde av N och P, 
+        vilket blir den sammanvägda klassificeringen av näringsämnen. 
+        
+        Statusklassificeringen avgörs av medelvärdet för den numeriska klassningen enligt tabell 2.1, ett värde 0-1.
+        Dessa värden kan sedan jämföras med övriga kvalitetsfaktorer och ingå i sammansvägningen.
+        """
+                
+        ###### Results #####
+        # how keyword:
+            # - outer: use union of keys from both frames, similar to a SQL full outer join; sort keys lexicographically
+            # - inner: use intersection of keys from both frames, similar to a SQL inner join; preserve the order of the left keys
+        # TODO: replace merge by join? 
+        merge_on = ['VISS_EU_CD', 'WATER_BODY_NAME', 'WATER_TYPE_AREA']
+        def mean_of_indicators(indicator_name):
+            parameters = self.mapping_objects['quality_element'].indicator_config.loc[indicator_name]['parameters'].split(', ') 
+            if 'indicator_' not in parameters[0]: 
+#                 if 'qe_' not in parameters[0]:
+                    return False
+            if not all([par in self.indicator_dict.keys() for par in parameters]):
+                return False
+            if len(parameters) == 2:
+                mean_of_indicators = self.indicator_dict[parameters[0]].merge(self.indicator_dict[parameters[1]], on = merge_on, how = 'inner', copy=True, suffixes = ['_' + par for par in parameters])
+                mean_of_indicators['ok_'+indicator_name] = mean_of_indicators['ok_' + parameters[0]] | mean_of_indicators['ok_' + parameters[1]]
+                mean_of_indicators['global_EQR_'+indicator_name] = mean_of_indicators[['global_EQR' + '_' + parameters[0],'global_EQR' +'_' + parameters[1]]].mean(axis = 1, skipna = False)
+                mean_of_indicators['STATUS_'+indicator_name] = mean_of_indicators['global_EQR_'+indicator_name].apply(lambda x: self.get_status_from_global_EQR(x))
+                self.indicator_dict[indicator_name] = mean_of_indicators
+            elif len(parameters) == 1:
+                col_list = list(self.indicator_dict[parameters[0]].columns)
+                [col_list.remove(r) for r in merge_on]
+                {k: k+'_'+parameters[0] for k in col_list}
+                self.indicator_dict[indicator_name] = self.indicator_dict[parameters[0]].rename(columns = {k: k+'_'+indicator_name for k in col_list})
+            return True
+                
+        def cut_results(df, indicator_name):
+            #pick out columns for only this indicator
+            these_cols = [col for col in df.columns if re.search(indicator_name + r'$', col)]
+            return df[these_cols + merge_on].rename(columns = {col: col.strip(indicator_name) for col in these_cols})
+    
+        for indicator in self.mapping_objects['quality_element'].indicator_config.index:
+            if self.mapping_objects['quality_element'].indicator_config.loc[indicator]['quality element'] == self.name:
+                # calculate mean for the included sub-indicators
+                if mean_of_indicators(indicator):
+                    df = cut_results(self.indicator_dict[indicator], indicator)
+                    self.sld.save_df(df, indicator)
+        if 'qe_'+self.name in self.indicator_dict.keys():
+            self.sld.save_df(self.indicator_dict['qe_'+self.name], self.name+'_all_results')
     
     #==========================================================================
     def get_status_from_global_EQR(self, global_EQR):
@@ -162,8 +222,11 @@ class QualityElementNutrients(QualityElementBase):
                 if 'qe_' not in parameters[0]:
                     return False
 #             print(indicator_name, parameters)
+            if not all([par in self.indicator_dict.keys() for par in parameters]):
+                return False
             if len(parameters) == 2:
-#                 print(self.indicator_dict[parameters[0]].columns)    
+#                 print(self.indicator_dict[parameters[0]].columns) 
+                   
                 mean_of_indicators = self.indicator_dict[parameters[0]].merge(self.indicator_dict[parameters[1]], on = merge_on, how = 'inner', copy=True, suffixes = ['_' + par for par in parameters])
 #                 print('columns 1 merge', mean_of_indicators.columns)
                 mean_of_indicators['global_EQR_'+indicator_name] = mean_of_indicators[['global_EQR' + '_' + parameters[0],'global_EQR' +'_' + parameters[1]]].mean(axis = 1, skipna = False)
@@ -187,12 +250,13 @@ class QualityElementNutrients(QualityElementBase):
             return df[these_cols + merge_on].rename(columns = {col: col.strip(indicator_name) for col in these_cols})
     
         for indicator in self.mapping_objects['quality_element'].indicator_config.index:
-            if self.mapping_objects['quality_element'].indicator_config.loc[indicator]['quality element'] == 'nutrients':
+            if self.mapping_objects['quality_element'].indicator_config.loc[indicator]['quality element'] == self.name:#'nutrients':
                 # calculate mean for the included sub-indicators
                 if mean_of_indicators(indicator):
                     df = cut_results(self.indicator_dict[indicator], indicator)
                     self.sld.save_df(df, indicator)
-        self.sld.save_df(self.indicator_dict['qe_'+self.name], self.name+'_all_results')
+        if 'qe_'+self.name in self.indicator_dict.keys():
+            self.sld.save_df(self.indicator_dict['qe_'+self.name], self.name+'_all_results')
 #         mean_of_indicators('indicator_p_winter')
 #         mean_of_indicators('indicator_p_summer')
 #         mean_of_indicators('indicator_p')
@@ -342,78 +406,5 @@ if __name__ == '__main__':
     print('Running module "quality_factor.py"')
     print('-'*nr_marks)
     print('')
-    
-    
-    root_directory = os.path.dirname(os.path.abspath(__file__))[:-9]
-    
-#    core.StationList(root_directory + '/test_data/Stations_inside_med_typ_attribute_table_med_delar_av_utsjö.txt')
-    core.ParameterList()
-    
-    #--------------------------------------------------------------------------
-    # Directories and file paths
-    raw_data_file_path = root_directory + '/test_data/raw_data/data_BAS_2000-2009.txt'
-    first_filter_data_directory = root_directory + '/test_data/filtered_data' 
-    
-    first_data_filter_file_path = root_directory + '/test_data/filters/first_data_filter.txt' 
-    winter_data_filter_file_path = root_directory + '/test_data/filters/winter_data_filter.txt'
-    
-    tolerance_filter_file_path = root_directory + '/test_data/filters/tolerance_filter_template.txt'
-    
-    #--------------------------------------------------------------------------
-    # Filters 
-    first_filter = core.DataFilter('First filter', file_path=first_data_filter_file_path)
-    winter_filter = core.DataFilter('winter_filter', file_path=winter_data_filter_file_path)
-    winter_filter.save_filter_file(root_directory + '/test_data/filters/winter_data_filter_save.txt') # mothod available
-    tolerance_filter = core.ToleranceFilter('test_tolerance_filter', file_path=tolerance_filter_file_path)
-
-    #--------------------------------------------------------------------------
-    # Reference values
-    core.RefValues()
-    core.RefValues().add_ref_parameter_from_file('DIN_winter', root_directory + '/test_data/din_vinter.txt')
-    core.RefValues().add_ref_parameter_from_file('TOTN_winter', root_directory + '/test_data/totn_vinter.txt')
-    
-    #--------------------------------------------------------------------------
-    #--------------------------------------------------------------------------
-    # Handler (raw data)
-    raw_data = core.DataHandler('raw')
-    raw_data.add_txt_file(raw_data_file_path, data_type='column') 
-    
-    # Use first filter 
-    filtered_data = raw_data.filter_data(first_filter) 
-    
-    # Save filtered data (first filter) as a test
-    filtered_data.save_data(first_filter_data_directory)
-    
-    
-    # Load filtered data (first filter) as a test
-    loaded_filtered_data = core.DataHandler('first_filtered')
-    loaded_filtered_data.load_data(first_filter_data_directory)
-
-
-    # Create and fill QualityFactor
-    qf_NP = core.QualityFactorNP()
-    qf_NP.set_data_handler(data_handler=loaded_filtered_data)
-    
-    # Filter parameters in QualityFactorNP 
-    # First general filter 
-    qf_NP.filter_data(data_filter_object=first_filter) 
-    # winter filter
-    qf_NP.filter_data(data_filter_object=winter_filter, indicator='TOTN_winter') 
-    
-    q_factor = qf_NP.get_quality_factor(tolerance_filter)
-    
-    
-    # Parameter
-    print('-'*nr_marks)
-    print('done')
-    print('-'*nr_marks)
-    
-    
-    
-    
-    
-    
-    
-    
     
     
