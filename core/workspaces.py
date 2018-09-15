@@ -497,10 +497,10 @@ class WorkStep(object):
         
     
     #==========================================================================
-    def load_results(self, force_loading_txt=False): 
+    def get_results(self, force_loading_txt=False, **kwargs): 
         """
         Created 20180720    by Magnus 
-        
+        Updated 20180914    bu Magnus
         Loads all files in the results-directory. 
         pkl-files are loaded by default if present. 
         Override this by setting force_loading_txt == True 
@@ -527,8 +527,11 @@ class WorkStep(object):
             df = save_load_object.load_df(key, load_txt=force_loading_txt)
             result_data[key] = df
             
-        if not self.result_data: 
+        if not result_data: 
             exceptions.NoResultsInResultDirectory
+        
+        return result_data 
+    
         
     #==========================================================================
     def set_indicator_settings_data_filter(self, indicator=None, filter_settings=None):

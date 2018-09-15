@@ -3,6 +3,7 @@ to_year
 datatypes	Chlorophyll;Physical and Chemical;Phytoplankton;Zoobenthos
 default_from_year	2013
 default_to_year	2018
+Physical and Chemical_parameter	Ammonium NH4-N;Nitrate NO3-N;Nitrite+Nitrate NO2+NO3-N;Nitrite NO2-N;Total Nitrogen Tot-N;Phosphate PO4-P;Total phosphorus Tot-P;Salinity Bottle;Salinity CTD;Secchi depth;Chlorophyll-a bottle;Dissolved oxygen O2 bottle;Dissolved oxygen O2 ctd;Dissolved oxygen O2 bottle
 Chlorophyll_parameter	Chlorophyll-a
 Phytoplankton_parameter	Biovolume concentration
 Zoobenthos_parameter	BQIm

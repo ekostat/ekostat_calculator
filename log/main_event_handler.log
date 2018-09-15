@@ -955,3 +955,43 @@
 2018-09-14 10:33:20,123	event_handler.py	122	__init__	DEBUG	Time for initiating EventHandler: 0.6708011627197266
 2018-09-14 10:33:20,138	event_handler.py	47	f	DEBUG	Start: "request_sharkweb_search"
 2018-09-14 10:33:20,138	event_handler.py	51	f	DEBUG	Stop: "request_sharkweb_search". Time for running method was 0.0
+2018-09-14 16:45:30,463	event_handler.py	106	__init__	DEBUG	Start EventHandler: event_handler
+2018-09-14 16:45:30,463	event_handler.py	146	_load_mapping_objects	DEBUG	Loading mapping files from original files.
+2018-09-14 16:46:10,783	event_handler.py	106	__init__	DEBUG	Start EventHandler: event_handler
+2018-09-14 16:46:10,783	event_handler.py	146	_load_mapping_objects	DEBUG	Loading mapping files from original files.
+2018-09-14 16:46:46,643	logger.py	85	add_log	DEBUG	
+2018-09-14 16:46:46,643	logger.py	86	add_log	DEBUG	========================================================================================================================
+2018-09-14 16:46:46,653	logger.py	87	add_log	DEBUG	### Log added for log_id "event_handler" at locaton: ..\log\main_event_handler.log
+2018-09-14 16:46:46,653	logger.py	88	add_log	DEBUG	------------------------------------------------------------------------------------------------------------------------
+2018-09-14 16:46:46,663	event_handler.py	106	__init__	DEBUG	Start EventHandler: event_handler
+2018-09-14 16:46:46,663	event_handler.py	146	_load_mapping_objects	DEBUG	Loading mapping files from original files.
+2018-09-14 16:46:53,773	event_handler.py	117	__init__	DEBUG	Time for mapping: 7.1100099086761475
+2018-09-14 16:46:53,813	event_handler.py	122	__init__	DEBUG	Time for initiating EventHandler: 7.170010089874268
+2018-09-14 16:46:53,833	event_handler.py	47	f	DEBUG	Start: "test_timer"
+2018-09-14 16:46:54,523	event_handler.py	51	f	DEBUG	Stop: "test_timer". Time for running method was 0.6900010108947754
+2018-09-14 16:52:30,830	logger.py	85	add_log	DEBUG	
+2018-09-14 16:52:30,840	logger.py	86	add_log	DEBUG	========================================================================================================================
+2018-09-14 16:52:30,840	logger.py	87	add_log	DEBUG	### Log added for log_id "event_handler" at locaton: ..\log\main_event_handler.log
+2018-09-14 16:52:30,850	logger.py	88	add_log	DEBUG	------------------------------------------------------------------------------------------------------------------------
+2018-09-14 16:52:30,850	event_handler.py	106	__init__	DEBUG	Start EventHandler: event_handler
+2018-09-14 16:52:30,850	event_handler.py	146	_load_mapping_objects	DEBUG	Loading mapping files from original files.
+2018-09-14 16:52:37,940	event_handler.py	117	__init__	DEBUG	Time for mapping: 7.090009927749634
+2018-09-14 16:52:37,980	event_handler.py	122	__init__	DEBUG	Time for initiating EventHandler: 7.150009870529175
+2018-09-14 16:52:37,990	event_handler.py	47	f	DEBUG	Start: "test_timer"
+2018-09-14 16:52:38,620	event_handler.py	51	f	DEBUG	Stop: "test_timer". Time for running method was 0.6300010681152344
+2018-09-14 16:53:17,133	logger.py	85	add_log	DEBUG	
+2018-09-14 16:53:17,133	logger.py	86	add_log	DEBUG	========================================================================================================================
+2018-09-14 16:53:17,133	logger.py	87	add_log	DEBUG	### Log added for log_id "event_handler" at locaton: ..\log\main_event_handler.log
+2018-09-14 16:53:17,143	logger.py	88	add_log	DEBUG	------------------------------------------------------------------------------------------------------------------------
+2018-09-14 16:53:17,143	event_handler.py	106	__init__	DEBUG	Start EventHandler: event_handler
+2018-09-14 16:53:17,143	event_handler.py	146	_load_mapping_objects	DEBUG	Loading mapping files from original files.
+2018-09-14 16:53:24,273	event_handler.py	117	__init__	DEBUG	Time for mapping: 7.130009889602661
+2018-09-14 16:53:24,313	event_handler.py	122	__init__	DEBUG	Time for initiating EventHandler: 7.190009832382202
+2018-09-14 16:53:24,323	event_handler.py	47	f	DEBUG	Start: "test_timer"
+2018-09-14 16:53:24,953	event_handler.py	51	f	DEBUG	Stop: "test_timer". Time for running method was 0.6300010681152344
+2018-09-14 16:53:52,463	event_handler.py	106	__init__	DEBUG	Start EventHandler: event_handler
+2018-09-14 16:53:52,463	event_handler.py	141	_load_mapping_objects	DEBUG	Loading mapping files from pickle file.
+2018-09-14 16:53:53,153	event_handler.py	117	__init__	DEBUG	Time for mapping: 0.6900010108947754
+2018-09-14 16:53:53,203	event_handler.py	122	__init__	DEBUG	Time for initiating EventHandler: 0.7400007247924805
+2018-09-14 16:53:53,203	event_handler.py	47	f	DEBUG	Start: "request_sharkweb_search"
+2018-09-14 16:53:57,063	event_handler.py	51	f	DEBUG	Stop: "request_sharkweb_search". Time for running method was 3.8500051498413086

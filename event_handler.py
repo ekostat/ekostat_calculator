@@ -231,17 +231,7 @@ class EventHandler(object):
             return_mapping[item[name]] = item
         return return_mapping
         
-    
-    #==========================================================================
-    def deprecated_get_workspace_object(self, unique_id=None): 
-        """
-        Updated     20180530    by Magnus wenzer
-        """
-        # TODO: _get_workspace_object and self.get_workspace does the same thing. 
-        # TODO: Maybe use self.get_workspace to handle status and check against user etc 
-        return self.workspaces.get(unique_id, False)
-    
-    
+
     #==========================================================================
     def _get_selected_areas_from_subset_request(self, request):
         """
@@ -3354,10 +3344,13 @@ class EventHandler(object):
         #TODO: Här är request enklare listor mm.
         self._logger.debug('Start: request_subset_get_indicator_settings')
         
-        workspace_uuid = request.get('workspace_uuid', {}) 
-        if not workspace_uuid:
-            workspace_uuid = request['workspace']['workspace_uuid'] 
-        subset_uuid = request['subset']['subset_uuid']
+        workspace_uuid = request.get('workspace_uuid')
+        subset_uuid = request.get('subset_uuid')
+        
+#        workspace_uuid = request.get('workspace_uuid', {}) 
+#        if not workspace_uuid:
+#            workspace_uuid = request['workspace']['workspace_uuid'] 
+#        subset_uuid = request['subset']['subset_uuid']
         
         
         # Load workspace 
@@ -3384,6 +3377,12 @@ class EventHandler(object):
         response['workspace_uuid'] = workspace_uuid
         response['workspace'] = self.dict_workspace(workspace_uuid)
         
+        # Added by Magnus 20180914 
+        request['subset'] = {} 
+        request['subset']['value'] = True
+        request['subset']['subset_uuid'] = subset_uuid
+        request['subset']['areas'] = request.get('areas') 
+        request['subset']['time'] = {'year_interval': request.get('year_interval')}
         
         # Set data filter and add subset information to response
         response['subset'] = self.dict_subset(workspace_uuid=workspace_uuid, 
