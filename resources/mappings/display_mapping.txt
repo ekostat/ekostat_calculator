@@ -92,5 +92,5 @@ indicator 	Parameter
 DEPH_INTERVAL	Depth interval		m
 MONTH_LIST	Month interval		
 MONTHDAY_INTERVAL	Season		
-MIN_NR_YEARS	Minimum number of years		years
+MIN_NR_YEARS	Minimum number of years		
 BOTTOM_WATER	Bottom layer		m

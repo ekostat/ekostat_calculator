@@ -1,6 +1,6 @@
 {
     "alias": "Another test workspace",
-    "workspace_uuid": "47e9d997-a6b6-4872-8119-c0ecfd23ead1",
+    "workspace_uuid": "7fd63e08-bfaa-4f51-b639-fa608e2a641d",
     "status": "editable",
     "data_is_available": false
 }

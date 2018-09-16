@@ -625,7 +625,7 @@ class EventHandler(object):
     def dict_time(self, workspace_uuid=None, subset_uuid=None, request=None, **kwargs): 
         """
         Created     20180317   by Magnus Wenzer
-        Updated     20180719   by Magnus Wenzer
+        Updated     20180916   by Magnus Wenzer
         """
         workspace_object = self.get_workspace(workspace_uuid) 
         subset_object = workspace_object.get_subset_object(subset_uuid) 
@@ -646,12 +646,14 @@ class EventHandler(object):
             if from_year > to_year:
                 raise exceptions.InvalidUserInput('years in wrong order', code='year_interval_invalid')
             
-            year_choices = request.get('year_choices')
-            if not year_choices: 
-                raise exceptions.MissingInputVariable('choice list for year is missing', code='year_choices_missing') 
-                
-            if not all([from_year in year_choices, to_year in year_choices]): 
-                raise exceptions.InvalidUserInput('years are not within range of choices', code='year_interval_invalid')
+            # 20180916
+            if 0:
+                year_choices = request.get('year_choices')
+                if not year_choices: 
+                    raise exceptions.MissingInputVariable('choice list for year is missing', code='year_choices_missing') 
+                    
+                if not all([from_year in year_choices, to_year in year_choices]): 
+                    raise exceptions.InvalidUserInput('years are not within range of choices', code='year_interval_invalid')
                 
                 
             year_list = [str(y) for y in range(from_year, to_year+1)]
@@ -1032,8 +1034,8 @@ class EventHandler(object):
             # Create settings_item_dict
             settings_item_dict['key'] = settings_item
             
-            settings_item_dict["label"] = self.mapping_objects['display_mapping'].get_mapping(settings_item, 'internal_name', 'display_en')
-            settings_item_dict["unit"] = self.mapping_objects['display_mapping'].get_mapping(settings_item, 'internal_name', 'unit')
+            unit = settings_item_dict["unit"] = self.mapping_objects['display_mapping'].get_mapping(settings_item, 'internal', 'unit')
+            settings_item_dict["label"] = '{} ({})'.format(self.mapping_objects['display_mapping'].get_mapping(settings_item, 'internal', 'label'), unit)
             
             # Check status 
             if settings_item in self.mapping_objects['indicator_settings_items_editable_in_gui']:
@@ -2126,8 +2128,8 @@ class EventHandler(object):
         # Find datatype
         datatype = reader.data.split('\n')[1].split('\t')[0] 
         internal_datatype_name = self.mapping_objects['datatype_list'].get_mapping(datatype, 'codelist_name', 'internal_name')
-        print('datatype', datatype)
-        print('internal_datatype_name', internal_datatype_name)
+#        print('datatype', datatype)
+#        print('internal_datatype_name', internal_datatype_name)
         # Save file 
         parameter = kwargs.get('parameter', 'all')
         if not parameter:
@@ -2446,7 +2448,7 @@ class EventHandler(object):
 #        subset_object = workspace_object.get_subset_object(subset_uuid)
         
         quality_element_list = self.mapping_objects['quality_element'].get_quality_element_list() 
-        exclude = ['secchi depth', 'nutrients', 'oxygen balance']
+        exclude = ['secchi', 'nutrients', 'oxygen']
         quality_element_list = [item for item in quality_element_list if item not in exclude]
         
         request_for_label = self._get_mapping_for_name_in_dict('label', request)
@@ -2536,7 +2538,7 @@ class EventHandler(object):
 #        workspace_object = self.get_workspace(workspace_uuid) 
 #        subset_object = workspace_object.get_subset_object(subset_uuid)
         
-        quality_element_list = ['secchi depth', 'nutrients', 'oxygen balance']
+        quality_element_list = ['secchi', 'nutrients', 'oxygen']
         
         request_for_label = self._get_mapping_for_name_in_dict('label', request)
         
@@ -3153,7 +3155,8 @@ class EventHandler(object):
                               'parameter': self.mapping_objects['sharkweb_settings'].get('{}_parameter'.format(datatype)), 
                               'headerlang': self.mapping_objects['sharkweb_settings'].get('headerlang')} 
             
-            
+#            self.selection_dict = selection_dict
+#            return {}
             file_name = self.import_sharkweb_data(workspace_uuid=workspace_uuid, 
                                                   **selection_dict)
         

@@ -1,47 +1,11 @@
 {
-    "workspace_uuid": "8b13b250-8179-4638-ba88-21425ef7b576",
+    "workspace_uuid": "52725df4-b4a0-431c-a186-5e542fc6a3a4",
     "data_sources": [
-        {
-            "status": true,
-            "loaded": true,
-            "filename": "chlorophyll_sharkweb_data_chlorophyll_wb_2007-2017_20180320.txt",
-            "datatype": "chlorophyll"
-        },
-        {
-            "status": false,
-            "loaded": false,
-            "filename": "physicalchemicalmodel_110001_PROFILER_alldepths_SE652400-223501_toolbox.dat",
-            "datatype": "physicalchemicalmodel"
-        },
-        {
-            "status": false,
-            "loaded": false,
-            "filename": "physicalchemicalmodel_120004_PROFILER_alldepths_SE612520-172080_toolbox.dat",
-            "datatype": "physicalchemicalmodel"
-        },
         {
             "status": true,
             "loaded": true,
             "filename": "physicalchemical_sharkweb_data_fyskem_wb_2007-2017_20180320.txt",
             "datatype": "physicalchemical"
-        },
-        {
-            "status": false,
-            "loaded": false,
-            "filename": "phytoplankton_sharkweb_data_biovolume_wb_2007-2012_20180320.txt",
-            "datatype": "phytoplankton"
-        },
-        {
-            "status": false,
-            "loaded": false,
-            "filename": "phytoplankton_sharkweb_data_biovolume_wb_2013-2017_20180320.txt",
-            "datatype": "phytoplankton"
-        },
-        {
-            "status": false,
-            "loaded": false,
-            "filename": "zoobenthos_sharkweb_data_BQIm_wb_2007-2017_20180320.txt",
-            "datatype": "zoobenthos"
         }
     ]
 }

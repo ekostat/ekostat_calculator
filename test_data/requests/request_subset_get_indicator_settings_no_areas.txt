@@ -1,12 +1,12 @@
 {
     "workspace": {
         "alias": "New test workspace",
-        "workspace_uuid": "8b13b250-8179-4638-ba88-21425ef7b576",
+        "workspace_uuid": "52725df4-b4a0-431c-a186-5e542fc6a3a4",
         "status": "editable"
     },
     "subset": {
         "alias": "test_subset_1",
-        "subset_uuid": "ac45fef1-3042-44f4-bdca-e121d1d93f45",
+        "subset_uuid": "52725df4-b4a0-431c-a186-5e542fc6a3a4",
         "status": "editable",
         "value": true,
         "time": {
