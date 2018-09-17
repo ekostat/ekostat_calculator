@@ -11,7 +11,8 @@ import time
 import datetime
 
 import json
-import codecs
+import codecs 
+import re
 
 import pandas as pd
 import pickle
@@ -373,7 +374,7 @@ class EventHandler(object):
     def copy_workspace(self, source_uuid=None, target_alias=None): 
         """
         Created     20180219    by Magnus Wenzer
-        Updated     20180530    by Lena Viktorsson
+        Updated     20180917    by Lena Viktorsson
         
         """ 
         if self.user_id == 'default':
@@ -390,11 +391,22 @@ class EventHandler(object):
 #            return False
         
         # Copy all directories and files in workspace 
-        source_workspace_path = '/'.join([self.workspace_directory, source_uuid])
+        
+        # 20180917: default workspaces has been oved to theresources directory
+        default_workspace_path = os.path.join(self.resource_directory, 'default_workspaces')
+        default_workspaces_list = os.listdir(default_workspace_path) 
+        if source_uuid in default_workspaces_list:
+#            print(type(default_workspaces_list))
+#            print(type(source_uuid))
+            source_workspace_path = os.path.join(default_workspace_path, source_uuid)
+        else:
+            source_workspace_path = '/'.join([self.workspace_directory, source_uuid])
+            
         target_workspace_path = '/'.join([self.workspace_directory, target_uuid])
         
 #        print('source_workspace_path:', source_workspace_path)
 #        print('target_workspace_path:', target_workspace_path)
+        
         
         
         self._logger.debug('Trying to copy workspace "{}". Copy has alias "{}"'.format(source_uuid, target_alias))
@@ -1072,6 +1084,7 @@ class EventHandler(object):
             
                                                      
             if settings_item == 'MONTHDAY_INTERVAL': 
+#                print(type(value), value)
                 value = [list(map(int, [value[0][:2], value[0][2:]])), 
                          list(map(int, [value[-1][:2], value[-1][2:]]))]
                 
@@ -1562,7 +1575,7 @@ class EventHandler(object):
     def dict_subset(self, workspace_uuid=None, subset_uuid=None, request={}, **kwargs):  
         """
         Created     20180222    by Magnus Wenzer
-        Updated     20180824    by Magnus Wenzer
+        Updated     20180917    by Magnus Wenzer
         
         Update 20180608 by MW: kwargs contains what to include. Currently options are: 
             inidcator_settings 
@@ -1596,9 +1609,14 @@ class EventHandler(object):
 #                        'supporting_elements': [], 
 #                        'quality_elements': []}
         
-        if not subset_uuid and request.get('subset_uuid', False):
-            subset_uuid = request['subset_uuid']
-            
+#        print(request.keys()) 
+#        print(request['subset_uuid'])
+        if not subset_uuid: 
+            subset_uuid = request.get('subset_uuid')
+        if not subset_uuid: 
+            subset_uuid = request.get('subset', {}).get('subset_uuid')
+        
+        self.request = request 
         subset_dict['alias'] = uuid_mapping.get_alias(subset_uuid, status=self.all_status) 
         subset_dict['subset_uuid'] = subset_uuid
         subset_dict['status'] = uuid_mapping.get_status(unique_id=subset_uuid) 
@@ -1703,10 +1721,10 @@ class EventHandler(object):
                           
         
     #==========================================================================
-    def dict_type_area(self, workspace_uuid=None, subset_uuid=None, type_area=None, request=None): 
+    def dict_type_area(self, workspace_uuid=None, subset_uuid=None, type_area=None, request=None, **kwargs): 
         """
         Created     20180222    by Magnus Wenzer
-        Updated     20180824    by Magnus Wenzer
+        Updated     20180917    by Magnus Wenzer
         
         "editable" is not checked at the moment....
         """
@@ -1755,7 +1773,18 @@ class EventHandler(object):
                           "children": []}
             
             children_list = []
-            for water_body in water_body_mapping.get_list('water_body', type_area=type_area):
+            
+            # Check in data or not
+            if type(kwargs.get('check_in_df', False)) != bool: 
+                df = kwargs['check_in_df']
+                water_body_list = sorted(list(set(df['VISS_EU_CD'])))
+            elif kwargs.get('list_viss_eu_cd'):
+                water_body_list = kwargs.get('list_viss_eu_cd')
+            else:
+                water_body_list = water_body_mapping.get_list('water_body', type_area=type_area)
+            
+            
+            for water_body in water_body_list:
                 children_list.append(self.dict_water_body(workspace_uuid=workspace_uuid, 
                                                           subset_uuid=subset_uuid, 
                                                           water_body=water_body, 
@@ -1767,10 +1796,10 @@ class EventHandler(object):
         
         
     #==========================================================================
-    def dict_water_district(self, workspace_uuid=None, subset_uuid=None, water_district=None, request={}): 
+    def dict_water_district(self, workspace_uuid=None, subset_uuid=None, water_district=None, request={}, **kwargs): 
         """
         Created     20180315    by Magnus Wenzer
-        Updated     20180315    by Magnus Wenzer
+        Updated     20180917    by Magnus Wenzer
         
         Internally its only possible to filter water bodies.  
         "editable" needs to be checked against water district and type. 
@@ -1801,16 +1830,19 @@ class EventHandler(object):
         else:
             
             active = False 
-            self.temp_subset_object =subset_object
             data_filter_object = subset_object.get_data_filter_object('step_1')
             water_body_active_list = data_filter_object.get_include_list_filter('WATER_BODY')
             
 #            print('****')
 #            print(water_body_active_list)
             water_district_active_list = water_body_mapping.get_list('water_district', water_body=water_body_active_list)
-            
+#            print('### water_body_active_list', water_body_active_list)
+#            print('=== water_district_active_list', water_district_active_list) 
+#            print('--- water_district', water_district)
             if water_district in water_district_active_list:
                 active = True
+            # TODO: water district is not set tto active=true is sub-baisins are active. Is this ok?  
+        
                 
             label = water_body_mapping.get_display_name(water_district=water_district) 
             if not label:
@@ -1823,11 +1855,24 @@ class EventHandler(object):
                           "children": []}
             
             children_list = []
-            for type_area in water_body_mapping.get_list('type_area', water_district=water_district):
+            
+            # Check in data or not
+            if type(kwargs.get('check_in_df', False)) != bool: 
+                df = kwargs['check_in_df']
+                type_area_list = sorted(self.mapping_objects['water_body'].get_list('type_area', 
+                                                                            water_body=list(set(df['VISS_EU_CD']))))
+            elif kwargs.get('list_viss_eu_cd'):
+                type_area_list = sorted(self.mapping_objects['water_body'].get_list('type_area', 
+                                             water_body=kwargs.get('list_viss_eu_cd')))
+            else:
+                type_area_list = water_body_mapping.get_list('type_area', water_district=water_district)
+            
+            for type_area in type_area_list:
                 children_list.append(self.dict_type_area(workspace_uuid=workspace_uuid, 
                                                           subset_uuid=subset_uuid, 
                                                           type_area=type_area, 
-                                                          request=request)) 
+                                                          request=request, 
+                                                          **kwargs)) 
                 # request not active here...
             return_dict['children'] = children_list 
         
@@ -1928,6 +1973,14 @@ class EventHandler(object):
                 result_dict[viss_eu_cd]['result'][key]['value'] = key
                 result_dict[viss_eu_cd]['result'][key]['label'] = self.mapping_objects['label_mapping'].get_mapping(key)         
                 
+                
+                result_dict[viss_eu_cd]['result'][key]['data'] = [{'type': 'timeseries', 
+                                                                   'datasets': [{}]
+                                                                   }]
+                
+                
+                
+                
                 if viss_eu_cd in data['VISS_EU_CD'].values: 
                     status_list = data.loc[data['VISS_EU_CD']==viss_eu_cd, 'STATUS'].values
                     if len(status_list) == 1:
@@ -1957,6 +2010,20 @@ class EventHandler(object):
         
         return result_dict 
         
+    #==========================================================================
+    def dict_result_item(self, viss_eu_cd=None, element_id=None):
+        result_item_dict = {}
+        result_item_dict['status'] = '' 
+        result_item_dict['active'] = False
+        result_item_dict['value'] = element_id
+        result_item_dict['label'] = self.mapping_objects['label_mapping'].get_mapping(element_id) 
+        
+        result_item_dict['label']['data'] = self.dict_data()
+                
+        
+    #==========================================================================
+    def dict_data(self, viss_eu_cd=None, element_id=None):
+        pass
         
     #==========================================================================
     def print_workspaces(self): 
@@ -2138,7 +2205,7 @@ class EventHandler(object):
                                                                    parameter, 
                                                                    kwargs.get('year_from'), 
                                                                    kwargs.get('year_to'), 
-                                                                   datetime.datetime.now().strftime('%Y%m%d'))
+                                                                   datetime.datetime.now().strftime('%Y%m%d%H%M'))
         file_path = os.path.join(self.temp_directory, full_file_name) 
         reader.save_data(file_path) 
         
@@ -2590,7 +2657,7 @@ class EventHandler(object):
     def list_areas(self, workspace_uuid=None, subset_uuid=None, request=None, **kwargs): 
         """
         Created     20180315    by Magnus Wenzer
-        Updated     20180824    by Magnus Wenzer
+        Updated     20180917    by Magnus Wenzer
         
         Lists information for "areas". Areas are hierarchically structured like: 
             [
@@ -2645,14 +2712,24 @@ class EventHandler(object):
                                           append_items=False) 
 #        request_for_water_district = self._get_mapping_for_name_in_dict('key', request)
         
+        if type(kwargs.get('check_in_df', False)) != bool: 
+            df = kwargs['check_in_df']
+            water_district_list = sorted(self.mapping_objects['water_body'].get_list('water_district', 
+                                         water_body=list(set(df['VISS_EU_CD']))))
+        elif kwargs.get('list_viss_eu_cd'):
+            water_district_list = sorted(self.mapping_objects['water_body'].get_list('water_district', 
+                                         water_body=kwargs.get('list_viss_eu_cd')))
+        else:
+            water_district_list = self.mapping_objects['water_body'].get_list('water_district')
 
-        for water_district in self.mapping_objects['water_body'].get_list('water_district'):
+        for water_district in water_district_list:
 #            sub_request = request_for_water_district.get(water_district, None) 
         
             response = self.dict_water_district(workspace_uuid=workspace_uuid, 
                                                 subset_uuid=subset_uuid, 
                                                 water_district=water_district, 
-                                                request={})
+                                                request={}, 
+                                                **kwargs)
             area_list.append(response)
         
         return area_list
@@ -2689,38 +2766,7 @@ class EventHandler(object):
         
         return list(water_bodies)
     
-    
-    #==========================================================================
-    def deprecated_list_type_areas(self, workspace_uuid=None, subset_uuid=None, request=None): 
-        """
-        Created     20180222    by Magnus Wenzer
-        Updated     20180222    by Magnus Wenzer
-        
-        Lists information for type areas. 
-        """
-        # Check request 
-        if request:
-            workspace_object = self.get_workspace(workspace_uuid) 
-            # Create list of type areas 
-            type_area_list = [req['key'] for req in request if req['value']]
-            # Set data filter 
-            workspace_object.set_data_filter(step='step_1', filter_type='include_list', filter_name='TYPE_AREA', data=type_area_list)
-            
-            return request
-        else:
-            return_list = []
-            for type_area in self.mapping_objects['water_body'].get_type_area_list(): 
-    
-                        
-                type_area_dict = self.dict_type_area(workspace_uuid=workspace_uuid, 
-                                                       subset_uuid=subset_uuid, 
-                                                       type_area=type_area, 
-                                                       request=request)
-                return_list.append(type_area_dict)
-    
-            return return_list
-        
-    
+
     #==========================================================================
     def list_water_bodies(self, workspace_uuid=None, subset_uuid=None, type_area=None, request=None): 
         """
@@ -2836,12 +2882,18 @@ class EventHandler(object):
         
     #==========================================================================
     def write_test_response(self, name, response): 
-        if name.startswith('request_'):
-            name = name[8:]
-        file_path = '{}/requests/response_{}.txt'.format(self.test_data_directory, name)
-        self.response = response
-        with codecs.open(file_path, 'w', encoding='cp1252') as fid:
-            json.dump(response, fid, indent=4)        
+        if 0:
+            file_path = '{}/requests/{}.txt'.format(self.test_data_directory, name)
+            self.response = response
+            with codecs.open(file_path, 'w', encoding='cp1252') as fid:
+                json.dump(response, fid, indent=4) 
+        else:
+            if name.startswith('request_'):
+                name = name[8:]
+            file_path = '{}/requests/response_{}.txt'.format(self.test_data_directory, name)
+            self.response = response
+            with codecs.open(file_path, 'w', encoding='cp1252') as fid:
+                json.dump(response, fid, indent=4)        
         
         
     #==========================================================================
@@ -2865,26 +2917,39 @@ class EventHandler(object):
                 continue
             
             file_path = os.path.join(directory, file_name)
-            with codecs.open(file_path, 'r', encoding='cp1252') as fid: 
-#                print(file_path)
-                j = json.load(fid) 
-            if 'workspace_uuid' in j.keys(): 
-                print('Updating workspace_uuid in file: {}'.format(file_name))
-                if j['workspace_uuid'] != 'default_workspace':
-                    j['workspace_uuid'] = workspace_uuid
+            
+            if 1:
+                new_lines = []
+                with codecs.open(file_path) as fid: 
+                    for line in fid:
+                        new_line = re.sub('"workspace_uuid": ".{36}"', '"workspace_uuid": "{}"'.format(workspace_uuid), line)
+                        new_lines.append(new_line)
+                
+                with codecs.open(file_path, 'w') as fid:
+                    fid.write(''.join(new_lines))
+                
+            else:
+                with codecs.open(file_path, 'r', encoding='cp1252') as fid: 
+    #                print(file_path)
+                    j = json.load(fid) 
                     
-            elif 'workspace' in j.keys():
-                if 'workspace_uuid' in j['workspace'].keys():
-                    if j['workspace']['workspace_uuid'] != 'default_workspace':
-                        j['workspace']['workspace_uuid'] = workspace_uuid
-            elif 'subsets' in j.keys(): 
-                for sub in j['subsets']:
-                    if 'workspace_uuid' in sub.keys():
-                        if sub['workspace_uuid'] != 'default_workspace':
-                            sub['workspace_uuid'] = workspace_uuid
-                    
-            with codecs.open(file_path, 'w', encoding='cp1252') as fid:
-                json.dump(j, fid, indent=4) 
+                if 'workspace_uuid' in j.keys(): 
+                    print('Updating workspace_uuid in file: {}'.format(file_name))
+                    if j['workspace_uuid'] != 'default_workspace':
+                        j['workspace_uuid'] = workspace_uuid
+                        
+                elif 'workspace' in j.keys():
+                    if 'workspace_uuid' in j['workspace'].keys():
+                        if j['workspace']['workspace_uuid'] != 'default_workspace':
+                            j['workspace']['workspace_uuid'] = workspace_uuid
+                elif 'subsets' in j.keys(): 
+                    for sub in j['subsets']:
+                        if 'workspace_uuid' in sub.keys():
+                            if sub['workspace_uuid'] != 'default_workspace':
+                                sub['workspace_uuid'] = workspace_uuid
+                        
+                with codecs.open(file_path, 'w', encoding='cp1252') as fid:
+                    json.dump(j, fid, indent=4) 
                 
         self.load_test_requests()
         
@@ -2910,26 +2975,38 @@ class EventHandler(object):
                 continue
             
             file_path = os.path.join(directory, file_name)
-            with codecs.open(file_path, 'r', encoding='cp1252') as fid: 
-#                print(file_path)
-                j = json.load(fid) 
-            if 'subset_uuid' in j.keys(): 
-                print('Updating workspace_uuid in file: {}'.format(file_name))
-                if j['subset_uuid'] != 'default_workspace':
-                    j['subset_uuid'] = subset_uuid
-                    
-            elif 'subset' in j.keys():
-                if 'subset_uuid' in j['subset'].keys():
-                    if j['subset']['subset_uuid'] != 'default_workspace':
-                        j['subset']['subset_uuid'] = subset_uuid
-            elif 'subsets' in j.keys(): 
-                for sub in j['subsets']:
-                    if 'workspace_uuid' in sub.keys():
-                        if sub['workspace_uuid'] != 'default_workspace':
-                            sub['workspace_uuid'] = subset_uuid
-                    
-            with codecs.open(file_path, 'w', encoding='cp1252') as fid:
-                json.dump(j, fid, indent=4) 
+            
+            if 1:
+                new_lines = []
+                with codecs.open(file_path) as fid: 
+                    for line in fid:
+                        new_line = re.sub('"subset_uuid": ".{36}"', '"subset_uuid": "{}"'.format(subset_uuid), line)
+                        new_lines.append(new_line)
+                
+                with codecs.open(file_path, 'w') as fid:
+                    fid.write(''.join(new_lines))
+                
+            else:
+                with codecs.open(file_path, 'r', encoding='cp1252') as fid: 
+    #                print(file_path)
+                    j = json.load(fid) 
+                if 'subset_uuid' in j.keys(): 
+                    print('Updating workspace_uuid in file: {}'.format(file_name))
+                    if j['subset_uuid'] != 'default_workspace':
+                        j['subset_uuid'] = subset_uuid
+                        
+                elif 'subset' in j.keys():
+                    if 'subset_uuid' in j['subset'].keys():
+                        if j['subset']['subset_uuid'] != 'default_workspace':
+                            j['subset']['subset_uuid'] = subset_uuid
+                elif 'subsets' in j.keys(): 
+                    for sub in j['subsets']:
+                        if 'workspace_uuid' in sub.keys():
+                            if sub['workspace_uuid'] != 'default_workspace':
+                                sub['workspace_uuid'] = subset_uuid
+                        
+                with codecs.open(file_path, 'w', encoding='cp1252') as fid:
+                    json.dump(j, fid, indent=4) 
                 
         self.load_test_requests()
         
@@ -3011,13 +3088,26 @@ class EventHandler(object):
     #==========================================================================
     def action_calculate_status(self, workspace_uuid=None, subset_uuid=None, indicator_list=None, water_body_list=None):
         """
-        Created     20180913    by Magnus Wenzer
+        Created     20180913    by Magnus Wenzer 
+        Updated     20180917    by Magnus Wenzer
         
         Calculates status for the given subset. 
         """
-        self.action_load_workspace(workspace_uuid=workspace_uuid) 
+        self.action_load_workspace(workspace_uuid=workspace_uuid) # Loaded in action_apply_data_filter
+
+        # Apply data filters 
+        self.action_apply_data_filter(workspace_uuid=workspace_uuid, 
+                                      subset_uuid=subset_uuid, 
+                                      step=1) 
+        
+        self.action_apply_indicator_settings_data_filter(workspace_uuid=workspace_uuid, 
+                                                         subset_uuid=subset_uuid, 
+                                                         step=2)
+        
+        
         workspace_object = self.get_workspace(workspace_uuid) 
-        step_object_calculate = workspace_object.get_step_object(subset_uuid=subset_uuid, step=3) 
+        
+        step_object_calculate = workspace_object.get_step_object(subset=subset_uuid, step=3) 
         
         # Setup indicators 
         step_object_calculate.indicator_setup(indicator_list=indicator_list)
@@ -3028,8 +3118,8 @@ class EventHandler(object):
         # Calculate quaity elements  
         # TODO: Hur väljer vi quality elements
         quality_elements = ['Nutrients', 'Phytoplankton']
-        step_object_calculate.calculate_quality_element(subset_unique_id=subset_uuid, 
-                                                        quality_element=quality_elements)
+        for qe in quality_elements:
+            step_object_calculate.calculate_quality_element(quality_element=qe)
         
         
     #==========================================================================
@@ -3132,15 +3222,21 @@ class EventHandler(object):
         type_areas = self.mapping_objects['water_body'].get_list('type_area')
         water_bodies = self.mapping_objects['water_body'].get_list('water_body')
         
+#        self.water_districts = water_districts
+#        self.type_areas = type_areas
+#        self.water_bodies = water_bodies
         for area in area_list: 
             if area in water_districts:
-                water_district_list.append(area)
+                sharkweb_name = self.mapping_objects['water_body'].get_mapping(area, 'WATER_DISTRICT_CODE', 'WATER_DISTRICT_NAME')
+                water_district_list.append(sharkweb_name)
             elif area in type_areas:
-                type_area_list.append(area)
+                sharkweb_name = self.mapping_objects['sharkweb_mapping'].get_mapping(area, 'internal', 'sharkweb')
+                type_area_list.append(sharkweb_name)
             elif area in water_bodies:
-                water_body_list.append(area)
+                sharkweb_name = self.mapping_objects['water_body'].get_mapping(area, 'VISS_EU_CD', 'WATERBODY_NAME')
+                water_body_list.append(sharkweb_name)
         
-        
+        self.selection_dicts = {}
         for datatype in datatype_list: 
             selection_dict = {'year_from': from_year, 
                               'year_to': to_year, 
@@ -3148,7 +3244,8 @@ class EventHandler(object):
                               self.mapping_objects['sharkweb_mapping'].get_mapping('WATER_DISTRICT', 'internal', 'sharkweb'): water_district_list, 
                               self.mapping_objects['sharkweb_mapping'].get_mapping('WATER_TYPE_AREA', 'internal', 'sharkweb'): type_area_list, 
                               self.mapping_objects['sharkweb_mapping'].get_mapping('VISS_EU_CD', 'internal', 'sharkweb'): water_body_list, 
-                              'encoding': 'utf8',  #Windows-cp1252
+#                              'encoding': 'utf8',  
+                              'encoding': "Windows-1252", 
                               'lineend': 'windows', 
                               'delimiters': 'point-tab', 
                               'sample_table_view': self.mapping_objects['sharkweb_settings'].get('{}_sample_table_view'.format(datatype)), 
@@ -3156,6 +3253,8 @@ class EventHandler(object):
                               'headerlang': self.mapping_objects['sharkweb_settings'].get('headerlang')} 
             
 #            self.selection_dict = selection_dict
+#            return {} 
+            self.selection_dicts[datatype] = selection_dict
 #            return {}
             file_name = self.import_sharkweb_data(workspace_uuid=workspace_uuid, 
                                                   **selection_dict)
@@ -3260,7 +3359,8 @@ class EventHandler(object):
             raise exceptions.NoDataSelected 
             
         # Extract water bodies from "areas" 
-        water_body_list = self._get_water_bodies_from_area_list(request['areas']) 
+        water_body_list = None
+#        water_body_list = self._get_water_bodies_from_area_list(request['areas']) 
         
         self.action_calculate_status(workspace_uuid=workspace_uuid, 
                                      subset_uuid=subset_uuid, 
@@ -3304,7 +3404,9 @@ class EventHandler(object):
         
         df0 = workspace_object.get_filtered_data(step=0) 
         year_choices = sorted(set(df0['MYEAR']))
-        
+#        water_distric_list = sorted(ekos.mapping_objects['water_body'].get_list('water_district', 
+#                                                                        water_body=list(set(df0['VISS_EU_CD']))))
+  
         response = {}
         response['workspace_uuid'] = workspace_uuid
         response['workspace'] = self.dict_workspace(workspace_uuid) 
@@ -3317,7 +3419,8 @@ class EventHandler(object):
                                               indicator_settings=False, 
                                               quality_elements=False, 
                                               supporting_elements=False, 
-                                              year_choices=year_choices)
+                                              year_choices=year_choices, 
+                                              check_in_df=df0)
        
         
 #        print('='*50)
@@ -3349,6 +3452,9 @@ class EventHandler(object):
         
         workspace_uuid = request.get('workspace_uuid')
         subset_uuid = request.get('subset_uuid')
+         
+        if not subset_uuid:
+            subset_uuid = request.get('subset', {}).get('subset_uuid')
         
 #        workspace_uuid = request.get('workspace_uuid', {}) 
 #        if not workspace_uuid:
@@ -3386,13 +3492,14 @@ class EventHandler(object):
         request['subset']['subset_uuid'] = subset_uuid
         request['subset']['areas'] = request.get('areas') 
         request['subset']['time'] = {'year_interval': request.get('year_interval')}
-        
+        self.request_ = request
         # Set data filter and add subset information to response
         response['subset'] = self.dict_subset(workspace_uuid=workspace_uuid, 
                                               subset_uuid=subset_uuid, 
                                               request=request['subset'], 
                                               time=True, 
-                                              areas=True) 
+                                              areas=True, 
+                                              list_viss_eu_cd=request.get('areas', [])) 
         
         # Check selected areas 
         workspace_object = self.get_workspace(workspace_uuid) 

@@ -548,6 +548,18 @@ class WaterBody(AttributeDict):
         else:
             return sorted(set(self.water_bodies[self.column_name[area_level]['internal']]))
 
+    
+    #==========================================================================
+    def get_mapping(self, item, from_col, to_col): 
+        """
+        Created     20180917    by Magnus Wenzer
+        """ 
+        result = self.water_bodies.loc[self.water_bodies[from_col]==item, to_col]
+        if len(result):
+            return result.values[0]
+        return item
+        
+        
     #==========================================================================
     def get_url(self, water_body): 
         result = self.water_bodies.loc[self.water_bodies[self.column_name['water_body']['internal']]==water_body, 'URL_VISS']

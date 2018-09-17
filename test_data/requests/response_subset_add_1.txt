@@ -1,6 +1,6 @@
 {
-    "alias": "subset_20180615",
-    "subset_uuid": "2eebfe4f-2bee-4301-a209-a4e06ff35859",
+    "alias": "mw_subset",
+    "subset_uuid": "9ada83cf-a930-438e-b88c-0b71cc85e4c1",
     "status": "editable",
     "value": true
 }

@@ -1,12 +1,4 @@
 {
-    "workspace_uuid": "52725df4-b4a0-431c-a186-5e542fc6a3a4",
-    "subset_uuid": "52725df4-b4a0-431c-a186-5e542fc6a3a4",
-    "indicators": [
-        "din_winter"
-    ],
-    "areas": [
-        "SE633000-195000",
-        "SE633550-200700",
-        "SE633710-200500"
-    ]
+    "workspace_uuid": "c423252b-63ad-4d1d-98b9-ca51bbde5042",
+    "subset_uuid": "9ada83cf-a930-438e-b88c-0b71cc85e4c1"
 }

@@ -1,5 +1,5 @@
 {
-    "workspace_uuid": "52725df4-b4a0-431c-a186-5e542fc6a3a4",
-    "subset_uuid": "52725df4-b4a0-431c-a186-5e542fc6a3a4",
+    "workspace_uuid": "c423252b-63ad-4d1d-98b9-ca51bbde5042",
+    "subset_uuid": "9ada83cf-a930-438e-b88c-0b71cc85e4c1",
     "alias": "test_subset_2"
 }

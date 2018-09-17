@@ -1,12 +1,11 @@
 {
-    "workspace_uuid": "52725df4-b4a0-431c-a186-5e542fc6a3a4",
+    "workspace_uuid": "c423252b-63ad-4d1d-98b9-ca51bbde5042",
     "year_from": 2013,
     "year_to": 2014,
     "datatypes": [
         "Physical and Chemical"
     ],
     "areas": [
-        "02 - V\u00e4stkustens fjordar",
-        "SE570900-121060 - Balg\u00f6arkipelagen"
+        "SE570900-121060"
     ]
 }

@@ -1,0 +1,2 @@
+uuid	alias	user_id	status	active
+default_workspace	default_workspace	default	readable	False

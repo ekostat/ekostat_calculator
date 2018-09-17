@@ -1,19 +1,19 @@
 {
-    "workspace_uuid": "52725df4-b4a0-431c-a186-5e542fc6a3a4",
+    "workspace_uuid": "c423252b-63ad-4d1d-98b9-ca51bbde5042",
     "workspace": {
         "alias": "New test workspace",
-        "workspace_uuid": "52725df4-b4a0-431c-a186-5e542fc6a3a4",
+        "workspace_uuid": "c423252b-63ad-4d1d-98b9-ca51bbde5042",
         "status": "editable"
     },
     "subset": {
-        "alias": "subset_20180615",
-        "subset_uuid": "2eebfe4f-2bee-4301-a209-a4e06ff35859",
+        "alias": "mw_subset",
+        "subset_uuid": "9ada83cf-a930-438e-b88c-0b71cc85e4c1",
         "status": "editable",
         "value": true,
         "time": {
             "year_interval": [
-                2015,
-                2017
+                2013,
+                2013
             ]
         },
         "areas": [
@@ -7815,10 +7815,115 @@
                 },
                 {
                     "label": "Chlorophyll",
-                    "status": "readable",
-                    "value": false,
+                    "status": "editable",
+                    "value": true,
                     "key": "indicator_chl",
-                    "settings": []
+                    "settings": [
+                        {
+                            "area_type": "type_area",
+                            "key": "20",
+                            "label": "Norra Kvarkens inre kustvatten",
+                            "children": [
+                                {
+                                    "key": "MIN_NR_YEARS",
+                                    "unit": "years",
+                                    "label": "Minimum number of years (years)",
+                                    "status": "editable",
+                                    "widget": "number:int",
+                                    "value": 3
+                                },
+                                {
+                                    "key": "MONTH_LIST",
+                                    "unit": "",
+                                    "label": "Month interval ()",
+                                    "status": "editable",
+                                    "widget": "interval:int",
+                                    "value": [
+                                        6,
+                                        8
+                                    ]
+                                }
+                            ]
+                        },
+                        {
+                            "area_type": "type_area",
+                            "key": "21",
+                            "label": "Norra Kvarkens yttre kustvatten",
+                            "children": [
+                                {
+                                    "key": "MIN_NR_YEARS",
+                                    "unit": "years",
+                                    "label": "Minimum number of years (years)",
+                                    "status": "editable",
+                                    "widget": "number:int",
+                                    "value": 3
+                                },
+                                {
+                                    "key": "MONTH_LIST",
+                                    "unit": "",
+                                    "label": "Month interval ()",
+                                    "status": "editable",
+                                    "widget": "interval:int",
+                                    "value": [
+                                        6,
+                                        8
+                                    ]
+                                }
+                            ]
+                        },
+                        {
+                            "area_type": "type_area",
+                            "key": "22",
+                            "label": "Bottenviken, inre kustvatten",
+                            "children": [
+                                {
+                                    "key": "MIN_NR_YEARS",
+                                    "unit": "years",
+                                    "label": "Minimum number of years (years)",
+                                    "status": "editable",
+                                    "widget": "number:int",
+                                    "value": 3
+                                },
+                                {
+                                    "key": "MONTH_LIST",
+                                    "unit": "",
+                                    "label": "Month interval ()",
+                                    "status": "editable",
+                                    "widget": "interval:int",
+                                    "value": [
+                                        6,
+                                        8
+                                    ]
+                                }
+                            ]
+                        },
+                        {
+                            "area_type": "type_area",
+                            "key": "23",
+                            "label": "Bottenviken, yttre kustvatten",
+                            "children": [
+                                {
+                                    "key": "MIN_NR_YEARS",
+                                    "unit": "years",
+                                    "label": "Minimum number of years (years)",
+                                    "status": "editable",
+                                    "widget": "number:int",
+                                    "value": 3
+                                },
+                                {
+                                    "key": "MONTH_LIST",
+                                    "unit": "",
+                                    "label": "Month interval ()",
+                                    "status": "editable",
+                                    "widget": "interval:int",
+                                    "value": [
+                                        6,
+                                        8
+                                    ]
+                                }
+                            ]
+                        }
+                    ]
                 },
                 {
                     "label": "Phytplankton",
@@ -7978,17 +8083,6 @@
                                     "value": 3
                                 },
                                 {
-                                    "key": "MONTH_LIST",
-                                    "unit": "",
-                                    "label": "Month interval ()",
-                                    "status": "editable",
-                                    "widget": "interval:int",
-                                    "value": [
-                                        11,
-                                        2
-                                    ]
-                                },
-                                {
                                     "key": "DEPH_INTERVAL",
                                     "unit": "m",
                                     "label": "Depth interval (m)",
@@ -7997,6 +8091,23 @@
                                     "value": [
                                         0,
                                         10
+                                    ]
+                                },
+                                {
+                                    "key": "MONTHDAY_INTERVAL",
+                                    "unit": "",
+                                    "label": "Season ()",
+                                    "status": "editable",
+                                    "widget": "interval:monthday",
+                                    "value": [
+                                        [
+                                            11,
+                                            30
+                                        ],
+                                        [
+                                            2,
+                                            28
+                                        ]
                                     ]
                                 }
                             ]
@@ -8015,17 +8126,6 @@
                                     "value": 3
                                 },
                                 {
-                                    "key": "MONTH_LIST",
-                                    "unit": "",
-                                    "label": "Month interval ()",
-                                    "status": "editable",
-                                    "widget": "interval:int",
-                                    "value": [
-                                        11,
-                                        2
-                                    ]
-                                },
-                                {
                                     "key": "DEPH_INTERVAL",
                                     "unit": "m",
                                     "label": "Depth interval (m)",
@@ -8034,6 +8134,23 @@
                                     "value": [
                                         0,
                                         10
+                                    ]
+                                },
+                                {
+                                    "key": "MONTHDAY_INTERVAL",
+                                    "unit": "",
+                                    "label": "Season ()",
+                                    "status": "editable",
+                                    "widget": "interval:monthday",
+                                    "value": [
+                                        [
+                                            11,
+                                            30
+                                        ],
+                                        [
+                                            2,
+                                            28
+                                        ]
                                     ]
                                 }
                             ]
@@ -8052,17 +8169,6 @@
                                     "value": 3
                                 },
                                 {
-                                    "key": "MONTH_LIST",
-                                    "unit": "",
-                                    "label": "Month interval ()",
-                                    "status": "editable",
-                                    "widget": "interval:int",
-                                    "value": [
-                                        11,
-                                        2
-                                    ]
-                                },
-                                {
                                     "key": "DEPH_INTERVAL",
                                     "unit": "m",
                                     "label": "Depth interval (m)",
@@ -8071,6 +8177,23 @@
                                     "value": [
                                         0,
                                         10
+                                    ]
+                                },
+                                {
+                                    "key": "MONTHDAY_INTERVAL",
+                                    "unit": "",
+                                    "label": "Season ()",
+                                    "status": "editable",
+                                    "widget": "interval:monthday",
+                                    "value": [
+                                        [
+                                            11,
+                                            30
+                                        ],
+                                        [
+                                            2,
+                                            28
+                                        ]
                                     ]
                                 }
                             ]
@@ -8089,17 +8212,6 @@
                                     "value": 3
                                 },
                                 {
-                                    "key": "MONTH_LIST",
-                                    "unit": "",
-                                    "label": "Month interval ()",
-                                    "status": "editable",
-                                    "widget": "interval:int",
-                                    "value": [
-                                        11,
-                                        2
-                                    ]
-                                },
-                                {
                                     "key": "DEPH_INTERVAL",
                                     "unit": "m",
                                     "label": "Depth interval (m)",
@@ -8108,6 +8220,23 @@
                                     "value": [
                                         0,
                                         10
+                                    ]
+                                },
+                                {
+                                    "key": "MONTHDAY_INTERVAL",
+                                    "unit": "",
+                                    "label": "Season ()",
+                                    "status": "editable",
+                                    "widget": "interval:monthday",
+                                    "value": [
+                                        [
+                                            11,
+                                            30
+                                        ],
+                                        [
+                                            2,
+                                            28
+                                        ]
                                     ]
                                 }
                             ]

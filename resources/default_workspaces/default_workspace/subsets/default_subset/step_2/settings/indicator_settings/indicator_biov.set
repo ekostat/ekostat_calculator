@@ -1,0 +1,28 @@
+Type_Area_number	Type_Area_suffix	VISS_EU_CD	tolerance_MIN_NR_YEARS_int	tolerance_MIN_NR_VALUES_int	tolerance_TIME_DELTA_TOLERANCE	tolerance_POS_RADIUS_TOLERANCE	filter_MONTH_LIST_int	ref_ref_value_limit	ref_HG_value_limit	ref_GM_value_limit	ref_MP_value_limit	ref_PB_value_limit	ref_HG_EQR_limit_float	ref_GM_EQR_limit_float	ref_MP_EQR_limit_float	ref_PB_EQR_limit_float	ref_Salinity_max_int
+1	n	unspecified	3	3	3	0.1	6;7;8	0.8					0.67	0.52	0.26	0.13	27
+1	s	unspecified	3	3	3	0.1	6;7;8	0.9					0.69	0.53	0.27	0.14	20
+2		unspecified	3	3	3	0.1	6;7;8	1.35					0.68	0.45	0.3	0.17	27
+3		unspecified	3	3	3	0.1	6;7;8	0.8					0.67	0.52	0.26	0.13	27
+4		unspecified	3	3	3	0.1	6;7;8	0.5					0.67	0.45	0.22	0.08	20
+5		unspecified	3	3	3	0.1	6;7;8	0.7					0.58	0.33	0.17	0.1	20
+6		unspecified	3	3	3	0.1	6;7;8	0.25					0.63	0.33	0.1	0.05	20
+7		unspecified	3	3	3	0.1	6;7;8	0.18					0.72	0.56	0.24	0.08	7
+8		unspecified	3	3	3	0.1	6;7;8	1.05*10**(-4)*((15+( (59-15)  * ((7-s) /7) ))**2.6878)					0.72	0.56	0.24	0.08	7
+9		unspecified	3	3	3	0.1	6;7;8	0.18					0.72	0.56	0.24	0.08	7
+10		unspecified	3	3	3	0.1	6;7;8	0.18					0.72	0.56	0.24	0.08	7
+11		unspecified	3	3	3	0.1	6;7;8	0.18					0.72	0.56	0.24	0.08	7
+12	s	unspecified	3	3	3	0.1	6;7;8	1.05*10**(-4)*((15+( (34-15)  * ((6-s) /6) ))**2.6878)					0.72	0.56	0.24	0.08	6
+12	n	unspecified	3	3	3	0.1	6;7;8	1.05*10**(-4)*((15+( (23-15)  * ((6-s) /6) ))**2.6878)					0.72	0.56	0.24	0.08	6
+13		unspecified	3	3	3	0.1	6;7;8	1.05*10**(-4)*((15+( (34-15)  * ((6-s) /6) ))**2.6878)					0.72	0.56	0.24	0.08	6
+14		unspecified	3	3	3	0.1	6;7;8	0.18					0.72	0.56	0.24	0.08	6
+15		unspecified	3	3	3	0.1	6;7;8	0.18					0.72	0.56	0.24	0.08	6
+16		unspecified	3	3	3	0.1	6;7;8	0.21					0.66	0.45	0.24	0.08	5
+17		unspecified	3	3	3	0.1	6;7;8	0.18					0.67	0.45	0.24	0.08	5
+18		unspecified	3	3	3	0.1	6;7;8	0.21					0.66	0.45	0.24	0.08	5
+19		unspecified	3	3	3	0.1	6;7;8	0.18					0.67	0.45	0.24	0.08	5
+20		unspecified	3	3	3	0.1	6;7;8	0.16					0.64	0.43	0.24	0.08	5
+21		unspecified	3	3	3	0.1	6;7;8	0.15					0.56	0.38	0.2	0.07	5
+22		unspecified	3	3	3	0.1	6;7;8	0.16					0.64	0.43	0.24	0.08	3
+23		unspecified	3	3	3	0.1	6;7;8	0.15					0.73	0.55	0.3	0.13	3
+24		unspecified	3	3	3	0.1	6;7;8	1.05*10**(-4)*((15+( (23-15)  * ((6-s) /6) ))**2.6878)					0.72	0.56	0.24	0.08	6
+25		unspecified	3	3	3	0.1	6;7;8	1.4					0.67	0.51	0.29	0.17	20

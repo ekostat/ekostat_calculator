@@ -88,7 +88,7 @@ class IndicatorBase(object):
         # To be read from config-file
         # TODO: Add 'ALABO' and 'TEMP'
         self.meta_columns = ['SDATE', 'YEAR', 'MONTH', 'STIME', 'POSITION', 'STATN', 'VISS_EU_CD', 'WATER_BODY_NAME', 'WATER_DISTRICT',
-       'WATER_TYPE_AREA', 'DEPH', 'ALABO', 'WADEP']
+       'WATER_TYPE_AREA', 'DEPH', 'RLABO', 'WADEP']
         self.parameter_list =  [item.strip() for item in self.mapping_objects['quality_element'].indicator_config.loc[self.name]['parameters'].split(', ')] #[item.strip() for item in self.parent_workspace_object.cfg['indicators'].loc[self.name][0].split(', ')]
         self.additional_parameter_list = []
         if type(self.mapping_objects['quality_element'].indicator_config.loc[self.name]['additional_parameters']) is str:
@@ -554,7 +554,8 @@ class IndicatorBase(object):
         else:
             water_body_list = self.get_filtered_data(subset = self.subset, step = 'step_2').dropna(subset = [self.indicator_parameter]).VISS_EU_CD.unique()
 #        if water_body:
-        
+#        print('self.column_list', self.column_list) 
+        print(water_body_list)
         for water_body in dict.fromkeys(water_body_list, True):
             filtered_data = self.get_filtered_data(subset = self.subset, step = 'step_2', water_body = water_body, indicator = self.name)[self.column_list].copy()
             if filtered_data.empty:
@@ -1221,6 +1222,7 @@ class IndicatorNutrients(IndicatorBase):
         year_variable = 'YEAR'
         if 'winter' in self.name:
             month_list = self.parent_workspace_object.get_step_object(step = 2, subset = self.subset).get_indicator_data_filter_settings(self.name).get_value(variable = 'MONTH_LIST', water_body = water_body)
+            print('month_list', month_list)
             winter_months = [month for month in month_list if month > 10]
             #print(water_body, self.mapping_objects['water_body'][water_body]['WATERBODY_NAME'])
             self._add_winter_year(df, winter_months)

@@ -1,0 +1,26 @@
+{
+	"subset": {
+		"result": {
+			"SE-1090": {
+				"value": "SE-1090",
+				"label": "Bottenviken",
+				"result": {
+					"qe_nutrients": {
+						"status": "Good",
+						"value": "qe_nutrients",
+						"label": "Nutrients",
+						"data": {
+							"type": "timeseries", // timeseries, bar, boxplot
+							"xLabel": "...",
+							"yLabel": "...",
+							"datasets": [
+								{"label": "good", "x": [0,1,2], "y": [0,1,2]},
+								{"label": "high", "x": [0,1,2], "y": [0,1,2]},
+							]
+						}
+					}
+				}
+			}
+		}
+	}
+}
