@@ -401,7 +401,7 @@ class ParameterMapping(AttributeDict):
         return self.get_mapping_dict(para_list)
         
     #==========================================================================
-    def get_mapping(self, item=None, from_column=None, to_column=None):
+    def get_mapping(self, item=None, from_column=None, to_column=None, **kwargs):
         """
         Created     20180222    by Magnus Wenzer
         Updated     20180222    by Magnus Wenzer
@@ -410,6 +410,8 @@ class ParameterMapping(AttributeDict):
         result = self.mapping_file.loc[self.mapping_file[from_column]==item, to_column]
         if len(result):
             return result.values[0]
+        if kwargs.get('return_blank_if_not_found'):
+            return ''
         return item
 
 
@@ -701,6 +703,17 @@ class QualityElement(object):
         self.cfg['quality elements'] = self.cf_df.groupby('quality element')['indicator'].unique()
         self.cfg['indicators'] = self.cf_df.groupby('indicator')['parameters'].unique() 
         self.indicator_config = self.cf_df.set_index('indicator')
+    
+    
+    #==========================================================================
+    def get_mapping(self, item, from_col, to_col): 
+        """
+        Created     20180918    by Magnus Wenzer
+        """ 
+        result = self.cf_df.loc[self.cf_df[from_col]==item, to_col]
+        if len(result):
+            return result.values[0]
+        return item
     
     
     #==========================================================================

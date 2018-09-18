@@ -499,7 +499,7 @@ class WorkStep(object):
     def get_results(self, force_loading_txt=False, **kwargs): 
         """
         Created 20180720    by Magnus 
-        Updated 20180914    bu Magnus
+        Updated 20180918    by Magnus
         Loads all files in the results-directory. 
         pkl-files are loaded by default if present. 
         Override this by setting force_loading_txt == True 
@@ -520,6 +520,8 @@ class WorkStep(object):
         save_load_object = core.SaveLoadDelete(results_directory)
         
         for key in key_list: 
+            if kwargs.get('match_string') and kwargs.get('match_string') not in key:
+                continue
             if kwargs.get('by'): 
                 if 'by_' + kwargs.get('by') not in key:
                     continue

@@ -20,9 +20,9 @@ BIOV_CONC_ALL	Biovolume	float
 BQIm	BQI	float	
 CPHL_INTEG	Chlorophyll	float	
 DIN	DIN	float	umol/l
-PHOS	DIP	float	
-NTOT	TN	float	
-PTOT	TP	float	
+PHOS	DIP	float	umol/l
+NTOT	TN	float	umol/l
+PTOT	TP	float	umol/l
 SECCHI	Secchi	float	m
 WATER_BODY_NAME	Waterbody	string	
 VISS_EU_CD	Waterbody ID	string	

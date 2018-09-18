@@ -159,7 +159,7 @@ class EventHandler(object):
             self.mapping_objects['indicator_settings_items_to_show_in_gui'] = core.SimpleList(file_path=os.path.join(self.resource_directory, 'mappings/indicator_settings_items_to_show_in_gui.txt'))
             self.mapping_objects['indicator_settings_items_editable_in_gui'] = core.SimpleList(file_path=os.path.join(self.resource_directory, 'mappings/indicator_settings_items_editable_in_gui.txt'))
             self.mapping_objects['datatype_list'] = core.MappingObject(file_path=os.path.join(self.resource_directory, 'mappings/datatype_list.txt'))
-            self.mapping_objects['sharkweb_mapping'] = core.MappingObject(file_path=os.path.join(self.resource_directory, 'mappings/sharkweb_mapping.txt'))
+            self.mapping_objects['sharkweb_mapping'] = core.MappingObject(file_path=os.path.join(self.resource_directory, 'mappings/sharkweb_search_mapping.txt'))
             self.mapping_objects['sharkweb_settings'] = core.SharkwebSettings(file_path=os.path.join(self.resource_directory, 'mappings/sharkweb_settings.txt'))
             self.mapping_objects['label_mapping'] = core.MappingObject(file_path=os.path.join(self.resource_directory, 'mappings/display_mapping.txt'), 
                                                                        from_column='internal', 
@@ -1922,14 +1922,16 @@ class EventHandler(object):
     def dict_result(self, workspace_uuid=None, subset_uuid=None, **kwargs): 
         """
         Created     20180720    by Magnus Wenzer
+        Updated     20181918    by Magnus
         
-        """
+        """ 
+        self.action_load_workspace(workspace_uuid)
         workspace_object = self.get_workspace(workspace_uuid) 
         self._check_valid_uuid(workspace_uuid, subset_uuid)
         
         # Loading saved  
         step3_object = workspace_object.get_step_object(step=3, subset=subset_uuid)
-        result_data = step3_object.get_results(by=kwargs.get('by', 'period'))
+        result_data = step3_object.get_results(by='period')
         
         # Get list of viss_eu_cd from data filter step 1 
         step1 = workspace_object.get_step_object(step=1, subset=subset_uuid) 
@@ -1967,16 +1969,23 @@ class EventHandler(object):
                 result_dict['all']['result'][key]['value'] = key
                 result_dict['all']['result'][key]['label'] = self.mapping_objects['label_mapping'].get_mapping(key) 
                 
-                result_dict[viss_eu_cd]['result'][key] = {} 
-                result_dict[viss_eu_cd]['result'][key]['status'] = '' 
-                result_dict[viss_eu_cd]['result'][key]['active'] = False
-                result_dict[viss_eu_cd]['result'][key]['value'] = key
-                result_dict[viss_eu_cd]['result'][key]['label'] = self.mapping_objects['label_mapping'].get_mapping(key)         
+                result_dict[viss_eu_cd]['result'][key] = self.dict_result_element(workspace_uuid=workspace_uuid, 
+                                                                                  subset_uuid=subset_uuid, 
+                                                                                  viss_eu_cd=viss_eu_cd, 
+                                                                                  element_id=key, 
+                                                                                  **kwargs)
                 
                 
-                result_dict[viss_eu_cd]['result'][key]['data'] = [{'type': 'timeseries', 
-                                                                   'datasets': [{}]
-                                                                   }]
+#                result_dict[viss_eu_cd]['result'][key] = {} 
+#                result_dict[viss_eu_cd]['result'][key]['status'] = '' 
+#                result_dict[viss_eu_cd]['result'][key]['active'] = False
+#                result_dict[viss_eu_cd]['result'][key]['value'] = key
+#                result_dict[viss_eu_cd]['result'][key]['label'] = self.mapping_objects['label_mapping'].get_mapping(key)         
+#                
+#                
+#                result_dict[viss_eu_cd]['result'][key]['data'] = [{'type': 'timeseries', 
+#                                                                   'datasets': [{}]
+#                                                                   }]
                 
                 
                 
@@ -2010,21 +2019,156 @@ class EventHandler(object):
         
         return result_dict 
         
+    
     #==========================================================================
-    def dict_result_item(self, viss_eu_cd=None, element_id=None):
+    def dict_result_element(self, viss_eu_cd=None, element_id=None, **kwargs):
+        """
+        Created     20181918    by Magnus Wenzer
+        
+        """
+        
         result_item_dict = {}
         result_item_dict['status'] = '' 
-        result_item_dict['active'] = False
+        result_item_dict['active'] = False # changed later i think 
         result_item_dict['value'] = element_id
         result_item_dict['label'] = self.mapping_objects['label_mapping'].get_mapping(element_id) 
         
-        result_item_dict['label']['data'] = self.dict_data()
-                
+        # kwargs must be workspace_uuid and subset_uuid
+        result_item_dict['data'] = [] 
+        result_item_dict['data'].append(self.dict_data_timeseries(viss_eu_cd=viss_eu_cd, 
+                                                                       element_id=element_id, 
+                                                                       **kwargs)) 
+        return result_item_dict
+    
         
     #==========================================================================
-    def dict_data(self, viss_eu_cd=None, element_id=None):
-        pass
+    def dict_data_timeseries(self, workspace_uuid=None, subset_uuid=None, 
+                             viss_eu_cd=None, element_id=None, time_as_string=False, **kwargs):
+        """
+        Created     20181918    by Magnus Wenzer
         
+        """
+        
+        self.action_load_workspace(workspace_uuid)
+        workspace_object = self.get_workspace(workspace_uuid) 
+        self._check_valid_uuid(workspace_uuid, subset_uuid)
+        
+        # Loading saved  
+        step3_object = workspace_object.get_step_object(step=3, subset=subset_uuid)
+        result_data = step3_object.get_results(by='date', match_string=element_id) 
+        # Should only return result for one key...
+        key = element_id + '-by_date'
+        
+        df = result_data[key] 
+        
+        # Extract the given viss_eu_cd 
+        df = df.loc[df['VISS_EU_CD']==viss_eu_cd]
+#        print('KEY', key)
+        # Find primary variable 
+        primary_variable = self.mapping_objects['quality_element'].get_mapping(element_id, 'indicator', 'parameters').split(',')[0].strip()
+        if primary_variable not in df.columns: 
+            # Primary variable not found. No data to plot. 
+#            print('primary_variable'.upper(), primary_variable)
+            return {}
+        print('=== primary_variable'.upper(), primary_variable)
+        # Find unit for xlabel
+        unit = self.mapping_objects['display_mapping'].get_mapping(primary_variable, 
+                                                                     'internal', 
+                                                                     'unit', 
+                                                                     return_blank_if_not_found=True)
+        
+        # List stations 
+        station_list = sorted(set(df['STATN']))
+        
+        #----------------------------------------------------------------------
+        # Create datasets 
+        datasets = []
+        
+        # Stations
+        for station in station_list: 
+            statn_df = df.loc[df['STATN']==station]
+            y = list(statn_df[primary_variable]) 
+            if time_as_string: 
+                x = ['{}T'.format(sdate) for sdate in statn_df['SDATE']]
+            else: 
+                # Time as datetime objects 
+                x = []
+                for sdate in statn_df['SDATE']:
+                    ymd = [int(item) for item in sdate.split('-')]
+                    x.append(datetime.datetime(*ymd))
+            
+            dataset_dict = {'x': x, 
+                            'y': y, 
+                            'label': station.capitalize(), 
+                            'type': 'scatter'}
+            
+            datasets.append(dataset_dict)
+        
+        
+        # Status lines/fields
+        
+        # Add date column and sort by date 
+        df['date'] = pd.to_datetime(df['SDATE']) 
+        df.sort_values('date', inplace=True)
+        
+        # First check order 
+        direction = self.mapping_objects['quality_element'].get_mapping(key, 'indicator', 'direction_good').split(',')[0].strip()
+        
+        status_list = ['REFERENCE_VALUE', 'HG_VALUE_LIMIT', 'GM_VALUE_LIMIT', 'MP_VALUE_LIMIT', 'PB_VALUE_LIMIT']
+        label_dict = dict(zip(status_list, ['high', 'good', 'moderate', 'poor', 'bad'])) 
+        
+        if direction == 'negative':
+            # Lower value is better  
+            for status in status_list:                 
+                y = list(df[status]) 
+                if time_as_string: 
+                    x = ['{}T'.format(sdate) for sdate in df['SDATE']]
+                else: 
+                    # Time as datetime objects 
+                    x = df['date']
+                    
+                status_dict = {'x': x, 
+                               'y': y, 
+                               'label': label_dict[status], 
+                               'type': 'fill', 
+                               'extend': ''} 
+                if status == 'PB_VALUE_LIMIT':
+                    status_dict['extend'] = 'max'
+                
+                datasets.append(status_dict)
+            
+        
+        elif direction == 'positive':
+            # Higher value is better 
+            status_list.reverse() 
+            for status in status_list:                 
+                y = list(df[status]) 
+                if time_as_string: 
+                    x = ['{}T'.format(sdate) for sdate in df['SDATE']]
+                else: 
+                    # Time as datetime objects 
+                    x = df['date']
+                    
+                status_dict = {'x': x, 
+                               'y': y, 
+                               'label': label_dict[status], 
+                               'type': 'fill', 
+                               'extend': ''} 
+                if status == 'REFERENCE_VALUE':
+                    status_dict['extend'] = 'max'
+                
+                datasets.append(status_dict)
+            
+        
+        # Create dict to return 
+        data_dict = {'type': 'timeseries', 
+                     'xlabel': 'Date', 
+                     'ylabel': unit, 
+                     'datasets': datasets}
+        
+        return data_dict
+        
+    
     #==========================================================================
     def print_workspaces(self): 
         """
@@ -3244,8 +3388,8 @@ class EventHandler(object):
                               self.mapping_objects['sharkweb_mapping'].get_mapping('WATER_DISTRICT', 'internal', 'sharkweb'): water_district_list, 
                               self.mapping_objects['sharkweb_mapping'].get_mapping('WATER_TYPE_AREA', 'internal', 'sharkweb'): type_area_list, 
                               self.mapping_objects['sharkweb_mapping'].get_mapping('VISS_EU_CD', 'internal', 'sharkweb'): water_body_list, 
-#                              'encoding': 'utf8',  
-                              'encoding': "Windows-1252", 
+                              'encoding': 'utf8',  
+#                              'encoding': "Windows-1252", 
                               'lineend': 'windows', 
                               'delimiters': 'point-tab', 
                               'sample_table_view': self.mapping_objects['sharkweb_settings'].get('{}_sample_table_view'.format(datatype)), 
@@ -3913,7 +4057,8 @@ class EventHandler(object):
         for subset_uuid in subset_uuid_list: 
             response['subset'][subset_uuid] = self.dict_subset(workspace_uuid=workspace_uuid, 
                                                                 subset_uuid=subset_uuid, 
-                                                                result=True)
+                                                                result=True, 
+                                                                time_as_string=True)
         return response
         
     

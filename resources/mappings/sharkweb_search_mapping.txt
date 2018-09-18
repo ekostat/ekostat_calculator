@@ -1,7 +1,7 @@
 internal	sharkweb
-VISS_EU_CD	svar_sea_area_option
-WATER_TYPE_AREA	type_area_option
-WATER_DISTRICT	water_district_option
+VISS_EU_CD	svar_sea_area_list
+WATER_TYPE_AREA	type_area_list
+WATER_DISTRICT	water_district_list
 1n	01n - Västkustens inre kustvatten
 1s	01s - Västkustens inre kustvatten
 2	02 - Västkustens fjordar

@@ -1,42 +1,262 @@
 {
-    "workspace_uuid": "c423252b-63ad-4d1d-98b9-ca51bbde5042",
+    "workspace_uuid": "37d6ec90-4461-41ea-98cd-d17391205602",
     "workspace": {
         "alias": "New test workspace",
-        "workspace_uuid": "c423252b-63ad-4d1d-98b9-ca51bbde5042",
+        "workspace_uuid": "37d6ec90-4461-41ea-98cd-d17391205602",
         "status": "editable"
     },
     "subset": {
         "alias": "mw_subset",
-        "subset_uuid": "9ada83cf-a930-438e-b88c-0b71cc85e4c1",
+        "subset_uuid": "aab21e58-6819-4ff9-a7b5-eb3b4b122889",
         "status": "editable",
         "value": true,
         "time": {
             "year_interval": [
-                2011,
-                2013
+                2014,
+                2016
             ]
         },
         "areas": [
             {
-                "label": "S\u00f6dra \u00d6stersj\u00f6ns vattendistrikt",
-                "key": "SE4",
+                "label": "Bottenvikens vattendistrikt",
+                "key": "SE1",
                 "type": "water_district",
                 "status": "editable",
                 "active": false,
                 "children": [
                     {
-                        "label": "Sk\u00e5nes kustvatten",
-                        "key": "7",
+                        "label": "\u00d6sterg\u00f6tlands samt Stockholms sk\u00e4rg\u00e5rd, mellankustvatten, norra",
+                        "key": "12n",
                         "type": "type_area",
                         "status": "editable",
                         "active": true,
                         "children": [
                             {
-                                "label": "\u00d6 sydkustens kustvatten",
-                                "key": "SE552170-130626",
+                                "label": "Kallsk\u00e4rsfj\u00e4rden",
+                                "key": "SE593000-190500",
                                 "type": "water_body",
                                 "status": "editable",
-                                "url": " http://www.viss.lansstyrelsen.se/waters.aspx?waterEUID=SE552170-130626",
+                                "url": " http://www.viss.lansstyrelsen.se/waters.aspx?waterEUID=SE593000-190500",
+                                "active": true
+                            },
+                            {
+                                "label": "\u00d6refj\u00e4rden",
+                                "key": "SE633000-195000",
+                                "type": "water_body",
+                                "status": "editable",
+                                "url": " http://www.viss.lansstyrelsen.se/waters.aspx?waterEUID=SE633000-195000",
+                                "active": true
+                            },
+                            {
+                                "label": "Kallsk\u00e4rsfj\u00e4rden",
+                                "key": "SE593000-190500",
+                                "type": "water_body",
+                                "status": "editable",
+                                "url": " http://www.viss.lansstyrelsen.se/waters.aspx?waterEUID=SE593000-190500",
+                                "active": true
+                            },
+                            {
+                                "label": "\u00d6refj\u00e4rden",
+                                "key": "SE633000-195000",
+                                "type": "water_body",
+                                "status": "editable",
+                                "url": " http://www.viss.lansstyrelsen.se/waters.aspx?waterEUID=SE633000-195000",
+                                "active": true
+                            },
+                            {
+                                "label": "Kallsk\u00e4rsfj\u00e4rden",
+                                "key": "SE593000-190500",
+                                "type": "water_body",
+                                "status": "editable",
+                                "url": " http://www.viss.lansstyrelsen.se/waters.aspx?waterEUID=SE593000-190500",
+                                "active": true
+                            },
+                            {
+                                "label": "\u00d6refj\u00e4rden",
+                                "key": "SE633000-195000",
+                                "type": "water_body",
+                                "status": "editable",
+                                "url": " http://www.viss.lansstyrelsen.se/waters.aspx?waterEUID=SE633000-195000",
+                                "active": true
+                            }
+                        ]
+                    },
+                    {
+                        "label": "Norra Kvarkens inre kustvatten",
+                        "key": "20",
+                        "type": "type_area",
+                        "status": "editable",
+                        "active": true,
+                        "children": [
+                            {
+                                "label": "Kallsk\u00e4rsfj\u00e4rden",
+                                "key": "SE593000-190500",
+                                "type": "water_body",
+                                "status": "editable",
+                                "url": " http://www.viss.lansstyrelsen.se/waters.aspx?waterEUID=SE593000-190500",
+                                "active": true
+                            },
+                            {
+                                "label": "\u00d6refj\u00e4rden",
+                                "key": "SE633000-195000",
+                                "type": "water_body",
+                                "status": "editable",
+                                "url": " http://www.viss.lansstyrelsen.se/waters.aspx?waterEUID=SE633000-195000",
+                                "active": true
+                            },
+                            {
+                                "label": "Kallsk\u00e4rsfj\u00e4rden",
+                                "key": "SE593000-190500",
+                                "type": "water_body",
+                                "status": "editable",
+                                "url": " http://www.viss.lansstyrelsen.se/waters.aspx?waterEUID=SE593000-190500",
+                                "active": true
+                            },
+                            {
+                                "label": "\u00d6refj\u00e4rden",
+                                "key": "SE633000-195000",
+                                "type": "water_body",
+                                "status": "editable",
+                                "url": " http://www.viss.lansstyrelsen.se/waters.aspx?waterEUID=SE633000-195000",
+                                "active": true
+                            },
+                            {
+                                "label": "Kallsk\u00e4rsfj\u00e4rden",
+                                "key": "SE593000-190500",
+                                "type": "water_body",
+                                "status": "editable",
+                                "url": " http://www.viss.lansstyrelsen.se/waters.aspx?waterEUID=SE593000-190500",
+                                "active": true
+                            },
+                            {
+                                "label": "\u00d6refj\u00e4rden",
+                                "key": "SE633000-195000",
+                                "type": "water_body",
+                                "status": "editable",
+                                "url": " http://www.viss.lansstyrelsen.se/waters.aspx?waterEUID=SE633000-195000",
+                                "active": true
+                            }
+                        ]
+                    }
+                ]
+            },
+            {
+                "label": "Norra \u00d6stersj\u00f6ns vattendistrikt",
+                "key": "SE3",
+                "type": "water_district",
+                "status": "editable",
+                "active": false,
+                "children": [
+                    {
+                        "label": "\u00d6sterg\u00f6tlands samt Stockholms sk\u00e4rg\u00e5rd, mellankustvatten, norra",
+                        "key": "12n",
+                        "type": "type_area",
+                        "status": "editable",
+                        "active": true,
+                        "children": [
+                            {
+                                "label": "Kallsk\u00e4rsfj\u00e4rden",
+                                "key": "SE593000-190500",
+                                "type": "water_body",
+                                "status": "editable",
+                                "url": " http://www.viss.lansstyrelsen.se/waters.aspx?waterEUID=SE593000-190500",
+                                "active": true
+                            },
+                            {
+                                "label": "\u00d6refj\u00e4rden",
+                                "key": "SE633000-195000",
+                                "type": "water_body",
+                                "status": "editable",
+                                "url": " http://www.viss.lansstyrelsen.se/waters.aspx?waterEUID=SE633000-195000",
+                                "active": true
+                            },
+                            {
+                                "label": "Kallsk\u00e4rsfj\u00e4rden",
+                                "key": "SE593000-190500",
+                                "type": "water_body",
+                                "status": "editable",
+                                "url": " http://www.viss.lansstyrelsen.se/waters.aspx?waterEUID=SE593000-190500",
+                                "active": true
+                            },
+                            {
+                                "label": "\u00d6refj\u00e4rden",
+                                "key": "SE633000-195000",
+                                "type": "water_body",
+                                "status": "editable",
+                                "url": " http://www.viss.lansstyrelsen.se/waters.aspx?waterEUID=SE633000-195000",
+                                "active": true
+                            },
+                            {
+                                "label": "Kallsk\u00e4rsfj\u00e4rden",
+                                "key": "SE593000-190500",
+                                "type": "water_body",
+                                "status": "editable",
+                                "url": " http://www.viss.lansstyrelsen.se/waters.aspx?waterEUID=SE593000-190500",
+                                "active": true
+                            },
+                            {
+                                "label": "\u00d6refj\u00e4rden",
+                                "key": "SE633000-195000",
+                                "type": "water_body",
+                                "status": "editable",
+                                "url": " http://www.viss.lansstyrelsen.se/waters.aspx?waterEUID=SE633000-195000",
+                                "active": true
+                            }
+                        ]
+                    },
+                    {
+                        "label": "Norra Kvarkens inre kustvatten",
+                        "key": "20",
+                        "type": "type_area",
+                        "status": "editable",
+                        "active": true,
+                        "children": [
+                            {
+                                "label": "Kallsk\u00e4rsfj\u00e4rden",
+                                "key": "SE593000-190500",
+                                "type": "water_body",
+                                "status": "editable",
+                                "url": " http://www.viss.lansstyrelsen.se/waters.aspx?waterEUID=SE593000-190500",
+                                "active": true
+                            },
+                            {
+                                "label": "\u00d6refj\u00e4rden",
+                                "key": "SE633000-195000",
+                                "type": "water_body",
+                                "status": "editable",
+                                "url": " http://www.viss.lansstyrelsen.se/waters.aspx?waterEUID=SE633000-195000",
+                                "active": true
+                            },
+                            {
+                                "label": "Kallsk\u00e4rsfj\u00e4rden",
+                                "key": "SE593000-190500",
+                                "type": "water_body",
+                                "status": "editable",
+                                "url": " http://www.viss.lansstyrelsen.se/waters.aspx?waterEUID=SE593000-190500",
+                                "active": true
+                            },
+                            {
+                                "label": "\u00d6refj\u00e4rden",
+                                "key": "SE633000-195000",
+                                "type": "water_body",
+                                "status": "editable",
+                                "url": " http://www.viss.lansstyrelsen.se/waters.aspx?waterEUID=SE633000-195000",
+                                "active": true
+                            },
+                            {
+                                "label": "Kallsk\u00e4rsfj\u00e4rden",
+                                "key": "SE593000-190500",
+                                "type": "water_body",
+                                "status": "editable",
+                                "url": " http://www.viss.lansstyrelsen.se/waters.aspx?waterEUID=SE593000-190500",
+                                "active": true
+                            },
+                            {
+                                "label": "\u00d6refj\u00e4rden",
+                                "key": "SE633000-195000",
+                                "type": "water_body",
+                                "status": "editable",
+                                "url": " http://www.viss.lansstyrelsen.se/waters.aspx?waterEUID=SE633000-195000",
                                 "active": true
                             }
                         ]
@@ -89,10 +309,63 @@
                 },
                 {
                     "label": "Chlorophyll",
-                    "status": "readable",
-                    "value": false,
+                    "status": "editable",
+                    "value": true,
                     "key": "indicator_chl",
-                    "settings": []
+                    "settings": [
+                        {
+                            "area_type": "type_area",
+                            "key": "12n",
+                            "label": "\u00d6sterg\u00f6tlands samt Stockholms sk\u00e4rg\u00e5rd, mellankustvatten, norra",
+                            "children": [
+                                {
+                                    "key": "MIN_NR_YEARS",
+                                    "unit": "",
+                                    "label": "Minimum number of years ()",
+                                    "status": "editable",
+                                    "widget": "number:int",
+                                    "value": 3
+                                },
+                                {
+                                    "key": "MONTH_LIST",
+                                    "unit": "",
+                                    "label": "Month interval ()",
+                                    "status": "editable",
+                                    "widget": "interval:int",
+                                    "value": [
+                                        6,
+                                        8
+                                    ]
+                                }
+                            ]
+                        },
+                        {
+                            "area_type": "type_area",
+                            "key": "20",
+                            "label": "Norra Kvarkens inre kustvatten",
+                            "children": [
+                                {
+                                    "key": "MIN_NR_YEARS",
+                                    "unit": "",
+                                    "label": "Minimum number of years ()",
+                                    "status": "editable",
+                                    "widget": "number:int",
+                                    "value": 3
+                                },
+                                {
+                                    "key": "MONTH_LIST",
+                                    "unit": "",
+                                    "label": "Month interval ()",
+                                    "status": "editable",
+                                    "widget": "interval:int",
+                                    "value": [
+                                        6,
+                                        8
+                                    ]
+                                }
+                            ]
+                        }
+                    ]
                 },
                 {
                     "label": "Phytplankton",
@@ -116,8 +389,34 @@
                     "settings": [
                         {
                             "area_type": "type_area",
-                            "key": "7",
-                            "label": "Sk\u00e5nes kustvatten",
+                            "key": "12n",
+                            "label": "\u00d6sterg\u00f6tlands samt Stockholms sk\u00e4rg\u00e5rd, mellankustvatten, norra",
+                            "children": [
+                                {
+                                    "key": "MIN_NR_YEARS",
+                                    "unit": "",
+                                    "label": "Minimum number of years ()",
+                                    "status": "editable",
+                                    "widget": "number:int",
+                                    "value": 3
+                                },
+                                {
+                                    "key": "MONTH_LIST",
+                                    "unit": "",
+                                    "label": "Month interval ()",
+                                    "status": "editable",
+                                    "widget": "interval:int",
+                                    "value": [
+                                        6,
+                                        8
+                                    ]
+                                }
+                            ]
+                        },
+                        {
+                            "area_type": "type_area",
+                            "key": "20",
+                            "label": "Norra Kvarkens inre kustvatten",
                             "children": [
                                 {
                                     "key": "MIN_NR_YEARS",
@@ -162,8 +461,8 @@
                     "settings": [
                         {
                             "area_type": "type_area",
-                            "key": "7",
-                            "label": "Sk\u00e5nes kustvatten",
+                            "key": "12n",
+                            "label": "\u00d6sterg\u00f6tlands samt Stockholms sk\u00e4rg\u00e5rd, mellankustvatten, norra",
                             "children": [
                                 {
                                     "key": "MIN_NR_YEARS",
@@ -196,6 +495,43 @@
                                     ]
                                 }
                             ]
+                        },
+                        {
+                            "area_type": "type_area",
+                            "key": "20",
+                            "label": "Norra Kvarkens inre kustvatten",
+                            "children": [
+                                {
+                                    "key": "MIN_NR_YEARS",
+                                    "unit": "",
+                                    "label": "Minimum number of years ()",
+                                    "status": "editable",
+                                    "widget": "number:int",
+                                    "value": 3
+                                },
+                                {
+                                    "key": "MONTH_LIST",
+                                    "unit": "",
+                                    "label": "Month interval ()",
+                                    "status": "editable",
+                                    "widget": "interval:int",
+                                    "value": [
+                                        11,
+                                        2
+                                    ]
+                                },
+                                {
+                                    "key": "DEPH_INTERVAL",
+                                    "unit": "m",
+                                    "label": "Depth interval (m)",
+                                    "status": "editable",
+                                    "widget": "interval:int",
+                                    "value": [
+                                        0,
+                                        10
+                                    ]
+                                }
+                            ]
                         }
                     ]
                 },
@@ -207,8 +543,8 @@
                     "settings": [
                         {
                             "area_type": "type_area",
-                            "key": "7",
-                            "label": "Sk\u00e5nes kustvatten",
+                            "key": "12n",
+                            "label": "\u00d6sterg\u00f6tlands samt Stockholms sk\u00e4rg\u00e5rd, mellankustvatten, norra",
                             "children": [
                                 {
                                     "key": "MIN_NR_YEARS",
@@ -226,6 +562,43 @@
                                     "widget": "interval:int",
                                     "value": [
                                         12,
+                                        2
+                                    ]
+                                },
+                                {
+                                    "key": "DEPH_INTERVAL",
+                                    "unit": "m",
+                                    "label": "Depth interval (m)",
+                                    "status": "editable",
+                                    "widget": "interval:int",
+                                    "value": [
+                                        0,
+                                        10
+                                    ]
+                                }
+                            ]
+                        },
+                        {
+                            "area_type": "type_area",
+                            "key": "20",
+                            "label": "Norra Kvarkens inre kustvatten",
+                            "children": [
+                                {
+                                    "key": "MIN_NR_YEARS",
+                                    "unit": "",
+                                    "label": "Minimum number of years ()",
+                                    "status": "editable",
+                                    "widget": "number:int",
+                                    "value": 3
+                                },
+                                {
+                                    "key": "MONTH_LIST",
+                                    "unit": "",
+                                    "label": "Month interval ()",
+                                    "status": "editable",
+                                    "widget": "interval:int",
+                                    "value": [
+                                        11,
                                         2
                                     ]
                                 },
@@ -273,8 +646,45 @@
                     "settings": [
                         {
                             "area_type": "type_area",
-                            "key": "7",
-                            "label": "Sk\u00e5nes kustvatten",
+                            "key": "12n",
+                            "label": "\u00d6sterg\u00f6tlands samt Stockholms sk\u00e4rg\u00e5rd, mellankustvatten, norra",
+                            "children": [
+                                {
+                                    "key": "MIN_NR_YEARS",
+                                    "unit": "",
+                                    "label": "Minimum number of years ()",
+                                    "status": "editable",
+                                    "widget": "number:int",
+                                    "value": 3
+                                },
+                                {
+                                    "key": "MONTH_LIST",
+                                    "unit": "",
+                                    "label": "Month interval ()",
+                                    "status": "editable",
+                                    "widget": "interval:int",
+                                    "value": [
+                                        6,
+                                        8
+                                    ]
+                                },
+                                {
+                                    "key": "DEPH_INTERVAL",
+                                    "unit": "m",
+                                    "label": "Depth interval (m)",
+                                    "status": "editable",
+                                    "widget": "interval:int",
+                                    "value": [
+                                        0,
+                                        10
+                                    ]
+                                }
+                            ]
+                        },
+                        {
+                            "area_type": "type_area",
+                            "key": "20",
+                            "label": "Norra Kvarkens inre kustvatten",
                             "children": [
                                 {
                                     "key": "MIN_NR_YEARS",
@@ -318,8 +728,8 @@
                     "settings": [
                         {
                             "area_type": "type_area",
-                            "key": "7",
-                            "label": "Sk\u00e5nes kustvatten",
+                            "key": "12n",
+                            "label": "\u00d6sterg\u00f6tlands samt Stockholms sk\u00e4rg\u00e5rd, mellankustvatten, norra",
                             "children": [
                                 {
                                     "key": "MIN_NR_YEARS",
@@ -337,6 +747,43 @@
                                     "widget": "interval:int",
                                     "value": [
                                         12,
+                                        2
+                                    ]
+                                },
+                                {
+                                    "key": "DEPH_INTERVAL",
+                                    "unit": "m",
+                                    "label": "Depth interval (m)",
+                                    "status": "editable",
+                                    "widget": "interval:int",
+                                    "value": [
+                                        0,
+                                        10
+                                    ]
+                                }
+                            ]
+                        },
+                        {
+                            "area_type": "type_area",
+                            "key": "20",
+                            "label": "Norra Kvarkens inre kustvatten",
+                            "children": [
+                                {
+                                    "key": "MIN_NR_YEARS",
+                                    "unit": "",
+                                    "label": "Minimum number of years ()",
+                                    "status": "editable",
+                                    "widget": "number:int",
+                                    "value": 3
+                                },
+                                {
+                                    "key": "MONTH_LIST",
+                                    "unit": "",
+                                    "label": "Month interval ()",
+                                    "status": "editable",
+                                    "widget": "interval:int",
+                                    "value": [
+                                        11,
                                         2
                                     ]
                                 },
@@ -384,8 +831,45 @@
                     "settings": [
                         {
                             "area_type": "type_area",
-                            "key": "7",
-                            "label": "Sk\u00e5nes kustvatten",
+                            "key": "12n",
+                            "label": "\u00d6sterg\u00f6tlands samt Stockholms sk\u00e4rg\u00e5rd, mellankustvatten, norra",
+                            "children": [
+                                {
+                                    "key": "MIN_NR_YEARS",
+                                    "unit": "",
+                                    "label": "Minimum number of years ()",
+                                    "status": "editable",
+                                    "widget": "number:int",
+                                    "value": 3
+                                },
+                                {
+                                    "key": "MONTH_LIST",
+                                    "unit": "",
+                                    "label": "Month interval ()",
+                                    "status": "editable",
+                                    "widget": "interval:int",
+                                    "value": [
+                                        6,
+                                        8
+                                    ]
+                                },
+                                {
+                                    "key": "DEPH_INTERVAL",
+                                    "unit": "m",
+                                    "label": "Depth interval (m)",
+                                    "status": "editable",
+                                    "widget": "interval:int",
+                                    "value": [
+                                        0,
+                                        10
+                                    ]
+                                }
+                            ]
+                        },
+                        {
+                            "area_type": "type_area",
+                            "key": "20",
+                            "label": "Norra Kvarkens inre kustvatten",
                             "children": [
                                 {
                                     "key": "MIN_NR_YEARS",
@@ -429,8 +913,8 @@
                     "settings": [
                         {
                             "area_type": "type_area",
-                            "key": "7",
-                            "label": "Sk\u00e5nes kustvatten",
+                            "key": "12n",
+                            "label": "\u00d6sterg\u00f6tlands samt Stockholms sk\u00e4rg\u00e5rd, mellankustvatten, norra",
                             "children": [
                                 {
                                     "key": "MIN_NR_YEARS",
@@ -448,6 +932,43 @@
                                     "widget": "interval:int",
                                     "value": [
                                         12,
+                                        2
+                                    ]
+                                },
+                                {
+                                    "key": "DEPH_INTERVAL",
+                                    "unit": "m",
+                                    "label": "Depth interval (m)",
+                                    "status": "editable",
+                                    "widget": "interval:int",
+                                    "value": [
+                                        0,
+                                        10
+                                    ]
+                                }
+                            ]
+                        },
+                        {
+                            "area_type": "type_area",
+                            "key": "20",
+                            "label": "Norra Kvarkens inre kustvatten",
+                            "children": [
+                                {
+                                    "key": "MIN_NR_YEARS",
+                                    "unit": "",
+                                    "label": "Minimum number of years ()",
+                                    "status": "editable",
+                                    "widget": "number:int",
+                                    "value": 3
+                                },
+                                {
+                                    "key": "MONTH_LIST",
+                                    "unit": "",
+                                    "label": "Month interval ()",
+                                    "status": "editable",
+                                    "widget": "interval:int",
+                                    "value": [
+                                        11,
                                         2
                                     ]
                                 },
@@ -486,8 +1007,31 @@
                     "settings": [
                         {
                             "area_type": "type_area",
-                            "key": "7",
-                            "label": "Sk\u00e5nes kustvatten",
+                            "key": "12n",
+                            "label": "\u00d6sterg\u00f6tlands samt Stockholms sk\u00e4rg\u00e5rd, mellankustvatten, norra",
+                            "children": [
+                                {
+                                    "key": "MIN_NR_YEARS",
+                                    "unit": "",
+                                    "label": "Minimum number of years ()",
+                                    "status": "editable",
+                                    "widget": "number:int",
+                                    "value": 3
+                                },
+                                {
+                                    "key": "BOTTOM_WATER",
+                                    "unit": "m",
+                                    "label": "Bottom layer (m)",
+                                    "status": "editable",
+                                    "widget": "number:int",
+                                    "value": 10
+                                }
+                            ]
+                        },
+                        {
+                            "area_type": "type_area",
+                            "key": "20",
+                            "label": "Norra Kvarkens inre kustvatten",
                             "children": [
                                 {
                                     "key": "MIN_NR_YEARS",

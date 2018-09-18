@@ -1,11 +1,17 @@
 {
-    "workspace_uuid": "c423252b-63ad-4d1d-98b9-ca51bbde5042",
+    "workspace_uuid": "37d6ec90-4461-41ea-98cd-d17391205602",
     "data_sources": [
         {
             "status": false,
             "loaded": false,
-            "filename": "physicalchemical_sharkweb_data_fyskem_wb_2007-2017_20180320.txt",
+            "filename": "physicalchemical_sharkweb_data_all_2013-2017_201809181108.txt",
             "datatype": "physicalchemical"
+        },
+        {
+            "status": false,
+            "loaded": false,
+            "filename": "chlorophyll_sharkweb_data_Chlorophyll-a_2013-2017_201809181108.txt",
+            "datatype": "chlorophyll"
         }
     ]
 }
