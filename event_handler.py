@@ -2112,7 +2112,7 @@ class EventHandler(object):
         df.sort_values('date', inplace=True)
         
         # First check order 
-        direction = self.mapping_objects['quality_element'].get_mapping(key, 'indicator', 'direction_good').split(',')[0].strip()
+        direction = self.mapping_objects['quality_element'].get_mapping(element_id, 'indicator', 'direction_good')
         
         status_list = ['REFERENCE_VALUE', 'HG_VALUE_LIMIT', 'GM_VALUE_LIMIT', 'MP_VALUE_LIMIT', 'PB_VALUE_LIMIT']
         label_dict = dict(zip(status_list, ['high', 'good', 'moderate', 'poor', 'bad'])) 
