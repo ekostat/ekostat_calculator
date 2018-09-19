@@ -1925,6 +1925,7 @@ class EventHandler(object):
         self.action_load_workspace(workspace_uuid)
         reader = core.SharkWebReader(debug=True)
         data_params = reader.get_data_params()
+        self.data_params = data_params
         
         invalid_keys = []
         for key in kwargs:
@@ -1946,6 +1947,9 @@ class EventHandler(object):
         self.data = reader.data
         # Find datatype
         datatype = reader.data.split('\n')[1].split('\t')[0] 
+        if not datatype: 
+            raise exceptions.UnableToLoadData('No data available') 
+            
         internal_datatype_name = self.mapping_objects['datatype_list'].get_mapping(datatype, 'codelist_name', 'internal_name')
 #        print('datatype', datatype)
 #        print('internal_datatype_name', internal_datatype_name)
@@ -2515,8 +2519,8 @@ class EventHandler(object):
                     # Activate type_area 
                     type_area['active'] = True
                     # Set all water bodies to False 
-                    for water_body in type_area['children']: 
-                        water_body['active'] = False
+#                    for water_body in type_area['children']: 
+#                        water_body['active'] = False
                 else:
                     type_area['active'] = False
                     print('TYPE AREA', type_area['key'])
@@ -2530,8 +2534,8 @@ class EventHandler(object):
                 # Activate type_area 
                 water_district['active'] = True
                 # Set all water bodies to False 
-                for type_area in water_district['children']: 
-                    type_area['active'] = False
+#                for type_area in water_district['children']: 
+#                    type_area['active'] = False
             else:
                 water_district['active'] = False
                 
@@ -3384,8 +3388,14 @@ class EventHandler(object):
         # Load data 
         self.action_load_data(workspace_uuid) # workspace is loaded in action 
         
+        workspace_object = self.get_workspace(workspace_uuid)  
+        
+        if not workspace_object.data_is_loaded():
+            raise exceptions.NoDataSelected
+            
         self._check_valid_uuid(workspace_uuid, subset_uuid)
         
+        df0 = workspace_object.get_filtered_data(step=0)
         # Reset all data filters in step 1. 
         # This has to be done as water bodies are appended to current filter when looping throughtype areas. 
         # So if data filters are removed from last request it won't automaticly be removed in the data filter files. 
@@ -3408,7 +3418,8 @@ class EventHandler(object):
                                               request={}, 
                                               time=True, 
                                               areas=True, 
-                                              list_viss_eu_cd=request.get('areas', [])) 
+                                              list_viss_eu_cd=request.get('areas', []), 
+                                              check_in_df=df0) 
         
         # Check selected areas 
         workspace_object = self.get_workspace(workspace_uuid) 
