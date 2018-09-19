@@ -639,7 +639,7 @@ class EventHandler(object):
     def dict_time(self, workspace_uuid=None, subset_uuid=None, request=None, **kwargs): 
         """
         Created     20180317   by Magnus Wenzer
-        Updated     20180916   by Magnus Wenzer
+        Updated     20180919   by Magnus Wenzer
         """
         workspace_object = self.get_workspace(workspace_uuid) 
         subset_object = workspace_object.get_subset_object(subset_uuid) 
@@ -684,20 +684,22 @@ class EventHandler(object):
             if type(kwargs.get('check_in_df', False)) != bool: 
                 df = kwargs['check_in_df']
                 valid_years = sorted(set(df['MYEAR']))
-            
-            year_list = sorted(map(int, data_filter_object.get_include_list_filter('MYEAR'))) 
+            else:
+                valid_years = data_filter_object.get_include_list_filter('MYEAR')
+                
+            valid_years = sorted(map(int, valid_years)) # Cant be int64 for json to work
 #            if valid_years: 
 #                from_year = 
 #                if 
             
-            year_choices = [int(item) for item in kwargs.get('year_choices', list(range(1980, datetime.datetime.now().year+1)))] # Cant be int64 for json to work
+#            year_choices = [int(item) for item in kwargs.get('year_choices', list(range(1980, datetime.datetime.now().year+1)))] # Cant be int64 for json to work
 #            print('&'*50)
 #            print(year_list[0], type(year_list[0]))
 #            print(year_choices[0], type(year_choices[0]))
 #            month_list = sorted(map(int, data_filter_object.get_include_list_filter('MONTH')))
             
-            return {'year_interval': [year_list[0], year_list[-1]], 
-                    'year_choices': year_choices}#, "month_list": month_list} 
+            return {'year_interval': [valid_years[0], valid_years[-1]], 
+                    'year_choices': valid_years}#, "month_list": month_list} 
     
 #            return {'year_interval': [year_list[0], year_list[-1]]}#, "month_list": month_list} 
         
@@ -706,7 +708,7 @@ class EventHandler(object):
     def dict_select_year_interval(self, **kwargs): 
         """
         Created     20180720    by Magnus Wenzer 
-        Updated     20180919    by Magnus
+        Updated     20180919    by Magnus 
         
         """ 
         from_year = self.mapping_objects['sharkweb_settings'].get('from_year')
@@ -741,7 +743,7 @@ class EventHandler(object):
                     'label': 'Datatypes', 
                     'choices': choices, 
                     'widget': 'multiselect:str', 
-                    'value': ''}
+                    'value': []}
         
         return response
     
@@ -754,7 +756,8 @@ class EventHandler(object):
         """ 
         return_dict = {'key': 'areas', 
                        'label': 'Areas', 
-                       'widget': 'selection_tree'}
+                       'widget': 'selection_tree', 
+                       'value': []}
         
         
         
@@ -1310,7 +1313,7 @@ class EventHandler(object):
     def dict_type_area(self, workspace_uuid=None, subset_uuid=None, type_area=None, request=None, **kwargs): 
         """
         Created     20180222    by Magnus Wenzer
-        Updated     20180917    by Magnus Wenzer
+        Updated     20180919    by Magnus Wenzer
         
         "editable" is not checked at the moment....
         """
@@ -1366,8 +1369,9 @@ class EventHandler(object):
                 water_body_list = sorted(list(set(df['VISS_EU_CD'])))
             elif kwargs.get('list_viss_eu_cd'):
                 water_body_list = kwargs.get('list_viss_eu_cd')
-            else:
-                water_body_list = water_body_mapping.get_list('water_body', type_area=type_area)
+            
+            water_body_list = sorted(set(water_body_list).intersection(water_body_mapping.get_list('water_body', type_area=type_area)))
+#            water_body_list = water_body_mapping.get_list('water_body', type_area=type_area)
             
             
             for water_body in water_body_list:
@@ -1409,9 +1413,9 @@ class EventHandler(object):
                 type_area = child['key'] 
                 # Water district is not set as a internal data filter list. Only water body is saved. 
                 self.dict_type_area(workspace_uuid=workspace_uuid, 
-                                                          subset_uuid=subset_uuid, 
-                                                          type_area=type_area, 
-                                                          request=child)
+                                    subset_uuid=subset_uuid, 
+                                    type_area=type_area, 
+                                    request=child)
             return request
         else:
             
@@ -2485,6 +2489,55 @@ class EventHandler(object):
         
         return area_list
         
+    
+    #==========================================================================
+    def _check_active_in_area_tree(self, area_list): 
+        """
+        Created     20180919    by Magnus Wenzer
+        
+        Check area list tree and sets active True or False. Rules are: 
+            If all children are all True: Parent=True, all children=False 
+            If some but not all children=True: parent=False 
+        """
+        
+        for water_district in area_list: 
+            #------------------------------------------------------------------
+            type_area_active_list = []
+            for type_area in water_district['children']: 
+                #--------------------------------------------------------------
+                water_body_active_list = []
+                for water_body in type_area['children']: 
+                    # Check if water body is active
+                    water_body_active_list.append(water_body['active']) 
+                    
+                # Check if all water bodies are active 
+                if all(water_body_active_list):
+                    # Activate type_area 
+                    type_area['active'] = True
+                    # Set all water bodies to False 
+                    for water_body in type_area['children']: 
+                        water_body['active'] = False
+                else:
+                    type_area['active'] = False
+                    print('TYPE AREA', type_area['key'])
+                    
+                #--------------------------------------------------------------
+                # Check if type_area is active
+                type_area_active_list.append(type_area['active'])
+            
+            # Check if all type areas are active 
+            if all(type_area_active_list):
+                # Activate type_area 
+                water_district['active'] = True
+                # Set all water bodies to False 
+                for type_area in water_district['children']: 
+                    type_area['active'] = False
+            else:
+                water_district['active'] = False
+                
+            #------------------------------------------------------------------
+        
+        
         
     #==========================================================================
     def _get_water_bodies_from_area_list(self, area_list): 
@@ -3266,7 +3319,7 @@ class EventHandler(object):
             raise exceptions.NoDataSelected
         
         df0 = workspace_object.get_filtered_data(step=0) 
-        year_choices = sorted(set(df0['MYEAR']))
+#        year_choices = sorted(set(df0['MYEAR']))
 #        water_distric_list = sorted(ekos.mapping_objects['water_body'].get_list('water_district', 
 #                                                                        water_body=list(set(df0['VISS_EU_CD']))))
   
@@ -3274,7 +3327,7 @@ class EventHandler(object):
         response['workspace_uuid'] = workspace_uuid
         response['workspace'] = self.dict_workspace(workspace_uuid) 
         
-        print('===', subset_uuid)
+#        print('===', subset_uuid)
         response['subset'] = self.dict_subset(workspace_uuid=workspace_uuid, 
                                               subset_uuid=subset_uuid, 
                                               time=True, 
@@ -3282,9 +3335,11 @@ class EventHandler(object):
                                               indicator_settings=False, 
                                               quality_elements=False, 
                                               supporting_elements=False, 
-                                              year_choices=year_choices, 
+#                                              year_choices=year_choices, 
                                               check_in_df=df0)
        
+        # Fick active=True/False in areas tree 
+        self._check_active_in_area_tree(response['subset']['areas'])
         
 #        print('='*50)
 #        self.workspace_uuid = workspace_uuid

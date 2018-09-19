@@ -2,5 +2,8 @@
     "workspace_uuid": "28ac1911-73c8-49ab-b36e-3ae307b46a20",
     "subset_uuid": "9721bdbe-7aff-4e0a-b175-fdcb2815eaeb",
     "year_interval": [2011, 2011], 
-    "areas": ["SE4"]
+    "areas": ["SE571800-184300", 
+              "SE572350-180930", 
+              "SE574170-190001", 
+              "SE575150-190400"]
     }
