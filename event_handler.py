@@ -3590,7 +3590,10 @@ class EventHandler(object):
         workspace_uuid = request.get('workspace_uuid', {}) 
         if not workspace_uuid:
             workspace_uuid = request['workspace']['workspace_uuid'] 
-        subset_uuid = request['subset']['subset_uuid']
+        
+        subset_uuid = request.get('subset_uuid')
+        if not subset_uuid:
+            subset_uuid = request.get('subset', {}).get('subset_uuid')
         
         
         # Load workspace 

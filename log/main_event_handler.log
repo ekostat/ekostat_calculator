@@ -137,3 +137,169 @@
 2018-09-19 16:57:53,885	event_handler.py	2856	load_workspace	DEBUG	Workspace "28ac1911-73c8-49ab-b36e-3ae307b46a20" with alias "New test workspace" is already loaded. Set reload=True if you want to reload the workspace.
 2018-09-19 16:57:53,954	event_handler.py	2856	load_workspace	DEBUG	Workspace "28ac1911-73c8-49ab-b36e-3ae307b46a20" with alias "New test workspace" is already loaded. Set reload=True if you want to reload the workspace.
 2018-09-19 16:57:54,522	event_handler.py	52	f	DEBUG	Stop: "request_subset_set_indicator_settings". Time for running method was 9.404537916183472
+2018-09-19 17:07:40,208	logger.py	85	add_log	DEBUG	
+2018-09-19 17:07:40,216	logger.py	86	add_log	DEBUG	========================================================================================================================
+2018-09-19 17:07:40,221	logger.py	87	add_log	DEBUG	### Log added for log_id "event_handler" at locaton: ..\log\main_event_handler.log
+2018-09-19 17:07:40,224	logger.py	88	add_log	DEBUG	------------------------------------------------------------------------------------------------------------------------
+2018-09-19 17:07:40,231	event_handler.py	109	__init__	DEBUG	Start EventHandler: event_handler
+2018-09-19 17:07:40,235	event_handler.py	144	_load_mapping_objects	DEBUG	Loading mapping files from pickle file.
+2018-09-19 17:07:41,253	event_handler.py	120	__init__	DEBUG	Time for mapping: 1.0180583000183105
+2018-09-19 17:07:41,308	event_handler.py	125	__init__	DEBUG	Time for initiating EventHandler: 1.1020631790161133
+2018-09-19 17:07:41,315	event_handler.py	48	f	DEBUG	Start: "test_timer"
+2018-09-19 17:07:42,319	event_handler.py	52	f	DEBUG	Stop: "test_timer". Time for running method was 0.9970569610595703
+2018-09-19 17:07:46,698	event_handler.py	109	__init__	DEBUG	Start EventHandler: event_handler
+2018-09-19 17:07:46,702	event_handler.py	144	_load_mapping_objects	DEBUG	Loading mapping files from pickle file.
+2018-09-19 17:07:47,600	event_handler.py	120	__init__	DEBUG	Time for mapping: 0.8990514278411865
+2018-09-19 17:07:47,638	event_handler.py	125	__init__	DEBUG	Time for initiating EventHandler: 0.9410538673400879
+2018-09-19 17:07:47,652	event_handler.py	48	f	DEBUG	Start: "request_workspace_add"
+2018-09-19 17:07:47,659	event_handler.py	3965	request_workspace_add	DEBUG	Start: request_workspace_add
+2018-09-19 17:07:47,687	event_handler.py	414	copy_workspace	DEBUG	Trying to copy workspace "default_workspace". Copy has alias "New test workspace"
+2018-09-19 17:07:47,886	event_handler.py	2845	load_workspace	DEBUG	Trying to load new workspace "e7fbd04c-2be5-497d-88ae-af33860580ca" with alias "New test workspace"
+2018-09-19 17:07:48,512	event_handler.py	2863	load_workspace	INFO	Workspace "e7fbd04c-2be5-497d-88ae-af33860580ca" with alias "New test workspace loaded."
+2018-09-19 17:07:48,526	event_handler.py	52	f	DEBUG	Stop: "request_workspace_add". Time for running method was 0.8670494556427002
+2018-09-19 17:07:49,169	event_handler.py	109	__init__	DEBUG	Start EventHandler: event_handler
+2018-09-19 17:07:49,172	event_handler.py	144	_load_mapping_objects	DEBUG	Loading mapping files from pickle file.
+2018-09-19 17:07:50,223	event_handler.py	120	__init__	DEBUG	Time for mapping: 1.0510599613189697
+2018-09-19 17:07:50,262	event_handler.py	125	__init__	DEBUG	Time for initiating EventHandler: 1.093062400817871
+2018-09-19 17:07:54,307	event_handler.py	109	__init__	DEBUG	Start EventHandler: event_handler
+2018-09-19 17:07:54,310	event_handler.py	144	_load_mapping_objects	DEBUG	Loading mapping files from pickle file.
+2018-09-19 17:07:55,265	event_handler.py	120	__init__	DEBUG	Time for mapping: 0.955054521560669
+2018-09-19 17:07:55,311	event_handler.py	125	__init__	DEBUG	Time for initiating EventHandler: 1.0050575733184814
+2018-09-19 17:07:55,319	event_handler.py	48	f	DEBUG	Start: "request_sharkweb_import"
+2018-09-19 17:07:55,380	event_handler.py	2845	load_workspace	DEBUG	Trying to load new workspace "e7fbd04c-2be5-497d-88ae-af33860580ca" with alias "New test workspace"
+2018-09-19 17:07:55,867	event_handler.py	2863	load_workspace	INFO	Workspace "e7fbd04c-2be5-497d-88ae-af33860580ca" with alias "New test workspace loaded."
+2018-09-19 17:07:58,485	event_handler.py	52	f	DEBUG	Stop: "request_sharkweb_import". Time for running method was 3.1581807136535645
+2018-09-19 17:08:04,302	event_handler.py	109	__init__	DEBUG	Start EventHandler: event_handler
+2018-09-19 17:08:04,306	event_handler.py	144	_load_mapping_objects	DEBUG	Loading mapping files from pickle file.
+2018-09-19 17:08:05,439	event_handler.py	120	__init__	DEBUG	Time for mapping: 1.1330649852752686
+2018-09-19 17:08:05,492	event_handler.py	125	__init__	DEBUG	Time for initiating EventHandler: 1.190068006515503
+2018-09-19 17:08:05,499	event_handler.py	48	f	DEBUG	Start: "request_workspace_data_sources_list"
+2018-09-19 17:08:05,507	event_handler.py	4188	request_workspace_data_sources_list	DEBUG	Start: request_workspace_data_sources_list
+2018-09-19 17:08:05,564	event_handler.py	2845	load_workspace	DEBUG	Trying to load new workspace "e7fbd04c-2be5-497d-88ae-af33860580ca" with alias "New test workspace"
+2018-09-19 17:08:06,068	event_handler.py	2863	load_workspace	INFO	Workspace "e7fbd04c-2be5-497d-88ae-af33860580ca" with alias "New test workspace loaded."
+2018-09-19 17:08:06,077	event_handler.py	52	f	DEBUG	Stop: "request_workspace_data_sources_list". Time for running method was 0.5690326690673828
+2018-09-19 17:08:06,083	event_handler.py	48	f	DEBUG	Start: "request_workspace_data_sources_edit"
+2018-09-19 17:08:06,086	event_handler.py	4146	request_workspace_data_sources_edit	DEBUG	Start: request_workspace_data_sources_list
+2018-09-19 17:08:06,124	event_handler.py	2856	load_workspace	DEBUG	Workspace "e7fbd04c-2be5-497d-88ae-af33860580ca" with alias "New test workspace" is already loaded. Set reload=True if you want to reload the workspace.
+2018-09-19 17:08:09,762	event_handler.py	48	f	DEBUG	Start: "request_workspace_data_sources_list"
+2018-09-19 17:08:09,765	event_handler.py	4188	request_workspace_data_sources_list	DEBUG	Start: request_workspace_data_sources_list
+2018-09-19 17:08:09,808	event_handler.py	2856	load_workspace	DEBUG	Workspace "e7fbd04c-2be5-497d-88ae-af33860580ca" with alias "New test workspace" is already loaded. Set reload=True if you want to reload the workspace.
+2018-09-19 17:08:09,820	event_handler.py	52	f	DEBUG	Stop: "request_workspace_data_sources_list". Time for running method was 0.05500316619873047
+2018-09-19 17:08:09,824	event_handler.py	52	f	DEBUG	Stop: "request_workspace_data_sources_edit". Time for running method was 3.7382137775421143
+2018-09-19 17:08:13,719	event_handler.py	109	__init__	DEBUG	Start EventHandler: event_handler
+2018-09-19 17:08:13,723	event_handler.py	144	_load_mapping_objects	DEBUG	Loading mapping files from pickle file.
+2018-09-19 17:08:14,718	event_handler.py	120	__init__	DEBUG	Time for mapping: 0.9950568675994873
+2018-09-19 17:08:14,758	event_handler.py	125	__init__	DEBUG	Time for initiating EventHandler: 1.0380592346191406
+2018-09-19 17:08:14,764	event_handler.py	48	f	DEBUG	Start: "request_subset_add"
+2018-09-19 17:08:14,770	event_handler.py	3116	request_subset_add	DEBUG	Start: request_subset_add
+2018-09-19 17:08:14,813	event_handler.py	2845	load_workspace	DEBUG	Trying to load new workspace "e7fbd04c-2be5-497d-88ae-af33860580ca" with alias "New test workspace"
+2018-09-19 17:08:15,291	event_handler.py	2863	load_workspace	INFO	Workspace "e7fbd04c-2be5-497d-88ae-af33860580ca" with alias "New test workspace loaded."
+2018-09-19 17:08:15,294	event_handler.py	367	copy_subset	DEBUG	Trying to copy subset "default_subset"
+2018-09-19 17:08:15,515	event_handler.py	52	f	DEBUG	Stop: "request_subset_add". Time for running method was 0.7440423965454102
+2018-09-19 17:08:36,987	event_handler.py	109	__init__	DEBUG	Start EventHandler: event_handler
+2018-09-19 17:08:36,991	event_handler.py	144	_load_mapping_objects	DEBUG	Loading mapping files from pickle file.
+2018-09-19 17:08:38,126	event_handler.py	120	__init__	DEBUG	Time for mapping: 1.1340649127960205
+2018-09-19 17:08:38,168	event_handler.py	125	__init__	DEBUG	Time for initiating EventHandler: 1.1810674667358398
+2018-09-19 17:08:38,174	event_handler.py	48	f	DEBUG	Start: "request_subset_add"
+2018-09-19 17:08:38,182	event_handler.py	3116	request_subset_add	DEBUG	Start: request_subset_add
+2018-09-19 17:08:38,220	event_handler.py	2845	load_workspace	DEBUG	Trying to load new workspace "e7fbd04c-2be5-497d-88ae-af33860580ca" with alias "New test workspace"
+2018-09-19 17:08:38,769	event_handler.py	2863	load_workspace	INFO	Workspace "e7fbd04c-2be5-497d-88ae-af33860580ca" with alias "New test workspace loaded."
+2018-09-19 17:08:38,772	event_handler.py	367	copy_subset	DEBUG	Trying to copy subset "default_subset"
+2018-09-19 17:29:00,157	event_handler.py	109	__init__	DEBUG	Start EventHandler: event_handler
+2018-09-19 17:29:00,157	event_handler.py	144	_load_mapping_objects	DEBUG	Loading mapping files from pickle file.
+2018-09-19 17:29:00,947	event_handler.py	120	__init__	DEBUG	Time for mapping: 0.7900009155273438
+2018-09-19 17:29:00,977	event_handler.py	125	__init__	DEBUG	Time for initiating EventHandler: 0.8200011253356934
+2018-09-19 17:29:00,977	event_handler.py	48	f	DEBUG	Start: "request_subset_calculate_status"
+2018-09-19 17:29:00,987	event_handler.py	3156	request_subset_calculate_status	DEBUG	Start: request_subset_calculate_status
+2018-09-19 17:29:01,027	event_handler.py	2845	load_workspace	DEBUG	Trying to load new workspace "e7fbd04c-2be5-497d-88ae-af33860580ca" with alias "New test workspace"
+2018-09-19 17:29:01,467	event_handler.py	2863	load_workspace	INFO	Workspace "e7fbd04c-2be5-497d-88ae-af33860580ca" with alias "New test workspace loaded."
+2018-09-19 17:29:11,827	event_handler.py	109	__init__	DEBUG	Start EventHandler: event_handler
+2018-09-19 17:29:11,827	event_handler.py	144	_load_mapping_objects	DEBUG	Loading mapping files from pickle file.
+2018-09-19 17:29:12,587	event_handler.py	120	__init__	DEBUG	Time for mapping: 0.7600009441375732
+2018-09-19 17:29:12,607	event_handler.py	125	__init__	DEBUG	Time for initiating EventHandler: 0.7800009250640869
+2018-09-19 17:29:12,617	event_handler.py	48	f	DEBUG	Start: "request_subset_add"
+2018-09-19 17:29:12,617	event_handler.py	3116	request_subset_add	DEBUG	Start: request_subset_add
+2018-09-19 17:29:12,647	event_handler.py	2845	load_workspace	DEBUG	Trying to load new workspace "e7fbd04c-2be5-497d-88ae-af33860580ca" with alias "New test workspace"
+2018-09-19 17:29:13,077	event_handler.py	2863	load_workspace	INFO	Workspace "e7fbd04c-2be5-497d-88ae-af33860580ca" with alias "New test workspace loaded."
+2018-09-19 17:29:13,087	event_handler.py	367	copy_subset	DEBUG	Trying to copy subset "default_subset"
+2018-09-19 17:29:15,909	event_handler.py	109	__init__	DEBUG	Start EventHandler: event_handler
+2018-09-19 17:29:15,919	event_handler.py	144	_load_mapping_objects	DEBUG	Loading mapping files from pickle file.
+2018-09-19 17:29:16,679	event_handler.py	120	__init__	DEBUG	Time for mapping: 0.7600009441375732
+2018-09-19 17:29:16,709	event_handler.py	125	__init__	DEBUG	Time for initiating EventHandler: 0.8000011444091797
+2018-09-19 17:29:16,729	event_handler.py	2845	load_workspace	DEBUG	Trying to load new workspace "e7fbd04c-2be5-497d-88ae-af33860580ca" with alias "New test workspace"
+2018-09-19 17:29:17,169	event_handler.py	2863	load_workspace	INFO	Workspace "e7fbd04c-2be5-497d-88ae-af33860580ca" with alias "New test workspace loaded."
+2018-09-19 17:29:18,939	event_handler.py	109	__init__	DEBUG	Start EventHandler: event_handler
+2018-09-19 17:29:18,939	event_handler.py	144	_load_mapping_objects	DEBUG	Loading mapping files from pickle file.
+2018-09-19 17:29:19,689	event_handler.py	120	__init__	DEBUG	Time for mapping: 0.7500011920928955
+2018-09-19 17:29:19,719	event_handler.py	125	__init__	DEBUG	Time for initiating EventHandler: 0.780001163482666
+2018-09-19 17:29:19,729	event_handler.py	109	__init__	DEBUG	Start EventHandler: event_handler
+2018-09-19 17:29:19,729	event_handler.py	144	_load_mapping_objects	DEBUG	Loading mapping files from pickle file.
+2018-09-19 17:29:20,469	event_handler.py	120	__init__	DEBUG	Time for mapping: 0.7400009632110596
+2018-09-19 17:29:20,489	event_handler.py	125	__init__	DEBUG	Time for initiating EventHandler: 0.7600009441375732
+2018-09-19 17:29:20,529	event_handler.py	2845	load_workspace	DEBUG	Trying to load new workspace "e7fbd04c-2be5-497d-88ae-af33860580ca" with alias "New test workspace"
+2018-09-19 17:29:20,959	event_handler.py	2863	load_workspace	INFO	Workspace "e7fbd04c-2be5-497d-88ae-af33860580ca" with alias "New test workspace loaded."
+2018-09-19 17:29:21,149	event_handler.py	48	f	DEBUG	Start: "request_subset_get_data_filter"
+2018-09-19 17:29:21,149	event_handler.py	3309	request_subset_get_data_filter	DEBUG	Start: request_subset_get_data_filter
+2018-09-19 17:29:21,189	event_handler.py	2845	load_workspace	DEBUG	Trying to load new workspace "e7fbd04c-2be5-497d-88ae-af33860580ca" with alias "New test workspace"
+2018-09-19 17:29:21,629	event_handler.py	2863	load_workspace	INFO	Workspace "e7fbd04c-2be5-497d-88ae-af33860580ca" with alias "New test workspace loaded."
+2018-09-19 17:29:21,819	event_handler.py	52	f	DEBUG	Stop: "request_subset_get_data_filter". Time for running method was 0.6700010299682617
+2018-09-19 17:29:22,599	event_handler.py	109	__init__	DEBUG	Start EventHandler: event_handler
+2018-09-19 17:29:22,599	event_handler.py	144	_load_mapping_objects	DEBUG	Loading mapping files from pickle file.
+2018-09-19 17:29:23,369	event_handler.py	120	__init__	DEBUG	Time for mapping: 0.7700011730194092
+2018-09-19 17:29:23,399	event_handler.py	125	__init__	DEBUG	Time for initiating EventHandler: 0.8000011444091797
+2018-09-19 17:29:23,409	event_handler.py	109	__init__	DEBUG	Start EventHandler: event_handler
+2018-09-19 17:29:23,409	event_handler.py	144	_load_mapping_objects	DEBUG	Loading mapping files from pickle file.
+2018-09-19 17:29:24,219	event_handler.py	120	__init__	DEBUG	Time for mapping: 0.8100011348724365
+2018-09-19 17:29:24,249	event_handler.py	125	__init__	DEBUG	Time for initiating EventHandler: 0.840001106262207
+2018-09-19 17:29:24,279	event_handler.py	2845	load_workspace	DEBUG	Trying to load new workspace "e7fbd04c-2be5-497d-88ae-af33860580ca" with alias "New test workspace"
+2018-09-19 17:29:24,799	event_handler.py	2863	load_workspace	INFO	Workspace "e7fbd04c-2be5-497d-88ae-af33860580ca" with alias "New test workspace loaded."
+2018-09-19 17:29:25,019	event_handler.py	48	f	DEBUG	Start: "request_subset_set_data_filter"
+2018-09-19 17:29:25,029	event_handler.py	3203	request_subset_set_data_filter	DEBUG	Start: request_subset_get_indicator_settings
+2018-09-19 17:29:25,059	event_handler.py	2845	load_workspace	DEBUG	Trying to load new workspace "e7fbd04c-2be5-497d-88ae-af33860580ca" with alias "New test workspace"
+2018-09-19 17:29:25,571	event_handler.py	2863	load_workspace	INFO	Workspace "e7fbd04c-2be5-497d-88ae-af33860580ca" with alias "New test workspace loaded."
+2018-09-19 17:29:25,701	event_handler.py	52	f	DEBUG	Stop: "request_subset_set_data_filter". Time for running method was 0.6720035076141357
+2018-09-19 17:29:26,115	event_handler.py	109	__init__	DEBUG	Start EventHandler: event_handler
+2018-09-19 17:29:26,125	event_handler.py	144	_load_mapping_objects	DEBUG	Loading mapping files from pickle file.
+2018-09-19 17:29:26,895	event_handler.py	120	__init__	DEBUG	Time for mapping: 0.7700011730194092
+2018-09-19 17:29:26,925	event_handler.py	125	__init__	DEBUG	Time for initiating EventHandler: 0.8100011348724365
+2018-09-19 17:29:26,935	event_handler.py	48	f	DEBUG	Start: "request_subset_get_indicator_settings"
+2018-09-19 17:29:26,935	event_handler.py	3371	request_subset_get_indicator_settings	DEBUG	Start: request_subset_get_indicator_settings
+2018-09-19 17:29:26,965	event_handler.py	2845	load_workspace	DEBUG	Trying to load new workspace "e7fbd04c-2be5-497d-88ae-af33860580ca" with alias "New test workspace"
+2018-09-19 17:29:27,435	event_handler.py	2863	load_workspace	INFO	Workspace "e7fbd04c-2be5-497d-88ae-af33860580ca" with alias "New test workspace loaded."
+2018-09-19 17:29:27,545	event_handler.py	2856	load_workspace	DEBUG	Workspace "e7fbd04c-2be5-497d-88ae-af33860580ca" with alias "New test workspace" is already loaded. Set reload=True if you want to reload the workspace.
+2018-09-19 17:29:27,635	event_handler.py	2856	load_workspace	DEBUG	Workspace "e7fbd04c-2be5-497d-88ae-af33860580ca" with alias "New test workspace" is already loaded. Set reload=True if you want to reload the workspace.
+2018-09-19 17:29:27,715	event_handler.py	2856	load_workspace	DEBUG	Workspace "e7fbd04c-2be5-497d-88ae-af33860580ca" with alias "New test workspace" is already loaded. Set reload=True if you want to reload the workspace.
+2018-09-19 17:29:27,795	event_handler.py	2856	load_workspace	DEBUG	Workspace "e7fbd04c-2be5-497d-88ae-af33860580ca" with alias "New test workspace" is already loaded. Set reload=True if you want to reload the workspace.
+2018-09-19 17:29:27,875	event_handler.py	2856	load_workspace	DEBUG	Workspace "e7fbd04c-2be5-497d-88ae-af33860580ca" with alias "New test workspace" is already loaded. Set reload=True if you want to reload the workspace.
+2018-09-19 17:29:27,939	event_handler.py	2856	load_workspace	DEBUG	Workspace "e7fbd04c-2be5-497d-88ae-af33860580ca" with alias "New test workspace" is already loaded. Set reload=True if you want to reload the workspace.
+2018-09-19 17:29:28,009	event_handler.py	2856	load_workspace	DEBUG	Workspace "e7fbd04c-2be5-497d-88ae-af33860580ca" with alias "New test workspace" is already loaded. Set reload=True if you want to reload the workspace.
+2018-09-19 17:29:28,089	event_handler.py	2856	load_workspace	DEBUG	Workspace "e7fbd04c-2be5-497d-88ae-af33860580ca" with alias "New test workspace" is already loaded. Set reload=True if you want to reload the workspace.
+2018-09-19 17:29:28,149	event_handler.py	2856	load_workspace	DEBUG	Workspace "e7fbd04c-2be5-497d-88ae-af33860580ca" with alias "New test workspace" is already loaded. Set reload=True if you want to reload the workspace.
+2018-09-19 17:29:28,219	event_handler.py	2856	load_workspace	DEBUG	Workspace "e7fbd04c-2be5-497d-88ae-af33860580ca" with alias "New test workspace" is already loaded. Set reload=True if you want to reload the workspace.
+2018-09-19 17:29:28,289	event_handler.py	2856	load_workspace	DEBUG	Workspace "e7fbd04c-2be5-497d-88ae-af33860580ca" with alias "New test workspace" is already loaded. Set reload=True if you want to reload the workspace.
+2018-09-19 17:29:28,359	event_handler.py	2856	load_workspace	DEBUG	Workspace "e7fbd04c-2be5-497d-88ae-af33860580ca" with alias "New test workspace" is already loaded. Set reload=True if you want to reload the workspace.
+2018-09-19 17:29:28,429	event_handler.py	2856	load_workspace	DEBUG	Workspace "e7fbd04c-2be5-497d-88ae-af33860580ca" with alias "New test workspace" is already loaded. Set reload=True if you want to reload the workspace.
+2018-09-19 17:29:28,489	event_handler.py	2856	load_workspace	DEBUG	Workspace "e7fbd04c-2be5-497d-88ae-af33860580ca" with alias "New test workspace" is already loaded. Set reload=True if you want to reload the workspace.
+2018-09-19 17:29:28,569	event_handler.py	2856	load_workspace	DEBUG	Workspace "e7fbd04c-2be5-497d-88ae-af33860580ca" with alias "New test workspace" is already loaded. Set reload=True if you want to reload the workspace.
+2018-09-19 17:29:28,629	event_handler.py	2856	load_workspace	DEBUG	Workspace "e7fbd04c-2be5-497d-88ae-af33860580ca" with alias "New test workspace" is already loaded. Set reload=True if you want to reload the workspace.
+2018-09-19 17:29:28,699	event_handler.py	2856	load_workspace	DEBUG	Workspace "e7fbd04c-2be5-497d-88ae-af33860580ca" with alias "New test workspace" is already loaded. Set reload=True if you want to reload the workspace.
+2018-09-19 17:29:28,769	event_handler.py	2856	load_workspace	DEBUG	Workspace "e7fbd04c-2be5-497d-88ae-af33860580ca" with alias "New test workspace" is already loaded. Set reload=True if you want to reload the workspace.
+2018-09-19 17:29:28,839	event_handler.py	2856	load_workspace	DEBUG	Workspace "e7fbd04c-2be5-497d-88ae-af33860580ca" with alias "New test workspace" is already loaded. Set reload=True if you want to reload the workspace.
+2018-09-19 17:29:28,909	event_handler.py	2856	load_workspace	DEBUG	Workspace "e7fbd04c-2be5-497d-88ae-af33860580ca" with alias "New test workspace" is already loaded. Set reload=True if you want to reload the workspace.
+2018-09-19 17:29:28,969	event_handler.py	2856	load_workspace	DEBUG	Workspace "e7fbd04c-2be5-497d-88ae-af33860580ca" with alias "New test workspace" is already loaded. Set reload=True if you want to reload the workspace.
+2018-09-19 17:29:29,049	event_handler.py	2856	load_workspace	DEBUG	Workspace "e7fbd04c-2be5-497d-88ae-af33860580ca" with alias "New test workspace" is already loaded. Set reload=True if you want to reload the workspace.
+2018-09-19 17:29:29,119	event_handler.py	2856	load_workspace	DEBUG	Workspace "e7fbd04c-2be5-497d-88ae-af33860580ca" with alias "New test workspace" is already loaded. Set reload=True if you want to reload the workspace.
+2018-09-19 17:29:29,189	event_handler.py	2856	load_workspace	DEBUG	Workspace "e7fbd04c-2be5-497d-88ae-af33860580ca" with alias "New test workspace" is already loaded. Set reload=True if you want to reload the workspace.
+2018-09-19 17:29:29,219	event_handler.py	52	f	DEBUG	Stop: "request_subset_get_indicator_settings". Time for running method was 2.284003496170044
+2018-09-19 17:29:47,122	event_handler.py	109	__init__	DEBUG	Start EventHandler: event_handler
+2018-09-19 17:29:47,122	event_handler.py	144	_load_mapping_objects	DEBUG	Loading mapping files from pickle file.
+2018-09-19 17:29:47,902	event_handler.py	120	__init__	DEBUG	Time for mapping: 0.780001163482666
+2018-09-19 17:29:47,932	event_handler.py	125	__init__	DEBUG	Time for initiating EventHandler: 0.8100011348724365
+2018-09-19 17:29:47,932	event_handler.py	48	f	DEBUG	Start: "request_subset_calculate_status"
+2018-09-19 17:29:47,942	event_handler.py	3156	request_subset_calculate_status	DEBUG	Start: request_subset_calculate_status
+2018-09-19 17:29:47,972	event_handler.py	2845	load_workspace	DEBUG	Trying to load new workspace "e7fbd04c-2be5-497d-88ae-af33860580ca" with alias "New test workspace"
+2018-09-19 17:29:48,402	event_handler.py	2863	load_workspace	INFO	Workspace "e7fbd04c-2be5-497d-88ae-af33860580ca" with alias "New test workspace loaded."
+2018-09-19 17:29:48,482	event_handler.py	2856	load_workspace	DEBUG	Workspace "e7fbd04c-2be5-497d-88ae-af33860580ca" with alias "New test workspace" is already loaded. Set reload=True if you want to reload the workspace.
+2018-09-19 17:29:48,512	event_handler.py	2856	load_workspace	DEBUG	Workspace "e7fbd04c-2be5-497d-88ae-af33860580ca" with alias "New test workspace" is already loaded. Set reload=True if you want to reload the workspace.
+2018-09-19 17:29:48,572	event_handler.py	2856	load_workspace	DEBUG	Workspace "e7fbd04c-2be5-497d-88ae-af33860580ca" with alias "New test workspace" is already loaded. Set reload=True if you want to reload the workspace.
+2018-09-19 17:29:48,622	event_handler.py	52	f	DEBUG	Stop: "request_subset_calculate_status". Time for running method was 0.6800007820129395
