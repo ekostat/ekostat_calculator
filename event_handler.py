@@ -65,7 +65,7 @@ class EventHandler(object):
                  reload_mapping_objects=False): 
         """
         Created     20180219    by Magnus Wenzer
-        Updated     20180721    by Magnus Wenzer
+        Updated     20180919    by Magnus Wenzer
         
         MW 20180530: Only one usr per event handler. 
         In terms of user_id this does not really matter at the moment. 
@@ -87,7 +87,9 @@ class EventHandler(object):
         self.temp_directory = temp_directory
         self.reload_mapping_objects = reload_mapping_objects
         
-#        self.sharkweb_reader = None
+        # Create directories 
+        if not os.path.exists(self.workspace_directory):
+            os.mkdir(self.workspace_directory)
         
         
         self.log_id = 'event_handler'
@@ -678,7 +680,16 @@ class EventHandler(object):
 #                                          data=request['month_list'])
             
         else:
-            year_list = sorted(map(int, data_filter_object.get_include_list_filter('MYEAR')))
+            valid_years = None
+            if type(kwargs.get('check_in_df', False)) != bool: 
+                df = kwargs['check_in_df']
+                valid_years = sorted(set(df['MYEAR']))
+            
+            year_list = sorted(map(int, data_filter_object.get_include_list_filter('MYEAR'))) 
+#            if valid_years: 
+#                from_year = 
+#                if 
+            
             year_choices = [int(item) for item in kwargs.get('year_choices', list(range(1980, datetime.datetime.now().year+1)))] # Cant be int64 for json to work
 #            print('&'*50)
 #            print(year_list[0], type(year_list[0]))
@@ -694,7 +705,8 @@ class EventHandler(object):
     #==========================================================================
     def dict_select_year_interval(self, **kwargs): 
         """
-        Created     20180720   by Magnus Wenzer 
+        Created     20180720    by Magnus Wenzer 
+        Updated     20180919    by Magnus
         
         """ 
         from_year = self.mapping_objects['sharkweb_settings'].get('from_year')
@@ -704,7 +716,7 @@ class EventHandler(object):
         if not to_year: 
             to_year = datetime.datetime.now().year
         
-        choices = [int(item) for item in kwargs.get('year_choices', list(range(from_year, to_year)))] # Cant be int64 for json to work
+        choices = [int(item) for item in kwargs.get('year_choices', list(range(from_year, to_year+1)))] # Cant be int64 for json to work
         
         response = {'key': 'year_interval', 
                     'label': 'Year interval', 
@@ -725,8 +737,8 @@ class EventHandler(object):
 #        choices = sorted(self.mapping_objects['datatype_list'].get_list('codelist_name'))
         choices = [item for item in self.sharkweb_reader.get_available_datatypes() if item in self.mapping_objects['sharkweb_settings'].get('datatypes')]
         
-        response = {'key': 'datatype', 
-                    'label': 'Datatype', 
+        response = {'key': 'datatypes', 
+                    'label': 'Datatypes', 
                     'choices': choices, 
                     'widget': 'multiselect:str', 
                     'value': ''}
@@ -740,7 +752,7 @@ class EventHandler(object):
         Created     20180824   by Magnus Wenzer 
         
         """ 
-        return_dict = {'key': 'area', 
+        return_dict = {'key': 'areas', 
                        'label': 'Areas', 
                        'widget': 'selection_tree'}
         
@@ -826,44 +838,6 @@ class EventHandler(object):
 #            return water_district_list
         return_dict['children'] = water_district_list
         return return_dict
-    
-#    #==========================================================================
-#    def dict_select_water_body(self, **kwargs): 
-#        """
-#        Created     20180721   by Magnus Wenzer 
-#        
-#        "location_svar_sea_area_code" in sharkweb
-#        """ 
-#        choices = self.mapping_objects['water_body'].get_list(area_level='water_body')
-#        choices = [self._get_string_for_water_body(c) for c in choices] 
-#        choices = sorted(choices)
-#        
-#        response = {'key': 'water_body', 
-#                    'label': 'Water body', 
-#                    'choices': choices, 
-#                    'widget': 'multiselect:str', 
-#                    'value': []}
-#        
-#        return response
-#    
-#    
-#    #==========================================================================
-#    def dict_select_type_area(self, **kwargs): 
-#        """
-#        Created     20180721   by Magnus Wenzer 
-#        
-#        """ 
-#        choices = self.mapping_objects['water_body'].get_list(area_level='type_area')
-#        choices = [self._get_string_for_type_area(c) for c in choices]
-#        choices = sorted(choices)
-#        
-#        response = {'key': 'type_area', 
-#                    'label': 'Type area', 
-#                    'choices': choices, 
-#                    'widget': 'multiselect:str', 
-#                    'value': []}
-#        
-#        return response
         
         
     #==========================================================================
@@ -1109,6 +1083,8 @@ class EventHandler(object):
             # Check choices 
             if settings_item == 'MONTH_LIST': 
                 settings_item_dict['choices'] = list(range(1,13))
+            elif 'MIN_NR' in settings_item: 
+                settings_item_dict['choices'] = [1, 2, 3]
             
                      
             # Set value
@@ -1285,6 +1261,8 @@ class EventHandler(object):
                                                      subset_uuid=subset_uuid, 
                                                      **kwargs)
 
+        if kwargs.get('dont_build_subset'):
+            return None
         return subset_dict
                                 
     
@@ -1527,10 +1505,25 @@ class EventHandler(object):
     
     
     #==========================================================================
+    def _get_all_viss_eu_cd_in_result_dict(self, result_dict):
+        """
+        Created     20180919    by Magnus Wenzer 
+        
+        Returns a list with all viss_eu_cd frond in the result dict. result_dict 
+        is a dict with dataframes. 
+        """ 
+        viss_eu_cd_list = [] 
+        for key in result_dict:
+            viss_eu_cd_list.extend(list(result_dict[key]['VISS_EU_CD']))
+        
+        return sorted(set(viss_eu_cd_list))
+        
+        
+    #==========================================================================
     def dict_result(self, workspace_uuid=None, subset_uuid=None, **kwargs): 
         """
         Created     20180720    by Magnus Wenzer
-        Updated     20181918    by Magnus
+        Updated     20180919    by Magnus
         
         """ 
         self.action_load_workspace(workspace_uuid)
@@ -1542,9 +1535,11 @@ class EventHandler(object):
         result_data = step3_object.get_results(by='period')
         
         # Get list of viss_eu_cd from data filter step 1 
-        step1 = workspace_object.get_step_object(step=1, subset=subset_uuid) 
-        data_filter_object = step1.get_data_filter_object()
-        viss_eu_cd_list = data_filter_object.get_include_list_filter('VISS_EU_CD') 
+        viss_eu_cd_list = self._get_all_viss_eu_cd_in_result_dict(result_data) 
+        
+#        step1 = workspace_object.get_step_object(step=1, subset=subset_uuid) 
+#        data_filter_object = step1.get_data_filter_object()
+#        viss_eu_cd_list = data_filter_object.get_include_list_filter('VISS_EU_CD') 
         
         result_dict = {} 
         # Setup combined dict 
@@ -1654,12 +1649,12 @@ class EventHandler(object):
                              viss_eu_cd=None, element_id=None, time_as_string=False, **kwargs):
         """
         Created     20181918    by Magnus Wenzer
-        
+        Updated     20180918    by Magnus
         """
         
-        self.action_load_workspace(workspace_uuid)
+#        self.action_load_workspace(workspace_uuid)
         workspace_object = self.get_workspace(workspace_uuid) 
-        self._check_valid_uuid(workspace_uuid, subset_uuid)
+#        self._check_valid_uuid(workspace_uuid, subset_uuid)
         
         # Loading saved  
         step3_object = workspace_object.get_step_object(step=3, subset=subset_uuid)
@@ -1668,9 +1663,10 @@ class EventHandler(object):
         key = element_id + '-by_date'
         
         df = result_data[key] 
+        self.df = df
         
         # Extract the given viss_eu_cd 
-        df = df.loc[df['VISS_EU_CD']==viss_eu_cd]
+        df = df.loc[df['VISS_EU_CD']==viss_eu_cd].copy()
 #        print('KEY', key)
         # Find primary variable 
         primary_variable = self.mapping_objects['quality_element'].get_mapping(element_id, 'indicator', 'parameters').split(',')[0].strip()
@@ -1678,7 +1674,7 @@ class EventHandler(object):
             # Primary variable not found. No data to plot. 
 #            print('primary_variable'.upper(), primary_variable)
             return {}
-        print('=== primary_variable'.upper(), primary_variable)
+#        print('=== primary_variable'.upper(), primary_variable)
         # Find unit for xlabel
         unit = self.mapping_objects['display_mapping'].get_mapping(primary_variable, 
                                                                      'internal', 
@@ -1694,7 +1690,7 @@ class EventHandler(object):
         
         # Stations
         for station in station_list: 
-            statn_df = df.loc[df['STATN']==station]
+            statn_df = df.loc[df['STATN']==station].copy()
             y = list(statn_df[primary_variable]) 
             if time_as_string: 
                 x = ['{}T'.format(sdate) for sdate in statn_df['SDATE']]
@@ -1716,7 +1712,7 @@ class EventHandler(object):
         # Status lines/fields
         
         # Add date column and sort by date 
-        df['date'] = pd.to_datetime(df['SDATE']) 
+        df['date'] = pd.to_datetime(df['SDATE'])
         df.sort_values('date', inplace=True)
         
         # First check order 
@@ -2462,6 +2458,9 @@ class EventHandler(object):
                                           filter_name='VISS_EU_CD', 
                                           data=water_body_list, 
                                           append_items=False) 
+            
+        if kwargs.get('dont_build_subset'):
+            return {}
 #        request_for_water_district = self._get_mapping_for_name_in_dict('key', request)
         
         if type(kwargs.get('check_in_df', False)) != bool: 
@@ -2957,11 +2956,13 @@ class EventHandler(object):
     @timer 
     def request_sharkweb_import(self, request):
         """
-        Created     20180827    by Magnus Wenzer
+        Created     20180827    by Magnus Wenzer 
+        Updated     20180919    by Magnus 
         """ 
         workspace_uuid = request.get('workspace_uuid') 
-        from_year = request.get('year_from')
-        to_year = request.get('year_to')
+        year_interval = request.get('year_interval')
+        from_year = year_interval[0]
+        to_year = year_interval[1]
         datatype_list = request.get('datatypes') 
         area_list = request.get('areas')
         
@@ -3123,6 +3124,116 @@ class EventHandler(object):
                 'message': ''}
     
     
+    #==========================================================================
+    @timer 
+    def request_subset_set_data_filter(self, request):
+        """
+        Created     20180919    by Magnus Wenzer
+        
+        
+        "request" must contain: 
+            workspace_uuid
+            subset_uuid 
+            areas 
+            year_interval
+                
+        Response: 
+            - Only indicators that has data are active (only those need information). 
+        
+            
+        """
+        #TODO: Här är request enklare listor mm.
+        self._logger.debug('Start: request_subset_get_indicator_settings')
+        
+        workspace_uuid = request.get('workspace_uuid')
+        subset_uuid = request.get('subset_uuid')
+         
+        if not subset_uuid:
+            subset_uuid = request.get('subset', {}).get('subset_uuid')
+        
+#        workspace_uuid = request.get('workspace_uuid', {}) 
+#        if not workspace_uuid:
+#            workspace_uuid = request['workspace']['workspace_uuid'] 
+#        subset_uuid = request['subset']['subset_uuid']
+        
+        
+        # Load workspace 
+#        self.action_load_workspace(workspace_uuid) 
+        
+        # Load data 
+        self.action_load_data(workspace_uuid) # workspace is loaded in action 
+        
+        self._check_valid_uuid(workspace_uuid, subset_uuid)
+        
+        # Reset all data filters in step 1. 
+        # This has to be done as water bodies are appended to current filter when looping throughtype areas. 
+        # So if data filters are removed from last request it won't automaticly be removed in the data filter files. 
+        
+        # Dont think we need to reset filter anymore. MW 20180824
+        if 0:
+            self.action_reset_data_filter(workspace_uuid=workspace_uuid, 
+                                          subset_uuid=subset_uuid, 
+                                          step=1)
+        
+        response = {} 
+        
+        # Add workspace info to response 
+        response['workspace_uuid'] = workspace_uuid
+        response['workspace'] = self.dict_workspace(workspace_uuid)
+        
+        # Added by Magnus 20180914 
+        request['subset'] = {} 
+        request['subset']['value'] = True
+        request['subset']['subset_uuid'] = subset_uuid
+        request['subset']['areas'] = request.get('areas') 
+        request['subset']['time'] = {'year_interval': request.get('year_interval')}
+        self.request_ = request
+        # Set data filter and add subset information to response
+        response['subset'] = self.dict_subset(workspace_uuid=workspace_uuid, 
+                                              subset_uuid=subset_uuid, 
+                                              request=request['subset'], 
+                                              time=True, 
+                                              areas=True, 
+                                              list_viss_eu_cd=request.get('areas', []), 
+                                              dont_build_subset=True) 
+        
+        return request 
+    
+#        # Check selected areas 
+#        workspace_object = self.get_workspace(workspace_uuid) 
+#        subset_object = workspace_object.get_subset_object(subset_uuid) 
+#        data_filter_object = subset_object.get_data_filter_object(step=1)
+#        selected_areas = data_filter_object.get_include_list_filter('VISS_EU_CD')
+##        selected_areas = self._get_selected_areas_from_subset_request(request['subset'])
+##        self.selected_areas = selected_areas
+#        
+#        
+        # Apply data filter 
+#        self.action_apply_data_filter(workspace_uuid=workspace_uuid, 
+#                                      subset_uuid=subset_uuid, 
+#                                      step=1) 
+#        
+#        
+#        # Quality elements 
+#        response['quality_elements'] = self.list_quality_elements(workspace_uuid=workspace_uuid, 
+#                                                                  subset_uuid=subset_uuid, 
+#                                                                  request=[], 
+#                                                                  indicator_settings=True, 
+#                                                                  selected_areas=selected_areas)
+#        
+#        # Supporting elements 
+#        response['supporting_elements'] = self.list_supporting_elements(workspace_uuid=workspace_uuid, 
+#                                                                        subset_uuid=subset_uuid, 
+#                                                                        request=[], 
+#                                                                        indicator_settings=True, 
+#                                                                        selected_areas=selected_areas) 
+#        
+#        
+#               
+#        return response
+        
+        
+    
     
     #==========================================================================
     @timer
@@ -3186,13 +3297,111 @@ class EventHandler(object):
     def request_subset_get_indicator_settings(self, request):
         """
         Created     20180608    by Magnus Wenzer
+        Updated     20180919    by Magnus Wenzer
+        
+        "request" must contain: 
+            workspace_uuid
+            subset_uuid 
+                
+        Response: 
+            - Only indicators that has data are active (only those need information). 
+        
+            
+        """
+        #TODO: Här är request enklare listor mm.
+        self._logger.debug('Start: request_subset_get_indicator_settings')
+        
+        workspace_uuid = request.get('workspace_uuid')
+        subset_uuid = request.get('subset_uuid')
+         
+        if not subset_uuid:
+            subset_uuid = request.get('subset', {}).get('subset_uuid')
+        
+#        workspace_uuid = request.get('workspace_uuid', {}) 
+#        if not workspace_uuid:
+#            workspace_uuid = request['workspace']['workspace_uuid'] 
+#        subset_uuid = request['subset']['subset_uuid']
+        
+        
+        # Load workspace 
+#        self.action_load_workspace(workspace_uuid) 
+        
+        # Load data 
+        self.action_load_data(workspace_uuid) # workspace is loaded in action 
+        
+        self._check_valid_uuid(workspace_uuid, subset_uuid)
+        
+        # Reset all data filters in step 1. 
+        # This has to be done as water bodies are appended to current filter when looping throughtype areas. 
+        # So if data filters are removed from last request it won't automaticly be removed in the data filter files. 
+        
+        # Dont think we need to reset filter anymore. MW 20180824
+        if 0:
+            self.action_reset_data_filter(workspace_uuid=workspace_uuid, 
+                                          subset_uuid=subset_uuid, 
+                                          step=1)
+        
+        response = {} 
+        
+        # Add workspace info to response 
+        response['workspace_uuid'] = workspace_uuid
+        response['workspace'] = self.dict_workspace(workspace_uuid)
+        
+        # Set data filter and add subset information to response
+        response['subset'] = self.dict_subset(workspace_uuid=workspace_uuid, 
+                                              subset_uuid=subset_uuid, 
+                                              request={}, 
+                                              time=True, 
+                                              areas=True, 
+                                              list_viss_eu_cd=request.get('areas', [])) 
+        
+        # Check selected areas 
+        workspace_object = self.get_workspace(workspace_uuid) 
+        subset_object = workspace_object.get_subset_object(subset_uuid) 
+        data_filter_object = subset_object.get_data_filter_object(step=1)
+        selected_areas = data_filter_object.get_include_list_filter('VISS_EU_CD')
+#        selected_areas = self._get_selected_areas_from_subset_request(request['subset'])
+#        self.selected_areas = selected_areas
+        
+        
+        # Apply data filter 
+        self.action_apply_data_filter(workspace_uuid=workspace_uuid, 
+                                      subset_uuid=subset_uuid, 
+                                      step=1) 
+        
+        
+        # Quality elements 
+        response['quality_elements'] = self.list_quality_elements(workspace_uuid=workspace_uuid, 
+                                                                  subset_uuid=subset_uuid, 
+                                                                  request=[], 
+                                                                  indicator_settings=True, 
+                                                                  selected_areas=selected_areas)
+        
+        # Supporting elements 
+        response['supporting_elements'] = self.list_supporting_elements(workspace_uuid=workspace_uuid, 
+                                                                        subset_uuid=subset_uuid, 
+                                                                        request=[], 
+                                                                        indicator_settings=True, 
+                                                                        selected_areas=selected_areas) 
+        
+        
+               
+        return response
+        
+#        self.workspace_uuid = workspace_uuid
+#        self.subset_uuid = subset_uuid 
+#        self.response = response
+    
+    #==========================================================================
+    @timer 
+    def old_request_subset_get_indicator_settings(self, request):
+        """
+        Created     20180608    by Magnus Wenzer
         Updated     20180824    by Magnus Wenzer
         
         "request" must contain: 
             workspace_uuid
             subset_uuid 
-            information from the response to "request_subset_get_data_filter": 
-                Cointains information about time period and selected areas. (step_1 data filter)
                 
         Response: 
             - Only indicators that has data are active (only those need information). 
@@ -3285,10 +3494,6 @@ class EventHandler(object):
         
                
         return response
-        
-#        self.workspace_uuid = workspace_uuid
-#        self.subset_uuid = subset_uuid 
-#        self.response = response
     
     
     #==========================================================================
@@ -3610,7 +3815,10 @@ class EventHandler(object):
             }
         """
         
-        workspace_uuid = request['workspace_uuid'] 
+        workspace_uuid = request['workspace_uuid']  
+        
+#        if 'default' in workspace_uuid: 
+#            raise exceptions.
         # Initiate structure 
         response = {'workspace': {}, 
                    'subsets': []}

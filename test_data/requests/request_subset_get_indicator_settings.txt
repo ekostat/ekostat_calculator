@@ -1,11 +1,4 @@
 {
-    "workspace_uuid": "77d1c01d-a150-4bf7-9572-92eb05e29bb4",
-    "subset_uuid": "04f60cff-e691-4d5a-a1c0-ebb6a00570e2",
-    "year_interval": [2014, 2016], 
-    "areas": ["SE593000-190500",
-                  "SE633000-195000",
-                  "SE593000-190500",
-                  "SE633000-195000",
-                  "SE593000-190500",
-                  "SE633000-195000"]
-    }
+    "workspace_uuid": "28ac1911-73c8-49ab-b36e-3ae307b46a20",
+    "subset_uuid": "9721bdbe-7aff-4e0a-b175-fdcb2815eaeb"
+}

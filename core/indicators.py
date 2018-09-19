@@ -555,7 +555,7 @@ class IndicatorBase(object):
             water_body_list = self.get_filtered_data(subset = self.subset, step = 'step_2').dropna(subset = [self.indicator_parameter]).VISS_EU_CD.unique()
 #        if water_body:
 #        print('self.column_list', self.column_list) 
-        print(water_body_list)
+#        print(water_body_list)
         for water_body in dict.fromkeys(water_body_list, True):
             filtered_data = self.get_filtered_data(subset = self.subset, step = 'step_2', water_body = water_body, indicator = self.name)[self.column_list].copy()
             if filtered_data.empty:
@@ -1222,7 +1222,7 @@ class IndicatorNutrients(IndicatorBase):
         year_variable = 'YEAR'
         if 'winter' in self.name:
             month_list = self.parent_workspace_object.get_step_object(step = 2, subset = self.subset).get_indicator_data_filter_settings(self.name).get_value(variable = 'MONTH_LIST', water_body = water_body)
-            print('month_list', month_list)
+#            print('month_list', month_list)
             winter_months = [month for month in month_list if month > 10]
             #print(water_body, self.mapping_objects['water_body'][water_body]['WATERBODY_NAME'])
             self._add_winter_year(df, winter_months)
@@ -1426,18 +1426,18 @@ class IndicatorOxygen(IndicatorBase):
 #            maxD = self.Hypsographs.get_max_depth_of_water_body(water_body)
 #            value_list = []
             q = df.loc[df['DEPH'] > self.maxD - self.tol_BW, self.indicator_parameter].quantile(0.25)
-            print('q',q)
+#            print('q',q)
             #print(group.loc[group['DEPH'] > maxD-tol_BW])
             #deph_list
 #            value_list.append(df.loc[df[self.indicator_parameter] < q, self.indicator_parameter].mean())
 #            value = df.loc[df[self.indicator_parameter] < q, self.indicator_parameter].mean()
             value = np.nanmean(q)
-            print('nanmean(q)',value)
+#            print('nanmean(q)',value)
 #            position_list.append(key)
         else:
 #            value_list = False
             value = False
-            print('no_yr',no_yr)
+#            print('no_yr',no_yr)
             
         return value, no_yr, month_list
     ###############################################################################     

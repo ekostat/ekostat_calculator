@@ -1,4 +1,4 @@
 {
-    "status": "editable",
-    "workspace_uuid": "77d1c01d-a150-4bf7-9572-92eb05e29bb4"
+    "status": "readable",
+    "workspace_uuid": "default_workspace"
 }

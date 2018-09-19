@@ -1,16 +1,8 @@
 {
-    "workspace_uuid": "77d1c01d-a150-4bf7-9572-92eb05e29bb4",
-    "year_from": 2013,
-    "year_to": 2017,
+    "workspace_uuid": "28ac1911-73c8-49ab-b36e-3ae307b46a20",
+    "year_interval": [2011, 2011],
     "datatypes": [
-        "Physical and Chemical", 
-        "Chlorophyll"
+        "Physical and Chemical" 
     ],
-    "areas": [
-        "SE570900-121060", 
-        "SE633000-195000", 
-        "SE633710-200500", 
-        "SE634200-202033", 
-        "SE593000-190500"
-    ]
+    "areas": ["SE4"]
 }

@@ -1,5 +1,6 @@
 {
     "workspace_uuid": "28ac1911-73c8-49ab-b36e-3ae307b46a20",
     "subset_uuid": "9721bdbe-7aff-4e0a-b175-fdcb2815eaeb",
-    "by": "period"
-}
+    "year_interval": [2011, 2011], 
+    "areas": ["SE4"]
+    }

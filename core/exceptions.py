@@ -77,6 +77,16 @@ class WorkspaceNotFound(EkostatUserException):
     code = 'workspace_uuid_missing'   
     message = 'The workspace you are refering to does not exists' 
     
+
+#==============================================================================
+class WorkspaceNotValid(EkostatUserException):
+    """
+    Created     20180619    by Magnus Wenzer
+    Updated     
+    """
+    code = 'workspace_uuid_missing'   
+    message = 'The workspace you are refering to does not exists' 
+    
     
 #==============================================================================
 class SubsetAlreadyExists(EkostatUserException):
