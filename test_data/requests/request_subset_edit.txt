@@ -1,5 +1,5 @@
 {
     "alias": "new_subset_name",
-    "workspace_uuid": "37d6ec90-4461-41ea-98cd-d17391205602",
-    "subset_uuid": "aab21e58-6819-4ff9-a7b5-eb3b4b122889"
+    "workspace_uuid": "77d1c01d-a150-4bf7-9572-92eb05e29bb4",
+    "subset_uuid": "04f60cff-e691-4d5a-a1c0-ebb6a00570e2"
 }

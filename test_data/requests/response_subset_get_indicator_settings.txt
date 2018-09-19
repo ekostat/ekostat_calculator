@@ -1,13 +1,13 @@
 {
-    "workspace_uuid": "37d6ec90-4461-41ea-98cd-d17391205602",
+    "workspace_uuid": "77d1c01d-a150-4bf7-9572-92eb05e29bb4",
     "workspace": {
         "alias": "New test workspace",
-        "workspace_uuid": "37d6ec90-4461-41ea-98cd-d17391205602",
+        "workspace_uuid": "77d1c01d-a150-4bf7-9572-92eb05e29bb4",
         "status": "editable"
     },
     "subset": {
         "alias": "mw_subset",
-        "subset_uuid": "aab21e58-6819-4ff9-a7b5-eb3b4b122889",
+        "subset_uuid": "04f60cff-e691-4d5a-a1c0-ebb6a00570e2",
         "status": "editable",
         "value": true,
         "time": {
@@ -319,6 +319,7 @@
                             "label": "\u00d6sterg\u00f6tlands samt Stockholms sk\u00e4rg\u00e5rd, mellankustvatten, norra",
                             "children": [
                                 {
+                                    "choices": false,
                                     "key": "MIN_NR_YEARS",
                                     "unit": "",
                                     "label": "Minimum number of years ()",
@@ -327,6 +328,20 @@
                                     "value": 3
                                 },
                                 {
+                                    "choices": [
+                                        1,
+                                        2,
+                                        3,
+                                        4,
+                                        5,
+                                        6,
+                                        7,
+                                        8,
+                                        9,
+                                        10,
+                                        11,
+                                        12
+                                    ],
                                     "key": "MONTH_LIST",
                                     "unit": "",
                                     "label": "Month interval ()",
@@ -345,6 +360,7 @@
                             "label": "Norra Kvarkens inre kustvatten",
                             "children": [
                                 {
+                                    "choices": false,
                                     "key": "MIN_NR_YEARS",
                                     "unit": "",
                                     "label": "Minimum number of years ()",
@@ -353,6 +369,20 @@
                                     "value": 3
                                 },
                                 {
+                                    "choices": [
+                                        1,
+                                        2,
+                                        3,
+                                        4,
+                                        5,
+                                        6,
+                                        7,
+                                        8,
+                                        9,
+                                        10,
+                                        11,
+                                        12
+                                    ],
                                     "key": "MONTH_LIST",
                                     "unit": "",
                                     "label": "Month interval ()",
@@ -393,6 +423,7 @@
                             "label": "\u00d6sterg\u00f6tlands samt Stockholms sk\u00e4rg\u00e5rd, mellankustvatten, norra",
                             "children": [
                                 {
+                                    "choices": false,
                                     "key": "MIN_NR_YEARS",
                                     "unit": "",
                                     "label": "Minimum number of years ()",
@@ -401,6 +432,20 @@
                                     "value": 3
                                 },
                                 {
+                                    "choices": [
+                                        1,
+                                        2,
+                                        3,
+                                        4,
+                                        5,
+                                        6,
+                                        7,
+                                        8,
+                                        9,
+                                        10,
+                                        11,
+                                        12
+                                    ],
                                     "key": "MONTH_LIST",
                                     "unit": "",
                                     "label": "Month interval ()",
@@ -419,6 +464,7 @@
                             "label": "Norra Kvarkens inre kustvatten",
                             "children": [
                                 {
+                                    "choices": false,
                                     "key": "MIN_NR_YEARS",
                                     "unit": "",
                                     "label": "Minimum number of years ()",
@@ -427,6 +473,20 @@
                                     "value": 3
                                 },
                                 {
+                                    "choices": [
+                                        1,
+                                        2,
+                                        3,
+                                        4,
+                                        5,
+                                        6,
+                                        7,
+                                        8,
+                                        9,
+                                        10,
+                                        11,
+                                        12
+                                    ],
                                     "key": "MONTH_LIST",
                                     "unit": "",
                                     "label": "Month interval ()",
@@ -465,6 +525,7 @@
                             "label": "\u00d6sterg\u00f6tlands samt Stockholms sk\u00e4rg\u00e5rd, mellankustvatten, norra",
                             "children": [
                                 {
+                                    "choices": false,
                                     "key": "MIN_NR_YEARS",
                                     "unit": "",
                                     "label": "Minimum number of years ()",
@@ -473,6 +534,20 @@
                                     "value": 3
                                 },
                                 {
+                                    "choices": [
+                                        1,
+                                        2,
+                                        3,
+                                        4,
+                                        5,
+                                        6,
+                                        7,
+                                        8,
+                                        9,
+                                        10,
+                                        11,
+                                        12
+                                    ],
                                     "key": "MONTH_LIST",
                                     "unit": "",
                                     "label": "Month interval ()",
@@ -484,6 +559,7 @@
                                     ]
                                 },
                                 {
+                                    "choices": false,
                                     "key": "DEPH_INTERVAL",
                                     "unit": "m",
                                     "label": "Depth interval (m)",
@@ -502,6 +578,7 @@
                             "label": "Norra Kvarkens inre kustvatten",
                             "children": [
                                 {
+                                    "choices": false,
                                     "key": "MIN_NR_YEARS",
                                     "unit": "",
                                     "label": "Minimum number of years ()",
@@ -510,6 +587,20 @@
                                     "value": 3
                                 },
                                 {
+                                    "choices": [
+                                        1,
+                                        2,
+                                        3,
+                                        4,
+                                        5,
+                                        6,
+                                        7,
+                                        8,
+                                        9,
+                                        10,
+                                        11,
+                                        12
+                                    ],
                                     "key": "MONTH_LIST",
                                     "unit": "",
                                     "label": "Month interval ()",
@@ -521,6 +612,7 @@
                                     ]
                                 },
                                 {
+                                    "choices": false,
                                     "key": "DEPH_INTERVAL",
                                     "unit": "m",
                                     "label": "Depth interval (m)",
@@ -547,6 +639,7 @@
                             "label": "\u00d6sterg\u00f6tlands samt Stockholms sk\u00e4rg\u00e5rd, mellankustvatten, norra",
                             "children": [
                                 {
+                                    "choices": false,
                                     "key": "MIN_NR_YEARS",
                                     "unit": "",
                                     "label": "Minimum number of years ()",
@@ -555,6 +648,20 @@
                                     "value": 3
                                 },
                                 {
+                                    "choices": [
+                                        1,
+                                        2,
+                                        3,
+                                        4,
+                                        5,
+                                        6,
+                                        7,
+                                        8,
+                                        9,
+                                        10,
+                                        11,
+                                        12
+                                    ],
                                     "key": "MONTH_LIST",
                                     "unit": "",
                                     "label": "Month interval ()",
@@ -566,6 +673,7 @@
                                     ]
                                 },
                                 {
+                                    "choices": false,
                                     "key": "DEPH_INTERVAL",
                                     "unit": "m",
                                     "label": "Depth interval (m)",
@@ -584,6 +692,7 @@
                             "label": "Norra Kvarkens inre kustvatten",
                             "children": [
                                 {
+                                    "choices": false,
                                     "key": "MIN_NR_YEARS",
                                     "unit": "",
                                     "label": "Minimum number of years ()",
@@ -592,6 +701,20 @@
                                     "value": 3
                                 },
                                 {
+                                    "choices": [
+                                        1,
+                                        2,
+                                        3,
+                                        4,
+                                        5,
+                                        6,
+                                        7,
+                                        8,
+                                        9,
+                                        10,
+                                        11,
+                                        12
+                                    ],
                                     "key": "MONTH_LIST",
                                     "unit": "",
                                     "label": "Month interval ()",
@@ -603,6 +726,7 @@
                                     ]
                                 },
                                 {
+                                    "choices": false,
                                     "key": "DEPH_INTERVAL",
                                     "unit": "m",
                                     "label": "Depth interval (m)",
@@ -650,6 +774,7 @@
                             "label": "\u00d6sterg\u00f6tlands samt Stockholms sk\u00e4rg\u00e5rd, mellankustvatten, norra",
                             "children": [
                                 {
+                                    "choices": false,
                                     "key": "MIN_NR_YEARS",
                                     "unit": "",
                                     "label": "Minimum number of years ()",
@@ -658,6 +783,20 @@
                                     "value": 3
                                 },
                                 {
+                                    "choices": [
+                                        1,
+                                        2,
+                                        3,
+                                        4,
+                                        5,
+                                        6,
+                                        7,
+                                        8,
+                                        9,
+                                        10,
+                                        11,
+                                        12
+                                    ],
                                     "key": "MONTH_LIST",
                                     "unit": "",
                                     "label": "Month interval ()",
@@ -669,6 +808,7 @@
                                     ]
                                 },
                                 {
+                                    "choices": false,
                                     "key": "DEPH_INTERVAL",
                                     "unit": "m",
                                     "label": "Depth interval (m)",
@@ -687,6 +827,7 @@
                             "label": "Norra Kvarkens inre kustvatten",
                             "children": [
                                 {
+                                    "choices": false,
                                     "key": "MIN_NR_YEARS",
                                     "unit": "",
                                     "label": "Minimum number of years ()",
@@ -695,6 +836,20 @@
                                     "value": 3
                                 },
                                 {
+                                    "choices": [
+                                        1,
+                                        2,
+                                        3,
+                                        4,
+                                        5,
+                                        6,
+                                        7,
+                                        8,
+                                        9,
+                                        10,
+                                        11,
+                                        12
+                                    ],
                                     "key": "MONTH_LIST",
                                     "unit": "",
                                     "label": "Month interval ()",
@@ -706,6 +861,7 @@
                                     ]
                                 },
                                 {
+                                    "choices": false,
                                     "key": "DEPH_INTERVAL",
                                     "unit": "m",
                                     "label": "Depth interval (m)",
@@ -732,6 +888,7 @@
                             "label": "\u00d6sterg\u00f6tlands samt Stockholms sk\u00e4rg\u00e5rd, mellankustvatten, norra",
                             "children": [
                                 {
+                                    "choices": false,
                                     "key": "MIN_NR_YEARS",
                                     "unit": "",
                                     "label": "Minimum number of years ()",
@@ -740,6 +897,20 @@
                                     "value": 3
                                 },
                                 {
+                                    "choices": [
+                                        1,
+                                        2,
+                                        3,
+                                        4,
+                                        5,
+                                        6,
+                                        7,
+                                        8,
+                                        9,
+                                        10,
+                                        11,
+                                        12
+                                    ],
                                     "key": "MONTH_LIST",
                                     "unit": "",
                                     "label": "Month interval ()",
@@ -751,6 +922,7 @@
                                     ]
                                 },
                                 {
+                                    "choices": false,
                                     "key": "DEPH_INTERVAL",
                                     "unit": "m",
                                     "label": "Depth interval (m)",
@@ -769,6 +941,7 @@
                             "label": "Norra Kvarkens inre kustvatten",
                             "children": [
                                 {
+                                    "choices": false,
                                     "key": "MIN_NR_YEARS",
                                     "unit": "",
                                     "label": "Minimum number of years ()",
@@ -777,6 +950,20 @@
                                     "value": 3
                                 },
                                 {
+                                    "choices": [
+                                        1,
+                                        2,
+                                        3,
+                                        4,
+                                        5,
+                                        6,
+                                        7,
+                                        8,
+                                        9,
+                                        10,
+                                        11,
+                                        12
+                                    ],
                                     "key": "MONTH_LIST",
                                     "unit": "",
                                     "label": "Month interval ()",
@@ -788,6 +975,7 @@
                                     ]
                                 },
                                 {
+                                    "choices": false,
                                     "key": "DEPH_INTERVAL",
                                     "unit": "m",
                                     "label": "Depth interval (m)",
@@ -835,6 +1023,7 @@
                             "label": "\u00d6sterg\u00f6tlands samt Stockholms sk\u00e4rg\u00e5rd, mellankustvatten, norra",
                             "children": [
                                 {
+                                    "choices": false,
                                     "key": "MIN_NR_YEARS",
                                     "unit": "",
                                     "label": "Minimum number of years ()",
@@ -843,6 +1032,20 @@
                                     "value": 3
                                 },
                                 {
+                                    "choices": [
+                                        1,
+                                        2,
+                                        3,
+                                        4,
+                                        5,
+                                        6,
+                                        7,
+                                        8,
+                                        9,
+                                        10,
+                                        11,
+                                        12
+                                    ],
                                     "key": "MONTH_LIST",
                                     "unit": "",
                                     "label": "Month interval ()",
@@ -854,6 +1057,7 @@
                                     ]
                                 },
                                 {
+                                    "choices": false,
                                     "key": "DEPH_INTERVAL",
                                     "unit": "m",
                                     "label": "Depth interval (m)",
@@ -872,6 +1076,7 @@
                             "label": "Norra Kvarkens inre kustvatten",
                             "children": [
                                 {
+                                    "choices": false,
                                     "key": "MIN_NR_YEARS",
                                     "unit": "",
                                     "label": "Minimum number of years ()",
@@ -880,6 +1085,20 @@
                                     "value": 3
                                 },
                                 {
+                                    "choices": [
+                                        1,
+                                        2,
+                                        3,
+                                        4,
+                                        5,
+                                        6,
+                                        7,
+                                        8,
+                                        9,
+                                        10,
+                                        11,
+                                        12
+                                    ],
                                     "key": "MONTH_LIST",
                                     "unit": "",
                                     "label": "Month interval ()",
@@ -891,6 +1110,7 @@
                                     ]
                                 },
                                 {
+                                    "choices": false,
                                     "key": "DEPH_INTERVAL",
                                     "unit": "m",
                                     "label": "Depth interval (m)",
@@ -917,6 +1137,7 @@
                             "label": "\u00d6sterg\u00f6tlands samt Stockholms sk\u00e4rg\u00e5rd, mellankustvatten, norra",
                             "children": [
                                 {
+                                    "choices": false,
                                     "key": "MIN_NR_YEARS",
                                     "unit": "",
                                     "label": "Minimum number of years ()",
@@ -925,6 +1146,20 @@
                                     "value": 3
                                 },
                                 {
+                                    "choices": [
+                                        1,
+                                        2,
+                                        3,
+                                        4,
+                                        5,
+                                        6,
+                                        7,
+                                        8,
+                                        9,
+                                        10,
+                                        11,
+                                        12
+                                    ],
                                     "key": "MONTH_LIST",
                                     "unit": "",
                                     "label": "Month interval ()",
@@ -936,6 +1171,7 @@
                                     ]
                                 },
                                 {
+                                    "choices": false,
                                     "key": "DEPH_INTERVAL",
                                     "unit": "m",
                                     "label": "Depth interval (m)",
@@ -954,6 +1190,7 @@
                             "label": "Norra Kvarkens inre kustvatten",
                             "children": [
                                 {
+                                    "choices": false,
                                     "key": "MIN_NR_YEARS",
                                     "unit": "",
                                     "label": "Minimum number of years ()",
@@ -962,6 +1199,20 @@
                                     "value": 3
                                 },
                                 {
+                                    "choices": [
+                                        1,
+                                        2,
+                                        3,
+                                        4,
+                                        5,
+                                        6,
+                                        7,
+                                        8,
+                                        9,
+                                        10,
+                                        11,
+                                        12
+                                    ],
                                     "key": "MONTH_LIST",
                                     "unit": "",
                                     "label": "Month interval ()",
@@ -973,6 +1224,7 @@
                                     ]
                                 },
                                 {
+                                    "choices": false,
                                     "key": "DEPH_INTERVAL",
                                     "unit": "m",
                                     "label": "Depth interval (m)",
@@ -1011,6 +1263,7 @@
                             "label": "\u00d6sterg\u00f6tlands samt Stockholms sk\u00e4rg\u00e5rd, mellankustvatten, norra",
                             "children": [
                                 {
+                                    "choices": false,
                                     "key": "MIN_NR_YEARS",
                                     "unit": "",
                                     "label": "Minimum number of years ()",
@@ -1019,6 +1272,7 @@
                                     "value": 3
                                 },
                                 {
+                                    "choices": false,
                                     "key": "BOTTOM_WATER",
                                     "unit": "m",
                                     "label": "Bottom layer (m)",
@@ -1034,6 +1288,7 @@
                             "label": "Norra Kvarkens inre kustvatten",
                             "children": [
                                 {
+                                    "choices": false,
                                     "key": "MIN_NR_YEARS",
                                     "unit": "",
                                     "label": "Minimum number of years ()",
@@ -1042,6 +1297,7 @@
                                     "value": 3
                                 },
                                 {
+                                    "choices": false,
                                     "key": "BOTTOM_WATER",
                                     "unit": "m",
                                     "label": "Bottom layer (m)",
