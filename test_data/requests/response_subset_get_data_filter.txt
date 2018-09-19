@@ -1,13 +1,13 @@
 {
-    "workspace_uuid": "28ac1911-73c8-49ab-b36e-3ae307b46a20",
+    "workspace_uuid": "e7fbd04c-2be5-497d-88ae-af33860580ca",
     "workspace": {
         "alias": "New test workspace",
-        "workspace_uuid": "28ac1911-73c8-49ab-b36e-3ae307b46a20",
+        "workspace_uuid": "e7fbd04c-2be5-497d-88ae-af33860580ca",
         "status": "editable"
     },
     "subset": {
         "alias": "mw_subset",
-        "subset_uuid": "9721bdbe-7aff-4e0a-b175-fdcb2815eaeb",
+        "subset_uuid": "a8efce6c-25bc-48e2-8048-13a51d983fdb",
         "status": "editable",
         "value": true,
         "time": {
@@ -21,237 +21,349 @@
         },
         "areas": [
             {
-                "label": "S\u00f6dra \u00d6stersj\u00f6ns vattendistrikt",
-                "key": "SE4",
+                "label": "V\u00e4sterhavets vattendistrikt",
+                "key": "SE5",
                 "type": "water_district",
                 "status": "editable",
                 "active": false,
                 "children": [
                     {
-                        "label": "\u00d6stra \u00d6lands, syd\u00f6stra Gotlands kustvatten samt Gotska sand\u00f6n",
-                        "key": "10",
-                        "type": "type_area",
-                        "status": "editable",
-                        "active": true,
-                        "children": [
-                            {
-                                "label": "Lausvik",
-                                "key": "SE571800-184300",
-                                "type": "water_body",
-                                "status": "editable",
-                                "url": " http://www.viss.lansstyrelsen.se/waters.aspx?waterEUID=SE571800-184300",
-                                "active": false
-                            },
-                            {
-                                "label": "Klintehamnsviken sek namn",
-                                "key": "SE572350-180930",
-                                "type": "water_body",
-                                "status": "editable",
-                                "url": " http://www.viss.lansstyrelsen.se/waters.aspx?waterEUID=SE572350-180930",
-                                "active": false
-                            },
-                            {
-                                "label": "\u00d6 Gotlands n kustvatten",
-                                "key": "SE574170-190001",
-                                "type": "water_body",
-                                "status": "editable",
-                                "url": " http://www.viss.lansstyrelsen.se/waters.aspx?waterEUID=SE574170-190001",
-                                "active": false
-                            },
-                            {
-                                "label": "F\u00e5r\u00f6sund",
-                                "key": "SE575150-190400",
-                                "type": "water_body",
-                                "status": "editable",
-                                "url": " http://www.viss.lansstyrelsen.se/waters.aspx?waterEUID=SE575150-190400",
-                                "active": false
-                            }
-                        ]
-                    },
-                    {
-                        "label": "Gotlands v\u00e4stra och norra kustvatten",
-                        "key": "11",
+                        "label": "V\u00e4stkustens inre kustvatten, norra",
+                        "key": "1n",
                         "type": "type_area",
                         "status": "editable",
                         "active": false,
                         "children": [
                             {
-                                "label": "Irevik",
-                                "key": "SE575170-183550",
+                                "label": "\u00c4lg\u00f6fjorden",
+                                "key": "SE575500-113750",
                                 "type": "water_body",
                                 "status": "editable",
-                                "url": " http://www.viss.lansstyrelsen.se/waters.aspx?waterEUID=SE575170-183550",
+                                "url": " http://www.viss.lansstyrelsen.se/waters.aspx?waterEUID=SE575500-113750",
+                                "active": false
+                            },
+                            {
+                                "label": "Stigfjorden",
+                                "key": "SE580325-113500",
+                                "type": "water_body",
+                                "status": "editable",
+                                "url": " http://www.viss.lansstyrelsen.se/waters.aspx?waterEUID=SE580325-113500",
+                                "active": false
+                            },
+                            {
+                                "label": "Kalv\u00f6fjorden",
+                                "key": "SE580610-113615",
+                                "type": "water_body",
+                                "status": "editable",
+                                "url": " http://www.viss.lansstyrelsen.se/waters.aspx?waterEUID=SE580610-113615",
+                                "active": false
+                            },
+                            {
+                                "label": "Tr\u00e4lebergskile",
+                                "key": "SE581853-112736",
+                                "type": "water_body",
+                                "status": "editable",
+                                "url": " http://www.viss.lansstyrelsen.se/waters.aspx?waterEUID=SE581853-112736",
+                                "active": false
+                            },
+                            {
+                                "label": "Yttre Brofjorden",
+                                "key": "SE582000-112350",
+                                "type": "water_body",
+                                "status": "editable",
+                                "url": " http://www.viss.lansstyrelsen.se/waters.aspx?waterEUID=SE582000-112350",
+                                "active": false
+                            },
+                            {
+                                "label": "Kungshamn s sk\u00e4rg\u00e5rd",
+                                "key": "SE582147-111771",
+                                "type": "water_body",
+                                "status": "editable",
+                                "url": " http://www.viss.lansstyrelsen.se/waters.aspx?waterEUID=SE582147-111771",
+                                "active": false
+                            },
+                            {
+                                "label": "\u00c5byfjorden",
+                                "key": "SE582230-112255",
+                                "type": "water_body",
+                                "status": "editable",
+                                "url": " http://www.viss.lansstyrelsen.se/waters.aspx?waterEUID=SE582230-112255",
+                                "active": false
+                            },
+                            {
+                                "label": "Hunnebostrand sk\u00e4rg\u00e5rd",
+                                "key": "SE582665-111706",
+                                "type": "water_body",
+                                "status": "editable",
+                                "url": " http://www.viss.lansstyrelsen.se/waters.aspx?waterEUID=SE582665-111706",
+                                "active": false
+                            },
+                            {
+                                "label": "Bottnefjorden",
+                                "key": "SE582850-111760",
+                                "type": "water_body",
+                                "status": "editable",
+                                "url": " http://www.viss.lansstyrelsen.se/waters.aspx?waterEUID=SE582850-111760",
+                                "active": false
+                            },
+                            {
+                                "label": "Fj\u00e4llbacka inre sk\u00e4rg\u00e5rd",
+                                "key": "SE583710-111535",
+                                "type": "water_body",
+                                "status": "editable",
+                                "url": " http://www.viss.lansstyrelsen.se/waters.aspx?waterEUID=SE583710-111535",
+                                "active": false
+                            },
+                            {
+                                "label": "Grebbestad inre sk\u00e4rg\u00e5rd",
+                                "key": "SE584030-111400",
+                                "type": "water_body",
+                                "status": "editable",
+                                "url": " http://www.viss.lansstyrelsen.se/waters.aspx?waterEUID=SE584030-111400",
+                                "active": false
+                            },
+                            {
+                                "label": "Sann\u00e4sfjorden sek namn",
+                                "key": "SE584450-111445",
+                                "type": "water_body",
+                                "status": "editable",
+                                "url": " http://www.viss.lansstyrelsen.se/waters.aspx?waterEUID=SE584450-111445",
+                                "active": false
+                            },
+                            {
+                                "label": "Tanumskilen",
+                                "key": "SE584670-111300",
+                                "type": "water_body",
+                                "status": "editable",
+                                "url": " http://www.viss.lansstyrelsen.se/waters.aspx?waterEUID=SE584670-111300",
+                                "active": false
+                            },
+                            {
+                                "label": "Stridsfjorden",
+                                "key": "SE584750-111185",
+                                "type": "water_body",
+                                "status": "editable",
+                                "url": " http://www.viss.lansstyrelsen.se/waters.aspx?waterEUID=SE584750-111185",
+                                "active": false
+                            },
+                            {
+                                "label": "R\u00e5ss\u00f6-Res\u00f6fjorden sek namn",
+                                "key": "SE584890-110950",
+                                "type": "water_body",
+                                "status": "editable",
+                                "url": " http://www.viss.lansstyrelsen.se/waters.aspx?waterEUID=SE584890-110950",
+                                "active": false
+                            },
+                            {
+                                "label": "Inre Tj\u00e4rn\u00f6arkipelagen",
+                                "key": "SE585200-111140",
+                                "type": "water_body",
+                                "status": "editable",
+                                "url": " http://www.viss.lansstyrelsen.se/waters.aspx?waterEUID=SE585200-111140",
+                                "active": false
+                            },
+                            {
+                                "label": "Str\u00f6mstadsfjorden",
+                                "key": "SE585600-110880",
+                                "type": "water_body",
+                                "status": "editable",
+                                "url": " http://www.viss.lansstyrelsen.se/waters.aspx?waterEUID=SE585600-110880",
+                                "active": false
+                            },
+                            {
+                                "label": "Dynekilen",
+                                "key": "SE585990-111125",
+                                "type": "water_body",
+                                "status": "editable",
+                                "url": " http://www.viss.lansstyrelsen.se/waters.aspx?waterEUID=SE585990-111125",
                                 "active": false
                             }
                         ]
                     },
                     {
-                        "label": "\u00d6sterg\u00f6tlands samt Stockholms sk\u00e4rg\u00e5rd, mellankustvatten, norra",
-                        "key": "12n",
+                        "label": "V\u00e4stkustens inre kustvatten, s\u00f6dra",
+                        "key": "1s",
                         "type": "type_area",
                         "status": "editable",
                         "active": false,
                         "children": [
                             {
-                                "label": "Ark\u00f6sund",
-                                "key": "SE583000-165600",
+                                "label": "Yttre Kungsbackafjorden",
+                                "key": "SE572135-120141",
                                 "type": "water_body",
                                 "status": "editable",
-                                "url": " http://www.viss.lansstyrelsen.se/waters.aspx?waterEUID=SE583000-165600",
+                                "url": " http://www.viss.lansstyrelsen.se/waters.aspx?waterEUID=SE572135-120141",
                                 "active": false
                             },
                             {
-                                "label": "Yttre Br\u00e5viken",
-                                "key": "SE583730-164501",
+                                "label": "Inre Kungsbackafjorden",
+                                "key": "SE572472-120302",
                                 "type": "water_body",
                                 "status": "editable",
-                                "url": " http://www.viss.lansstyrelsen.se/waters.aspx?waterEUID=SE583730-164501",
+                                "url": " http://www.viss.lansstyrelsen.se/waters.aspx?waterEUID=SE572472-120302",
                                 "active": false
                             },
                             {
-                                "label": "Mellersta Br\u00e5viken",
-                                "key": "SE583825-163500",
+                                "label": "Dana fjord",
+                                "key": "SE574000-114230",
                                 "type": "water_body",
                                 "status": "editable",
-                                "url": " http://www.viss.lansstyrelsen.se/waters.aspx?waterEUID=SE583825-163500",
-                                "active": false
-                            },
-                            {
-                                "label": "Sill\u00f6fj\u00e4rden",
-                                "key": "SE583875-170270",
-                                "type": "water_body",
-                                "status": "editable",
-                                "url": " http://www.viss.lansstyrelsen.se/waters.aspx?waterEUID=SE583875-170270",
-                                "active": false
-                            },
-                            {
-                                "label": "Marsviken",
-                                "key": "SE583970-170280",
-                                "type": "water_body",
-                                "status": "editable",
-                                "url": " http://www.viss.lansstyrelsen.se/waters.aspx?waterEUID=SE583970-170280",
+                                "url": " http://www.viss.lansstyrelsen.se/waters.aspx?waterEUID=SE574000-114230",
                                 "active": false
                             }
                         ]
                     },
                     {
-                        "label": "\u00d6sterg\u00f6tlands samt Stockholms sk\u00e4rg\u00e5rd, mellankustvatten, s\u00f6dra",
-                        "key": "12s",
+                        "label": "V\u00e4stkustens fjordar",
+                        "key": "2",
                         "type": "type_area",
                         "status": "editable",
                         "active": false,
                         "children": [
                             {
-                                "label": "G\u00e5sfj\u00e4rden",
-                                "key": "SE573500-163500",
+                                "label": "Asker\u00f6fjorden",
+                                "key": "SE580500-114725",
                                 "type": "water_body",
                                 "status": "editable",
-                                "url": " http://www.viss.lansstyrelsen.se/waters.aspx?waterEUID=SE573500-163500",
+                                "url": " http://www.viss.lansstyrelsen.se/waters.aspx?waterEUID=SE580500-114725",
                                 "active": false
                             },
                             {
-                                "label": "V\u00e4strumsfj\u00e4rden",
-                                "key": "SE573940-163560",
+                                "label": "Halsefjorden",
+                                "key": "SE580688-114860",
                                 "type": "water_body",
                                 "status": "editable",
-                                "url": " http://www.viss.lansstyrelsen.se/waters.aspx?waterEUID=SE573940-163560",
+                                "url": " http://www.viss.lansstyrelsen.se/waters.aspx?waterEUID=SE580688-114860",
                                 "active": false
                             },
                             {
-                                "label": "Inre Gamlebyviken",
-                                "key": "SE575150-162700",
+                                "label": "Ell\u00f6sefjorden",
+                                "key": "SE581120-112680",
                                 "type": "water_body",
                                 "status": "editable",
-                                "url": " http://www.viss.lansstyrelsen.se/waters.aspx?waterEUID=SE575150-162700",
+                                "url": " http://www.viss.lansstyrelsen.se/waters.aspx?waterEUID=SE581120-112680",
                                 "active": false
                             },
                             {
-                                "label": "Vivassen",
-                                "key": "SE575370-164220",
+                                "label": "Kolj\u00f6 fjord",
+                                "key": "SE581260-113220",
                                 "type": "water_body",
                                 "status": "editable",
-                                "url": " http://www.viss.lansstyrelsen.se/waters.aspx?waterEUID=SE575370-164220",
+                                "url": " http://www.viss.lansstyrelsen.se/waters.aspx?waterEUID=SE581260-113220",
                                 "active": false
                             },
                             {
-                                "label": "Kaggebofj\u00e4rden",
-                                "key": "SE580000-164060",
+                                "label": "Sn\u00e4ckedjupet",
+                                "key": "SE581365-112910",
                                 "type": "water_body",
                                 "status": "editable",
-                                "url": " http://www.viss.lansstyrelsen.se/waters.aspx?waterEUID=SE580000-164060",
+                                "url": " http://www.viss.lansstyrelsen.se/waters.aspx?waterEUID=SE581365-112910",
                                 "active": false
                             },
                             {
-                                "label": "Yttre Valdemarsviken",
-                                "key": "SE580585-164720",
+                                "label": "Gullmarn centralbass\u00e4ng",
+                                "key": "SE581700-113000",
                                 "type": "water_body",
                                 "status": "editable",
-                                "url": " http://www.viss.lansstyrelsen.se/waters.aspx?waterEUID=SE580585-164720",
+                                "url": " http://www.viss.lansstyrelsen.se/waters.aspx?waterEUID=SE581700-113000",
                                 "active": false
                             },
                             {
-                                "label": "Hals\u00f6fj\u00e4rden",
-                                "key": "SE580735-165296",
+                                "label": "Havstensfjorden",
+                                "key": "SE581740-114820",
                                 "type": "water_body",
                                 "status": "editable",
-                                "url": " http://www.viss.lansstyrelsen.se/waters.aspx?waterEUID=SE580735-165296",
+                                "url": " http://www.viss.lansstyrelsen.se/waters.aspx?waterEUID=SE581740-114820",
                                 "active": false
                             },
                             {
-                                "label": "Orren",
-                                "key": "SE581520-165000",
+                                "label": "Byfjorden",
+                                "key": "SE582000-115270",
                                 "type": "water_body",
                                 "status": "editable",
-                                "url": " http://www.viss.lansstyrelsen.se/waters.aspx?waterEUID=SE581520-165000",
+                                "url": " http://www.viss.lansstyrelsen.se/waters.aspx?waterEUID=SE582000-115270",
                                 "active": false
                             },
                             {
-                                "label": "K\u00e4rrfj\u00e4rden",
-                                "key": "SE582050-165820",
+                                "label": "Brofjorden",
+                                "key": "SE582150-112530",
                                 "type": "water_body",
                                 "status": "editable",
-                                "url": " http://www.viss.lansstyrelsen.se/waters.aspx?waterEUID=SE582050-165820",
+                                "url": " http://www.viss.lansstyrelsen.se/waters.aspx?waterEUID=SE582150-112530",
                                 "active": false
                             },
                             {
-                                "label": "Tr\u00e4nn\u00f6fj\u00e4rden",
-                                "key": "SE582460-164500",
+                                "label": "F\u00e4rlevfjorden",
+                                "key": "SE582630-113515",
                                 "type": "water_body",
                                 "status": "editable",
-                                "url": " http://www.viss.lansstyrelsen.se/waters.aspx?waterEUID=SE582460-164500",
+                                "url": " http://www.viss.lansstyrelsen.se/waters.aspx?waterEUID=SE582630-113515",
                                 "active": false
                             }
                         ]
                     },
                     {
-                        "label": "\u00d6sterg\u00f6tlands inre sk\u00e4rg\u00e5rd",
-                        "key": "13",
+                        "label": "V\u00e4stkustens yttre kustvatten, Skagerrak",
+                        "key": "3",
                         "type": "type_area",
                         "status": "editable",
                         "active": false,
                         "children": [
                             {
-                                "label": "Inre Valdemarsviken",
-                                "key": "SE581000-164020",
+                                "label": "Marstrandsfjorden",
+                                "key": "SE575340-113000",
                                 "type": "water_body",
                                 "status": "editable",
-                                "url": " http://www.viss.lansstyrelsen.se/waters.aspx?waterEUID=SE581000-164020",
+                                "url": " http://www.viss.lansstyrelsen.se/waters.aspx?waterEUID=SE575340-113000",
                                 "active": false
                             },
                             {
-                                "label": "Inre Sl\u00e4tbaken",
-                                "key": "SE582705-163350",
+                                "label": "M Bohusl\u00e4ns sk\u00e4rg\u00e5rds kustvatten",
+                                "key": "SE580500-111801",
                                 "type": "water_body",
                                 "status": "editable",
-                                "url": " http://www.viss.lansstyrelsen.se/waters.aspx?waterEUID=SE582705-163350",
+                                "url": " http://www.viss.lansstyrelsen.se/waters.aspx?waterEUID=SE580500-111801",
                                 "active": false
                             },
                             {
-                                "label": "Pampusfj\u00e4rden",
-                                "key": "SE583718-161687",
+                                "label": "S Kosterfjorden",
+                                "key": "SE585100-110600",
                                 "type": "water_body",
                                 "status": "editable",
-                                "url": " http://www.viss.lansstyrelsen.se/waters.aspx?waterEUID=SE583718-161687",
+                                "url": " http://www.viss.lansstyrelsen.se/waters.aspx?waterEUID=SE585100-110600",
+                                "active": false
+                            }
+                        ]
+                    },
+                    {
+                        "label": "V\u00e4stkustens yttre kustvatten, Kattegatt",
+                        "key": "4",
+                        "type": "type_area",
+                        "status": "editable",
+                        "active": false,
+                        "children": [
+                            {
+                                "label": "N m Hallands kustvatten",
+                                "key": "SE570000-120701",
+                                "type": "water_body",
+                                "status": "editable",
+                                "url": " http://www.viss.lansstyrelsen.se/waters.aspx?waterEUID=SE570000-120701",
+                                "active": false
+                            },
+                            {
+                                "label": "Onsala kustvatten",
+                                "key": "SE572540-114801",
+                                "type": "water_body",
+                                "status": "editable",
+                                "url": " http://www.viss.lansstyrelsen.se/waters.aspx?waterEUID=SE572540-114801",
+                                "active": false
+                            },
+                            {
+                                "label": "G\u00f6teborgs s sk\u00e4rg\u00e5rds kustvatten",
+                                "key": "SE573300-113801",
+                                "type": "water_body",
+                                "status": "editable",
+                                "url": " http://www.viss.lansstyrelsen.se/waters.aspx?waterEUID=SE573300-113801",
                                 "active": false
                             }
                         ]
@@ -264,295 +376,27 @@
                         "active": false,
                         "children": [
                             {
-                                "label": "N \u00d6resunds kustvatten",
-                                "key": "SE561030-122821",
+                                "label": "Sk\u00e4lderviken",
+                                "key": "SE562000-123800",
                                 "type": "water_body",
                                 "status": "editable",
-                                "url": " http://www.viss.lansstyrelsen.se/waters.aspx?waterEUID=SE561030-122821",
-                                "active": false
-                            }
-                        ]
-                    },
-                    {
-                        "label": "\u00d6resunds kustvatten",
-                        "key": "6",
-                        "type": "type_area",
-                        "status": "editable",
-                        "active": false,
-                        "children": [
-                            {
-                                "label": "Lommabukten",
-                                "key": "SE554040-125750",
-                                "type": "water_body",
-                                "status": "editable",
-                                "url": " http://www.viss.lansstyrelsen.se/waters.aspx?waterEUID=SE554040-125750",
+                                "url": " http://www.viss.lansstyrelsen.se/waters.aspx?waterEUID=SE562000-123800",
                                 "active": false
                             },
                             {
-                                "label": "S m \u00d6resunds kustvatten",
-                                "key": "SE554500-125001",
+                                "label": "Laholmsbuktens kustvatten",
+                                "key": "SE563000-123351",
                                 "type": "water_body",
                                 "status": "editable",
-                                "url": " http://www.viss.lansstyrelsen.se/waters.aspx?waterEUID=SE554500-125001",
+                                "url": " http://www.viss.lansstyrelsen.se/waters.aspx?waterEUID=SE563000-123351",
                                 "active": false
                             },
                             {
-                                "label": "Lund\u00e5krabukten",
-                                "key": "SE554810-125240",
+                                "label": "Laholmsbukten",
+                                "key": "SE563330-124600",
                                 "type": "water_body",
                                 "status": "editable",
-                                "url": " http://www.viss.lansstyrelsen.se/waters.aspx?waterEUID=SE554810-125240",
-                                "active": false
-                            },
-                            {
-                                "label": "N m \u00d6resunds kustvatten",
-                                "key": "SE555545-124332",
-                                "type": "water_body",
-                                "status": "editable",
-                                "url": " http://www.viss.lansstyrelsen.se/waters.aspx?waterEUID=SE555545-124332",
-                                "active": false
-                            }
-                        ]
-                    },
-                    {
-                        "label": "Sk\u00e5nes kustvatten",
-                        "key": "7",
-                        "type": "type_area",
-                        "status": "editable",
-                        "active": false,
-                        "children": [
-                            {
-                                "label": "\u00d6 sydkustens kustvatten",
-                                "key": "SE552170-130626",
-                                "type": "water_body",
-                                "status": "editable",
-                                "url": " http://www.viss.lansstyrelsen.se/waters.aspx?waterEUID=SE552170-130626",
-                                "active": false
-                            },
-                            {
-                                "label": "S \u00d6resunds kustvatten",
-                                "key": "SE552500-124461",
-                                "type": "water_body",
-                                "status": "editable",
-                                "url": " http://www.viss.lansstyrelsen.se/waters.aspx?waterEUID=SE552500-124461",
-                                "active": false
-                            },
-                            {
-                                "label": "V Han\u00f6buktens kustvatten",
-                                "key": "SE554800-142001",
-                                "type": "water_body",
-                                "status": "editable",
-                                "url": " http://www.viss.lansstyrelsen.se/waters.aspx?waterEUID=SE554800-142001",
-                                "active": false
-                            },
-                            {
-                                "label": "S\u00f6lvesborgsviken",
-                                "key": "SE560205-143545",
-                                "type": "water_body",
-                                "status": "editable",
-                                "url": " http://www.viss.lansstyrelsen.se/waters.aspx?waterEUID=SE560205-143545",
-                                "active": false
-                            }
-                        ]
-                    },
-                    {
-                        "label": "Blekinge sk\u00e4rg\u00e5rd och Kalmarsund, inre kustvatten",
-                        "key": "8",
-                        "type": "type_area",
-                        "status": "editable",
-                        "active": false,
-                        "children": [
-                            {
-                                "label": "Torhamnsfj\u00e4rden",
-                                "key": "SE560500-154880",
-                                "type": "water_body",
-                                "status": "editable",
-                                "url": " http://www.viss.lansstyrelsen.se/waters.aspx?waterEUID=SE560500-154880",
-                                "active": false
-                            },
-                            {
-                                "label": "V\u00e4stra fj\u00e4rden",
-                                "key": "SE560775-153055",
-                                "type": "water_body",
-                                "status": "editable",
-                                "url": " http://www.viss.lansstyrelsen.se/waters.aspx?waterEUID=SE560775-153055",
-                                "active": false
-                            },
-                            {
-                                "label": "Yttre redden",
-                                "key": "SE560780-153500",
-                                "type": "water_body",
-                                "status": "editable",
-                                "url": " http://www.viss.lansstyrelsen.se/waters.aspx?waterEUID=SE560780-153500",
-                                "active": false
-                            },
-                            {
-                                "label": "Hallarumsviken",
-                                "key": "SE560795-154730",
-                                "type": "water_body",
-                                "status": "editable",
-                                "url": " http://www.viss.lansstyrelsen.se/waters.aspx?waterEUID=SE560795-154730",
-                                "active": false
-                            },
-                            {
-                                "label": "\u00d6stra fj\u00e4rden",
-                                "key": "SE560810-153980",
-                                "type": "water_body",
-                                "status": "editable",
-                                "url": " http://www.viss.lansstyrelsen.se/waters.aspx?waterEUID=SE560810-153980",
-                                "active": false
-                            },
-                            {
-                                "label": "Inre Pukaviksbukten",
-                                "key": "SE560825-144215",
-                                "type": "water_body",
-                                "status": "editable",
-                                "url": " http://www.viss.lansstyrelsen.se/waters.aspx?waterEUID=SE560825-144215",
-                                "active": false
-                            },
-                            {
-                                "label": "Karlshamnsfj\u00e4rden",
-                                "key": "SE560900-145280",
-                                "type": "water_body",
-                                "status": "editable",
-                                "url": " http://www.viss.lansstyrelsen.se/waters.aspx?waterEUID=SE560900-145280",
-                                "active": false
-                            },
-                            {
-                                "label": "Ronnebyfj\u00e4rden",
-                                "key": "SE560940-151740",
-                                "type": "water_body",
-                                "status": "editable",
-                                "url": " http://www.viss.lansstyrelsen.se/waters.aspx?waterEUID=SE560940-151740",
-                                "active": false
-                            },
-                            {
-                                "label": "Tj\u00e4r\u00f6fj\u00e4rden",
-                                "key": "SE561005-150250",
-                                "type": "water_body",
-                                "status": "editable",
-                                "url": " http://www.viss.lansstyrelsen.se/waters.aspx?waterEUID=SE561005-150250",
-                                "active": false
-                            },
-                            {
-                                "label": "V\u00e4stra sj\u00f6n",
-                                "key": "SE563825-161810",
-                                "type": "water_body",
-                                "status": "editable",
-                                "url": " http://www.viss.lansstyrelsen.se/waters.aspx?waterEUID=SE563825-161810",
-                                "active": false
-                            },
-                            {
-                                "label": "S n Kalmarsund",
-                                "key": "SE564250-162500",
-                                "type": "water_body",
-                                "status": "editable",
-                                "url": " http://www.viss.lansstyrelsen.se/waters.aspx?waterEUID=SE564250-162500",
-                                "active": false
-                            },
-                            {
-                                "label": "L\u00f6v\u00f6omr\u00e5det sek namn",
-                                "key": "SE565800-163000",
-                                "type": "water_body",
-                                "status": "editable",
-                                "url": " http://www.viss.lansstyrelsen.se/waters.aspx?waterEUID=SE565800-163000",
-                                "active": false
-                            },
-                            {
-                                "label": "M\u00f6nster\u00e5somr\u00e5det sek namn",
-                                "key": "SE570080-163430",
-                                "type": "water_body",
-                                "status": "editable",
-                                "url": " http://www.viss.lansstyrelsen.se/waters.aspx?waterEUID=SE570080-163430",
-                                "active": false
-                            },
-                            {
-                                "label": "\u00d6d\u00e4nglaomr\u00e5det sek namn",
-                                "key": "SE570340-163710",
-                                "type": "water_body",
-                                "status": "editable",
-                                "url": " http://www.viss.lansstyrelsen.se/waters.aspx?waterEUID=SE570340-163710",
-                                "active": false
-                            },
-                            {
-                                "label": "Emomr\u00e5det sek namn",
-                                "key": "SE570500-163750",
-                                "type": "water_body",
-                                "status": "editable",
-                                "url": " http://www.viss.lansstyrelsen.se/waters.aspx?waterEUID=SE570500-163750",
-                                "active": false
-                            },
-                            {
-                                "label": "Inre Oskarshamnsomr\u00e5det",
-                                "key": "SE571552-162848",
-                                "type": "water_body",
-                                "status": "editable",
-                                "url": " http://www.viss.lansstyrelsen.se/waters.aspx?waterEUID=SE571552-162848",
-                                "active": false
-                            },
-                            {
-                                "label": "F\u00e5gel\u00f6fj\u00e4rden",
-                                "key": "SE572205-163500",
-                                "type": "water_body",
-                                "status": "editable",
-                                "url": " http://www.viss.lansstyrelsen.se/waters.aspx?waterEUID=SE572205-163500",
-                                "active": false
-                            },
-                            {
-                                "label": "Simpevarpsomr\u00e5det",
-                                "key": "SE572500-164500",
-                                "type": "water_body",
-                                "status": "editable",
-                                "url": " http://www.viss.lansstyrelsen.se/waters.aspx?waterEUID=SE572500-164500",
-                                "active": false
-                            }
-                        ]
-                    },
-                    {
-                        "label": "Blekinge sk\u00e4rg\u00e5rd och Kalmarsund, yttre kustvatten",
-                        "key": "9",
-                        "type": "type_area",
-                        "status": "editable",
-                        "active": false,
-                        "children": [
-                            {
-                                "label": "S v s Kalmarsunds kustvatten",
-                                "key": "SE560700-155801",
-                                "type": "water_body",
-                                "status": "editable",
-                                "url": " http://www.viss.lansstyrelsen.se/waters.aspx?waterEUID=SE560700-155801",
-                                "active": false
-                            },
-                            {
-                                "label": "S Kalmarsunds utsj\u00f6vatten",
-                                "key": "SE561400-161201",
-                                "type": "water_body",
-                                "status": "editable",
-                                "url": " http://www.viss.lansstyrelsen.se/waters.aspx?waterEUID=SE561400-161201",
-                                "active": false
-                            },
-                            {
-                                "label": "M n Kalmarsunds utsj\u00f6vatten",
-                                "key": "SE565400-163600",
-                                "type": "water_body",
-                                "status": "editable",
-                                "url": " http://www.viss.lansstyrelsen.se/waters.aspx?waterEUID=SE565400-163600",
-                                "active": false
-                            },
-                            {
-                                "label": "N n Kalmarsunds utsj\u00f6vatten",
-                                "key": "SE570900-164501",
-                                "type": "water_body",
-                                "status": "editable",
-                                "url": " http://www.viss.lansstyrelsen.se/waters.aspx?waterEUID=SE570900-164501",
-                                "active": false
-                            },
-                            {
-                                "label": "V\u00e4stra Blekinge sk\u00e4rg\u00e5rds kustvatten",
-                                "key": "SE621688-144133",
-                                "type": "water_body",
-                                "status": "editable",
-                                "url": " http://www.viss.lansstyrelsen.se/waters.aspx?waterEUID=SE621688-144133",
+                                "url": " http://www.viss.lansstyrelsen.se/waters.aspx?waterEUID=SE563330-124600",
                                 "active": false
                             }
                         ]

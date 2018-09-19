@@ -10,6 +10,8 @@ import shutil
 import time
 import datetime
 
+import numpy as np 
+
 import json
 import codecs 
 import re
@@ -1704,6 +1706,15 @@ class EventHandler(object):
                 for sdate in statn_df['SDATE']:
                     ymd = [int(item) for item in sdate.split('-')]
                     x.append(datetime.datetime(*ymd))
+            
+            if 1: 
+                nx = []
+                ny = []
+                for xx, yy in zip(x, y):
+                    if not np.isnan(yy):
+                        nx.append(xx)
+                        ny.append(yy)
+                x, y = nx, ny
             
             dataset_dict = {'x': x, 
                             'y': y, 
@@ -3412,14 +3423,14 @@ class EventHandler(object):
         response['workspace_uuid'] = workspace_uuid
         response['workspace'] = self.dict_workspace(workspace_uuid)
         
-        # Set data filter and add subset information to response
-        response['subset'] = self.dict_subset(workspace_uuid=workspace_uuid, 
-                                              subset_uuid=subset_uuid, 
-                                              request={}, 
-                                              time=True, 
-                                              areas=True, 
-                                              list_viss_eu_cd=request.get('areas', []), 
-                                              check_in_df=df0) 
+#        # Set data filter and add subset information to response
+#        response['subset'] = self.dict_subset(workspace_uuid=workspace_uuid, 
+#                                              subset_uuid=subset_uuid, 
+#                                              request={}, 
+#                                              time=True, 
+#                                              areas=True, 
+#                                              list_viss_eu_cd=request.get('areas', []), 
+#                                              check_in_df=df0) 
         
         # Check selected areas 
         workspace_object = self.get_workspace(workspace_uuid) 
