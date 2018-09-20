@@ -1,8 +1,16 @@
 {
-    "workspace_uuid": "fccc7645-8501-4541-975b-bdcfb40a5092",
-    "year_interval": [2011, 2016],
+    "workspace_uuid": "a377ee26-cd2d-411b-999c-073cd7a3dbd4",
+    "year_interval": [2007, 2012],
     "datatypes": [
-        "Physical and Chemical" 
+        "Phytoplankton", 
+        "Chlorophyll", 
+        "Zoobenthos", 
+        "Physical and Chemical"
+        
     ],
-    "areas": ["SE4"]
+    "areas": ["SE584340-174401", 
+              "SE581700-113000", 
+              "SE654470-222700", 
+              "SE633000-195000", 
+              "SE625180-181655"]
 }

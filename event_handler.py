@@ -2088,6 +2088,7 @@ class EventHandler(object):
         if not datatype: 
             raise exceptions.UnableToLoadData('No data available') 
             
+        print('datatype', datatype)
         internal_datatype_name = self.mapping_objects['datatype_list'].get_mapping(datatype, 'codelist_name', 'internal_name')
 #        print('datatype', datatype)
 #        print('internal_datatype_name', internal_datatype_name)

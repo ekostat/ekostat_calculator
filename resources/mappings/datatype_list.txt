@@ -6,12 +6,12 @@ Harbour seal
 Physical and chemical	physicalchemical
 Physical and Chemical	physicalchemical
 Epibenthos	
-Phytoplankton	
+Phytoplankton	phytoplankton
 Picoplankton	
 Primary production	
 Ringed seal	
 Seal pathology	
 Sedimentation	
-Zoobenthos	
+Zoobenthos	zoobenthos
 Zooplankton	
 Harbour porpoise	
