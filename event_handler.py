@@ -690,12 +690,13 @@ class EventHandler(object):
 #                                          data=request['month_list'])
             
         else: 
-            valid_years = [int(y) for y in data_filter_object.get_include_list_filter('MYEAR')]
-            print(valid_years)
             if type(kwargs.get('check_in_df', False)) != bool: 
                 df = kwargs['check_in_df']
                 print(set(df['MYEAR']))
-                valid_years = set(df['MYEAR']).intersection(valid_years)
+                valid_years = set(df['MYEAR']) 
+            else:
+                valid_years = [int(y) for y in data_filter_object.get_include_list_filter('MYEAR')]
+            
                 
             valid_years = sorted(map(int, valid_years)) # Cant be int64 for json to work
 #            if valid_years: 
