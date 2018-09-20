@@ -153,7 +153,7 @@ class QualityElementBase(object):
                 # calculate mean for the included sub-indicators
                 if mean_of_indicators(indicator):
                     df = cut_results(self.indicator_dict[indicator], indicator)
-                    self.sld.save_df(df, indicator)
+                    self.sld.save_df(df, indicator + '-by_period')
         if 'qe_'+self.name in self.indicator_dict.keys():
             self.sld.save_df(self.indicator_dict['qe_'+self.name], self.name+'_all_results')
     

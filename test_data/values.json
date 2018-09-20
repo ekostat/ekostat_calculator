@@ -1,0 +1,589 @@
+{
+  "indicator_secchi": {
+    "2": {
+      "MIN_NR_YEARS": 3,
+      "MONTH_LIST": [
+        6,
+        8
+      ]
+    },
+    "3": {
+      "MIN_NR_YEARS": 3,
+      "MONTH_LIST": [
+        6,
+        8
+      ]
+    },
+    "4": {
+      "MIN_NR_YEARS": 3,
+      "MONTH_LIST": [
+        6,
+        8
+      ]
+    },
+    "5": {
+      "MIN_NR_YEARS": 3,
+      "MONTH_LIST": [
+        6,
+        8
+      ]
+    },
+    "25": {
+      "MIN_NR_YEARS": 3,
+      "MONTH_LIST": [
+        6,
+        8
+      ]
+    },
+    "1n": {
+      "MIN_NR_YEARS": 3,
+      "MONTH_LIST": [
+        6,
+        8
+      ]
+    },
+    "1s": {
+      "MIN_NR_YEARS": 3,
+      "MONTH_LIST": [
+        6,
+        8
+      ]
+    }
+  },
+  "indicator_din_winter": {
+    "2": {
+      "MIN_NR_YEARS": 3,
+      "MONTH_LIST": [
+        12,
+        3
+      ],
+      "DEPH_INTERVAL": [
+        0,
+        10
+      ]
+    },
+    "3": {
+      "MIN_NR_YEARS": 3,
+      "MONTH_LIST": [
+        12,
+        3
+      ],
+      "DEPH_INTERVAL": [
+        0,
+        10
+      ]
+    },
+    "4": {
+      "MIN_NR_YEARS": 3,
+      "MONTH_LIST": [
+        12,
+        3
+      ],
+      "DEPH_INTERVAL": [
+        0,
+        10
+      ]
+    },
+    "5": {
+      "MIN_NR_YEARS": 3,
+      "MONTH_LIST": [
+        12,
+        3
+      ],
+      "DEPH_INTERVAL": [
+        0,
+        10
+      ]
+    },
+    "25": {
+      "MIN_NR_YEARS": 3,
+      "MONTH_LIST": [
+        12,
+        3
+      ],
+      "DEPH_INTERVAL": [
+        0,
+        10
+      ]
+    },
+    "1n": {
+      "MIN_NR_YEARS": 3,
+      "MONTH_LIST": [
+        12,
+        3
+      ],
+      "DEPH_INTERVAL": [
+        0,
+        10
+      ]
+    },
+    "1s": {
+      "MIN_NR_YEARS": 3,
+      "MONTH_LIST": [
+        12,
+        3
+      ],
+      "DEPH_INTERVAL": [
+        0,
+        10
+      ]
+    }
+  },
+  "indicator_dip_winter": {
+    "2": {
+      "MIN_NR_YEARS": 3,
+      "MONTH_LIST": [
+        12,
+        3
+      ],
+      "DEPH_INTERVAL": [
+        0,
+        10
+      ]
+    },
+    "3": {
+      "MIN_NR_YEARS": 3,
+      "MONTH_LIST": [
+        12,
+        3
+      ],
+      "DEPH_INTERVAL": [
+        0,
+        10
+      ]
+    },
+    "4": {
+      "MIN_NR_YEARS": 3,
+      "MONTH_LIST": [
+        12,
+        3
+      ],
+      "DEPH_INTERVAL": [
+        0,
+        10
+      ]
+    },
+    "5": {
+      "MIN_NR_YEARS": 3,
+      "MONTH_LIST": [
+        12,
+        3
+      ],
+      "DEPH_INTERVAL": [
+        0,
+        10
+      ]
+    },
+    "25": {
+      "MIN_NR_YEARS": 3,
+      "MONTH_LIST": [
+        12,
+        3
+      ],
+      "DEPH_INTERVAL": [
+        0,
+        10
+      ]
+    },
+    "1n": {
+      "MIN_NR_YEARS": 3,
+      "MONTH_LIST": [
+        12,
+        3
+      ],
+      "DEPH_INTERVAL": [
+        0,
+        10
+      ]
+    },
+    "1s": {
+      "MIN_NR_YEARS": 3,
+      "MONTH_LIST": [
+        12,
+        3
+      ],
+      "DEPH_INTERVAL": [
+        0,
+        10
+      ]
+    }
+  },
+  "indicator_ntot_summer": {
+    "2": {
+      "MIN_NR_YEARS": 3,
+      "MONTH_LIST": [
+        6,
+        8
+      ],
+      "DEPH_INTERVAL": [
+        0,
+        10
+      ]
+    },
+    "3": {
+      "MIN_NR_YEARS": 3,
+      "MONTH_LIST": [
+        6,
+        8
+      ],
+      "DEPH_INTERVAL": [
+        0,
+        10
+      ]
+    },
+    "4": {
+      "MIN_NR_YEARS": 3,
+      "MONTH_LIST": [
+        6,
+        8
+      ],
+      "DEPH_INTERVAL": [
+        0,
+        10
+      ]
+    },
+    "5": {
+      "MIN_NR_YEARS": 3,
+      "MONTH_LIST": [
+        6,
+        8
+      ],
+      "DEPH_INTERVAL": [
+        0,
+        10
+      ]
+    },
+    "25": {
+      "MIN_NR_YEARS": 3,
+      "MONTH_LIST": [
+        6,
+        8
+      ],
+      "DEPH_INTERVAL": [
+        0,
+        10
+      ]
+    },
+    "1n": {
+      "MIN_NR_YEARS": 3,
+      "MONTH_LIST": [
+        6,
+        8
+      ],
+      "DEPH_INTERVAL": [
+        0,
+        10
+      ]
+    },
+    "1s": {
+      "MIN_NR_YEARS": 3,
+      "MONTH_LIST": [
+        6,
+        8
+      ],
+      "DEPH_INTERVAL": [
+        0,
+        10
+      ]
+    }
+  },
+  "indicator_ntot_winter": {
+    "2": {
+      "MIN_NR_YEARS": 3,
+      "MONTH_LIST": [
+        12,
+        3
+      ],
+      "DEPH_INTERVAL": [
+        0,
+        10
+      ]
+    },
+    "3": {
+      "MIN_NR_YEARS": 3,
+      "MONTH_LIST": [
+        12,
+        3
+      ],
+      "DEPH_INTERVAL": [
+        0,
+        10
+      ]
+    },
+    "4": {
+      "MIN_NR_YEARS": 3,
+      "MONTH_LIST": [
+        12,
+        3
+      ],
+      "DEPH_INTERVAL": [
+        0,
+        10
+      ]
+    },
+    "5": {
+      "MIN_NR_YEARS": 3,
+      "MONTH_LIST": [
+        12,
+        3
+      ],
+      "DEPH_INTERVAL": [
+        0,
+        10
+      ]
+    },
+    "25": {
+      "MIN_NR_YEARS": 3,
+      "MONTH_LIST": [
+        12,
+        3
+      ],
+      "DEPH_INTERVAL": [
+        0,
+        10
+      ]
+    },
+    "1n": {
+      "MIN_NR_YEARS": 3,
+      "MONTH_LIST": [
+        12,
+        3
+      ],
+      "DEPH_INTERVAL": [
+        0,
+        10
+      ]
+    },
+    "1s": {
+      "MIN_NR_YEARS": 3,
+      "MONTH_LIST": [
+        12,
+        3
+      ],
+      "DEPH_INTERVAL": [
+        0,
+        10
+      ]
+    }
+  },
+  "indicator_ptot_summer": {
+    "2": {
+      "MIN_NR_YEARS": 3,
+      "MONTH_LIST": [
+        6,
+        8
+      ],
+      "DEPH_INTERVAL": [
+        0,
+        10
+      ]
+    },
+    "3": {
+      "MIN_NR_YEARS": 3,
+      "MONTH_LIST": [
+        6,
+        8
+      ],
+      "DEPH_INTERVAL": [
+        0,
+        10
+      ]
+    },
+    "4": {
+      "MIN_NR_YEARS": 3,
+      "MONTH_LIST": [
+        6,
+        8
+      ],
+      "DEPH_INTERVAL": [
+        0,
+        10
+      ]
+    },
+    "5": {
+      "MIN_NR_YEARS": 3,
+      "MONTH_LIST": [
+        6,
+        8
+      ],
+      "DEPH_INTERVAL": [
+        0,
+        10
+      ]
+    },
+    "25": {
+      "MIN_NR_YEARS": 3,
+      "MONTH_LIST": [
+        6,
+        8
+      ],
+      "DEPH_INTERVAL": [
+        0,
+        10
+      ]
+    },
+    "1n": {
+      "MIN_NR_YEARS": 3,
+      "MONTH_LIST": [
+        6,
+        8
+      ],
+      "DEPH_INTERVAL": [
+        0,
+        10
+      ]
+    },
+    "1s": {
+      "MIN_NR_YEARS": 3,
+      "MONTH_LIST": [
+        6,
+        8
+      ],
+      "DEPH_INTERVAL": [
+        0,
+        10
+      ]
+    }
+  },
+  "indicator_ptot_winter": {
+    "2": {
+      "MIN_NR_YEARS": 3,
+      "MONTH_LIST": [
+        12,
+        3
+      ],
+      "DEPH_INTERVAL": [
+        0,
+        10
+      ]
+    },
+    "3": {
+      "MIN_NR_YEARS": 3,
+      "MONTH_LIST": [
+        12,
+        3
+      ],
+      "DEPH_INTERVAL": [
+        0,
+        10
+      ]
+    },
+    "4": {
+      "MIN_NR_YEARS": 3,
+      "MONTH_LIST": [
+        12,
+        3
+      ],
+      "DEPH_INTERVAL": [
+        0,
+        10
+      ]
+    },
+    "5": {
+      "MIN_NR_YEARS": 3,
+      "MONTH_LIST": [
+        12,
+        3
+      ],
+      "DEPH_INTERVAL": [
+        0,
+        10
+      ]
+    },
+    "25": {
+      "MIN_NR_YEARS": 3,
+      "MONTH_LIST": [
+        12,
+        3
+      ],
+      "DEPH_INTERVAL": [
+        0,
+        10
+      ]
+    },
+    "1n": {
+      "MIN_NR_YEARS": 3,
+      "MONTH_LIST": [
+        12,
+        3
+      ],
+      "DEPH_INTERVAL": [
+        0,
+        10
+      ]
+    },
+    "1s": {
+      "MIN_NR_YEARS": 3,
+      "MONTH_LIST": [
+        12,
+        3
+      ],
+      "DEPH_INTERVAL": [
+        0,
+        10
+      ]
+    }
+  },
+  "indicator_oxygen": {
+    "2": {
+      "MIN_NR_YEARS": 3,
+      "BOTTOM_WATER": 10
+    },
+    "3": {
+      "MIN_NR_YEARS": 3,
+      "BOTTOM_WATER": 10
+    },
+    "4": {
+      "MIN_NR_YEARS": 3,
+      "BOTTOM_WATER": 10
+    },
+    "5": {
+      "MIN_NR_YEARS": 3,
+      "BOTTOM_WATER": 10
+    },
+    "25": {
+      "MIN_NR_YEARS": 3,
+      "BOTTOM_WATER": 10
+    },
+    "1n": {
+      "MIN_NR_YEARS": 3,
+      "BOTTOM_WATER": 10
+    },
+    "1s": {
+      "MIN_NR_YEARS": 3,
+      "BOTTOM_WATER": 10
+    },
+    "SE561030-122821": {
+      "MIN_NR_YEARS": 3,
+      "BOTTOM_WATER": 10
+    },
+    "SE562000-123800": {
+      "MIN_NR_YEARS": 3,
+      "BOTTOM_WATER": 10
+    },
+    "SE562450-122751": {
+      "MIN_NR_YEARS": 3,
+      "BOTTOM_WATER": 10
+    },
+    "SE563000-123351": {
+      "MIN_NR_YEARS": 3,
+      "BOTTOM_WATER": 10
+    },
+    "SE581260-113220": {
+      "MIN_NR_YEARS": 3,
+      "BOTTOM_WATER": 10
+    },
+    "SE581700-113000": {
+      "MIN_NR_YEARS": 3,
+      "BOTTOM_WATER": 10
+    },
+    "SE581740-114820": {
+      "MIN_NR_YEARS": 3,
+      "BOTTOM_WATER": 10
+    },
+    "SE582000-115270": {
+      "MIN_NR_YEARS": 3,
+      "BOTTOM_WATER": 10
+    }
+  }
+}

@@ -723,7 +723,7 @@ class QualityElement(object):
     
     #==========================================================================
     def get_indicator_list_for_quality_element(self, quality_element):
-        return sorted(self.cfg['quality elements'][quality_element])
+        return sorted([item for item in self.cfg['quality elements'][quality_element] if 'indicator' in item])
     
     
 """

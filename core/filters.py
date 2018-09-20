@@ -963,7 +963,7 @@ class SettingsFile(object):
         print('¤'*50)
         print('¤'*50)
         print(value, type(value), variable)
-        item_list = []
+        item_list = [] 
         for item in value:
             if not self._valid_value(item, variable):
                 return False

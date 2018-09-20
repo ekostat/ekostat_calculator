@@ -1036,6 +1036,7 @@ class WorkSpace(object):
         self.paths['directory_path_export_data'] = self.paths['directory_path_input_data'] + '/exports'
         self.paths['directory_path_subset'] = self.paths['workspace_directory'] + '/subsets'
         self.paths['directory_path_log'] = self.paths['workspace_directory'] + '/log'
+        self.paths['directory_path_cache'] = self.paths['workspace_directory'] + '/cache'
         
         # Create directories if not present 
         for key, p in self.paths.items():
@@ -1135,7 +1136,8 @@ class WorkSpace(object):
         self.index_handler = core.IndexHandler(workspace_object=self, 
                                                data_handler_object=self.data_handler)
         
-    
+        # Load Cache object    
+        self.cache = core.Cache(self.paths['directory_path_cache'], mandatory_uuid=True, min_nr_arguments=3)
         
 
     #==========================================================================

@@ -154,6 +154,14 @@ class UnableToLoadWorkspace(EkostatInternalException):
     code = 500   
     message = 'Unable to load workspace'
     
+#==============================================================================
+class MatchError(EkostatInternalException):
+    """
+    Created     20180919    by Magnus Wenzer
+    """
+    code = 500   
+    message = 'Cant match'
+    
     
 #==============================================================================
 class UnableToLoadData(EkostatUserException):

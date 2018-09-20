@@ -64,7 +64,8 @@ class EventHandler(object):
                  log_directory='', 
                  test_data_directory='', 
                  temp_directory='', 
-                 reload_mapping_objects=False): 
+                 reload_mapping_objects=False, 
+                 cache_directory=''): 
         """
         Created     20180219    by Magnus Wenzer
         Updated     20180919    by Magnus Wenzer
@@ -88,11 +89,16 @@ class EventHandler(object):
         self.test_data_directory = test_data_directory 
         self.temp_directory = temp_directory
         self.reload_mapping_objects = reload_mapping_objects
+        self.cache_directory = cache_directory
         
         # Create directories 
         if not os.path.exists(self.workspace_directory):
             os.mkdir(self.workspace_directory)
-        
+        if not os.path.exists(self.cache_directory):
+            os.mkdir(self.cache_directory)
+            
+        # Load Cache object    
+        self.cache = core.Cache(self.cache_directory, mandatory_uuid=False, min_nr_arguments=1)
         
         self.log_id = 'event_handler'
         
@@ -1529,11 +1535,17 @@ class EventHandler(object):
     def dict_result(self, workspace_uuid=None, subset_uuid=None, **kwargs): 
         """
         Created     20180720    by Magnus Wenzer
-        Updated     20180919    by Magnus
+        Updated     20180920    by Magnus
         
         """ 
         self.action_load_workspace(workspace_uuid)
         workspace_object = self.get_workspace(workspace_uuid) 
+        
+        # Load cache result if present 
+        result_dict = workspace_object.cache.load(subset_uuid, 'result', 'dict') 
+        if result_dict:
+            return result_dict
+        
         self._check_valid_uuid(workspace_uuid, subset_uuid)
         
         # Loading saved  
@@ -1575,6 +1587,9 @@ class EventHandler(object):
                     result_dict['all']['result'][key]['active'] = False
 #                    print('===', result_dict['all']['result'][key]['active'])  
                     
+                
+                
+                
                 result_dict['all']['result'][key]['value'] = key
                 result_dict['all']['result'][key]['label'] = self.mapping_objects['label_mapping'].get_mapping(key) 
                 
@@ -1603,7 +1618,13 @@ class EventHandler(object):
                     status_list = data.loc[data['VISS_EU_CD']==viss_eu_cd, 'STATUS'].values
                     if len(status_list) == 1:
                         status = status_list[0].strip()
-                        result_dict[viss_eu_cd]['result'][key]['status'] = status 
+                        ok_list = data.loc[data['VISS_EU_CD']==viss_eu_cd, 'ok'].values
+                        ok = ok_list[0]
+                        if ok:
+                            result_dict[viss_eu_cd]['result'][key]['status'] = status 
+                        
+                        # This means that if active=True and status=''
+                        
 #                        print()
 #                        print('key:', key)
 #                        print('viss_eu_cd', viss_eu_cd)
@@ -1626,6 +1647,8 @@ class EventHandler(object):
 #        return_dict = {'dataframes': step3_object.result_data, 
 #                       'labels': labels}
         
+        workspace_object.cache.save(result_dict, subset_uuid, 'result', 'dict') 
+        
         return result_dict 
         
     
@@ -1638,7 +1661,7 @@ class EventHandler(object):
         
         result_item_dict = {}
         result_item_dict['status'] = '' 
-        result_item_dict['active'] = False # changed later i think 
+        result_item_dict['active'] = False # changed later I think 
         result_item_dict['value'] = element_id
         result_item_dict['label'] = self.mapping_objects['label_mapping'].get_mapping(element_id) 
         
@@ -1668,6 +1691,9 @@ class EventHandler(object):
         # Should only return result for one key...
         key = element_id + '-by_date'
         
+        if key not in result_data:
+            return {} 
+        
         df = result_data[key] 
         self.df = df
         
@@ -1693,7 +1719,83 @@ class EventHandler(object):
         #----------------------------------------------------------------------
         # Create datasets 
         datasets = []
+        time_as_string = False # Temp
         
+        
+        # Status lines/fields
+        
+        # Add date column and sort by date 
+        df['date'] = pd.to_datetime(df['SDATE'])
+        df.sort_values('date', inplace=True)
+#        print(df.head())
+        
+        # First check order 
+        direction = self.mapping_objects['quality_element'].get_mapping(element_id, 'indicator', 'direction_good')
+        
+        status_list = ['REFERENCE_VALUE', 'HG_VALUE_LIMIT', 'GM_VALUE_LIMIT', 'MP_VALUE_LIMIT', 'PB_VALUE_LIMIT']
+        label_dict = dict(zip(status_list, ['high', 'good', 'moderate', 'poor', 'bad'])) 
+        
+        if direction == 'negative':
+            # Lower value is better 
+            status_list.reverse()
+            for status in status_list:                 
+                y = list(df[status]) 
+                if time_as_string: 
+                    x = ['{}T'.format(sdate) for sdate in df['SDATE']]
+                else: 
+                    # Time as datetime objects 
+                    x = df['date']
+                    
+                if 1: 
+                    nx = []
+                    ny = []
+                    for xx, yy in zip(x, y):
+                        if not np.isnan(yy):
+                            nx.append(xx)
+                            ny.append(yy)
+                    x, y = nx, ny
+                
+                status_dict = {'x': x, 
+                               'y': y, 
+                               'label': label_dict[status], 
+                               'type': 'fill', 
+                               'extend': ''} 
+#                if status == 'PB_VALUE_LIMIT':
+#                    status_dict['extend'] = 'max'
+                
+                datasets.append(status_dict)
+            
+        
+        elif direction == 'positive':
+            # Higher value is better 
+            for status in status_list:                 
+                y = list(df[status]) 
+                if time_as_string: 
+                    x = ['{}T'.format(sdate) for sdate in df['SDATE']]
+                else: 
+                    # Time as datetime objects 
+                    x = df['date']
+                    
+                if 1: 
+                    nx = []
+                    ny = []
+                    for xx, yy in zip(x, y):
+                        if not np.isnan(yy):
+                            nx.append(xx)
+                            ny.append(yy)
+                    x, y = nx, ny
+                    
+                status_dict = {'x': x, 
+                               'y': y, 
+                               'label': label_dict[status], 
+                               'type': 'fill', 
+                               'extend': ''} 
+#                if status == 'REFERENCE_VALUE':
+#                    status_dict['extend'] = 'max'
+                
+                datasets.append(status_dict)
+            
+        #----------------------------------------------------------------------
         # Stations
         for station in station_list: 
             statn_df = df.loc[df['STATN']==station].copy()
@@ -1715,6 +1817,9 @@ class EventHandler(object):
                         nx.append(xx)
                         ny.append(yy)
                 x, y = nx, ny
+                
+        #---------------------------------------------------------------------- 
+        
             
             dataset_dict = {'x': x, 
                             'y': y, 
@@ -1723,70 +1828,92 @@ class EventHandler(object):
             
             datasets.append(dataset_dict)
         
-        
-        # Status lines/fields
-        
-        # Add date column and sort by date 
-        df['date'] = pd.to_datetime(df['SDATE'])
-        df.sort_values('date', inplace=True)
-        
-        # First check order 
-        direction = self.mapping_objects['quality_element'].get_mapping(element_id, 'indicator', 'direction_good')
-        
-        status_list = ['REFERENCE_VALUE', 'HG_VALUE_LIMIT', 'GM_VALUE_LIMIT', 'MP_VALUE_LIMIT', 'PB_VALUE_LIMIT']
-        label_dict = dict(zip(status_list, ['high', 'good', 'moderate', 'poor', 'bad'])) 
-        
-        if direction == 'negative':
-            # Lower value is better  
-            for status in status_list:                 
-                y = list(df[status]) 
-                if time_as_string: 
-                    x = ['{}T'.format(sdate) for sdate in df['SDATE']]
-                else: 
-                    # Time as datetime objects 
-                    x = df['date']
-                    
-                status_dict = {'x': x, 
-                               'y': y, 
-                               'label': label_dict[status], 
-                               'type': 'fill', 
-                               'extend': ''} 
-                if status == 'PB_VALUE_LIMIT':
-                    status_dict['extend'] = 'max'
-                
-                datasets.append(status_dict)
-            
-        
-        elif direction == 'positive':
-            # Higher value is better 
-            status_list.reverse() 
-            for status in status_list:                 
-                y = list(df[status]) 
-                if time_as_string: 
-                    x = ['{}T'.format(sdate) for sdate in df['SDATE']]
-                else: 
-                    # Time as datetime objects 
-                    x = df['date']
-                    
-                status_dict = {'x': x, 
-                               'y': y, 
-                               'label': label_dict[status], 
-                               'type': 'fill', 
-                               'extend': ''} 
-                if status == 'REFERENCE_VALUE':
-                    status_dict['extend'] = 'max'
-                
-                datasets.append(status_dict)
-            
-        
         # Create dict to return 
         data_dict = {'type': 'timeseries', 
                      'xlabel': 'Date', 
                      'ylabel': unit, 
                      'datasets': datasets}
         
-        return data_dict
+        data_dict['y'] = self._convert_time_series_datasets_to_labels_time_series(datasets)
         
+#        print('data_dict.keys()'.upper(), data_dict.keys())
+        return data_dict 
+    
+    
+    #==========================================================================
+    def _convert_time_series_datasets_to_labels_time_series(self, datasets, **kwargs): 
+        """
+        Created     20180920    by Magnus Wenzer
+        
+        For React component on the web we need one "labels" and several y-lists. 
+        "labels" are set mannually as strings. 
+        """ 
+        
+        all_dates = []
+        date_to_y = {}
+        ym_to_y = {}
+        for k, dataset in enumerate(datasets):
+           all_dates.extend(dataset['x']) 
+           date_to_y[k] = dict(zip(dataset['x'], dataset['y']))
+           ym_to_y[k] = {}
+           for x, y in zip(dataset['x'], dataset['y']): 
+               ym = '{}_{}'.format(x.year, x.month)
+               ym_to_y[k][ym] = y
+               
+               
+        all_dates = sorted(set(all_dates)) 
+        
+        
+        if not len(all_dates):
+            return []
+        
+        # Extend date list 
+        start_year = all_dates[0].year
+        end_year = all_dates[-1].year+1
+        
+        # Set date display interval 
+        date_interval = []
+        for year in range(start_year, end_year+1):
+            for month in range(1, 13, kwargs.get('tick_month_interval', 3)):
+                d = datetime.datetime(year, month, 1) 
+                if d >= all_dates[0] and d <= all_dates[-1]:
+                    date_interval.append(d)
+        
+#        extended_dates = sorted(set(all_dates + date_interval))
+        
+        
+        # Loop dates and add/remove values 
+        new_x = [] 
+        new_y = dict((item, []) for item in date_to_y)
+        for date in date_interval: 
+            new_x.append(date.strftime('%y-%b'))
+                
+            for i in new_y: 
+                ym = '{}_{}'.format(date.year, date.month)
+                new_y[i].append(ym_to_y[i].get(ym, None))
+                
+                
+        
+#        # Loop dates and add/remove values 
+#        new_x = [] 
+#        new_y = dict((item, []) for item in date_to_y)
+#        for date in extended_dates: 
+#            if date in date_interval:
+#                new_x.append(date.strftime('%y-%b'))
+#            else:
+#                new_x.append('')
+#                
+#            for i in new_y:
+#                new_y[i].append(date_to_y[i].get(date, None))
+        
+        
+        # Add to datasets 
+        for k, dataset in enumerate(datasets):
+            dataset['x'] = new_y[k]
+            dataset.pop('y')
+        
+        return new_x 
+    
     
     #==========================================================================
     def print_workspaces(self): 
@@ -2912,6 +3039,7 @@ class EventHandler(object):
         
         Calculates status for the given subset. 
         """
+        
         self.action_load_workspace(workspace_uuid=workspace_uuid) # Loaded in action_apply_data_filter
 
         # Apply data filters 
@@ -3179,6 +3307,9 @@ class EventHandler(object):
         if not workspace_object.data_is_loaded():
             raise exceptions.NoDataSelected 
             
+        # Remove cached result
+        workspace_object.cache.delete(subset_uuid, 'result', 'dict')
+            
         # Extract water bodies from "areas" 
         water_body_list = None
 #        water_body_list = self._get_water_bodies_from_area_list(request['areas']) 
@@ -3423,14 +3554,14 @@ class EventHandler(object):
         response['workspace_uuid'] = workspace_uuid
         response['workspace'] = self.dict_workspace(workspace_uuid)
         
-#        # Set data filter and add subset information to response
-#        response['subset'] = self.dict_subset(workspace_uuid=workspace_uuid, 
-#                                              subset_uuid=subset_uuid, 
-#                                              request={}, 
-#                                              time=True, 
-#                                              areas=True, 
-#                                              list_viss_eu_cd=request.get('areas', []), 
-#                                              check_in_df=df0) 
+        # Set data filter and add subset information to response
+        response['subset'] = self.dict_subset(workspace_uuid=workspace_uuid, 
+                                              subset_uuid=subset_uuid, 
+                                              request={}, 
+                                              time=True, 
+                                              areas=True, 
+                                              list_viss_eu_cd=request.get('areas', []), 
+                                              check_in_df=df0) 
         
         # Check selected areas 
         workspace_object = self.get_workspace(workspace_uuid) 
@@ -3577,6 +3708,154 @@ class EventHandler(object):
     @timer
     def request_subset_set_indicator_settings(self, request):
         """
+        Created     20180920    by Magnus Wenzer
+        Updated     
+        
+        "request" is tree dictionary only containg the settings that has chould be changed". 
+        Structure is: 
+            {"indicator_din_winter": {
+                "2": {
+                  "MIN_NR_YEARS": 3}
+                
+        Response:         
+            
+        """
+        self._logger.debug('Start: request_subset_set_indicator_settings')
+        
+        workspace_uuid = request.get('workspace_uuid', {}) 
+        if not workspace_uuid:
+            workspace_uuid = request['workspace']['workspace_uuid'] 
+        
+        subset_uuid = request.get('subset_uuid')
+        if not subset_uuid:
+            subset_uuid = request.get('subset', {}).get('subset_uuid')
+        
+        
+        # Load workspace 
+#        self.action_load_workspace(workspace_uuid) 
+        
+        # Load data 
+        self.action_load_data(workspace_uuid) # workspace is loaded in action
+        
+        self._check_valid_uuid(workspace_uuid, subset_uuid)
+                             
+
+        response = {} 
+        response['workspace_uuid'] = workspace_uuid 
+        response['subset_uuid'] = subset_uuid
+        
+        type_area_list = self.mapping_objects['water_body'].get_list('type_area')
+        viss_eu_cd_list = self.mapping_objects['water_body'].get_list('water_body')
+        
+        # Set inicator settings filter 
+        settings = request['settings']
+        for indicator in settings: 
+            for area in settings[indicator]:
+                for settings_item in settings[indicator][area]: 
+                    settings_filter_object = None
+                    # Load filter objects 
+                    settings_data_filter_object = self.get_settings_filter_object(workspace_uuid=workspace_uuid, 
+                                                                                       subset_uuid=subset_uuid,
+                                                                                       indicator=indicator, 
+                                                                                       filter_type='data')
+                    
+                    settings_tolerance_filter_object = self.get_settings_filter_object(workspace_uuid=workspace_uuid, 
+                                                                           subset_uuid=subset_uuid,
+                                                                           indicator=indicator,
+                                                                           filter_type='tolerance') 
+                    
+                    # data_filter
+                    if settings_item in settings_data_filter_object.allowed_variables: 
+                        settings_filter_object = settings_data_filter_object
+                    
+                    # tolerance_filters 
+                    elif settings_item in settings_tolerance_filter_object.allowed_variables: 
+                        settings_filter_object = settings_tolerance_filter_object
+                    
+                    else:
+                        raise exceptions.InvalidInputVariable('Settings item "{}" not found'.format(settings_item))
+                    
+                    # Check area 
+                    type_area = None
+                    viss_eu_cd = None
+                    if area in type_area_list:
+                        type_area = area
+                    elif area in viss_eu_cd_list: 
+                        viss_eu_cd = area
+                    else:
+                        raise exceptions.InvalidInputVariable('Invalid area when setting indicator settings')
+                    # Get value 
+                    value = settings[indicator][area][settings_item] 
+                    
+                    
+                    self.set_settings_filter(settings_filter_object=settings_filter_object, 
+                                             type_area=type_area, 
+                                             viss_eu_cd=viss_eu_cd, 
+                                             settings_item=settings_item, 
+                                             value=value)
+ 
+                    
+        return {}
+
+
+    #==========================================================================
+    @timer
+    def set_settings_filter(self, 
+                            settings_filter_object=None, 
+                            type_area=None, 
+                            viss_eu_cd=None, 
+                            settings_item=None, 
+                            value=None): 
+        """
+        Created     20180920    by Magnus Wenzer
+        Updated 
+        """
+        
+        
+        # TODO: Not checking permission at the moment  
+            
+        # Convert MONTHDAY from list to string:
+        if 'MONTHDAY' in settings_item:
+            value = [''.join(map(lambda x: str(x).rjust(2, '0'), value[0])), 
+                     ''.join(map(lambda x: str(x).rjust(2, '0'), value[-1]))]
+            
+#                print('&'*50)
+#                print('&'*50)
+#                print(value, type(value), settings_item)
+        if 'LIST' in settings_item: 
+            value = get_list_from_interval(value) 
+        
+        # Check order of month list 
+        # TODO: Check months per season
+#            if settings_item == 'MONTH_LIST': 
+#                if value[0] > value[1]:
+#                    print(value)
+#                    raise exceptions.InvalidUserInput('month in wrong order', code='month_interval_invalid')
+         
+            
+            
+        # 
+        # No tuples come from json. Convert first 
+#            if 'MONTHDAY' in settings_item:
+#                print('#'*50)
+#                print('#'*50)
+#                print(value, type(value), settings_item)
+        if type(value) == list:
+            if type(value[0]) == list:
+                value = [tuple(val) for val in value]
+            else:
+                value = tuple(value)
+            
+        settings_filter_object.set_value(type_area=type_area, 
+                                          variable=settings_item, 
+                                          value=value, 
+                                          viss_eu_cd=viss_eu_cd)
+            
+    
+    #==========================================================================
+    @timer
+    def old_request_subset_set_indicator_settings(self, request):
+        """
         Created     20180611    by Magnus Wenzer
         Updated     
         
@@ -3652,17 +3931,15 @@ class EventHandler(object):
                                                                         selected_areas=viss_eu_cd_list) 
         
         # Apply data filter 
-        self.action_apply_data_filter(workspace_uuid=workspace_uuid, 
-                                      subset_uuid=subset_uuid, 
-                                      step=1) 
-        
-        self.action_apply_indicator_settings_data_filter(workspace_uuid=workspace_uuid, 
-                                                         subset_uuid=subset_uuid, 
-                                                         step=2)
+#        self.action_apply_data_filter(workspace_uuid=workspace_uuid, 
+#                                      subset_uuid=subset_uuid, 
+#                                      step=1) 
+#        
+#        self.action_apply_indicator_settings_data_filter(workspace_uuid=workspace_uuid, 
+#                                                         subset_uuid=subset_uuid, 
+#                                                         step=2)
                
         return response
-    
-    
     
     
     #==========================================================================
