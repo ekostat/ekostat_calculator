@@ -1618,9 +1618,16 @@ class EventHandler(object):
                     status_list = data.loc[data['VISS_EU_CD']==viss_eu_cd, 'STATUS'].values
                     if len(status_list) == 1:
                         status = status_list[0].strip()
-                        ok_list = data.loc[data['VISS_EU_CD']==viss_eu_cd, 'ok'].values
-                        ok = ok_list[0]
-                        if ok:
+                        if 'ok' in data.columns:
+                            ok_list = data.loc[data['VISS_EU_CD']==viss_eu_cd, 'ok'].values
+                            ok = ok_list[0]
+                            if ok:
+                                result_dict[viss_eu_cd]['result'][key]['status'] = status 
+                        else:
+                            print('='*30)
+                            print(key)
+                            print('-'*30)
+#                            print('\n'.join(sorted(data.columns)))
                             result_dict[viss_eu_cd]['result'][key]['status'] = status 
                         
                         # This means that if active=True and status=''
