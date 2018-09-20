@@ -100,6 +100,8 @@ class QualityElementBase(object):
     def calculate_quality_factor(self):
 
         """
+        Updated 20180920    by Magnus
+        
         Calculates quality element based on included indicators
         
         GAMLA FÖRESKRIFTEN
@@ -146,7 +148,8 @@ class QualityElementBase(object):
         def cut_results(df, indicator_name):
             #pick out columns for only this indicator
             these_cols = [col for col in df.columns if re.search(indicator_name + r'$', col)]
-            return df[these_cols + merge_on].rename(columns = {col: col.strip(indicator_name) for col in these_cols})
+#            return df[these_cols + merge_on].rename(columns = {col: col.strip(indicator_name) for col in these_cols})
+            return df[these_cols + merge_on].rename(columns = {col: col.replace('_'+indicator_name,'') for col in these_cols})
     
         for indicator in self.mapping_objects['quality_element'].indicator_config.index:
             if self.mapping_objects['quality_element'].indicator_config.loc[indicator]['quality element'] == self.name:

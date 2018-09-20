@@ -3,7 +3,8 @@
     "year_interval": [2007, 2012],
     "datatypes": [
         "Phytoplankton", 
-        "Chlorophyll",  
+        "Chlorophyll", 
+        "Zoobenthos", 
         "Physical and Chemical"
         
     ],

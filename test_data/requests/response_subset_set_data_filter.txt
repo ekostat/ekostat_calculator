@@ -1,23 +1,25 @@
 {
-    "workspace_uuid": "fccc7645-8501-4541-975b-bdcfb40a5092",
-    "subset_uuid": "a4e53080-2c68-40d5-957f-8cc4dbf77815",
+    "workspace_uuid": "d347d3bf-3f26-42f3-b261-d48253f9ba26",
+    "subset_uuid": "344e8ecb-71b0-41a9-b0ad-c1accd12bbf8",
     "year_interval": [
-        2011,
-        2016
+        2008,
+        2012
     ],
     "areas": [
-        "SE4"
+        "SE584340-174401",
+        "SE581700-113000"
     ],
     "subset": {
         "value": true,
-        "subset_uuid": "a4e53080-2c68-40d5-957f-8cc4dbf77815",
+        "subset_uuid": "344e8ecb-71b0-41a9-b0ad-c1accd12bbf8",
         "areas": [
-            "SE4"
+            "SE584340-174401",
+            "SE581700-113000"
         ],
         "time": {
             "year_interval": [
-                2011,
-                2016
+                2008,
+                2012
             ]
         }
     }

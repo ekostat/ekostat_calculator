@@ -658,6 +658,8 @@ class EventHandler(object):
         
         
         data_filter_object = subset_object.get_data_filter_object('step_1')
+#        self.data_filter_object = data_filter_object 
+
         if request:
             from_year = int(request['year_interval'][0]) 
             to_year = int(request['year_interval'][1])
@@ -687,13 +689,13 @@ class EventHandler(object):
 #                                          filter_name='MONTH', 
 #                                          data=request['month_list'])
             
-        else:
-            valid_years = None
+        else: 
+            valid_years = [int(y) for y in data_filter_object.get_include_list_filter('MYEAR')]
+            print(valid_years)
             if type(kwargs.get('check_in_df', False)) != bool: 
                 df = kwargs['check_in_df']
-                valid_years = sorted(set(df['MYEAR']))
-            else:
-                valid_years = data_filter_object.get_include_list_filter('MYEAR')
+                print(set(df['MYEAR']))
+                valid_years = set(df['MYEAR']).intersection(valid_years)
                 
             valid_years = sorted(map(int, valid_years)) # Cant be int64 for json to work
 #            if valid_years: 
@@ -705,7 +707,8 @@ class EventHandler(object):
 #            print(year_list[0], type(year_list[0]))
 #            print(year_choices[0], type(year_choices[0]))
 #            month_list = sorted(map(int, data_filter_object.get_include_list_filter('MONTH')))
-            
+            if not len(valid_years):
+                raise exceptions.FilterInputError
             return {'year_interval': [valid_years[0], valid_years[-1]], 
                     'year_choices': valid_years}#, "month_list": month_list} 
     
@@ -1369,17 +1372,40 @@ class EventHandler(object):
                           "active": active, 
                           "children": []}
             
-            children_list = []
             
-            # Check in data or not
+            water_body_list = self.mapping_objects['water_body'].get_list('water_body', type_area=type_area) 
+        
+            if kwargs.get('check_data_settings'): 
+                workspace_object = self.get_workspace(workspace_uuid)
+                subset_object = workspace_object.get_subset_object(subset_uuid)
+                data_filter_object = subset_object.get_data_filter_object('step_1')
+                water_body_active_list = data_filter_object.get_include_list_filter('VISS_EU_CD')
+                water_body_list = set(water_body_active_list).intersection(water_body_list)
+            
             if type(kwargs.get('check_in_df', False)) != bool: 
                 df = kwargs['check_in_df']
-                water_body_list = sorted(list(set(df['VISS_EU_CD'])))
-            elif kwargs.get('list_viss_eu_cd'):
-                water_body_list = kwargs.get('list_viss_eu_cd')
+                water_body_list = set(df['VISS_EU_CD']).intersection(water_body_list)
+            if kwargs.get('list_viss_eu_cd'): 
+                water_body_list = self._get_water_bodies_from_area_list(kwargs.get('list_viss_eu_cd')) 
+                water_body_list = set(water_body_list).intersection(water_body_list)
+                
+            water_body_list = sorted(water_body_list)
             
-            water_body_list = sorted(set(water_body_list).intersection(water_body_mapping.get_list('water_body', type_area=type_area)))
+            
+            
+            children_list = []
+            
+#            # Check in data or not 
 #            water_body_list = water_body_mapping.get_list('water_body', type_area=type_area)
+#            
+#            if type(kwargs.get('check_in_df', False)) != bool: 
+#                df = kwargs['check_in_df']
+#                water_body_list = set(df['VISS_EU_CD']).intersection(water_body_list)
+#            if kwargs.get('list_viss_eu_cd'):
+#                water_body_list = kwargs.get('list_viss_eu_cd').intersection(water_body_list)
+#            
+#            water_body_list = sorted(set(water_body_list).intersection(water_body_list)
+##            water_body_list = water_body_mapping.get_list('water_body', type_area=type_area)
             
             
             for water_body in water_body_list:
@@ -1429,7 +1455,7 @@ class EventHandler(object):
             
             active = False 
             data_filter_object = subset_object.get_data_filter_object('step_1')
-            water_body_active_list = data_filter_object.get_include_list_filter('WATER_BODY')
+            water_body_active_list = data_filter_object.get_include_list_filter('VISS_EU_CD')
             
 #            print('****')
 #            print(water_body_active_list)
@@ -1439,7 +1465,7 @@ class EventHandler(object):
 #            print('--- water_district', water_district)
             if water_district in water_district_active_list:
                 active = True
-            # TODO: water district is not set tto active=true is sub-baisins are active. Is this ok?  
+            # TODO: water district is not set to active=true is sub-baisins are active. Is this ok?  
         
                 
             label = water_body_mapping.get_display_name(water_district=water_district) 
@@ -1454,16 +1480,46 @@ class EventHandler(object):
             
             children_list = []
             
-            # Check in data or not
+            
+            type_area_list = self.mapping_objects['water_body'].get_list('type_area', water_district=water_district) 
+        
+            if kwargs.get('check_data_settings'): 
+                workspace_object = self.get_workspace(workspace_uuid)
+                subset_object = workspace_object.get_subset_object(subset_uuid)
+                data_filter_object = subset_object.get_data_filter_object('step_1')
+                water_body_active_list = data_filter_object.get_include_list_filter('VISS_EU_CD')
+                type_area_list = set(self.mapping_objects['water_body'].get_list('type_area', water_body=water_body_active_list)).intersection(type_area_list)
+            
             if type(kwargs.get('check_in_df', False)) != bool: 
                 df = kwargs['check_in_df']
-                type_area_list = sorted(self.mapping_objects['water_body'].get_list('type_area', 
-                                                                            water_body=list(set(df['VISS_EU_CD']))))
-            elif kwargs.get('list_viss_eu_cd'):
-                type_area_list = sorted(self.mapping_objects['water_body'].get_list('type_area', 
-                                             water_body=kwargs.get('list_viss_eu_cd')))
-            else:
-                type_area_list = water_body_mapping.get_list('type_area', water_district=water_district)
+                type_area_list = set(self.mapping_objects['water_body'].get_list('type_area', 
+                                             water_body=list(set(df['VISS_EU_CD'])))).intersection(type_area_list)
+            if kwargs.get('list_viss_eu_cd'): 
+                water_body_list = self._get_water_bodies_from_area_list(kwargs.get('list_viss_eu_cd')) 
+                type_area_list = set(self.mapping_objects['water_body'].get_list('type_area', 
+                                             water_body=water_body_list)).intersection(type_area_list)
+                
+            type_area_list = sorted(type_area_list)
+            
+            
+            
+            
+            
+            
+            
+            
+            
+#            if kwargs['check_filter']: 
+#                
+#            else:
+#                type_area_list = water_body_mapping.get_list('type_area', water_district=water_district)
+#            
+#            if type(kwargs.get('check_in_df', False)) != bool: 
+#                df = kwargs['check_in_df']
+#                type_area_list = set(df['VISS_EU_CD']).intersection(type_area_list)
+#            elif kwargs.get('list_viss_eu_cd'):
+#                water_body_list = self._get_water_bodies_from_area_list(kwargs.get('list_viss_eu_cd')) 
+#                type_area_list = set(water_body_list).intersection(type_area_list)
             
             for type_area in type_area_list:
                 children_list.append(self.dict_type_area(workspace_uuid=workspace_uuid, 
@@ -1838,10 +1894,13 @@ class EventHandler(object):
         # Create dict to return 
         data_dict = {'type': 'timeseries', 
                      'xlabel': 'Date', 
+                     'label': self.mapping_objects['display_mapping'].get_mapping(primary_variable, 
+                                                                     'internal', 
+                                                                     'label'),  
                      'ylabel': unit, 
                      'datasets': datasets}
         
-        data_dict['y'] = self._convert_time_series_datasets_to_labels_time_series(datasets)
+        data_dict['x'] = self._convert_time_series_datasets_to_labels_time_series(datasets)
         
 #        print('data_dict.keys()'.upper(), data_dict.keys())
         return data_dict 
@@ -1896,8 +1955,12 @@ class EventHandler(object):
             new_x.append(date.strftime('%y-%b'))
                 
             for i in new_y: 
-                ym = '{}_{}'.format(date.year, date.month)
-                new_y[i].append(ym_to_y[i].get(ym, None))
+                ym = '{}_{}'.format(date.year, date.month) 
+                value = ym_to_y[i].get(ym, None)
+#                print(type())
+                if type(value) == np.int64:
+                    value = int(value)
+                new_y[i].append(value)
                 
                 
         
@@ -1916,8 +1979,8 @@ class EventHandler(object):
         
         # Add to datasets 
         for k, dataset in enumerate(datasets):
-            dataset['x'] = new_y[k]
-            dataset.pop('y')
+            dataset['y'] = new_y[k]
+            dataset.pop('x')
         
         return new_x 
     
@@ -2615,18 +2678,33 @@ class EventHandler(object):
             
         if kwargs.get('dont_build_subset'):
             return {}
+        
+        
+            
 #        request_for_water_district = self._get_mapping_for_name_in_dict('key', request)
+        
+        
+        water_district_list = self.mapping_objects['water_body'].get_list('water_district') 
+        
+        if kwargs.get('check_data_settings'): 
+            workspace_object = self.get_workspace(workspace_uuid)
+            subset_object = workspace_object.get_subset_object(subset_uuid)
+            data_filter_object = subset_object.get_data_filter_object('step_1')
+            water_body_active_list = data_filter_object.get_include_list_filter('VISS_EU_CD')
+            water_district_list = set(self.mapping_objects['water_body'].get_list('water_district', water_body=water_body_active_list)).intersection(water_district_list)
         
         if type(kwargs.get('check_in_df', False)) != bool: 
             df = kwargs['check_in_df']
-            water_district_list = sorted(self.mapping_objects['water_body'].get_list('water_district', 
-                                         water_body=list(set(df['VISS_EU_CD']))))
-        elif kwargs.get('list_viss_eu_cd'):
-            water_district_list = sorted(self.mapping_objects['water_body'].get_list('water_district', 
-                                         water_body=kwargs.get('list_viss_eu_cd')))
-        else:
-            water_district_list = self.mapping_objects['water_body'].get_list('water_district')
-
+            water_district_list = set(self.mapping_objects['water_body'].get_list('water_district', 
+                                         water_body=list(set(df['VISS_EU_CD'])))).intersection(water_district_list)
+        if kwargs.get('list_viss_eu_cd'): 
+            water_body_list = self._get_water_bodies_from_area_list(kwargs.get('list_viss_eu_cd')) 
+            water_district_list = set(self.mapping_objects['water_body'].get_list('water_district', 
+                                         water_body=water_body_list)).intersection(water_district_list)
+            
+        water_district_list = sorted(water_district_list)
+        
+        
         for water_district in water_district_list:
 #            sub_request = request_for_water_district.get(water_district, None) 
         
@@ -2669,7 +2747,7 @@ class EventHandler(object):
 #                        water_body['active'] = False
                 else:
                     type_area['active'] = False
-                    print('TYPE AREA', type_area['key'])
+#                    print('TYPE AREA', type_area['key'])
                     
                 #--------------------------------------------------------------
                 # Check if type_area is active
@@ -2738,7 +2816,7 @@ class EventHandler(object):
             # Create list of type areas 
             water_body_list = [req['key'] for req in request if req['value']]
             # Set data filter 
-            workspace_object.set_data_filter(step='step_1', subset=subset_uuid, filter_type='include_list', filter_name='WATER_BODY', data=water_body_list)
+            workspace_object.set_data_filter(step='step_1', subset=subset_uuid, filter_type='include_list', filter_name='VISS_EU_CD', data=water_body_list)
             
             return request
         else:
@@ -3568,7 +3646,8 @@ class EventHandler(object):
                                               request={}, 
                                               time=True, 
                                               areas=True, 
-                                              list_viss_eu_cd=request.get('areas', []), 
+                                              check_data_settings=True, 
+#                                              list_viss_eu_cd=request.get('areas', []), 
                                               check_in_df=df0) 
         
         # Check selected areas 

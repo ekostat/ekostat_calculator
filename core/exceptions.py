@@ -169,7 +169,16 @@ class UnableToLoadData(EkostatUserException):
     Created     20180719    by Magnus Wenzer
     """
     code = 'load_data_failed'   
-    message = 'Unable to load data'
+    message = 'Unable to load data' 
+    
+    
+#==============================================================================
+class FilterInputError(EkostatUserException):
+    """
+    Created     20180920    by Magnus Wenzer
+    """
+    code = 'filter_input_error'   
+    message = 'Filter missmatch with data'
     
     
 #==============================================================================

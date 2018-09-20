@@ -1,559 +1,76 @@
 {
-    "workspace_uuid": "1a349dfd-5e08-4617-85a8-5bdde050a4ee",
+    "workspace_uuid": "d347d3bf-3f26-42f3-b261-d48253f9ba26",
     "workspace": {
         "alias": "New test workspace",
-        "workspace_uuid": "1a349dfd-5e08-4617-85a8-5bdde050a4ee",
+        "workspace_uuid": "d347d3bf-3f26-42f3-b261-d48253f9ba26",
         "status": "editable"
     },
     "subset": {
         "alias": "mw_subset",
-        "subset_uuid": "cc264e56-f958-4ec4-932d-bc0cc1d2caf8",
+        "subset_uuid": "344e8ecb-71b0-41a9-b0ad-c1accd12bbf8",
         "status": "editable",
         "value": true,
         "time": {
             "year_interval": [
-                2011,
-                2011
+                2008,
+                2012
             ],
             "year_choices": [
-                2011
+                2008,
+                2009,
+                2010,
+                2011,
+                2012
             ]
         },
         "areas": [
             {
-                "label": "S\u00f6dra \u00d6stersj\u00f6ns vattendistrikt",
-                "key": "SE4",
+                "label": "Norra \u00d6stersj\u00f6ns vattendistrikt",
+                "key": "SE3",
                 "type": "water_district",
                 "status": "editable",
-                "active": false,
+                "active": true,
                 "children": [
                     {
-                        "label": "\u00d6stra \u00d6lands, syd\u00f6stra Gotlands kustvatten samt Gotska sand\u00f6n",
-                        "key": "10",
+                        "label": "\u00d6sterg\u00f6tlands yttre kustvatten",
+                        "key": "14",
                         "type": "type_area",
                         "status": "editable",
                         "active": true,
                         "children": [
                             {
-                                "label": "Lausvik",
-                                "key": "SE571800-184300",
+                                "label": "Krabbfj\u00e4rden",
+                                "key": "SE584340-174401",
                                 "type": "water_body",
                                 "status": "editable",
-                                "url": " http://www.viss.lansstyrelsen.se/waters.aspx?waterEUID=SE571800-184300",
-                                "active": true
-                            },
-                            {
-                                "label": "Klintehamnsviken sek namn",
-                                "key": "SE572350-180930",
-                                "type": "water_body",
-                                "status": "editable",
-                                "url": " http://www.viss.lansstyrelsen.se/waters.aspx?waterEUID=SE572350-180930",
-                                "active": true
-                            },
-                            {
-                                "label": "\u00d6 Gotlands n kustvatten",
-                                "key": "SE574170-190001",
-                                "type": "water_body",
-                                "status": "editable",
-                                "url": " http://www.viss.lansstyrelsen.se/waters.aspx?waterEUID=SE574170-190001",
-                                "active": true
-                            },
-                            {
-                                "label": "F\u00e5r\u00f6sund",
-                                "key": "SE575150-190400",
-                                "type": "water_body",
-                                "status": "editable",
-                                "url": " http://www.viss.lansstyrelsen.se/waters.aspx?waterEUID=SE575150-190400",
+                                "url": " http://www.viss.lansstyrelsen.se/waters.aspx?waterEUID=SE584340-174401",
                                 "active": true
                             }
                         ]
-                    },
+                    }
+                ]
+            },
+            {
+                "label": "V\u00e4sterhavets vattendistrikt",
+                "key": "SE5",
+                "type": "water_district",
+                "status": "editable",
+                "active": true,
+                "children": [
                     {
-                        "label": "Gotlands v\u00e4stra och norra kustvatten",
-                        "key": "11",
+                        "label": "V\u00e4stkustens fjordar",
+                        "key": "2",
                         "type": "type_area",
                         "status": "editable",
-                        "active": false,
+                        "active": true,
                         "children": [
                             {
-                                "label": "Irevik",
-                                "key": "SE575170-183550",
+                                "label": "Gullmarn centralbass\u00e4ng",
+                                "key": "SE581700-113000",
                                 "type": "water_body",
                                 "status": "editable",
-                                "url": " http://www.viss.lansstyrelsen.se/waters.aspx?waterEUID=SE575170-183550",
-                                "active": false
-                            }
-                        ]
-                    },
-                    {
-                        "label": "\u00d6sterg\u00f6tlands samt Stockholms sk\u00e4rg\u00e5rd, mellankustvatten, norra",
-                        "key": "12n",
-                        "type": "type_area",
-                        "status": "editable",
-                        "active": false,
-                        "children": [
-                            {
-                                "label": "Ark\u00f6sund",
-                                "key": "SE583000-165600",
-                                "type": "water_body",
-                                "status": "editable",
-                                "url": " http://www.viss.lansstyrelsen.se/waters.aspx?waterEUID=SE583000-165600",
-                                "active": false
-                            },
-                            {
-                                "label": "Yttre Br\u00e5viken",
-                                "key": "SE583730-164501",
-                                "type": "water_body",
-                                "status": "editable",
-                                "url": " http://www.viss.lansstyrelsen.se/waters.aspx?waterEUID=SE583730-164501",
-                                "active": false
-                            },
-                            {
-                                "label": "Mellersta Br\u00e5viken",
-                                "key": "SE583825-163500",
-                                "type": "water_body",
-                                "status": "editable",
-                                "url": " http://www.viss.lansstyrelsen.se/waters.aspx?waterEUID=SE583825-163500",
-                                "active": false
-                            },
-                            {
-                                "label": "Sill\u00f6fj\u00e4rden",
-                                "key": "SE583875-170270",
-                                "type": "water_body",
-                                "status": "editable",
-                                "url": " http://www.viss.lansstyrelsen.se/waters.aspx?waterEUID=SE583875-170270",
-                                "active": false
-                            },
-                            {
-                                "label": "Marsviken",
-                                "key": "SE583970-170280",
-                                "type": "water_body",
-                                "status": "editable",
-                                "url": " http://www.viss.lansstyrelsen.se/waters.aspx?waterEUID=SE583970-170280",
-                                "active": false
-                            }
-                        ]
-                    },
-                    {
-                        "label": "\u00d6sterg\u00f6tlands samt Stockholms sk\u00e4rg\u00e5rd, mellankustvatten, s\u00f6dra",
-                        "key": "12s",
-                        "type": "type_area",
-                        "status": "editable",
-                        "active": false,
-                        "children": [
-                            {
-                                "label": "G\u00e5sfj\u00e4rden",
-                                "key": "SE573500-163500",
-                                "type": "water_body",
-                                "status": "editable",
-                                "url": " http://www.viss.lansstyrelsen.se/waters.aspx?waterEUID=SE573500-163500",
-                                "active": false
-                            },
-                            {
-                                "label": "V\u00e4strumsfj\u00e4rden",
-                                "key": "SE573940-163560",
-                                "type": "water_body",
-                                "status": "editable",
-                                "url": " http://www.viss.lansstyrelsen.se/waters.aspx?waterEUID=SE573940-163560",
-                                "active": false
-                            },
-                            {
-                                "label": "Inre Gamlebyviken",
-                                "key": "SE575150-162700",
-                                "type": "water_body",
-                                "status": "editable",
-                                "url": " http://www.viss.lansstyrelsen.se/waters.aspx?waterEUID=SE575150-162700",
-                                "active": false
-                            },
-                            {
-                                "label": "Vivassen",
-                                "key": "SE575370-164220",
-                                "type": "water_body",
-                                "status": "editable",
-                                "url": " http://www.viss.lansstyrelsen.se/waters.aspx?waterEUID=SE575370-164220",
-                                "active": false
-                            },
-                            {
-                                "label": "Kaggebofj\u00e4rden",
-                                "key": "SE580000-164060",
-                                "type": "water_body",
-                                "status": "editable",
-                                "url": " http://www.viss.lansstyrelsen.se/waters.aspx?waterEUID=SE580000-164060",
-                                "active": false
-                            },
-                            {
-                                "label": "Yttre Valdemarsviken",
-                                "key": "SE580585-164720",
-                                "type": "water_body",
-                                "status": "editable",
-                                "url": " http://www.viss.lansstyrelsen.se/waters.aspx?waterEUID=SE580585-164720",
-                                "active": false
-                            },
-                            {
-                                "label": "Hals\u00f6fj\u00e4rden",
-                                "key": "SE580735-165296",
-                                "type": "water_body",
-                                "status": "editable",
-                                "url": " http://www.viss.lansstyrelsen.se/waters.aspx?waterEUID=SE580735-165296",
-                                "active": false
-                            },
-                            {
-                                "label": "Orren",
-                                "key": "SE581520-165000",
-                                "type": "water_body",
-                                "status": "editable",
-                                "url": " http://www.viss.lansstyrelsen.se/waters.aspx?waterEUID=SE581520-165000",
-                                "active": false
-                            },
-                            {
-                                "label": "K\u00e4rrfj\u00e4rden",
-                                "key": "SE582050-165820",
-                                "type": "water_body",
-                                "status": "editable",
-                                "url": " http://www.viss.lansstyrelsen.se/waters.aspx?waterEUID=SE582050-165820",
-                                "active": false
-                            },
-                            {
-                                "label": "Tr\u00e4nn\u00f6fj\u00e4rden",
-                                "key": "SE582460-164500",
-                                "type": "water_body",
-                                "status": "editable",
-                                "url": " http://www.viss.lansstyrelsen.se/waters.aspx?waterEUID=SE582460-164500",
-                                "active": false
-                            }
-                        ]
-                    },
-                    {
-                        "label": "\u00d6sterg\u00f6tlands inre sk\u00e4rg\u00e5rd",
-                        "key": "13",
-                        "type": "type_area",
-                        "status": "editable",
-                        "active": false,
-                        "children": [
-                            {
-                                "label": "Inre Valdemarsviken",
-                                "key": "SE581000-164020",
-                                "type": "water_body",
-                                "status": "editable",
-                                "url": " http://www.viss.lansstyrelsen.se/waters.aspx?waterEUID=SE581000-164020",
-                                "active": false
-                            },
-                            {
-                                "label": "Inre Sl\u00e4tbaken",
-                                "key": "SE582705-163350",
-                                "type": "water_body",
-                                "status": "editable",
-                                "url": " http://www.viss.lansstyrelsen.se/waters.aspx?waterEUID=SE582705-163350",
-                                "active": false
-                            },
-                            {
-                                "label": "Pampusfj\u00e4rden",
-                                "key": "SE583718-161687",
-                                "type": "water_body",
-                                "status": "editable",
-                                "url": " http://www.viss.lansstyrelsen.se/waters.aspx?waterEUID=SE583718-161687",
-                                "active": false
-                            }
-                        ]
-                    },
-                    {
-                        "label": "S\u00f6dra Halland och norra \u00d6resunds kustvatten",
-                        "key": "5",
-                        "type": "type_area",
-                        "status": "editable",
-                        "active": false,
-                        "children": [
-                            {
-                                "label": "N \u00d6resunds kustvatten",
-                                "key": "SE561030-122821",
-                                "type": "water_body",
-                                "status": "editable",
-                                "url": " http://www.viss.lansstyrelsen.se/waters.aspx?waterEUID=SE561030-122821",
-                                "active": false
-                            }
-                        ]
-                    },
-                    {
-                        "label": "\u00d6resunds kustvatten",
-                        "key": "6",
-                        "type": "type_area",
-                        "status": "editable",
-                        "active": false,
-                        "children": [
-                            {
-                                "label": "Lommabukten",
-                                "key": "SE554040-125750",
-                                "type": "water_body",
-                                "status": "editable",
-                                "url": " http://www.viss.lansstyrelsen.se/waters.aspx?waterEUID=SE554040-125750",
-                                "active": false
-                            },
-                            {
-                                "label": "S m \u00d6resunds kustvatten",
-                                "key": "SE554500-125001",
-                                "type": "water_body",
-                                "status": "editable",
-                                "url": " http://www.viss.lansstyrelsen.se/waters.aspx?waterEUID=SE554500-125001",
-                                "active": false
-                            },
-                            {
-                                "label": "Lund\u00e5krabukten",
-                                "key": "SE554810-125240",
-                                "type": "water_body",
-                                "status": "editable",
-                                "url": " http://www.viss.lansstyrelsen.se/waters.aspx?waterEUID=SE554810-125240",
-                                "active": false
-                            },
-                            {
-                                "label": "N m \u00d6resunds kustvatten",
-                                "key": "SE555545-124332",
-                                "type": "water_body",
-                                "status": "editable",
-                                "url": " http://www.viss.lansstyrelsen.se/waters.aspx?waterEUID=SE555545-124332",
-                                "active": false
-                            }
-                        ]
-                    },
-                    {
-                        "label": "Sk\u00e5nes kustvatten",
-                        "key": "7",
-                        "type": "type_area",
-                        "status": "editable",
-                        "active": false,
-                        "children": [
-                            {
-                                "label": "\u00d6 sydkustens kustvatten",
-                                "key": "SE552170-130626",
-                                "type": "water_body",
-                                "status": "editable",
-                                "url": " http://www.viss.lansstyrelsen.se/waters.aspx?waterEUID=SE552170-130626",
-                                "active": false
-                            },
-                            {
-                                "label": "S \u00d6resunds kustvatten",
-                                "key": "SE552500-124461",
-                                "type": "water_body",
-                                "status": "editable",
-                                "url": " http://www.viss.lansstyrelsen.se/waters.aspx?waterEUID=SE552500-124461",
-                                "active": false
-                            },
-                            {
-                                "label": "V Han\u00f6buktens kustvatten",
-                                "key": "SE554800-142001",
-                                "type": "water_body",
-                                "status": "editable",
-                                "url": " http://www.viss.lansstyrelsen.se/waters.aspx?waterEUID=SE554800-142001",
-                                "active": false
-                            },
-                            {
-                                "label": "S\u00f6lvesborgsviken",
-                                "key": "SE560205-143545",
-                                "type": "water_body",
-                                "status": "editable",
-                                "url": " http://www.viss.lansstyrelsen.se/waters.aspx?waterEUID=SE560205-143545",
-                                "active": false
-                            }
-                        ]
-                    },
-                    {
-                        "label": "Blekinge sk\u00e4rg\u00e5rd och Kalmarsund, inre kustvatten",
-                        "key": "8",
-                        "type": "type_area",
-                        "status": "editable",
-                        "active": false,
-                        "children": [
-                            {
-                                "label": "Torhamnsfj\u00e4rden",
-                                "key": "SE560500-154880",
-                                "type": "water_body",
-                                "status": "editable",
-                                "url": " http://www.viss.lansstyrelsen.se/waters.aspx?waterEUID=SE560500-154880",
-                                "active": false
-                            },
-                            {
-                                "label": "V\u00e4stra fj\u00e4rden",
-                                "key": "SE560775-153055",
-                                "type": "water_body",
-                                "status": "editable",
-                                "url": " http://www.viss.lansstyrelsen.se/waters.aspx?waterEUID=SE560775-153055",
-                                "active": false
-                            },
-                            {
-                                "label": "Yttre redden",
-                                "key": "SE560780-153500",
-                                "type": "water_body",
-                                "status": "editable",
-                                "url": " http://www.viss.lansstyrelsen.se/waters.aspx?waterEUID=SE560780-153500",
-                                "active": false
-                            },
-                            {
-                                "label": "Hallarumsviken",
-                                "key": "SE560795-154730",
-                                "type": "water_body",
-                                "status": "editable",
-                                "url": " http://www.viss.lansstyrelsen.se/waters.aspx?waterEUID=SE560795-154730",
-                                "active": false
-                            },
-                            {
-                                "label": "\u00d6stra fj\u00e4rden",
-                                "key": "SE560810-153980",
-                                "type": "water_body",
-                                "status": "editable",
-                                "url": " http://www.viss.lansstyrelsen.se/waters.aspx?waterEUID=SE560810-153980",
-                                "active": false
-                            },
-                            {
-                                "label": "Inre Pukaviksbukten",
-                                "key": "SE560825-144215",
-                                "type": "water_body",
-                                "status": "editable",
-                                "url": " http://www.viss.lansstyrelsen.se/waters.aspx?waterEUID=SE560825-144215",
-                                "active": false
-                            },
-                            {
-                                "label": "Karlshamnsfj\u00e4rden",
-                                "key": "SE560900-145280",
-                                "type": "water_body",
-                                "status": "editable",
-                                "url": " http://www.viss.lansstyrelsen.se/waters.aspx?waterEUID=SE560900-145280",
-                                "active": false
-                            },
-                            {
-                                "label": "Ronnebyfj\u00e4rden",
-                                "key": "SE560940-151740",
-                                "type": "water_body",
-                                "status": "editable",
-                                "url": " http://www.viss.lansstyrelsen.se/waters.aspx?waterEUID=SE560940-151740",
-                                "active": false
-                            },
-                            {
-                                "label": "Tj\u00e4r\u00f6fj\u00e4rden",
-                                "key": "SE561005-150250",
-                                "type": "water_body",
-                                "status": "editable",
-                                "url": " http://www.viss.lansstyrelsen.se/waters.aspx?waterEUID=SE561005-150250",
-                                "active": false
-                            },
-                            {
-                                "label": "V\u00e4stra sj\u00f6n",
-                                "key": "SE563825-161810",
-                                "type": "water_body",
-                                "status": "editable",
-                                "url": " http://www.viss.lansstyrelsen.se/waters.aspx?waterEUID=SE563825-161810",
-                                "active": false
-                            },
-                            {
-                                "label": "S n Kalmarsund",
-                                "key": "SE564250-162500",
-                                "type": "water_body",
-                                "status": "editable",
-                                "url": " http://www.viss.lansstyrelsen.se/waters.aspx?waterEUID=SE564250-162500",
-                                "active": false
-                            },
-                            {
-                                "label": "L\u00f6v\u00f6omr\u00e5det sek namn",
-                                "key": "SE565800-163000",
-                                "type": "water_body",
-                                "status": "editable",
-                                "url": " http://www.viss.lansstyrelsen.se/waters.aspx?waterEUID=SE565800-163000",
-                                "active": false
-                            },
-                            {
-                                "label": "M\u00f6nster\u00e5somr\u00e5det sek namn",
-                                "key": "SE570080-163430",
-                                "type": "water_body",
-                                "status": "editable",
-                                "url": " http://www.viss.lansstyrelsen.se/waters.aspx?waterEUID=SE570080-163430",
-                                "active": false
-                            },
-                            {
-                                "label": "\u00d6d\u00e4nglaomr\u00e5det sek namn",
-                                "key": "SE570340-163710",
-                                "type": "water_body",
-                                "status": "editable",
-                                "url": " http://www.viss.lansstyrelsen.se/waters.aspx?waterEUID=SE570340-163710",
-                                "active": false
-                            },
-                            {
-                                "label": "Emomr\u00e5det sek namn",
-                                "key": "SE570500-163750",
-                                "type": "water_body",
-                                "status": "editable",
-                                "url": " http://www.viss.lansstyrelsen.se/waters.aspx?waterEUID=SE570500-163750",
-                                "active": false
-                            },
-                            {
-                                "label": "Inre Oskarshamnsomr\u00e5det",
-                                "key": "SE571552-162848",
-                                "type": "water_body",
-                                "status": "editable",
-                                "url": " http://www.viss.lansstyrelsen.se/waters.aspx?waterEUID=SE571552-162848",
-                                "active": false
-                            },
-                            {
-                                "label": "F\u00e5gel\u00f6fj\u00e4rden",
-                                "key": "SE572205-163500",
-                                "type": "water_body",
-                                "status": "editable",
-                                "url": " http://www.viss.lansstyrelsen.se/waters.aspx?waterEUID=SE572205-163500",
-                                "active": false
-                            },
-                            {
-                                "label": "Simpevarpsomr\u00e5det",
-                                "key": "SE572500-164500",
-                                "type": "water_body",
-                                "status": "editable",
-                                "url": " http://www.viss.lansstyrelsen.se/waters.aspx?waterEUID=SE572500-164500",
-                                "active": false
-                            }
-                        ]
-                    },
-                    {
-                        "label": "Blekinge sk\u00e4rg\u00e5rd och Kalmarsund, yttre kustvatten",
-                        "key": "9",
-                        "type": "type_area",
-                        "status": "editable",
-                        "active": false,
-                        "children": [
-                            {
-                                "label": "S v s Kalmarsunds kustvatten",
-                                "key": "SE560700-155801",
-                                "type": "water_body",
-                                "status": "editable",
-                                "url": " http://www.viss.lansstyrelsen.se/waters.aspx?waterEUID=SE560700-155801",
-                                "active": false
-                            },
-                            {
-                                "label": "S Kalmarsunds utsj\u00f6vatten",
-                                "key": "SE561400-161201",
-                                "type": "water_body",
-                                "status": "editable",
-                                "url": " http://www.viss.lansstyrelsen.se/waters.aspx?waterEUID=SE561400-161201",
-                                "active": false
-                            },
-                            {
-                                "label": "M n Kalmarsunds utsj\u00f6vatten",
-                                "key": "SE565400-163600",
-                                "type": "water_body",
-                                "status": "editable",
-                                "url": " http://www.viss.lansstyrelsen.se/waters.aspx?waterEUID=SE565400-163600",
-                                "active": false
-                            },
-                            {
-                                "label": "N n Kalmarsunds utsj\u00f6vatten",
-                                "key": "SE570900-164501",
-                                "type": "water_body",
-                                "status": "editable",
-                                "url": " http://www.viss.lansstyrelsen.se/waters.aspx?waterEUID=SE570900-164501",
-                                "active": false
-                            },
-                            {
-                                "label": "V\u00e4stra Blekinge sk\u00e4rg\u00e5rds kustvatten",
-                                "key": "SE621688-144133",
-                                "type": "water_body",
-                                "status": "editable",
-                                "url": " http://www.viss.lansstyrelsen.se/waters.aspx?waterEUID=SE621688-144133",
-                                "active": false
+                                "url": " http://www.viss.lansstyrelsen.se/waters.aspx?waterEUID=SE581700-113000",
+                                "active": true
                             }
                         ]
                     }
@@ -570,13 +87,6 @@
                     "status": "readable",
                     "value": false,
                     "key": "indicator_bqi",
-                    "settings": []
-                },
-                {
-                    "label": "Bottom fauna",
-                    "status": "readable",
-                    "value": false,
-                    "key": "qe_bottomfauna",
                     "settings": []
                 }
             ]
@@ -598,42 +108,59 @@
             "children": [
                 {
                     "label": "Biovolume",
-                    "status": "readable",
-                    "value": false,
-                    "key": "indicator_biov",
-                    "settings": []
-                },
-                {
-                    "label": "Chlorophyll",
-                    "status": "readable",
-                    "value": false,
-                    "key": "indicator_chl",
-                    "settings": []
-                },
-                {
-                    "label": "Phytplankton",
-                    "status": "readable",
-                    "value": false,
-                    "key": "qe_phytoplankton",
-                    "settings": []
-                }
-            ]
-        }
-    ],
-    "supporting_elements": [
-        {
-            "label": "secchi",
-            "children": [
-                {
-                    "label": "Secchi depth",
                     "status": "editable",
                     "value": true,
-                    "key": "indicator_secchi",
+                    "key": "indicator_biov",
                     "settings": [
                         {
                             "area_type": "type_area",
-                            "key": "10",
-                            "label": "\u00d6stra \u00d6lands, syd\u00f6stra Gotlands kustvatten samt Gotska sand\u00f6n",
+                            "key": "14",
+                            "label": "\u00d6sterg\u00f6tlands yttre kustvatten",
+                            "children": [
+                                {
+                                    "choices": [
+                                        1,
+                                        2,
+                                        3
+                                    ],
+                                    "key": "MIN_NR_YEARS",
+                                    "unit": "",
+                                    "label": "Minimum number of years ()",
+                                    "status": "editable",
+                                    "widget": "number:int",
+                                    "value": 3
+                                },
+                                {
+                                    "choices": [
+                                        1,
+                                        2,
+                                        3,
+                                        4,
+                                        5,
+                                        6,
+                                        7,
+                                        8,
+                                        9,
+                                        10,
+                                        11,
+                                        12
+                                    ],
+                                    "key": "MONTH_LIST",
+                                    "unit": "",
+                                    "label": "Month interval ()",
+                                    "status": "editable",
+                                    "widget": "interval:int",
+                                    "value": [
+                                        6,
+                                        8
+                                    ]
+                                }
+                            ]
+                        },
+                        {
+                            "area_type": "type_area",
+                            "key": "2",
+                            "label": "V\u00e4stkustens fjordar",
                             "children": [
                                 {
                                     "choices": [
@@ -678,11 +205,207 @@
                     ]
                 },
                 {
+                    "label": "Chlorophyll",
+                    "status": "editable",
+                    "value": true,
+                    "key": "indicator_chl",
+                    "settings": [
+                        {
+                            "area_type": "type_area",
+                            "key": "14",
+                            "label": "\u00d6sterg\u00f6tlands yttre kustvatten",
+                            "children": [
+                                {
+                                    "choices": [
+                                        1,
+                                        2,
+                                        3
+                                    ],
+                                    "key": "MIN_NR_YEARS",
+                                    "unit": "",
+                                    "label": "Minimum number of years ()",
+                                    "status": "editable",
+                                    "widget": "number:int",
+                                    "value": 3
+                                },
+                                {
+                                    "choices": [
+                                        1,
+                                        2,
+                                        3,
+                                        4,
+                                        5,
+                                        6,
+                                        7,
+                                        8,
+                                        9,
+                                        10,
+                                        11,
+                                        12
+                                    ],
+                                    "key": "MONTH_LIST",
+                                    "unit": "",
+                                    "label": "Month interval ()",
+                                    "status": "editable",
+                                    "widget": "interval:int",
+                                    "value": [
+                                        6,
+                                        8
+                                    ]
+                                }
+                            ]
+                        },
+                        {
+                            "area_type": "type_area",
+                            "key": "2",
+                            "label": "V\u00e4stkustens fjordar",
+                            "children": [
+                                {
+                                    "choices": [
+                                        1,
+                                        2,
+                                        3
+                                    ],
+                                    "key": "MIN_NR_YEARS",
+                                    "unit": "",
+                                    "label": "Minimum number of years ()",
+                                    "status": "editable",
+                                    "widget": "number:int",
+                                    "value": 3
+                                },
+                                {
+                                    "choices": [
+                                        1,
+                                        2,
+                                        3,
+                                        4,
+                                        5,
+                                        6,
+                                        7,
+                                        8,
+                                        9,
+                                        10,
+                                        11,
+                                        12
+                                    ],
+                                    "key": "MONTH_LIST",
+                                    "unit": "",
+                                    "label": "Month interval ()",
+                                    "status": "editable",
+                                    "widget": "interval:int",
+                                    "value": [
+                                        6,
+                                        8
+                                    ]
+                                }
+                            ]
+                        }
+                    ]
+                }
+            ]
+        }
+    ],
+    "supporting_elements": [
+        {
+            "label": "secchi",
+            "children": [
+                {
                     "label": "Secchi depth",
-                    "status": "readable",
-                    "value": false,
-                    "key": "qe_secchi",
-                    "settings": []
+                    "status": "editable",
+                    "value": true,
+                    "key": "indicator_secchi",
+                    "settings": [
+                        {
+                            "area_type": "type_area",
+                            "key": "14",
+                            "label": "\u00d6sterg\u00f6tlands yttre kustvatten",
+                            "children": [
+                                {
+                                    "choices": [
+                                        1,
+                                        2,
+                                        3
+                                    ],
+                                    "key": "MIN_NR_YEARS",
+                                    "unit": "",
+                                    "label": "Minimum number of years ()",
+                                    "status": "editable",
+                                    "widget": "number:int",
+                                    "value": 3
+                                },
+                                {
+                                    "choices": [
+                                        1,
+                                        2,
+                                        3,
+                                        4,
+                                        5,
+                                        6,
+                                        7,
+                                        8,
+                                        9,
+                                        10,
+                                        11,
+                                        12
+                                    ],
+                                    "key": "MONTH_LIST",
+                                    "unit": "",
+                                    "label": "Month interval ()",
+                                    "status": "editable",
+                                    "widget": "interval:int",
+                                    "value": [
+                                        6,
+                                        8
+                                    ]
+                                }
+                            ]
+                        },
+                        {
+                            "area_type": "type_area",
+                            "key": "2",
+                            "label": "V\u00e4stkustens fjordar",
+                            "children": [
+                                {
+                                    "choices": [
+                                        1,
+                                        2,
+                                        3
+                                    ],
+                                    "key": "MIN_NR_YEARS",
+                                    "unit": "",
+                                    "label": "Minimum number of years ()",
+                                    "status": "editable",
+                                    "widget": "number:int",
+                                    "value": 3
+                                },
+                                {
+                                    "choices": [
+                                        1,
+                                        2,
+                                        3,
+                                        4,
+                                        5,
+                                        6,
+                                        7,
+                                        8,
+                                        9,
+                                        10,
+                                        11,
+                                        12
+                                    ],
+                                    "key": "MONTH_LIST",
+                                    "unit": "",
+                                    "label": "Month interval ()",
+                                    "status": "editable",
+                                    "widget": "interval:int",
+                                    "value": [
+                                        6,
+                                        8
+                                    ]
+                                }
+                            ]
+                        }
+                    ]
                 }
             ]
         },
@@ -697,8 +420,8 @@
                     "settings": [
                         {
                             "area_type": "type_area",
-                            "key": "10",
-                            "label": "\u00d6stra \u00d6lands, syd\u00f6stra Gotlands kustvatten samt Gotska sand\u00f6n",
+                            "key": "14",
+                            "label": "\u00d6sterg\u00f6tlands yttre kustvatten",
                             "children": [
                                 {
                                     "choices": [
@@ -751,6 +474,63 @@
                                     ]
                                 }
                             ]
+                        },
+                        {
+                            "area_type": "type_area",
+                            "key": "2",
+                            "label": "V\u00e4stkustens fjordar",
+                            "children": [
+                                {
+                                    "choices": [
+                                        1,
+                                        2,
+                                        3
+                                    ],
+                                    "key": "MIN_NR_YEARS",
+                                    "unit": "",
+                                    "label": "Minimum number of years ()",
+                                    "status": "editable",
+                                    "widget": "number:int",
+                                    "value": 3
+                                },
+                                {
+                                    "choices": [
+                                        1,
+                                        2,
+                                        3,
+                                        4,
+                                        5,
+                                        6,
+                                        7,
+                                        8,
+                                        9,
+                                        10,
+                                        11,
+                                        12
+                                    ],
+                                    "key": "MONTH_LIST",
+                                    "unit": "",
+                                    "label": "Month interval ()",
+                                    "status": "editable",
+                                    "widget": "interval:int",
+                                    "value": [
+                                        12,
+                                        3
+                                    ]
+                                },
+                                {
+                                    "choices": false,
+                                    "key": "DEPH_INTERVAL",
+                                    "unit": "m",
+                                    "label": "Depth interval (m)",
+                                    "status": "editable",
+                                    "widget": "interval:int",
+                                    "value": [
+                                        0,
+                                        10
+                                    ]
+                                }
+                            ]
                         }
                     ]
                 },
@@ -762,8 +542,8 @@
                     "settings": [
                         {
                             "area_type": "type_area",
-                            "key": "10",
-                            "label": "\u00d6stra \u00d6lands, syd\u00f6stra Gotlands kustvatten samt Gotska sand\u00f6n",
+                            "key": "14",
+                            "label": "\u00d6sterg\u00f6tlands yttre kustvatten",
                             "children": [
                                 {
                                     "choices": [
@@ -801,6 +581,63 @@
                                     "value": [
                                         12,
                                         2
+                                    ]
+                                },
+                                {
+                                    "choices": false,
+                                    "key": "DEPH_INTERVAL",
+                                    "unit": "m",
+                                    "label": "Depth interval (m)",
+                                    "status": "editable",
+                                    "widget": "interval:int",
+                                    "value": [
+                                        0,
+                                        10
+                                    ]
+                                }
+                            ]
+                        },
+                        {
+                            "area_type": "type_area",
+                            "key": "2",
+                            "label": "V\u00e4stkustens fjordar",
+                            "children": [
+                                {
+                                    "choices": [
+                                        1,
+                                        2,
+                                        3
+                                    ],
+                                    "key": "MIN_NR_YEARS",
+                                    "unit": "",
+                                    "label": "Minimum number of years ()",
+                                    "status": "editable",
+                                    "widget": "number:int",
+                                    "value": 3
+                                },
+                                {
+                                    "choices": [
+                                        1,
+                                        2,
+                                        3,
+                                        4,
+                                        5,
+                                        6,
+                                        7,
+                                        8,
+                                        9,
+                                        10,
+                                        11,
+                                        12
+                                    ],
+                                    "key": "MONTH_LIST",
+                                    "unit": "",
+                                    "label": "Month interval ()",
+                                    "status": "editable",
+                                    "widget": "interval:int",
+                                    "value": [
+                                        12,
+                                        3
                                     ]
                                 },
                                 {
@@ -848,8 +685,65 @@
                     "settings": [
                         {
                             "area_type": "type_area",
-                            "key": "10",
-                            "label": "\u00d6stra \u00d6lands, syd\u00f6stra Gotlands kustvatten samt Gotska sand\u00f6n",
+                            "key": "14",
+                            "label": "\u00d6sterg\u00f6tlands yttre kustvatten",
+                            "children": [
+                                {
+                                    "choices": [
+                                        1,
+                                        2,
+                                        3
+                                    ],
+                                    "key": "MIN_NR_YEARS",
+                                    "unit": "",
+                                    "label": "Minimum number of years ()",
+                                    "status": "editable",
+                                    "widget": "number:int",
+                                    "value": 3
+                                },
+                                {
+                                    "choices": [
+                                        1,
+                                        2,
+                                        3,
+                                        4,
+                                        5,
+                                        6,
+                                        7,
+                                        8,
+                                        9,
+                                        10,
+                                        11,
+                                        12
+                                    ],
+                                    "key": "MONTH_LIST",
+                                    "unit": "",
+                                    "label": "Month interval ()",
+                                    "status": "editable",
+                                    "widget": "interval:int",
+                                    "value": [
+                                        6,
+                                        8
+                                    ]
+                                },
+                                {
+                                    "choices": false,
+                                    "key": "DEPH_INTERVAL",
+                                    "unit": "m",
+                                    "label": "Depth interval (m)",
+                                    "status": "editable",
+                                    "widget": "interval:int",
+                                    "value": [
+                                        0,
+                                        10
+                                    ]
+                                }
+                            ]
+                        },
+                        {
+                            "area_type": "type_area",
+                            "key": "2",
+                            "label": "V\u00e4stkustens fjordar",
                             "children": [
                                 {
                                     "choices": [
@@ -913,8 +807,8 @@
                     "settings": [
                         {
                             "area_type": "type_area",
-                            "key": "10",
-                            "label": "\u00d6stra \u00d6lands, syd\u00f6stra Gotlands kustvatten samt Gotska sand\u00f6n",
+                            "key": "14",
+                            "label": "\u00d6sterg\u00f6tlands yttre kustvatten",
                             "children": [
                                 {
                                     "choices": [
@@ -967,6 +861,63 @@
                                     ]
                                 }
                             ]
+                        },
+                        {
+                            "area_type": "type_area",
+                            "key": "2",
+                            "label": "V\u00e4stkustens fjordar",
+                            "children": [
+                                {
+                                    "choices": [
+                                        1,
+                                        2,
+                                        3
+                                    ],
+                                    "key": "MIN_NR_YEARS",
+                                    "unit": "",
+                                    "label": "Minimum number of years ()",
+                                    "status": "editable",
+                                    "widget": "number:int",
+                                    "value": 3
+                                },
+                                {
+                                    "choices": [
+                                        1,
+                                        2,
+                                        3,
+                                        4,
+                                        5,
+                                        6,
+                                        7,
+                                        8,
+                                        9,
+                                        10,
+                                        11,
+                                        12
+                                    ],
+                                    "key": "MONTH_LIST",
+                                    "unit": "",
+                                    "label": "Month interval ()",
+                                    "status": "editable",
+                                    "widget": "interval:int",
+                                    "value": [
+                                        12,
+                                        3
+                                    ]
+                                },
+                                {
+                                    "choices": false,
+                                    "key": "DEPH_INTERVAL",
+                                    "unit": "m",
+                                    "label": "Depth interval (m)",
+                                    "status": "editable",
+                                    "widget": "interval:int",
+                                    "value": [
+                                        0,
+                                        10
+                                    ]
+                                }
+                            ]
                         }
                     ]
                 },
@@ -999,8 +950,65 @@
                     "settings": [
                         {
                             "area_type": "type_area",
-                            "key": "10",
-                            "label": "\u00d6stra \u00d6lands, syd\u00f6stra Gotlands kustvatten samt Gotska sand\u00f6n",
+                            "key": "14",
+                            "label": "\u00d6sterg\u00f6tlands yttre kustvatten",
+                            "children": [
+                                {
+                                    "choices": [
+                                        1,
+                                        2,
+                                        3
+                                    ],
+                                    "key": "MIN_NR_YEARS",
+                                    "unit": "",
+                                    "label": "Minimum number of years ()",
+                                    "status": "editable",
+                                    "widget": "number:int",
+                                    "value": 3
+                                },
+                                {
+                                    "choices": [
+                                        1,
+                                        2,
+                                        3,
+                                        4,
+                                        5,
+                                        6,
+                                        7,
+                                        8,
+                                        9,
+                                        10,
+                                        11,
+                                        12
+                                    ],
+                                    "key": "MONTH_LIST",
+                                    "unit": "",
+                                    "label": "Month interval ()",
+                                    "status": "editable",
+                                    "widget": "interval:int",
+                                    "value": [
+                                        6,
+                                        8
+                                    ]
+                                },
+                                {
+                                    "choices": false,
+                                    "key": "DEPH_INTERVAL",
+                                    "unit": "m",
+                                    "label": "Depth interval (m)",
+                                    "status": "editable",
+                                    "widget": "interval:int",
+                                    "value": [
+                                        0,
+                                        10
+                                    ]
+                                }
+                            ]
+                        },
+                        {
+                            "area_type": "type_area",
+                            "key": "2",
+                            "label": "V\u00e4stkustens fjordar",
                             "children": [
                                 {
                                     "choices": [
@@ -1064,8 +1072,8 @@
                     "settings": [
                         {
                             "area_type": "type_area",
-                            "key": "10",
-                            "label": "\u00d6stra \u00d6lands, syd\u00f6stra Gotlands kustvatten samt Gotska sand\u00f6n",
+                            "key": "14",
+                            "label": "\u00d6sterg\u00f6tlands yttre kustvatten",
                             "children": [
                                 {
                                     "choices": [
@@ -1118,15 +1126,65 @@
                                     ]
                                 }
                             ]
+                        },
+                        {
+                            "area_type": "type_area",
+                            "key": "2",
+                            "label": "V\u00e4stkustens fjordar",
+                            "children": [
+                                {
+                                    "choices": [
+                                        1,
+                                        2,
+                                        3
+                                    ],
+                                    "key": "MIN_NR_YEARS",
+                                    "unit": "",
+                                    "label": "Minimum number of years ()",
+                                    "status": "editable",
+                                    "widget": "number:int",
+                                    "value": 3
+                                },
+                                {
+                                    "choices": [
+                                        1,
+                                        2,
+                                        3,
+                                        4,
+                                        5,
+                                        6,
+                                        7,
+                                        8,
+                                        9,
+                                        10,
+                                        11,
+                                        12
+                                    ],
+                                    "key": "MONTH_LIST",
+                                    "unit": "",
+                                    "label": "Month interval ()",
+                                    "status": "editable",
+                                    "widget": "interval:int",
+                                    "value": [
+                                        12,
+                                        3
+                                    ]
+                                },
+                                {
+                                    "choices": false,
+                                    "key": "DEPH_INTERVAL",
+                                    "unit": "m",
+                                    "label": "Depth interval (m)",
+                                    "status": "editable",
+                                    "widget": "interval:int",
+                                    "value": [
+                                        0,
+                                        10
+                                    ]
+                                }
+                            ]
                         }
                     ]
-                },
-                {
-                    "label": "Nutrients",
-                    "status": "readable",
-                    "value": false,
-                    "key": "qe_nutrients",
-                    "settings": []
                 }
             ]
         },
@@ -1141,8 +1199,66 @@
                     "settings": [
                         {
                             "area_type": "type_area",
-                            "key": "10",
-                            "label": "\u00d6stra \u00d6lands, syd\u00f6stra Gotlands kustvatten samt Gotska sand\u00f6n",
+                            "key": "14",
+                            "label": "\u00d6sterg\u00f6tlands yttre kustvatten",
+                            "children": [
+                                {
+                                    "choices": [
+                                        1,
+                                        2,
+                                        3
+                                    ],
+                                    "key": "MIN_NR_YEARS",
+                                    "unit": "",
+                                    "label": "Minimum number of years ()",
+                                    "status": "editable",
+                                    "widget": "number:int",
+                                    "value": 3
+                                },
+                                {
+                                    "choices": false,
+                                    "key": "BOTTOM_WATER",
+                                    "unit": "m",
+                                    "label": "Bottom layer (m)",
+                                    "status": "editable",
+                                    "widget": "number:int",
+                                    "value": 10
+                                }
+                            ]
+                        },
+                        {
+                            "area_type": "type_area",
+                            "key": "2",
+                            "label": "V\u00e4stkustens fjordar",
+                            "children": [
+                                {
+                                    "choices": [
+                                        1,
+                                        2,
+                                        3
+                                    ],
+                                    "key": "MIN_NR_YEARS",
+                                    "unit": "",
+                                    "label": "Minimum number of years ()",
+                                    "status": "editable",
+                                    "widget": "number:int",
+                                    "value": 3
+                                },
+                                {
+                                    "choices": false,
+                                    "key": "BOTTOM_WATER",
+                                    "unit": "m",
+                                    "label": "Bottom layer (m)",
+                                    "status": "editable",
+                                    "widget": "number:int",
+                                    "value": 10
+                                }
+                            ]
+                        },
+                        {
+                            "area_type": "viss_eu_cd",
+                            "key": "SE581700-113000",
+                            "label": "Gullmarn centralbass\u00e4ng",
                             "children": [
                                 {
                                     "choices": [
@@ -1169,13 +1285,6 @@
                             ]
                         }
                     ]
-                },
-                {
-                    "label": "Oxygen balance",
-                    "status": "readable",
-                    "value": false,
-                    "key": "qe_oxygen",
-                    "settings": []
                 }
             ]
         }

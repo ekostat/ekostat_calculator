@@ -1,28 +1,22 @@
 {
-    "workspace_uuid": "a377ee26-cd2d-411b-999c-073cd7a3dbd4",
+    "workspace_uuid": "d347d3bf-3f26-42f3-b261-d48253f9ba26",
     "data_sources": [
         {
             "status": true,
             "loaded": true,
-            "filename": "phytoplankton_sharkweb_data_Biovolume concentration_2007-2012_201809201903.txt",
+            "filename": "phytoplankton_sharkweb_data_Biovolume concentration_2007-2012_201809202109.txt",
             "datatype": "phytoplankton"
         },
         {
             "status": true,
             "loaded": true,
-            "filename": "chlorophyll_sharkweb_data_Chlorophyll-a_2007-2012_201809201903.txt",
+            "filename": "chlorophyll_sharkweb_data_Chlorophyll-a_2007-2012_201809202109.txt",
             "datatype": "chlorophyll"
         },
         {
             "status": true,
             "loaded": true,
-            "filename": "zoobenthos_sharkweb_data_BQIm_2007-2012_201809201903.txt",
-            "datatype": "zoobenthos"
-        },
-        {
-            "status": true,
-            "loaded": true,
-            "filename": "physicalchemical_sharkweb_data_all_2007-2012_201809201903.txt",
+            "filename": "physicalchemical_sharkweb_data_all_2007-2012_201809202109.txt",
             "datatype": "physicalchemical"
         }
     ]
