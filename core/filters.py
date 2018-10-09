@@ -91,7 +91,7 @@ class DataFilter(object):
         # If parameter is MYEAR we want to include also some month before to be
         # able to calculate winter status stretching over new year. 
         if parameter == 'MYEAR':
-            start_date = datetime.datetime(int(value_list[0])-1, 6, 1) # Include nov and dec
+            start_date = datetime.datetime(int(value_list[0])-1, 11, 1) # Include nov and dec
             stop_date = datetime.datetime(int(value_list[0])-1, 12, 31) # Include nov and dec 
             date_boolean = df['date'].between(start_date, stop_date) 
             boolean = boolean | date_boolean
