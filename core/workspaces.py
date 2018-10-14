@@ -462,7 +462,9 @@ class WorkStep(object):
         Updated:     20180419        by Lena Viktorsson
         Loads all types of settings, data and config files/objects. 
         """
-        
+        allowed_steps = ['step_2']
+        if self.name not in allowed_steps:
+            return False
         # All indicators in directory should be loaded automatically         
         # Load indicator setting files. Internal attr (_) since they are only used by other objects.  
         self._indicator_setting_files = {} 
@@ -479,6 +481,7 @@ class WorkStep(object):
             self.indicator_data_filter_settings[indicator.lower()] = core.SettingsDataFilter(obj)
             
         # Load Ref settings. Filter settings are using indicator_setting_files-objects as data
+        # TODO: this is doen twice why?
         self.indicator_ref_settings = {} 
         for indicator, obj in self._indicator_setting_files.items():
             self.indicator_ref_settings[indicator.lower()] = core.SettingsRef(obj) 
@@ -1703,24 +1706,32 @@ class WorkSpace(object):
         
         available_indicators = []
         filtered_data = self.get_filtered_data(step = step, subset = subset) # MW 20180718 Moved here
-        #for indicator, parameters in self.cfg['indicators'].items():
-        for indicator, row in self.mapping_objects['quality_element'].indicator_config.iterrows():
-            parameter_list = [item.strip() for item in row['parameters'].split(', ')]
-            #parameter_list = [item.strip() for item in parameters[0].split(', ')]
-#            print('subset', subset)
-            try:
-                #TODO: speed of pd.to_numeric?
-#                filtered_data = self.get_filtered_data(step = step, subset = subset) # MW 20180718 Moved outside loop
-                if len(filtered_data): # 20180611, MW added if 
-#                    self.filtered_data = filtered_data
-                    filtered_data[parameter_list].apply(pd.to_numeric).dropna(thresh = len(parameter_list)) # MW 20180718 
-#                    self.get_filtered_data(step = step, subset = subset)[parameter_list].apply(pd.to_numeric).dropna(thresh = len(parameter_list))
-                    available_indicators.append(indicator)
-            except KeyError as e:
-                #TODO: lägga till felmeddelande i log?
-#                print('7777777', indicator)
-#                print(e)
-                pass
+        if len(filtered_data): # 20180611, MW added if, LV 20181012 moved outside loop
+            #for indicator, parameters in self.cfg['indicators'].items():
+            for indicator, row in self.mapping_objects['quality_element'].indicator_config.iterrows():
+                parameter_list = [item.strip() for item in row['parameters'].split(', ')]
+                if 'indicator' in parameter_list[0] or 'qe' in parameter_list[0]:
+                    continue
+                #parameter_list = [item.strip() for item in parameters[0].split(', ')]
+    #            print('subset', subset)
+                try:
+                    #TODO: speed of pd.to_numeric? is pd.to_numeric really needed?
+                    if indicator == 'indicator_chl': 
+                        if parameter_list[0] in filtered_data.columns:
+                            if len(filtered_data.dropna(subset = [parameter_list[0]])) > 0:
+                                available_indicators.append(indicator)
+                        elif parameter_list[1] in filtered_data.columns:
+                            if len(filtered_data.dropna(subset = [parameter_list[1]])) > 0:
+                                available_indicators.append(indicator)
+                    else:
+                        filtered_data[parameter_list].apply(pd.to_numeric).dropna(thresh = len(parameter_list)) # MW 20180718 
+                        available_indicators.append(indicator)
+                except KeyError as e:
+                    #TODO: lägga till felmeddelande i log?
+    #                print('7777777', indicator)
+    #                print(e)
+                    print('{} not in filtered_data'.format(parameter_list))
+                    pass
 
         
         self.available_indicators = available_indicators            

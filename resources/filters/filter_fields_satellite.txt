@@ -1,0 +1,13 @@
+compulsory_fields	fields_index	sort_by_fields	use_parameters	visit_id_key	depth_key	parameter_key	value_key	qflag_key
+MYEAR		SDATE	CPHL_BTL	SERNO	DEPH	PARAM	VALUE	QFLAG
+SDATE		SERNO	SECCHI					
+STIME		SHIPC						
+DEPH		DEPH						
+STATN								
+LATIT_DD								
+LONGI_DD								
+VISS_EU_CD								
+WATER_BODY_NAME								
+SEA_BASIN								
+WATER_DISTRICT								
+WATER_TYPE_AREA								

@@ -41,7 +41,8 @@ workspace_directory = root_directory + '/workspaces'
 resource_directory = root_directory + '/resources'
 #alias = 'lena'
 user_id = 'test_user' #kanske ska vara off_line user?
-workspace_alias = 'lena_indicator' # kustzonsmodellen_3daydata
+# workspace_alias = 'lena_indicator' # kustzonsmodellen_3daydata
+workspace_alias = 'kustzonsmodellen_3daydata'
 
 # ## Initiate EventHandler
 print(root_directory)
@@ -104,18 +105,18 @@ w.apply_data_filter(step = 0) # This sets the first level of data filter in the 
 # w.copy_subset(source_uuid='default_subset', target_alias='test_kustzon') 
 ###############################################################################################################################
 # ### Choose subset name to load
-# subset_alias = 'test_kustzon'
-subset_alias = 'period_2007-2012_refvalues_2013'
+subset_alias = 'test_kustzon'
+# subset_alias = 'period_2007-2012_refvalues_2013'
 # subset_alias = 'test_subset'
 subset_uuid = ekos.get_unique_id_for_alias(workspace_alias = workspace_alias, subset_alias = subset_alias)
 print('subset_alias', subset_alias, 'subset_uuid', subset_uuid)
 ###############################################################################################################################
 # ### Set subset filters
 # #### year filter
-# w.set_data_filter(subset = subset_uuid, step=1, 
-#                          filter_type='include_list', 
-#                          filter_name='MYEAR', 
-#                          data=[2007,2008,2009,2010,2011,2012])#['2011', '2012', '2013']) #, 2014, 2015, 2016
+w.set_data_filter(subset = subset_uuid, step=1, 
+                         filter_type='include_list', 
+                         filter_name='MYEAR', 
+                         data=[])#['2011', '2012', '2013']) #2007,2008,2009,2010,2011,2012 , 2014, 2015, 2016
 ###############################################################################################################################
 # #### waterbody filter
 w.set_data_filter(subset = subset_uuid, step=1, 
@@ -148,13 +149,13 @@ w.get_available_indicators(subset= subset_uuid, step=2)
 # ### choose indicators
 #list(zip(typeA_list, df_step1.WATER_TYPE_AREA.unique()))
 # indicator_list = ['oxygen','din_winter','ntot_summer', 'ntot_winter', 'dip_winter', 'ptot_summer', 'ptot_winter','bqi', 'biov', 'chl', 'secchi']
-indicator_list = ['din_winter','ntot_summer', 'ntot_winter', 'dip_winter', 'ptot_summer', 'ptot_winter']
-#indicator_list = ['biov', 'chl']
+# indicator_list = ['din_winter','ntot_summer', 'ntot_winter', 'dip_winter', 'ptot_summer', 'ptot_winter']
+indicator_list = ['chl']
 # indicator_list = ['bqi', 'biov', 'chl', 'secchi']
 #indicator_list = ['bqi', 'secchi'] + ['biov', 'chl'] + ['din_winter']
 # indicator_list = ['din_winter','ntot_summer']
 indicator_list = ['indicator_' + indicator for indicator in indicator_list]
-# indicator_list = w.available_indicators
+indicator_list = w.available_indicators
 ###############################################################################################################################  
 # ### Apply indicator data filter
 print('apply indicator data filter to {}'.format(indicator_list))
@@ -182,7 +183,7 @@ w.get_step_object(step = 3, subset = subset_uuid).calculate_status(indicator_lis
 w.get_step_object(step = 3, subset = subset_uuid).calculate_quality_element(quality_element = 'nutrients')
 # w.get_step_object(step = 3, subset = subset_uuid).calculate_quality_element(quality_element = 'phytoplankton')
 # w.get_step_object(step = 3, subset = subset_uuid).calculate_quality_element(quality_element = 'bottomfauna')
-# w.get_step_object(step = 3, subset = subset_uuid).calculate_quality_element(quality_element = 'oxygen')
+w.get_step_object(step = 3, subset = subset_uuid).calculate_quality_element(quality_element = 'oxygen')
 # w.get_step_object(step = 3, subset = subset_uuid).calculate_quality_element(quality_element = 'secchi')
  
 # w.get_step_object(step = 3, subset = subset_uuid).calculate_quality_element(subset_unique_id = subset_uuid, quality_element = 'Phytoplankton')

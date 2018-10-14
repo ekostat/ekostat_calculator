@@ -696,6 +696,112 @@ class DataHandlerPhysicalChemical(DataFrameHandler):
         return ntri, ntra, ntrz, amon
     
     #==========================================================================
+    
+"""
+#==============================================================================
+#==============================================================================
+"""
+class DataHandlerPhysicalChemicalModel(DataFrameHandler):
+    """
+    """
+    def __init__(self, 
+                 filter_path=u'',
+                 export_directory='',
+                 parameter_mapping=None,
+                 no_qflags=False): # no_qflags for data that has no quality flags (model data..)
+        
+        super().__init__()
+        self.dtype = 'physicalchemicalmodel'
+        self.export_directory = export_directory
+        self.read_filter_file(file_path=filter_path)
+        self.parameter_mapping = parameter_mapping
+        self.no_qflags = no_qflags
+        
+        self.column_data = {} #pd.DataFrame()
+        self.row_data = {} #pd.DataFrame()
+
+    #==========================================================================
+    def _calculate_data(self):
+        """ 
+        Rewritten from parent
+        If there are no quality flags in data self.no_qflags is initialized 
+        as True
+        """
+#        print('_calculate_data')
+        if self.no_qflags:
+            self.calculate_din()
+        else:
+            self.calculate_din(ignore_qf_list=['B','S']) 
+
+        
+    #==========================================================================
+    def calculate_din(self, ignore_qf_list=[]):
+        """ 
+        Returns a vector calculated DIN. 
+        If NO3 is not present, value is np.nan 
+        """
+        din_list = []
+        
+        for no2, no3, nox, nh4 in zip(*self.get_nxx_lists(ignore_qf_list)):
+
+            if np.isnan(nox):
+                din = np.nan
+                if not np.isnan(no3):
+                    din = no3                    
+                    if not np.isnan(no2):
+                        din += no2
+                    if not np.isnan(nh4):
+                        din += nh4
+            else:
+                din = nox
+                if not np.isnan(nh4):
+                    din += nh4
+            
+            if np.isnan(din):
+                din=''
+            else:
+                din = str(round(din, 2))
+            din_list.append(din)
+            
+        if not 'DIN' in self.column_data:
+            self.column_data[self.source]['DIN'] = din_list
+        else:
+            self.column_data[self.source]['DIN_calulated'] = din_list
+                            
+    #==========================================================================
+    def get_float_list(self, key, ignore_qf=[]):
+        """
+        Get all values as floats
+        """
+        return utils.get_float_list_from_str(df=self.column_data[self.source], 
+                                             key=key, ignore_qf=ignore_qf)
+    
+    #==========================================================================
+    def get_nxx_lists(self, ignore_qf_list):
+        """
+        Returns 4 equal in length arrays for NO2, NO3, NO23, NH4..
+        If a parameter does not excist in the loaded dataset, an array filled 
+        with NaNs is returned for that specific parameter
+        """
+        if 'NTRI' in self.column_data[self.source]:
+            ntri = self.get_float_list(key='NTRI', ignore_qf=ignore_qf_list)
+        else:
+            ntri = [np.nan]*self.column_data[self.source].shape[0]
+        if 'NTRA' in self.column_data[self.source]:
+            ntra = self.get_float_list(key='NTRA', ignore_qf=ignore_qf_list)
+        else:
+            ntra = [np.nan]*self.column_data[self.source].shape[0]
+        if 'NTRZ' in self.column_data[self.source]:
+            ntrz = self.get_float_list(key='NTRZ', ignore_qf=ignore_qf_list)
+        else:
+            ntrz = [np.nan]*self.column_data[self.source].shape[0]
+        if 'AMON' in self.column_data[self.source]:
+            amon = self.get_float_list(key='AMON', ignore_qf=ignore_qf_list)
+        else:
+            amon = [np.nan]*self.column_data[self.source].shape[0]
+        return ntri, ntra, ntrz, amon
+    
+    #==========================================================================
                                       
 """
 #==============================================================================
@@ -870,7 +976,7 @@ class DataHandler(object):
                                                              export_directory=self.export_directory,
                                                              parameter_mapping=self.parameter_mapping)
 
-        self.physicalchemicalmodel = DataHandlerPhysicalChemical(filter_path=path_fields_filter+'filter_fields_physical_chemical_model.txt',
+        self.physicalchemicalmodel = DataHandlerPhysicalChemicalModel(filter_path=path_fields_filter+'filter_fields_physical_chemical_model.txt',
                                                                    export_directory=self.export_directory,
                                                                    parameter_mapping=self.parameter_mapping,
                                                                    no_qflags=True)        
@@ -1201,7 +1307,7 @@ class DataHandler(object):
 #                                                self.all_data['STIME']
                 
                 # MW: Add prioritized salinity 
-                self._add_prioritized_parameter('SALT', 'SALT_BTL', 'SALT_CTD') 
+                self._add_prioritized_parameter('SALT', 'SALT_BTL', 'SALT_CTD')
                 
                 # MW: Add prioritized temperature 
                 self._add_prioritized_parameter('TEMP', 'TEMP_BTL', 'TEMP_CTD')
@@ -1264,13 +1370,20 @@ class DataHandler(object):
         t0 = time.time()
         primary_par_qf = 'Q_' + primary_par
         secondary_par_qf = 'Q_' + secondary_par
-        
-        if not all([True if item in self.all_data.columns else False \
-                    for item in [primary_par, primary_par_qf, secondary_par, secondary_par_qf]]): 
-            return False
-        
         q_new_par = 'Q_'+new_par
         source_new_par = 'source_'+new_par
+        
+        if not all([True if item in self.all_data.columns else False \
+                    for item in [primary_par, primary_par_qf, secondary_par, secondary_par_qf]]):
+            if all([True if item in self.all_data.columns else False \
+                    for item in [primary_par, secondary_par]]): 
+                print('both parameters {} and {} in data but no q_flags'.format(primary_par, secondary_par))
+            elif primary_par in self.all_data.columns:
+                self.all_data[new_par] = self.all_data.loc[primary_par]
+                self.all_data[source_new_par] = primary_par
+            else:
+                return False
+        
         self.all_data[new_par] = np.nan
         self.all_data[q_new_par] = ''
         self.all_data[source_new_par] = ''

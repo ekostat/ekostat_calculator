@@ -120,7 +120,16 @@ class SaveLoadDelete(object):
             df = load_data_file(file_path=txt_file_path, sep='\t', encoding='cp1252',  fill_nan=u'')
         return df
     
-    
+    def load_dict(self, file_name):
+        
+        pickle_file_path = os.path.join(self.directory, self._pikle_file_name(file_name))
+        if os.path.exists(pickle_file_path):
+            with open(pickle_file_path, "rb") as fid: 
+                d = pickle.load(fid)
+        else:
+            print('{} not in {}'.format(file_name, self.directory))
+        
+        return d
     #==========================================================================
     def load_df(self, file_name='df_data', load_txt=False): 
         """

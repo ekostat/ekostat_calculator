@@ -1330,13 +1330,14 @@ class SettingsRef(SettingsBase):
     def _set_refval_dict(self):
         
 #         self.settings.indicator 
-        self.refval_pkl_path = self.settings.file_path.rstrip('.set')+'.pkl'
+        self.refval_pkl_path = self.settings.file_path.rstrip(os.path.basename(self.settings.file_path))+'evaluated_refeq.pkl'
         if not hasattr(self, 'refval_dict'):
             if os.path.exists(self.refval_pkl_path):
                 with open(self.refval_pkl_path, "rb") as fid: 
-                    self.refval_dict = pickle.load(fid)
+                    self.refval_dict = pickle.load(fid).get(self.settings.indicator+'.set', False)
             else:
-                self.refval_dict = {}
+                return False
+                #self.refval_dict = {}
             
     def eval_linear_salinity_eq(self, eq_str, s):
         
@@ -1367,6 +1368,18 @@ class SettingsRef(SettingsBase):
         if type(ref_value) is float:
             ref_value = ref_value
         elif type(ref_value) is str:
+            if water_body:
+                max_s = self.get_value(variable = 'SALINITY_MAX', water_body = water_body)
+            else:
+                max_s = self.get_value(variable = 'SALINITY_MAX', type_area = type_area)
+            if len(salinity) > 1:
+                salinity[salinity < 2] = 2
+                salinity[salinity > max_s] = max_s
+                ref_list = []
+                for s in salinity:
+                    get_s = str(s)[0:3]
+                    ref_list.append(self.refval_dict[ref_value].get(get_s))
+                return ref_list
             try: 
                 s = salinity
                 if water_body:
@@ -1376,7 +1389,8 @@ class SettingsRef(SettingsBase):
                 if s > max_s:
                     s = max_s
                 #print(s, ref_value)
-                ref_value = self.eval_salinity_eq(ref_value, s)
+                ref_value = self.refval_dict[ref_value][str(s)[0:3]]
+                #ref_value = self.eval_salinity_eq(ref_value, s)
                 #ref_value = eval(ref_value)
                 #print('resulting ref value: {}'.format(ref_value))
             except TypeError as e:
@@ -1481,11 +1495,21 @@ class SettingsRef(SettingsBase):
                     max_s = self.get_value(variable = 'SALINITY_MAX', type_area = type_area)
                 if s > max_s:
                     s = max_s
+                if s < 2:
+                    s = 2.0
                 #print(s, ref_value)
                 #boundarie = self.eval_salinity_eq(boundarie, s)
                 #exp_as_func = eval('lambda s: ' + boundarie)
                 #boundarie = exp_as_func(s)
-                boundarie = eval(boundarie)
+                get_s = str(s)[0:min(3,len(str(s)))]
+#                 print(boundarie, s, get_s)
+                if len(get_s) == 1:
+                    get_s = get_s+'.0'
+                try:
+                    boundarie = self.refval_dict[boundarie][get_s]
+                except KeyError:
+                    boundarie = eval(boundarie)
+                    self.refval_dict[boundarie].set_default(get_s, boundarie)
                 #print('resulting ref value: {}'.format(ref_value))
             except TypeError as e:
                 raise TypeError('{}\nSalinity TypeError, salinity must be int, float or nan but is {}'.format(e, repr(s)))
@@ -1501,7 +1525,7 @@ class SettingsRef(SettingsBase):
 
     
     #==========================================================================    
-    def get_ref_value_type(self, type_area = None, water_body = None):
+    def get_ref_value_type(self, type_area = None, water_body = None, get_eq = False):
         """
         Created     20180403    by Lena Viktorsson
         Updated     20180418    by Lena Viktorsson     
@@ -1513,11 +1537,18 @@ class SettingsRef(SettingsBase):
             ref_value = self.get_value(variable = 'REF_VALUE_LIMIT', water_body = water_body)
         else:
             ref_value = self.get_value(variable = 'REF_VALUE_LIMIT', type_area = type_area)
+        try:
+            ref_value = float(ref_value)
+        except ValueError:
+            pass
         
         if type(ref_value) is float:
             return 'float'
         elif type(ref_value) is str:
-            return 'str'
+            if get_eq:
+                return ref_value
+            else:
+                return 'str'
         elif not ref_value:
             return False
         else:

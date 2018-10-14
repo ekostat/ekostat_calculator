@@ -87,8 +87,9 @@ class IndicatorBase(object):
         self.ref_settings = self.parent_workspace_object.get_step_object(step = 2, subset = self.subset).get_indicator_ref_settings(self.name)
         # To be read from config-file
         # TODO: Add 'ALABO' and 'TEMP'
-        self.meta_columns = ['SDATE', 'YEAR', 'MONTH', 'STIME', 'POSITION', 'STATN', 'VISS_EU_CD', 'WATER_BODY_NAME', 'WATER_DISTRICT',
-       'WATER_TYPE_AREA', 'DEPH', 'RLABO', 'WADEP']
+        self.meta_columns = ['SDATE', 'YEAR', 'MONTH', 'STATN', 'VISS_EU_CD', 'WATER_BODY_NAME', 'WATER_DISTRICT',
+       'WATER_TYPE_AREA', 'DEPH']
+        self.meta_columns_shark = ['STIME', 'POSITION', 'RLABO', 'WADEP']
         self.parameter_list =  [item.strip() for item in self.mapping_objects['quality_element'].indicator_config.loc[self.name]['parameters'].split(', ')] #[item.strip() for item in self.parent_workspace_object.cfg['indicators'].loc[self.name][0].split(', ')]
         self.additional_parameter_list = []
         if type(self.mapping_objects['quality_element'].indicator_config.loc[self.name]['additional_parameters']) is str:
@@ -96,7 +97,7 @@ class IndicatorBase(object):
         else:
             self.additional_parameter_list = []
         self.direction_good = self.mapping_objects['quality_element'].indicator_config.loc[self.name]['direction_good']
-        self.column_list = self.meta_columns + self.parameter_list + self.additional_parameter_list
+        self.column_list = self.meta_columns + self.parameter_list + self.additional_parameter_list #+ self.meta_columns_shark 
         #print(self.column_list)
         self.indicator_parameter = self.parameter_list[0]
         # attributes that will be calculated
@@ -185,9 +186,31 @@ class IndicatorBase(object):
         #print(water_body,len(self.ref_settings.settings.refvalue_column))
         if len(self.ref_settings.settings.refvalue_column) == 0:
             return df
-
+        
+        HG_EQR_LIMIT = self.ref_settings.get_value(variable = 'HG_EQR_LIMIT', water_body = water_body)
+        GM_EQR_LIMIT = self.ref_settings.get_value(variable = 'GM_EQR_LIMIT', water_body = water_body)
+        MP_EQR_LIMIT = self.ref_settings.get_value(variable = 'MP_EQR_LIMIT', water_body = water_body)
+        PB_EQR_LIMIT = self.ref_settings.get_value(variable = 'PB_EQR_LIMIT', water_body = water_body)
+        
         #print(self.get_ref_value_type(water_body = water_body))
         if self.get_ref_value_type(water_body = water_body) == 'str':
+            salt_values = df.loc[:,self.salt_parameter].copy().values
+            ref_list = self.get_ref_value(water_body = water_body, salinity = salt_values)
+            df.loc[:,'REFERENCE_VALUE'] = ref_list
+            #TODO: should not enter here if ref value is not an equations
+            if not isinstance(ref_list, list):
+                ref_list = [ref_list]
+            
+            if self.direction_good == 'positive':
+                df.loc[:,'HG_VALUE_LIMIT'] = [item*HG_EQR_LIMIT for item in  ref_list]
+                df.loc[:,'GM_VALUE_LIMIT'] = [item*GM_EQR_LIMIT for item in  ref_list]
+                df.loc[:,'MP_VALUE_LIMIT'] = [item*MP_EQR_LIMIT for item in  ref_list]
+                df.loc[:,'PB_VALUE_LIMIT'] = [item*PB_EQR_LIMIT for item in  ref_list]
+            elif self.direction_good == 'negative':
+                df.loc[:,'HG_VALUE_LIMIT'] = [item/HG_EQR_LIMIT for item in  ref_list]
+                df.loc[:,'GM_VALUE_LIMIT'] = [item/GM_EQR_LIMIT for item in  ref_list]
+                df.loc[:,'MP_VALUE_LIMIT'] = [item/MP_EQR_LIMIT for item in  ref_list]
+                df.loc[:,'PB_VALUE_LIMIT'] = [item/PB_EQR_LIMIT for item in  ref_list]
             #print('ref_value is str')
 #            df.loc[:,'REFERENCE_VALUE'] = np.nan
 #             reference_values = []
@@ -196,22 +219,22 @@ class IndicatorBase(object):
 #             mp_values = []
 #             pb_values = []
 #             print('this is where the SettingWithCopyWarning i raised')
-            df.loc[:,'REFERENCE_VALUE'] = df[[self.salt_parameter, 'VISS_EU_CD']].apply(lambda x: self.get_boundarie(water_body = x['VISS_EU_CD'], salinity = x[self.salt_parameter], variable = 'REF_VALUE_LIMIT'), axis=1)
+#             df.loc[:,'REFERENCE_VALUE'] = df[[self.salt_parameter, 'VISS_EU_CD']].apply(lambda x: self.get_boundarie(water_body = x['VISS_EU_CD'], salinity = x[self.salt_parameter], variable = 'REF_VALUE_LIMIT'), axis=1)
 #             df.loc[:,'HG_VALUE_LIMIT'] = df[[self.salt_parameter, 'VISS_EU_CD']].apply(lambda x: self.get_boundarie(water_body = x['VISS_EU_CD'], salinity = x[self.salt_parameter], variable = 'HG_VALUE_LIMIT'), axis=1)
 #             df.loc[:,'GM_VALUE_LIMIT'] = df[[self.salt_parameter, 'VISS_EU_CD']].apply(lambda x: self.get_boundarie(water_body = x['VISS_EU_CD'], salinity = x[self.salt_parameter], variable = 'GM_VALUE_LIMIT'), axis=1)
 #             df.loc[:,'MP_VALUE_LIMIT'] = df[[self.salt_parameter, 'VISS_EU_CD']].apply(lambda x: self.get_boundarie(water_body = x['VISS_EU_CD'], salinity = x[self.salt_parameter], variable = 'MP_VALUE_LIMIT'), axis=1)
 #             df.loc[:,'PB_VALUE_LIMIT'] = df[[self.salt_parameter, 'VISS_EU_CD']].apply(lambda x: self.get_boundarie(water_body = x['VISS_EU_CD'], salinity = x[self.salt_parameter], variable = 'PB_VALUE_LIMIT'), axis=1)
             
-            if self.direction_good == 'positive':
-                df.loc[:,'HG_VALUE_LIMIT'] = df[['REFERENCE_VALUE', 'VISS_EU_CD']].apply(lambda x: x['REFERENCE_VALUE']*self.ref_settings.get_value(variable = 'HG_EQR_LIMIT', water_body = x['VISS_EU_CD']), axis=1)
-                df.loc[:,'GM_VALUE_LIMIT'] = df[['REFERENCE_VALUE', 'VISS_EU_CD']].apply(lambda x: x['REFERENCE_VALUE']*self.ref_settings.get_value(variable = 'GM_EQR_LIMIT', water_body = x['VISS_EU_CD']), axis=1)
-                df.loc[:,'MP_VALUE_LIMIT'] = df[['REFERENCE_VALUE', 'VISS_EU_CD']].apply(lambda x: x['REFERENCE_VALUE']*self.ref_settings.get_value(variable = 'MP_EQR_LIMIT', water_body = x['VISS_EU_CD']), axis=1)
-                df.loc[:,'PB_VALUE_LIMIT'] = df[['REFERENCE_VALUE', 'VISS_EU_CD']].apply(lambda x: x['REFERENCE_VALUE']*self.ref_settings.get_value(variable = 'PB_EQR_LIMIT', water_body = x['VISS_EU_CD']), axis=1)
-            elif self.direction_good == 'negative':
-                df.loc[:,'HG_VALUE_LIMIT'] = df[['REFERENCE_VALUE', 'VISS_EU_CD']].apply(lambda x: x['REFERENCE_VALUE']/self.ref_settings.get_value(variable = 'HG_EQR_LIMIT', water_body = x['VISS_EU_CD']), axis=1)
-                df.loc[:,'GM_VALUE_LIMIT'] = df[['REFERENCE_VALUE', 'VISS_EU_CD']].apply(lambda x: x['REFERENCE_VALUE']/self.ref_settings.get_value(variable = 'GM_EQR_LIMIT', water_body = x['VISS_EU_CD']), axis=1)
-                df.loc[:,'MP_VALUE_LIMIT'] = df[['REFERENCE_VALUE', 'VISS_EU_CD']].apply(lambda x: x['REFERENCE_VALUE']/self.ref_settings.get_value(variable = 'MP_EQR_LIMIT', water_body = x['VISS_EU_CD']), axis=1)
-                df.loc[:,'PB_VALUE_LIMIT'] = df[['REFERENCE_VALUE', 'VISS_EU_CD']].apply(lambda x: x['REFERENCE_VALUE']/self.ref_settings.get_value(variable = 'PB_EQR_LIMIT', water_body = x['VISS_EU_CD']), axis=1)
+#             if self.direction_good == 'positive':
+#                 df.loc[:,'HG_VALUE_LIMIT'] = df[['REFERENCE_VALUE', 'VISS_EU_CD']].apply(lambda x: x['REFERENCE_VALUE']*self.ref_settings.get_value(variable = 'HG_EQR_LIMIT', water_body = x['VISS_EU_CD']), axis=1)
+#                 df.loc[:,'GM_VALUE_LIMIT'] = df[['REFERENCE_VALUE', 'VISS_EU_CD']].apply(lambda x: x['REFERENCE_VALUE']*self.ref_settings.get_value(variable = 'GM_EQR_LIMIT', water_body = x['VISS_EU_CD']), axis=1)
+#                 df.loc[:,'MP_VALUE_LIMIT'] = df[['REFERENCE_VALUE', 'VISS_EU_CD']].apply(lambda x: x['REFERENCE_VALUE']*self.ref_settings.get_value(variable = 'MP_EQR_LIMIT', water_body = x['VISS_EU_CD']), axis=1)
+#                 df.loc[:,'PB_VALUE_LIMIT'] = df[['REFERENCE_VALUE', 'VISS_EU_CD']].apply(lambda x: x['REFERENCE_VALUE']*self.ref_settings.get_value(variable = 'PB_EQR_LIMIT', water_body = x['VISS_EU_CD']), axis=1)
+#             elif self.direction_good == 'negative':
+#                 df.loc[:,'HG_VALUE_LIMIT'] = df[['REFERENCE_VALUE', 'VISS_EU_CD']].apply(lambda x: x['REFERENCE_VALUE']/self.ref_settings.get_value(variable = 'HG_EQR_LIMIT', water_body = x['VISS_EU_CD']), axis=1)
+#                 df.loc[:,'GM_VALUE_LIMIT'] = df[['REFERENCE_VALUE', 'VISS_EU_CD']].apply(lambda x: x['REFERENCE_VALUE']/self.ref_settings.get_value(variable = 'GM_EQR_LIMIT', water_body = x['VISS_EU_CD']), axis=1)
+#                 df.loc[:,'MP_VALUE_LIMIT'] = df[['REFERENCE_VALUE', 'VISS_EU_CD']].apply(lambda x: x['REFERENCE_VALUE']/self.ref_settings.get_value(variable = 'MP_EQR_LIMIT', water_body = x['VISS_EU_CD']), axis=1)
+#                 df.loc[:,'PB_VALUE_LIMIT'] = df[['REFERENCE_VALUE', 'VISS_EU_CD']].apply(lambda x: x['REFERENCE_VALUE']/self.ref_settings.get_value(variable = 'PB_EQR_LIMIT', water_body = x['VISS_EU_CD']), axis=1)
  
             
 #             df.loc[:,'HG_BOUNDARIE_VALUE'] = df[['REFERENCE_VALUE', 'VISS_EU_CD']].apply(lambda x: x['REFERENCE_VALUE']*self.ref_settings.get_value(variable = 'HG_EQR_LIMIT', water_body = x['VISS_EU_CD']), axis=1)
@@ -246,22 +269,32 @@ class IndicatorBase(object):
 #             df.loc[:,'MP_BOUNDARIE'] = pd.Series(mp_values, index = df.index)
 #             df.loc[:,'PB_BOUNDARIE'] = pd.Series(pb_values, index = df.index)
         else:
-            ref_value = self.get_boundarie(water_body, variable = 'REF_VALUE_LIMIT')
+            ref_value = self.get_ref_value(water_body = water_body, variable = 'REF_VALUE_LIMIT')
             df.loc[:,'REFERENCE_VALUE'] = ref_value
 #             df.loc[:,'HG_BOUNDARIE_VALUE'] = self.ref_settings.get_value(variable = 'HG_EQR_LIMIT', water_body = water_body)
 #             df.loc[:,'GM_BOUNDARIE_VALUE'] = self.ref_settings.get_value(variable = 'GM_EQR_LIMIT', water_body = water_body)
 #             df.loc[:,'MP_BOUNDARIE_VALUE'] = self.ref_settings.get_value(variable = 'MP_EQR_LIMIT', water_body = water_body)
 #             df.loc[:,'PB_BOUNDARIE_VALUE'] = self.ref_settings.get_value(variable = 'PB_EQR_LIMIT', water_body = water_body)
+#             if self.direction_good == 'positive':
+#                 df.loc[:,'HG_VALUE_LIMIT'] = ref_value*self.get_boundarie(water_body, variable = 'HG_VALUE_LIMIT')
+#                 df.loc[:,'GM_VALUE_LIMIT'] = ref_value*self.get_boundarie(water_body, variable = 'GM_VALUE_LIMIT')
+#                 df.loc[:,'MP_VALUE_LIMIT'] = ref_value*self.get_boundarie(water_body, variable = 'MP_VALUE_LIMIT')
+#                 df.loc[:,'PB_VALUE_LIMIT'] = ref_value*self.get_boundarie(water_body, variable = 'PB_VALUE_LIMIT')
+#             elif self.direction_good == 'negative':
+#                 df.loc[:,'HG_VALUE_LIMIT'] = ref_value/self.get_boundarie(water_body, variable = 'HG_VALUE_LIMIT')
+#                 df.loc[:,'GM_VALUE_LIMIT'] = ref_value/self.get_boundarie(water_body, variable = 'GM_VALUE_LIMIT')
+#                 df.loc[:,'MP_VALUE_LIMIT'] = ref_value/self.get_boundarie(water_body, variable = 'MP_VALUE_LIMIT')
+#                 df.loc[:,'PB_VALUE_LIMIT'] = ref_value/self.get_boundarie(water_body, variable = 'PB_VALUE_LIMIT')
             if self.direction_good == 'positive':
-                df.loc[:,'HG_VALUE_LIMIT'] = ref_value*self.get_boundarie(water_body, variable = 'HG_VALUE_LIMIT')
-                df.loc[:,'GM_VALUE_LIMIT'] = ref_value*self.get_boundarie(water_body, variable = 'GM_VALUE_LIMIT')
-                df.loc[:,'MP_VALUE_LIMIT'] = ref_value*self.get_boundarie(water_body, variable = 'MP_VALUE_LIMIT')
-                df.loc[:,'PB_VALUE_LIMIT'] = ref_value*self.get_boundarie(water_body, variable = 'PB_VALUE_LIMIT')
+                df.loc[:,'HG_VALUE_LIMIT'] = ref_value*HG_EQR_LIMIT
+                df.loc[:,'GM_VALUE_LIMIT'] = ref_value*GM_EQR_LIMIT
+                df.loc[:,'MP_VALUE_LIMIT'] = ref_value*MP_EQR_LIMIT
+                df.loc[:,'PB_VALUE_LIMIT'] = ref_value*PB_EQR_LIMIT
             elif self.direction_good == 'negative':
-                df.loc[:,'HG_VALUE_LIMIT'] = ref_value/self.get_boundarie(water_body, variable = 'HG_VALUE_LIMIT')
-                df.loc[:,'GM_VALUE_LIMIT'] = ref_value/self.get_boundarie(water_body, variable = 'GM_VALUE_LIMIT')
-                df.loc[:,'MP_VALUE_LIMIT'] = ref_value/self.get_boundarie(water_body, variable = 'MP_VALUE_LIMIT')
-                df.loc[:,'PB_VALUE_LIMIT'] = ref_value/self.get_boundarie(water_body, variable = 'PB_VALUE_LIMIT')
+                df.loc[:,'HG_VALUE_LIMIT'] = ref_value/HG_EQR_LIMIT
+                df.loc[:,'GM_VALUE_LIMIT'] = ref_value/GM_EQR_LIMIT
+                df.loc[:,'MP_VALUE_LIMIT'] = ref_value/MP_EQR_LIMIT
+                df.loc[:,'PB_VALUE_LIMIT'] = ref_value/PB_EQR_LIMIT
                                     
 #        return df
 
@@ -574,9 +607,12 @@ class IndicatorBase(object):
                 continue
 #            df = df[self.column_list]
             if self.name == 'indicator_chl':
-                df = filtered_data.dropna(subset = self.parameter_list[0:1], how = 'all').copy()
+                if self.parameter_list[0] in filtered_data.columns and self.parameter_list[1] in filtered_data.columns:
+                    df = filtered_data.dropna(subset = self.parameter_list[0:1], how = 'all').copy()
+                else:
+                    df = filtered_data.dropna(subset = [self.indicator_parameter]).copy()
             elif self.name == 'indicator_secchi':
-                df = filtered_data.dropna(subset = [self.indicator_parameter]).drop_duplicates(subset = ['SDATE', 'VISS_EU_CD', 'SECCHI']).copy()
+                df = filtered_data.dropna(subset = [self.indicator_parameter]).drop_duplicates(subset = ['SDATE', 'VISS_EU_CD', 'STATN', 'SECCHI']).copy()
             elif self.name == 'indicator_oxygen':
                 df = filtered_data.dropna(subset = [self.indicator_parameter]).copy()
                 tol_BW = 5
@@ -678,6 +714,16 @@ class IndicatorBase(object):
         To get reference value from equation you need to supply both type_area and salinity
         """
         return self.ref_settings.get_ref_value_type(type_area = type_area, water_body = water_body)
+    #==========================================================================        
+    def get_ref_value(self, type_area = None, water_body = None, salinity = None, variable = None):
+        """
+        Created:        20181013     by Lena
+        Last modified:  
+        Get referencevalue either from equation or directly from settings
+        To get reference value from equation you need to supply both type_area and salinity
+        
+        """
+        return self.ref_settings.get_ref_value(type_area = type_area, water_body = water_body, salinity = salinity)
     
     #==========================================================================        
     def get_boundarie(self, type_area = None, water_body = None, salinity = None, variable = None):
@@ -1351,7 +1397,24 @@ class IndicatorNutrients(IndicatorBase):
         beskrivning i föreskrift för slutlig statusklassificering av hela kvalitetsfaktorn.
         Görs i quality_factors, def calculate_quality_factor()
         """
+###############################################################################
+class IndicatorNutrients_SCM(IndicatorNutrients): 
+    """
+    Class with methods common for all nutrient indicators (TOTN, DIN, TOTP and DIP). 
+    """
+    
+    def __init__(self, subset_uuid, parent_workspace_object, indicator):
+        super().__init__(subset_uuid, parent_workspace_object, indicator)  
+        self.indicator_parameter = self.parameter_list[0]
+        self.salt_parameter = self.parameter_list[-1] 
+        # CHANGES from parentclass
+        self.meta_columns = ['SDATE', 'YEAR', 'MONTH', 'STATN', 'VISS_EU_CD', 'WATER_BODY_NAME', 'WATER_DISTRICT',
+       'WATER_TYPE_AREA', 'DEPH']
+        self.column_list = self.meta_columns + self.parameter_list + self.additional_parameter_list
         
+        # Set dataframe to use        
+        self._set_water_body_indicator_df(water_body = None)
+                
 ###############################################################################
 class IndicatorOxygen(IndicatorBase): 
     """
@@ -1361,8 +1424,8 @@ class IndicatorOxygen(IndicatorBase):
     def __init__(self, subset_uuid, parent_workspace_object, indicator):
         super().__init__(subset_uuid, parent_workspace_object, indicator)  
         self.indicator_parameter = self.parameter_list[0]
-        self.Hypsographs = self.mapping_objects['hypsographs']
-        self.column_list = self.column_list + ['source_DOXY']
+        self.Hypsographs = self.mapping_objects['hypsographs']            
+        self.column_list = self.column_list #+ ['source_DOXY']
         self.deficiency_limit = 3.5
         self.tol_BW = 10
         self.test1_result_array = []
@@ -1370,7 +1433,10 @@ class IndicatorOxygen(IndicatorBase):
         self.test2_result_array = []
         self.test1_no_yr = np.nan
         self.df_bottomwater = {}
-        # Set dataframe to use        
+        # Set dataframe to use   
+        if 'source_DOXY' not in self.get_filtered_data(subset = self.subset, step = 'step_2').columns:
+            # TODO: add here source_DOXy here if not in data?
+            pass
         self._set_water_body_indicator_df(water_body = None)
         
     ############################################################################### 
@@ -1403,6 +1469,8 @@ class IndicatorOxygen(IndicatorBase):
         # df = df[df['MONTH'].isin(list(range(1,5+1)))]
 #        maxD = self.Hypsographs.get_max_depth_of_water_body(water_body)
         minimum_deficiency_depth = df.loc[df[self.indicator_parameter] <= self.deficiency_limit, 'DEPH'].min()
+        if np.isnan(minimum_deficiency_depth):
+            minimum_deficiency_depth = self.maxD
         if minimum_deficiency_depth > self.maxD:
             minimum_deficiency_depth = self.maxD
         self.minimum_deficiency_depth = minimum_deficiency_depth
@@ -1715,7 +1783,12 @@ class IndicatorPhytoplankton(IndicatorBase):
     
     def __init__(self, subset_uuid, parent_workspace_object, indicator):
         super().__init__(subset_uuid, parent_workspace_object, indicator) 
-        self.indicator_parameter = self.parameter_list[0]
+        if self.name == 'indicator_chl':
+            if self.parameter_list[0] in self.get_filtered_data(subset = self.subset, step = 'step_2').columns:
+                self.indicator_parameter = self.parameter_list[0]
+            else:
+                self.indicator_parameter = self.parameter_list[1]
+                self.column_list.remove(self.parameter_list[0])
         self.salt_parameter = self.parameter_list[-1]
         # Set dataframe to use        
         self._set_water_body_indicator_df(water_body = None)
@@ -1747,10 +1820,10 @@ class IndicatorPhytoplankton(IndicatorBase):
         if water_body not in self.water_body_indicator_df.keys():
             return False, False, False, False
         df = self.water_body_indicator_df[water_body]
-        if self.name == 'chl' and len(df.dropna(subset = [self.indicator_parameter])) == 0 and len(df.dropna(subset = [self.parameter_list[1]])) > 0: 
-            indicator_parameter = self.parameter_list[1]
-        else:
-            indicator_parameter = self.parameter_list[0]
+#         if self.name == 'chl' and len(df.dropna(subset = [self.indicator_parameter])) == 0 and len(df.dropna(subset = [self.parameter_list[1]])) > 0: 
+#             indicator_parameter = self.parameter_list[1]
+#         else:
+#             indicator_parameter = self.parameter_list[0]
         
         if len(df) < 1:
             return False, False, False, False
@@ -1776,7 +1849,7 @@ class IndicatorPhytoplankton(IndicatorBase):
         
         # TODO: what about different stations in one waterbody?
         
-        agg_dict1 = {indicator_parameter: 'mean', self.salt_parameter: 'mean', 
+        agg_dict1 = {self.indicator_parameter: 'mean', self.salt_parameter: 'mean', 
                      'REFERENCE_VALUE': 'mean', 'HG_VALUE_LIMIT': 'mean', 'GM_VALUE_LIMIT': 'mean', 'MP_VALUE_LIMIT': 'mean', 'PB_VALUE_LIMIT': 'mean', 
                       'DEPH': 'count', 'VISS_EU_CD': 'max', 'WATER_BODY_NAME': 'max', 'WATER_TYPE_AREA': 'max'}       
         if len(self.additional_parameter_list) > 0:
@@ -1787,14 +1860,14 @@ class IndicatorPhytoplankton(IndicatorBase):
         by_date.rename(columns={'DEPH':'DEPH_count'}, inplace=True)
         
 #        by_date = self._add_reference_value_to_df(by_date, water_body)
-        by_date['local_EQR'] = by_date.REFERENCE_VALUE/by_date[indicator_parameter]
+        by_date['local_EQR'] = by_date.REFERENCE_VALUE/by_date[self.indicator_parameter]
         by_date['local_EQR'] = by_date['local_EQR'].apply(set_value_above_one)
         by_date['global_EQR'], by_date['STATUS'] = zip(*by_date['local_EQR'].apply(self._calculate_global_EQR_from_local_EQR, water_body = water_body))
         #by_date.set_index(keys = 'VISS_EU_CD', append =True, drop = False, inplace = True)        
         
         """ 2) Medelvärdet av EK för parametern beräknas för varje år och station.
         """
-        agg_dict1 = {'local_EQR': 'mean', indicator_parameter: 'mean', self.salt_parameter: 'mean', 'SDATE': 'count', 'VISS_EU_CD': 'max', 'WATER_BODY_NAME': 'max', 'WATER_TYPE_AREA': 'max'}       
+        agg_dict1 = {'local_EQR': 'mean', self.indicator_parameter: 'mean', self.salt_parameter: 'mean', 'SDATE': 'count', 'VISS_EU_CD': 'max', 'WATER_BODY_NAME': 'max', 'WATER_TYPE_AREA': 'max'}       
         
         by_year_pos = by_date.groupby(['YEAR', 'STATN']).agg({**agg_dict1, **agg_dict2}).reset_index()
         by_year_pos.rename(columns={'SDATE':'DATE_count'}, inplace=True)
@@ -1804,7 +1877,7 @@ class IndicatorPhytoplankton(IndicatorBase):
         """
         3) Medelvärdet av EK för parametern beräknas för varje år.
         """
-        agg_dict1 = {'local_EQR': 'mean', indicator_parameter: 'mean', self.salt_parameter: 'mean', 'STATN': 'count', 'VISS_EU_CD': 'max', 'WATER_BODY_NAME': 'max', 'WATER_TYPE_AREA': 'max'}       
+        agg_dict1 = {'local_EQR': 'mean', self.indicator_parameter: 'mean', self.salt_parameter: 'mean', 'STATN': 'count', 'VISS_EU_CD': 'max', 'WATER_BODY_NAME': 'max', 'WATER_TYPE_AREA': 'max'}       
         
         by_year = by_year_pos.groupby(['YEAR']).agg({**agg_dict1}).reset_index() #, **agg_dict2
         by_year.rename(columns={'STATN':'STATN_count'}, inplace=True)
@@ -1817,7 +1890,7 @@ class IndicatorPhytoplankton(IndicatorBase):
         4) Medelvärdet av EK för varje parameter och vattenförekomst (beräknas för minst
         en treårsperiod)
         """
-        agg_dict1 = {'local_EQR': 'mean', indicator_parameter: 'mean', self.salt_parameter: 'mean', 'YEAR': 'count', 'YEAR': 'count', 'WATER_BODY_NAME': 'max', 'WATER_TYPE_AREA': 'max'}       
+        agg_dict1 = {'local_EQR': 'mean', self.indicator_parameter: 'mean', self.salt_parameter: 'mean', 'YEAR': 'count', 'YEAR': 'count', 'WATER_BODY_NAME': 'max', 'WATER_TYPE_AREA': 'max'}       
         
         by_period = by_year.groupby(['VISS_EU_CD']).agg({**agg_dict1}).reset_index() #, **agg_dict2
         by_period.rename(columns={'YEAR':'YEAR_count'}, inplace=True)
@@ -1928,7 +2001,7 @@ class IndicatorSecchi(IndicatorBase):
         2) Medelvärdet av local_EQR för varje siktdjup och vattenförekomst (beräknas för minst
         en treårsperiod)
         """
-        agg_dict1 = {'local_EQR': 'mean', self.indicator_parameter: 'mean', 'YEAR': 'count', 'WATER_BODY_NAME': 'max', 'WATER_TYPE_AREA': 'max'}       
+        agg_dict1 = {'local_EQR': 'mean', self.indicator_parameter: 'mean', 'YEAR': 'nunique', 'WATER_BODY_NAME': 'max', 'WATER_TYPE_AREA': 'max'}       
         if len(self.additional_parameter_list) > 0:
             agg_dict2 = {key: 'mean' for key in self.additional_parameter_list}
         else: agg_dict2 = {}  
