@@ -125,11 +125,13 @@ class SaveLoadDelete(object):
         pickle_file_path = os.path.join(self.directory, self._pikle_file_name(file_name))
         if os.path.exists(pickle_file_path):
             with open(pickle_file_path, "rb") as fid: 
-                d = pickle.load(fid)
+                dicten = pickle.load(fid)
         else:
             print('{} not in {}'.format(file_name, self.directory))
+            return False
         
-        return d
+        return dicten
+    
     #==========================================================================
     def load_df(self, file_name='df_data', load_txt=False): 
         """
@@ -185,7 +187,18 @@ class SaveLoadDelete(object):
         with open(pickle_file_path, "wb") as fid:
             pickle.dump(df, fid) 
 #        df.to_pickle(pickle_file_path)
+    
+    #==========================================================================
+    def save_dict(self, dicten, file_name=None): 
+        """
+        Created:        20181016     by Lena
         
+        Saves a dictionary as a pickle. 
+        """ 
+        pickle_file_path = os.path.join(self.directory, self._pikle_file_name(file_name)) 
+        # Save pickle file 
+        with open(pickle_file_path, "wb") as fid:
+            pickle.dump(dicten, fid)   
         
     #==========================================================================
     def delete_files(self, file_name='df_data'): 

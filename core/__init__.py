@@ -10,6 +10,7 @@ from . import exceptions
 from .cache import Cache
 
 from .filters import DataFilter
+from .filters import ReferenceEquations
 from .filters import SettingsFile
 from .filters import SettingsRef
 from .filters import SettingsDataFilter

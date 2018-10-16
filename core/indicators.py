@@ -97,7 +97,7 @@ class IndicatorBase(object):
         else:
             self.additional_parameter_list = []
         self.direction_good = self.mapping_objects['quality_element'].indicator_config.loc[self.name]['direction_good']
-        self.column_list = self.meta_columns + self.parameter_list + self.additional_parameter_list #+ self.meta_columns_shark 
+        self.column_list = self.meta_columns + self.parameter_list + self.additional_parameter_list + self.meta_columns_shark 
         #print(self.column_list)
         self.indicator_parameter = self.parameter_list[0]
         # attributes that will be calculated

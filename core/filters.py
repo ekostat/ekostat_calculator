@@ -1248,8 +1248,94 @@ class SettingsFile(object):
 
         return df[parameter].isin(value_list)
     
+###############################################################################
+class ReferenceEquations(object):
+    
+    #==========================================================================
+    def __init__(self, indicator = None, settingsref_obj = False):
+                
+        self.indicator = indicator
+        self.settingsref_obj = settingsref_obj
         
+        if self.settingsref_obj:
+            self.indicator = os.path.basename(self.settingsref_obj.settings.file_path)[:-4]
+            self.directory_path = self.settingsref_obj.settings.file_path.strip(os.path.basename(self.settingsref_obj.settings.file_path))  
+             
+            
+    #==========================================================================
+    def add_salinities(self, equation, salinities):
         
+        if not hasattr(self, 'refval_dict'):
+            self.refval_dict = {}
+            self.add_equation(equation)
+            for s in salinities:
+                self.refval_dict[equation].setdefault(str(s), eval(equation))       
+        else:
+            self.add_equation(equation)
+            for s in salinities:
+                if str(s) not in self.refval_dict[equation].keys():
+                    self.refval_dict[equation].setdefault(str(s), eval(equation))
+                    
+    #==========================================================================
+    def add_equation(self, equation):     
+        
+        if equation not in self.refval_dict.keys():
+            self.refval_dict[equation] = {}
+            
+    #==========================================================================        
+    def get_equation_list(self):
+        
+        return list(self.refval_dict.keys())
+    #==========================================================================                
+    def set_refval_dict_from_settingsref_obj(self):
+        """
+        create a dict with equations and salinities as keys from settingsfile
+        reads equations, min salinity and max salinity from settingsfile
+        """ 
+        refval_col = self.settingsref_obj.settings.refvalue_column  
+        min_s = 2 
+        for ix in self.settingsref_obj.settings.df.index:
+            equation = self.settingsref_obj.settings.df.loc[ix, refval_col].values[0]
+            try:
+                float(equation)
+            except(ValueError):
+                max_s = int(self.settingsref_obj.settings.df.loc[ix, 'SALINITY_MAX'])
+                # TODO, read from settingsfile 
+                # min_s = self.settingsref_obj.df.loc[ix, 'ref_Salinity_min_int']
+                salinities = np.linspace(min_s,max_s, (max_s-min_s)*10+1)
+                self.add_salinities(equation, salinities)
+        if not hasattr(self, 'refval_dict'):
+            self.refval_dict = False
+            
+        self.save_pickle()
+
+    #==========================================================================
+    def save_pickle(self):
+        
+        if not hasattr(self, 'sld'):
+            self.sld = core.SaveLoadDelete(self.directory_path)
+            
+        self.sld.save_dict(self.refval_dict, self.indicator+'.pkl')
+        
+    #==========================================================================
+    def load_pickle(self):
+        
+        if not hasattr(self, 'sld'):
+            self.sld = core.SaveLoadDelete(self.directory_path)
+            
+        refval_dict = self.sld.load_dict(self.indicator+'.pkl')
+        
+        if refval_dict:
+            self.refval_dict = refval_dict
+            return self.refval_dict
+        else:
+            return False
+        
+    #==========================================================================
+    def save_txt(self):
+        
+        pass
+    
 
 ###############################################################################
 class SettingsBase(object): 
@@ -1325,9 +1411,22 @@ class SettingsRef(SettingsBase):
         self.settings = settings_file_object 
         self.settings.connected_to_ref_settings_object = True
         self.allowed_variables = self.settings.ref_columns
+        self.refeq_obj = core.ReferenceEquations(settingsref_obj = self)
         self._set_refval_dict()
-    
+        
+    #========================================================================== 
     def _set_refval_dict(self):
+        
+        refval_dict = self.refeq_obj.load_pickle()
+        
+        if refval_dict:
+            self.refval_dict = refval_dict
+        else:
+            self.refeq_obj.set_refval_dict_from_settingsref_obj()
+            self.refval_dict = self.refeq_obj.refval_dict
+        
+    #==========================================================================     
+    def _set_refval_dict_old(self):
         
 #         self.settings.indicator 
         self.refval_pkl_path = self.settings.file_path.rstrip(os.path.basename(self.settings.file_path))+'evaluated_refeq.pkl'
@@ -1336,6 +1435,19 @@ class SettingsRef(SettingsBase):
                 with open(self.refval_pkl_path, "rb") as fid: 
                     self.refval_dict = pickle.load(fid).get(self.settings.indicator+'.set', False)
             else:
+#                 d = {}
+#                 min_s = 2
+#                 for key in setting_paths:
+#                     if 'ref_ref_value_limit_eq' not in setting_paths[key].columns:
+#                             continue
+#                     d[key] = {}
+#                     for ix in setting_paths[key].index:
+#                         eq = setting_paths[key].loc[ix, 'ref_ref_value_limit_eq']
+#                         d[key][eq] = {}
+#                         max_s = setting_paths[key].loc[ix, 'ref_Salinity_max_int']
+#                         S = np.linspace(min_s,max_s, (max_s-min_s)*10+1)
+#                         for s in S:
+#                             d[key][eq].setdefault(str(s), eval(eq))
                 return False
                 #self.refval_dict = {}
             
@@ -1376,9 +1488,21 @@ class SettingsRef(SettingsBase):
                 salinity[salinity < 2] = 2
                 salinity[salinity > max_s] = max_s
                 ref_list = []
+                salinities_added = False
                 for s in salinity:
-                    get_s = str(s)[0:3]
-                    ref_list.append(self.refval_dict[ref_value].get(get_s))
+                    if float(s) >= 10:
+                        get_s = str(s)[0:4]
+                    else:
+                        get_s = str(s)[0:3]
+                    get_s = str(s)
+                    if self.refval_dict[ref_value].get(get_s):
+                        ref_list.append(self.refval_dict[ref_value].get(get_s))
+                    else:
+                        self.refeq_obj.add_salinities(ref_value, [s])
+                        ref_list.append(self.refval_dict[ref_value].get(get_s))
+                        salinities_added = True
+                if salinities_added:
+                    self.refeq_obj.save_pickle()
                 return ref_list
             try: 
                 s = salinity
