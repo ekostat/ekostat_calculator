@@ -61,7 +61,6 @@ class Load(object):
         
         return array
     
-    
     #==========================================================================
         
      
@@ -79,23 +78,23 @@ class SaveLoadDelete(object):
     
     def __init__(self, directory): 
         self.directory = directory 
-        
-    
+
     #==========================================================================
     def _strip_name(self, file_name):
         return file_name.split('.')[0] 
-    
-    
+
     #==========================================================================
     def _pikle_file_name(self, file_name): 
         return self._strip_name(file_name) + '.pkl'
-        
-    
+
+    #==========================================================================
+    def _json_file_name(self, file_name): 
+        return self._strip_name(file_name) + '.json'
+
     #==========================================================================
     def _txt_file_name(self, file_name): 
         return self._strip_name(file_name) + '.txt'
-        
-    
+
     #==========================================================================
     def old_load_df(self, file_name='df_data', load_txt=False): 
         """
@@ -120,7 +119,7 @@ class SaveLoadDelete(object):
             df = load_data_file(file_path=txt_file_path, sep='\t', encoding='cp1252',  fill_nan=u'')
         return df
     
-    def load_dict(self, file_name):
+    def load_dict_from_pkl(self, file_name):
         
         pickle_file_path = os.path.join(self.directory, self._pikle_file_name(file_name))
         if os.path.exists(pickle_file_path):
@@ -132,6 +131,22 @@ class SaveLoadDelete(object):
         
         return dicten
     
+    def load_dict_from_json(self, file_name):
+        """
+        Created:        20181017     by Lena
+        
+        Saves a dictionary as a json. 
+        """ 
+        json_file_path = os.path.join(self.directory, self._json_file_name(file_name)) 
+        if os.path.exists(json_file_path):
+            with codecs.open(json_file_path, 'r', encoding = 'cp1252') as fid:
+                dicten = json.load(fid)
+        else:
+            print('{} not in {}'.format(file_name, self.directory))
+            return False
+        
+        return dicten
+        
     #==========================================================================
     def load_df(self, file_name='df_data', load_txt=False): 
         """
@@ -189,7 +204,7 @@ class SaveLoadDelete(object):
 #        df.to_pickle(pickle_file_path)
     
     #==========================================================================
-    def save_dict(self, dicten, file_name=None): 
+    def save_dict_to_pkl(self, dicten, file_name=None): 
         """
         Created:        20181016     by Lena
         
@@ -199,7 +214,17 @@ class SaveLoadDelete(object):
         # Save pickle file 
         with open(pickle_file_path, "wb") as fid:
             pickle.dump(dicten, fid)   
+    
+    def save_dict_to_json(self, dicten = None, file_name=None):
+        """
+        Created:        20181017     by Lena
         
+        Saves a dictionary as a json. 
+        """ 
+        json_file_path = os.path.join(self.directory, self._json_file_name(file_name)) 
+        with codecs.open(json_file_path, 'w', encoding = 'cp1252') as fid:
+            json.dump(dicten, fid, indent = 4)
+            
     #==========================================================================
     def delete_files(self, file_name='df_data'): 
         """

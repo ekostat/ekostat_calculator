@@ -1307,7 +1307,7 @@ class ReferenceEquations(object):
         if not hasattr(self, 'refval_dict'):
             self.refval_dict = False
             
-        self.save_pickle()
+        self.save_json()
 
     #==========================================================================
     def save_pickle(self):
@@ -1315,15 +1315,37 @@ class ReferenceEquations(object):
         if not hasattr(self, 'sld'):
             self.sld = core.SaveLoadDelete(self.directory_path)
             
-        self.sld.save_dict(self.refval_dict, self.indicator+'.pkl')
+        self.sld.save_dict_to_pkl(self.refval_dict, self.indicator+'.pkl')
         
-    #==========================================================================
-    def load_pickle(self):
+        #==========================================================================
+    def save_json(self):
         
         if not hasattr(self, 'sld'):
             self.sld = core.SaveLoadDelete(self.directory_path)
             
-        refval_dict = self.sld.load_dict(self.indicator+'.pkl')
+        self.sld.save_dict_to_json(self.refval_dict, self.indicator+'.json')
+    
+    #==========================================================================
+    def load_from_json(self):
+        
+        if not hasattr(self, 'sld'):
+            self.sld = core.SaveLoadDelete(self.directory_path)
+            
+        refval_dict = self.sld.load_dict_from_json(self.indicator+'.json')
+        
+        if refval_dict:
+            self.refval_dict = refval_dict
+            return self.refval_dict
+        else:
+            return False
+            
+    #==========================================================================
+    def load_from_pickle(self):
+        
+        if not hasattr(self, 'sld'):
+            self.sld = core.SaveLoadDelete(self.directory_path)
+            
+        refval_dict = self.sld.load_dict_from_pkl(self.indicator+'.pkl')
         
         if refval_dict:
             self.refval_dict = refval_dict
@@ -1417,7 +1439,7 @@ class SettingsRef(SettingsBase):
     #========================================================================== 
     def _set_refval_dict(self):
         
-        refval_dict = self.refeq_obj.load_pickle()
+        refval_dict = self.refeq_obj.load_from_json()
         
         if refval_dict:
             self.refval_dict = refval_dict
@@ -1495,14 +1517,15 @@ class SettingsRef(SettingsBase):
                     else:
                         get_s = str(s)[0:3]
                     get_s = str(s)
-                    if self.refval_dict[ref_value].get(get_s):
+                    if self.refval_dict[ref_value].get(get_s, False):
+                        test = self.refval_dict[ref_value].get(get_s, False)
                         ref_list.append(self.refval_dict[ref_value].get(get_s))
                     else:
                         self.refeq_obj.add_salinities(ref_value, [s])
                         ref_list.append(self.refval_dict[ref_value].get(get_s))
                         salinities_added = True
                 if salinities_added:
-                    self.refeq_obj.save_pickle()
+                    self.refeq_obj.save_json()
                 return ref_list
             try: 
                 s = salinity
