@@ -1115,12 +1115,12 @@ class DataHandler(object):
         mandatory_keys = []#['DEPH']
         for dtype in all_datatypes:
             if dtype in dir(self):
-                #print(dtype)
-                #print(self.__getattribute__(dtype).column_data)
+#                 print(dtype)
+#                 print(self.__getattribute__(dtype).column_data)
                 # Appends dataframes from each datatype into one dataframe
                 for source in self.__getattribute__(dtype).column_data:
                     # Each datatype might have multiple sources..
-                    # .column_data is a dict 
+                    # .column_data is a dict in each datatypes DataFrameHandler object
                     df = self.__getattribute__(dtype).column_data[source] 
                     if not all([item in df.columns for item in mandatory_keys]):
                         raise exceptions.MissingKeyInData(message=os.path.basename(source))
@@ -1155,7 +1155,11 @@ class DataHandler(object):
         # Column data file 
         try:
             file_path = '{}/column_format_{}_data.pickle'.format(self.export_directory, datatype)
-            self.column_data = pickle.load(open(file_path, "rb")) 
+#             pd_df = pickle.load(open(file_path, "rb")) 
+#             self.add_df(pd_df, data_type) # here data_type is row or col
+            # TODO: should this really say self.column_data = ? It will then replace anything already in self.column_data with new content.
+#             self.column_data = pickle.load(open(file_path, "rb")) 
+            self.__getattribute__(datatype).column_data = pickle.load(open(file_path, "rb")) 
             return True
         except (OSError, IOError) as e: 
             return False
@@ -1195,9 +1199,10 @@ class DataHandler(object):
                 x = ''
             return x
         
-        print('self.all_data', len(self.all_data))
+#         print('self.all_data', len(self.all_data))
         if len(self.all_data): 
-            return False, False
+            print('self.all_data length', len(self.all_data, 'continue to load all_data'))
+#             return False, False
         else:
             sld_object = core.SaveLoadDelete(self.export_directory) # 20180525    by Magnus Wenzer
             try:
@@ -1206,6 +1211,7 @@ class DataHandler(object):
 #                with open(self.export_directory + "/all_data.pkl", "rb") as fid:
 #                    self.all_data = pickle.load(fid)
                 filetype = 'pickle'
+                print('all_data loaded from pickle')
             except (FileNotFoundError, UnboundLocalError) as e: 
                 # UnboundLocalError is for when df was not created in sld_object.load_df()
                 print('MMMMMMMMM')
@@ -1224,6 +1230,13 @@ class DataHandler(object):
 #                self.all_data['YEAR'] = self.all_data['SDATE'].apply(lambda x: int(x[0:4])).astype(int)
                 self.all_data['DEPH'] = self.all_data['DEPH'].apply(lambda x: float(x) if x else np.nan) 
                 self.all_data['POSITION'] = self.all_data.apply(lambda x: '{0:.2f}'.format(float_convert(x.LATIT_DD)) + '_' + '{0:.2f}'.format(float_convert(x.LONGI_DD)), axis = 1)
+                
+                statn = self.all_data.STATN.tolist()
+                pos = self.all_data.POSITION.tolist()
+                for i, x in enumerate(statn): 
+                    if x == "":
+                        statn[i] = pos[i]
+                self.all_data['STATN'] = statn
                 
                 if 'MNDEP' not in self.all_data.columns: 
                     self.all_data['MNDEP'] = np.nan
@@ -1348,6 +1361,7 @@ class DataHandler(object):
 #                               directory=self.export_directory, 
 #                               file_name='all_data.txt')
                 filetype = 'txt'
+                print('all_data loaded from txt and new parameters added')
             return True, filetype
         
         
