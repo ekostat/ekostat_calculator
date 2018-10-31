@@ -88,7 +88,7 @@ class IndicatorBase(object):
         # To be read from config-file
         # TODO: Add 'ALABO' and 'TEMP'
         self.meta_columns = ['SDATE', 'YEAR', 'MONTH', 'STATN', 'VISS_EU_CD', 'WATER_BODY_NAME', 'WATER_DISTRICT',
-       'WATER_TYPE_AREA', 'DEPH']
+       'WATER_TYPE_AREA']
         self.meta_columns_shark = ['STIME', 'POSITION', 'RLABO', 'WADEP']
         self.parameter_list =  [item.strip() for item in self.mapping_objects['quality_element'].indicator_config.loc[self.name]['parameters'].split(', ')] #[item.strip() for item in self.parent_workspace_object.cfg['indicators'].loc[self.name][0].split(', ')]
         self.additional_parameter_list = []
@@ -585,7 +585,7 @@ class IndicatorBase(object):
             water_body_list = [water_body]
             
         else:
-            water_body_list = self.get_filtered_data(subset = self.subset, step = 'step_2').dropna(subset = [self.indicator_parameter]).VISS_EU_CD.unique()
+            water_body_list = self.get_filtered_data(subset = self.subset, step = 'step_2').dropna(subset = [self.indicator_parameter], how = 'all').VISS_EU_CD.unique()
 #        if water_body:
 #        print('self.column_list', self.column_list) 
 #        print(water_body_list)
@@ -605,14 +605,18 @@ class IndicatorBase(object):
                 df = filtered_data.iloc[0:0]
                 self.water_body_indicator_df[water_body]
                 continue
-#            df = df[self.column_list]
             if self.name == 'indicator_chl':
-                if self.parameter_list[0] in filtered_data.columns and self.parameter_list[1] in filtered_data.columns:
-                    df = filtered_data.dropna(subset = self.parameter_list[0:1], how = 'all').copy()
+                type_area = self.mapping_objects['water_body'].get_type_area_for_water_body(water_body, include_suffix=False)
+                if type_area in self.notintegrate_typeareas:
+                    df = filtered_data.loc[(filtered_data.MXDEP <= self.end_deph_max) & (filtered_data.MNDEP <= self.start_deph_max)].dropna(subset = ['CPHL_BTL']).copy()
+#                     df = df[df['DEPH'].isin(df.groupby(['SDATE', 'YEAR', 'STATN']).min()['DEPH'].values)]
+#                 if self.parameter_list[0] in filtered_data.columns and self.parameter_list[1] in filtered_data.columns:
                 else:
-                    df = filtered_data.dropna(subset = [self.indicator_parameter]).copy()
+                    df = filtered_data.loc[(filtered_data.MXDEP <= self.end_deph_max) & (filtered_data.MNDEP <= self.start_deph_max)].dropna(subset = self.indicator_parameter, how = 'all').copy()
+            elif self.name == 'indicator_biov':
+                df = filtered_data.loc[(filtered_data.MXDEP <= self.end_deph_max) & (filtered_data.MNDEP <= self.start_deph_max)].dropna(subset = [self.indicator_parameter]).copy()   
             elif self.name == 'indicator_secchi':
-                df = filtered_data.dropna(subset = [self.indicator_parameter]).drop_duplicates(subset = ['SDATE', 'VISS_EU_CD', 'STATN', 'SECCHI']).copy()
+                df = filtered_data.dropna(subset = [self.indicator_parameter]).drop_duplicates(subset = ['SDATE', 'VISS_EU_CD', 'STATN', self.indicator_parameter]).copy()
             elif self.name == 'indicator_oxygen':
                 df = filtered_data.dropna(subset = [self.indicator_parameter]).copy()
                 tol_BW = 5
@@ -889,7 +893,7 @@ class IndicatorBQI(IndicatorBase):
         super().__init__(subset_uuid, parent_workspace_object, indicator) 
         self.indicator_parameter = self.parameter_list[0]
         #self.column_list.remove('DEPH')
-        self.column_list = self.column_list + ['MNDEP', 'MXDEP']
+        self.column_list = self.column_list + ['MNDEP', 'MXDEP', 'SLABO']
         # Set dataframe to use        
         self._set_water_body_indicator_df(water_body = None)
         
@@ -1217,6 +1221,7 @@ class IndicatorNutrients(IndicatorBase):
         super().__init__(subset_uuid, parent_workspace_object, indicator)  
         self.indicator_parameter = self.parameter_list[0]
         self.salt_parameter = self.parameter_list[-1] 
+        self.column_list = self.column_list + ['DEPH', 'RLABO']
         # Set dataframe to use        
         self._set_water_body_indicator_df(water_body = None)
         
@@ -1425,7 +1430,7 @@ class IndicatorOxygen(IndicatorBase):
         super().__init__(subset_uuid, parent_workspace_object, indicator)  
         self.indicator_parameter = self.parameter_list[0]
         self.Hypsographs = self.mapping_objects['hypsographs']            
-        self.column_list = self.column_list #+ ['source_DOXY']
+        self.column_list = self.column_list - ['DEPH', 'RLABO'] #+ ['source_DOXY']
         self.deficiency_limit = 3.5
         self.tol_BW = 10
         self.test1_result_array = []
@@ -1782,17 +1787,171 @@ class IndicatorPhytoplankton(IndicatorBase):
     """
     
     def __init__(self, subset_uuid, parent_workspace_object, indicator):
-        super().__init__(subset_uuid, parent_workspace_object, indicator) 
+        super().__init__(subset_uuid, parent_workspace_object, indicator)
+        self.column_list = self.column_list + ['MNDEP', 'MXDEP', 'DEPH', 'RLABO'] 
         if self.name == 'indicator_chl':
-            if self.parameter_list[0] in self.get_filtered_data(subset = self.subset, step = 'step_2').columns:
-                self.indicator_parameter = self.parameter_list[0]
-            else:
-                self.indicator_parameter = self.parameter_list[1]
+            if all(x in self.get_filtered_data(subset = self.subset, step = 'step_2').columns for x in self.parameter_list[0:-1]):
+                self.indicator_parameter = self.parameter_list[0:-1]
+            elif all(x in self.get_filtered_data(subset = self.subset, step = 'step_2').columns for x in self.parameter_list[1:-1]):
+                self.indicator_parameter = self.parameter_list[1:-1]
                 self.column_list.remove(self.parameter_list[0])
+            elif self.parameter_list[0] in self.get_filtered_data(subset = self.subset, step = 'step_2').columns:
+                self.indicator_parameter = self.parameter_list[0]
+                self.column_list.remove(self.parameter_list[1:-1])
+
+
         self.salt_parameter = self.parameter_list[-1]
+        self.notintegrate_typeareas = ['8','9','10','11','12s','12n,','13','14','15','24']
+        self.start_deph_max = 1
+        self.end_deph_max = 11
+        self.end_deph_min = 9
         # Set dataframe to use        
         self._set_water_body_indicator_df(water_body = None)
+    
+    def _get_surface_df(self, df, type_area):
+        """
+        First step before calculating EQR values and status. Collect the surface data that should be used.
+        """    
         
+        #-----------------------------------------------------------------------------------        
+        def get_surface_sample(df):
+            # first check if there is bottle sample, if not accept hose sample from 0-1 m.
+            max_surf_deph = 1
+            indicator_cols = ~df[indicator_list].isnull().all() 
+            indicator_cols = indicator_cols[np.where(indicator_cols)[0]].index[:].tolist()
+            param = 'CPHL_BTL'
+            value_found = False
+            if param in indicator_cols:
+                minD = df.DEPH.min()
+                if minD <= max_surf_deph:
+                    value = df.loc[df.DEPH == minD, param]
+                    add_df = df.loc[df.DEPH == minD,].copy()
+                    value_found = True
+                else:
+                    value_found = False
+            if not value_found:
+                param = [p for p in ['CPHL_INTEG','BIOV_CONC_ALL'] if p in indicator_list][0]
+                if param in indicator_cols:
+                    if len(df) > 1:
+                        print(df.STATN, df[param])
+                    MXD = df.MXDEP.values[0]
+                    MND = df.MNDEP.values[0]
+                    if MXD <= max_surf_deph:
+                        value = df.loc[df.MXDEP == MXD, param]
+                        add_df = df.loc[df.MXDEP == MXD].copy()
+                        value_found = True
+                    elif MXD == np.nan and MND <= max_surf_deph:
+                        value = df.loc[df.MNDEP == MND, param]
+                        add_df = df.loc[df.MNDEP == MND].copy()
+                        value_found = True
+                    else:
+                        return False
+                else:
+                    return False
+            add_df['CPHL'] = value
+            add_df['SOURCE'] = param
+            if len(df) > 1:
+                print(add_df)  
+            return add_df
+        #-----------------------------------------------------------------------------------        
+        def get_integ_sample(df):
+            start_deph_max = 1
+#             start_deph_min = 0
+            end_deph_max = 11
+            end_deph_min = 9
+            indicator_cols = ~df[indicator_list].isnull().all() 
+            indicator_cols = indicator_cols[np.where(indicator_cols)[0]].index[:].tolist() 
+            param = [p for p in ['CPHL_INTEG','CPHL_INTEG_CALC','BIOV_CONC_ALL'] if p in indicator_cols][0]
+            df = df.dropna(subset = [param]).copy()
+            df = df.loc[(df.MXDEP <= end_deph_max) & (df.MNDEP <= start_deph_max)].dropna(subset = [param])
+            if df is None or df.empty:
+                return False
+            if param in indicator_cols:
+                MXD = df.MXDEP.values
+                MND = df.MNDEP.values
+#                 if not isinstance(MXD, (float, int)):
+#                     print(MXD, MND)
+#                     MXD = float(MXD)
+#                     MND = float(MND)
+                if len(MXD) > 1:  
+                    print((MND <= start_deph_max).any(), (MXD <= end_deph_max).any(), (MXD >= end_deph_min).all())
+                    if (MND <= start_deph_max).all() and (MXD <= end_deph_max).all() and (MXD >= end_deph_min).all():
+                        value = df.loc[df.MXDEP == MXD[0], param]
+                        if len(df[param]) != len(value.values):
+                            print(df[param], value.values)
+                        add_df = df.loc[df[param] == value.values,].copy()
+    #                     add_df = df.loc[df[param] == value.values[0],].copy()
+    # #                     print('number of values: ',len(value.values))
+    #                     if len(value.values) > 1 and len(value.values) <= 3:
+    #                         value = value.mean()
+    #                     elif len(value.values) > 3:
+    #                         print('to many values ', value.values)
+    #                         return False
+                    elif (MND <= start_deph_max).any() and (MXD <= end_deph_max).any() and (MXD >= end_deph_min).all():
+#                         valid_MXD = MXD.where(MXD <= end_deph_max) MXD[np.where(MXD <= end_deph_max)]
+                        print(np.where(MXD <= end_deph_max))
+                        valid_MXD = MXD[np.where(MXD <= end_deph_max)]
+                        value = df.loc[df.MXDEP == valid_MXD[0], param]
+                        print(value.values, len(value.values))
+                        if len(df[param]) != len(value.values):
+                            print(df[param], value.values)
+                        add_df = df.loc[df[param] == value.values[0],].copy()
+                    else:
+                        return False
+                else:
+                    if MND == np.nan:
+                        MND = 0
+                    if MND <= start_deph_max and MXD <= end_deph_max and MXD >= end_deph_min:
+                        value = df.loc[df.MXDEP == MXD[0], param]
+                        if len(df[param]) != len(value.values):
+                            print(df[param], value.values)
+                        add_df = df.loc[df[param] == value.values,].copy()
+    #                     add_df = df.loc[df[param] == value.values[0],].copy()
+    # #                     print('number of values: ',len(value.values))
+    #                     if len(value.values) > 1 and len(value.values) <= 3:
+    #                         value = value.mean()
+    #                     elif len(value.values) > 3:
+    #                         print('to many values ', value.values)
+    #                         return False
+                    else:
+                        return False
+            else:
+                return False   
+            add_df['CPHL'] = value
+            add_df['SOURCE'] = param  
+            if len(df) > 1:
+                print(add_df, add_df.STATN)    
+            return add_df
+        #-----------------------------------------------------------------------------------
+        
+        if not isinstance(self.indicator_parameter, list):
+            indicator_list = [self.indicator_parameter]
+        else:
+            indicator_list = self.indicator_parameter
+        
+#         out_columns = [c for c in self.columnnlist if c not in indicator_list]
+        surface_df = pd.DataFrame()#.from_dict({c: [] for c in df.columns})
+        if type_area in self.notintegrate_typeareas and self.name == 'indicator_chl':
+            for name, group in df.groupby(['STATN','SDATE']):
+                add_df = get_surface_sample(group)
+                if isinstance(add_df,bool):
+                    continue
+                else:
+                    surface_df = pd.concat([surface_df, add_df])
+        
+        else:
+            for name, group in df.groupby(['STATN','SDATE']):
+                if group.WADEP.min() < 12:
+                    add_df = get_surface_sample(group)
+#                     value, param, value_found = get_surface_sample(group) 
+                else:
+                    add_df = get_integ_sample(group)
+                if isinstance(add_df,bool):
+                    continue
+                else:
+                    surface_df = pd.concat([surface_df, add_df])   
+                    
+        return surface_df
         
     def calculate_status(self, water_body):
         """
@@ -1836,6 +1995,7 @@ class IndicatorPhytoplankton(IndicatorBase):
         if type_area == None:
             return False, False, False, False
         
+#         
 #        self._add_wb_name_to_df(df, water_body)
         """ Calculate local_EQR (EK-värde)
         """ 
@@ -1843,13 +2003,15 @@ class IndicatorPhytoplankton(IndicatorBase):
             Beräkna local_EQR (EK-värde) för varje mätning och sedan ett medel-EK för varje specifikt mättillfälle.
             TO BE UPDATED TO local_EQR for mean of nutrient conc and salinity 0-10 m.
         """
+        surface_df = self._get_surface_df(df, type_area)
+        if surface_df.empty:
+            return False, False, False, False
         
-        # add dataframe to resultsclass
-#        self.classification_results.add_info(water_body, df)
-        
-        # TODO: what about different stations in one waterbody?
-        
-        agg_dict1 = {self.indicator_parameter: 'mean', self.salt_parameter: 'mean', 
+        if self.name == 'indicator_chl':
+            indicator_parameter = 'CPHL'
+        else:
+            indicator_parameter = self.indicator_parameter  
+        agg_dict1 = {indicator_parameter: 'mean', self.salt_parameter: 'mean', 
                      'REFERENCE_VALUE': 'mean', 'HG_VALUE_LIMIT': 'mean', 'GM_VALUE_LIMIT': 'mean', 'MP_VALUE_LIMIT': 'mean', 'PB_VALUE_LIMIT': 'mean', 
                       'DEPH': 'count', 'VISS_EU_CD': 'max', 'WATER_BODY_NAME': 'max', 'WATER_TYPE_AREA': 'max'}       
         if len(self.additional_parameter_list) > 0:
@@ -1858,16 +2020,16 @@ class IndicatorPhytoplankton(IndicatorBase):
         
         by_date = df.groupby(['SDATE', 'YEAR', 'STATN']).agg({**agg_dict1, **agg_dict2}).reset_index()
         by_date.rename(columns={'DEPH':'DEPH_count'}, inplace=True)
-        
-#        by_date = self._add_reference_value_to_df(by_date, water_body)
-        by_date['local_EQR'] = by_date.REFERENCE_VALUE/by_date[self.indicator_parameter]
+#         by_date = compile_surface_values(water_body)
+        by_date = self._add_reference_value_to_df(by_date, water_body)
+        by_date['local_EQR'] = by_date.REFERENCE_VALUE/by_date[indicator_parameter]
         by_date['local_EQR'] = by_date['local_EQR'].apply(set_value_above_one)
         by_date['global_EQR'], by_date['STATUS'] = zip(*by_date['local_EQR'].apply(self._calculate_global_EQR_from_local_EQR, water_body = water_body))
         #by_date.set_index(keys = 'VISS_EU_CD', append =True, drop = False, inplace = True)        
         
         """ 2) Medelvärdet av EK för parametern beräknas för varje år och station.
         """
-        agg_dict1 = {'local_EQR': 'mean', self.indicator_parameter: 'mean', self.salt_parameter: 'mean', 'SDATE': 'count', 'VISS_EU_CD': 'max', 'WATER_BODY_NAME': 'max', 'WATER_TYPE_AREA': 'max'}       
+        agg_dict1 = {'local_EQR': 'mean', indicator_parameter: 'mean', self.salt_parameter: 'mean', 'SDATE': 'count', 'VISS_EU_CD': 'max', 'WATER_BODY_NAME': 'max', 'WATER_TYPE_AREA': 'max'}       
         
         by_year_pos = by_date.groupby(['YEAR', 'STATN']).agg({**agg_dict1, **agg_dict2}).reset_index()
         by_year_pos.rename(columns={'SDATE':'DATE_count'}, inplace=True)
@@ -1877,7 +2039,7 @@ class IndicatorPhytoplankton(IndicatorBase):
         """
         3) Medelvärdet av EK för parametern beräknas för varje år.
         """
-        agg_dict1 = {'local_EQR': 'mean', self.indicator_parameter: 'mean', self.salt_parameter: 'mean', 'STATN': 'count', 'VISS_EU_CD': 'max', 'WATER_BODY_NAME': 'max', 'WATER_TYPE_AREA': 'max'}       
+        agg_dict1 = {'local_EQR': 'mean', indicator_parameter: 'mean', self.salt_parameter: 'mean', 'STATN': 'count', 'VISS_EU_CD': 'max', 'WATER_BODY_NAME': 'max', 'WATER_TYPE_AREA': 'max'}       
         
         by_year = by_year_pos.groupby(['YEAR']).agg({**agg_dict1}).reset_index() #, **agg_dict2
         by_year.rename(columns={'STATN':'STATN_count'}, inplace=True)
@@ -1890,7 +2052,7 @@ class IndicatorPhytoplankton(IndicatorBase):
         4) Medelvärdet av EK för varje parameter och vattenförekomst (beräknas för minst
         en treårsperiod)
         """
-        agg_dict1 = {'local_EQR': 'mean', self.indicator_parameter: 'mean', self.salt_parameter: 'mean', 'YEAR': 'count', 'YEAR': 'count', 'WATER_BODY_NAME': 'max', 'WATER_TYPE_AREA': 'max'}       
+        agg_dict1 = {'local_EQR': 'mean', indicator_parameter: 'mean', self.salt_parameter: 'mean', 'YEAR': 'count', 'YEAR': 'count', 'WATER_BODY_NAME': 'max', 'WATER_TYPE_AREA': 'max'}       
         
         by_period = by_year.groupby(['VISS_EU_CD']).agg({**agg_dict1}).reset_index() #, **agg_dict2
         by_period.rename(columns={'YEAR':'YEAR_count'}, inplace=True)
@@ -1923,6 +2085,7 @@ class IndicatorSecchi(IndicatorBase):
         super().__init__(subset_uuid, parent_workspace_object, indicator) 
         self.indicator_parameter = self.parameter_list[0]  
         self.salt_parameter = self.parameter_list[-1]
+        self.column_list = self.column_list + ['DEPH', 'RLABO']
         # Set dataframe to use        
         self._set_water_body_indicator_df(water_body = None)
         

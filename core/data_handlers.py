@@ -871,6 +871,7 @@ class DataHandlerPhytoplankton(DataFrameHandler):
     def _additional_filter(self):
         self._delete_columns_from_df(columns=self.filter_parameters.extra_fields + [self.filter_parameters.value_key])
         self._drop_duplicates(based_on_column='SHARKID_MD5')
+        # TODO: check if this overwrites earlier info and then why
         self.filter_parameters.use_parameters = 'BIOV_CONC_ALL'
 
     #==========================================================================
@@ -1282,7 +1283,7 @@ class DataHandler(object):
 #                        except ValueError as e:
 #                            self.all_data[par] = self.all_data[par].apply(convert)
                             #TODO: send info to user
-                    elif col in ['DIN', 'CPHL_BTL']: 
+                    elif col in ['DIN', 'CPHL_BTL', 'WADEP', 'MNDEP', 'MXDEP']: 
 #                        print(col)
                         self.all_data[col] = self.all_data[col].apply(float_convert)
 #                        try:

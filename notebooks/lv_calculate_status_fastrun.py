@@ -41,8 +41,8 @@ workspace_directory = root_directory + '/workspaces'
 resource_directory = root_directory + '/resources'
 #alias = 'lena'
 user_id = 'test_user' #kanske ska vara off_line user?
-# workspace_alias = 'lena_indicator' # kustzonsmodellen_3daydata
-workspace_alias = 'kustzonsmodellen_3daydata'
+workspace_alias = 'lena_indicator' # kustzonsmodellen_3daydata
+# workspace_alias = 'kustzonsmodellen_3daydata'
 
 # ## Initiate EventHandler
 print(root_directory)
@@ -105,9 +105,9 @@ w.apply_data_filter(step = 0) # This sets the first level of data filter in the 
 # w.copy_subset(source_uuid='default_subset', target_alias='test_kustzon') 
 ###############################################################################################################################
 # ### Choose subset name to load
-subset_alias = 'test_kustzon'
+# subset_alias = 'test_kustzon'
 # subset_alias = 'period_2007-2012_refvalues_2013'
-# subset_alias = 'test_subset'
+subset_alias = 'test_subset'
 subset_uuid = ekos.get_unique_id_for_alias(workspace_alias = workspace_alias, subset_alias = subset_alias)
 print('subset_alias', subset_alias, 'subset_uuid', subset_uuid)
 ###############################################################################################################################
@@ -121,7 +121,7 @@ w.set_data_filter(subset = subset_uuid, step=1,
 # #### waterbody filter
 w.set_data_filter(subset = subset_uuid, step=1, 
                          filter_type='include_list', 
-                         filter_name='viss_eu_cd', data = []) #'SE584340-174401', 'SE581700-113000', 'SE654470-222700', 'SE633000-195000', 'SE625180-181655'
+                         filter_name='viss_eu_cd', data = ['SE581700-113000','SE631610-184500','SE585100-110600','SE584340-174401', 'SE581700-113000', 'SE654470-222700']) #'SE584340-174401', 'SE581700-113000', 'SE654470-222700', 'SE633000-195000', 'SE625180-181655'
 #                          data=['SE584340-174401', 'SE581700-113000', 'SE654470-222700', 'SE633000-195000', 'SE625180-181655']) 
 #                          wb with no data for din 'SE591400-182320'
   
@@ -136,7 +136,6 @@ print(f1.include_list_filter)
 # ## Apply step 1 datafilter to subset
 w.apply_data_filter(subset = subset_uuid, step = 1)
 filtered_data = w.get_filtered_data(step = 1, subset = subset_uuid)
-print(filtered_data['VISS_EU_CD'].unique())
 ############################################################################################################################### 
 # Step 2
 ### Load indicator settings filter 
@@ -150,12 +149,12 @@ w.get_available_indicators(subset= subset_uuid, step=2)
 #list(zip(typeA_list, df_step1.WATER_TYPE_AREA.unique()))
 # indicator_list = ['oxygen','din_winter','ntot_summer', 'ntot_winter', 'dip_winter', 'ptot_summer', 'ptot_winter','bqi', 'biov', 'chl', 'secchi']
 # indicator_list = ['din_winter','ntot_summer', 'ntot_winter', 'dip_winter', 'ptot_summer', 'ptot_winter']
-indicator_list = ['chl']
+indicator_list = ['chl','biov']
 # indicator_list = ['bqi', 'biov', 'chl', 'secchi']
 #indicator_list = ['bqi', 'secchi'] + ['biov', 'chl'] + ['din_winter']
 # indicator_list = ['din_winter','ntot_summer']
 indicator_list = ['indicator_' + indicator for indicator in indicator_list]
-indicator_list = w.available_indicators
+# indicator_list = w.available_indicators
 ###############################################################################################################################  
 # ### Apply indicator data filter
 print('apply indicator data filter to {}'.format(indicator_list))
@@ -180,14 +179,14 @@ print('CALCULATE STATUS to {}'.format(indicator_list))
 w.get_step_object(step = 3, subset = subset_uuid).calculate_status(indicator_list = indicator_list)
 ###############################################################################################################################  
 # ### CALCULATE QUALITY ELEMENTS
-w.get_step_object(step = 3, subset = subset_uuid).calculate_quality_element(quality_element = 'nutrients')
-# w.get_step_object(step = 3, subset = subset_uuid).calculate_quality_element(quality_element = 'phytoplankton')
+# w.get_step_object(step = 3, subset = subset_uuid).calculate_quality_element(quality_element = 'nutrients')
+w.get_step_object(step = 3, subset = subset_uuid).calculate_quality_element(quality_element = 'phytoplankton')
 # w.get_step_object(step = 3, subset = subset_uuid).calculate_quality_element(quality_element = 'bottomfauna')
-w.get_step_object(step = 3, subset = subset_uuid).calculate_quality_element(quality_element = 'oxygen')
+# w.get_step_object(step = 3, subset = subset_uuid).calculate_quality_element(quality_element = 'oxygen')
 # w.get_step_object(step = 3, subset = subset_uuid).calculate_quality_element(quality_element = 'secchi')
  
 # w.get_step_object(step = 3, subset = subset_uuid).calculate_quality_element(subset_unique_id = subset_uuid, quality_element = 'Phytoplankton')
  
  
-
+print(10*'*'+'FINISHED'+10*'*')
 
