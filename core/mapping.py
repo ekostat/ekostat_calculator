@@ -651,6 +651,9 @@ class WaterBody(AttributeDict):
     def get_type_area_suffix_for_water_body(self, wb, key=u'TYPE_AREA_SUFFIX'):
         return self.get(wb).get(key)
     
+    #==========================================================================
+    def get_waterdistrictnamec_for_water_body(self, wb, key=u'WATER_DISTRICT_NAME'):
+        return self.get(wb).get(key)
     
     #==========================================================================
     def get_eu_cd_for_water_body(self, wb, key=u'EU_CD'):

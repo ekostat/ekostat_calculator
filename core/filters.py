@@ -640,11 +640,11 @@ class SettingsFile(object):
             try:
                 type_area = self.mapping_water_body.get_type_area_for_water_body(water_body, include_suffix=True)
                 if type_area == None:
-#                     print('waterbody matching file does not recognise water body with VISS_EU_CD {}'.format(water_body))
+                    print('waterbody matching file does not recognise water body with VISS_EU_CD {}'.format(water_body))
                     return False
             except AttributeError as e:
                 print(e)
-#                 print('waterbody matching file does not recognise water body with VISS_EU_CD {}'.format(water_body))
+                print('waterbody matching file does not recognise water body with VISS_EU_CD {}'.format(water_body))
                 return False
         num, suf = get_type_area_parts(type_area)
         
@@ -1506,7 +1506,7 @@ class SettingsRef(SettingsBase):
                 max_s = self.get_value(variable = 'SALINITY_MAX', water_body = water_body)
             else:
                 max_s = self.get_value(variable = 'SALINITY_MAX', type_area = type_area)
-            if len(salinity) > 1:
+            if isinstance(salinity, (list, tuple, np.ndarray)):
                 salinity[salinity < 2] = 2
                 salinity[salinity > max_s] = max_s
                 ref_list = []
@@ -1540,7 +1540,7 @@ class SettingsRef(SettingsBase):
                 #ref_value = self.eval_salinity_eq(ref_value, s)
                 #ref_value = eval(ref_value)
                 #print('resulting ref value: {}'.format(ref_value))
-            except TypeError as e:
+            except KeyError as e:
                 raise TypeError('{}\nSalinity TypeError, salinity must be int, float or nan but is {}'.format(e, repr(s)))
                 #TODO: add closes matching salinity somewhere here
         elif not ref_value:

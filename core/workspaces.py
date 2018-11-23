@@ -15,6 +15,7 @@ import uuid
 import re
 import pathlib
 import time
+from core.load import SaveLoadDelete
 
 current_path = os.path.dirname(os.path.realpath(__file__))[:-4]
 if current_path not in sys.path:
@@ -217,8 +218,6 @@ class WorkStep(object):
                 save_df = pd.concat([save_df, df])
             else:
                 save_df = df
-            save_df['new_index'] = [str(ix) +'_' + wb for ix, wb in zip(save_df.index, save_df.VISS_EU_CD)]
-            save_df.set_index(keys = 'new_index')
             return save_df
         #---------------------------------------------------------------------
         
@@ -280,13 +279,21 @@ class WorkStep(object):
             print('Total time to calculate status for indicator {}:'.format(indicator), time_ind)
             print('-'*50)    
             
-            if type(status_by_date) is not bool:                                  
+            if type(status_by_date) is not bool:  
+                status_by_date['new_index'] = [str(ix) +'_' + wb for ix, wb in zip(status_by_date.index, status_by_date.VISS_EU_CD)]
+                status_by_date.set_index(keys = 'new_index')                                
                 self.indicator_objects[indicator].sld.save_df(status_by_date, file_name = indicator_name + '-by_date', force_save_txt=True)
             if type(status_by_year_pos) is not bool:
-                self.indicator_objects[indicator].sld.save_df(status_by_year_pos, file_name = indicator_name + '-by_year', force_save_txt=True)
+                status_by_year_pos['new_index'] = [str(ix) +'_' + wb for ix, wb in zip(status_by_year_pos.index, status_by_year_pos.VISS_EU_CD)]
+                status_by_year_pos.set_index(keys = 'new_index')
+                self.indicator_objects[indicator].sld.save_df(status_by_year_pos, file_name = indicator_name + '-by_year_pos', force_save_txt=True)
             if type(status_by_year) is not bool:
-                self.indicator_objects[indicator].sld.save_df(status_by_year, file_name = indicator_name + '-by_year_pos', force_save_txt=True)
+                status_by_year['new_index'] = [str(ix) +'_' + wb for ix, wb in zip(status_by_year.index, status_by_year.VISS_EU_CD)]
+                status_by_year.set_index(keys = 'new_index')                                
+                self.indicator_objects[indicator].sld.save_df(status_by_year, file_name = indicator_name + '-by_year', force_save_txt=True)
             if type(status_by_period) is not bool:
+                status_by_period['new_index'] = [str(ix) +'_' + wb for ix, wb in zip(status_by_period.index, status_by_period.VISS_EU_CD)]
+                status_by_period.set_index(keys = 'new_index')                                
                 self.indicator_objects[indicator].sld.save_df(status_by_period, file_name = indicator_name + '-by_period', force_save_txt=True)
         
         
@@ -1677,7 +1684,34 @@ class WorkSpace(object):
             return False
         return data_filter.get_filter_info()
     
-    
+    def get_data_for_waterstool(self, step=None, subset=None):
+        
+        if step != 3:
+            return False
+        step_object = self.get_step_object(step = step, subset = subset)
+        result_directory = step_object.paths['step_directory']+'/output/results/'
+        
+        indicator_filelist = [f for f in os.listdir(result_directory) if '-by_date.pkl' in f]
+        sld = core.SaveLoadDelete(result_directory) 
+        indicator_dict = {}
+        for indicator in indicator_filelist:
+#             if not os.path.exists(sld.directory + indicator + '-by_date.pkl') or not os.path.exists(sld.directory +indicator + '-by_date.txt'):
+#                 pass #self.indicator_dict[indicator] = False
+#             else:
+            indicator_dict[indicator] = sld.load_df(file_name = indicator) # + '-by_date'
+                
+        df_list = list(indicator_dict.values())
+        all_df = pd.concat(df_list)
+        column_mapping = pd.read_csv(self.paths['resource_directory'] + '/mappings/waters_column_mapping.txt', sep='\t', encoding='cp1252')
+        c = {key: value[0] for key, value in column_mapping.to_dict('list').items()}
+        all_df = all_df.rename(columns = c)
+        
+        col_list = all_df.columns
+        remove_cols = ['REFERENCE_VALUE','HG_VALUE_LIMIT','GM_VALUE_LIMIT','MP_VALUE_LIMIT','PB_VALUE_LIMIT','global_EQR','local_EQR']
+        col_list = [c for c in col_list if not c in remove_cols]
+        
+        sld.save_df(all_df[col_list], 'WATERS_export', force_save_txt=True)
+        
     #==========================================================================
     def get_filtered_data(self, step=None, subset=None, water_body=None, indicator=None): 
         """

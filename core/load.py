@@ -160,16 +160,18 @@ class SaveLoadDelete(object):
         """ 
         pickle_file_path = os.path.join(self.directory, self._pikle_file_name(file_name))
         txt_file_path = os.path.join(self.directory, self._txt_file_name(file_name))
-        
+        #TODO: I added None here for it to work with some loading, but discovered it does not work with load_all_data
+        #df = None
         if load_txt or not os.path.exists(pickle_file_path): 
             if os.path.exists(txt_file_path):
                 df = load_data_file(file_path=txt_file_path, sep='\t', encoding='cp1252',  fill_nan=u'')
+                df.set_index('index_column', inplace = True)
 
         elif os.path.exists(pickle_file_path):
             with open(pickle_file_path, "rb") as fid: 
                 df = pickle.load(fid)
 #            df = pd.read_pickle(pickle_file_path)
-        
+            
         return df
         
     
@@ -279,8 +281,8 @@ class SaveLoadDelete(object):
 #==========================================================================
 def save_data_file(df=None, directory=u'', file_name=u''):
     """
-    Last modified:  20180525    by Magnus Wenzer
-    
+    Last modified:  20181105    by Lena Viktorsson
+    20181105 by Lena: added the index_column to a copy of df and saves that df
     20180525 by Magnus: moved to load module from data_handlers module
     """
 #            directory = os.path.dirname(os.path.realpath(__file__))[:-4] + 'test_data\\test_exports\\'
@@ -291,13 +293,14 @@ def save_data_file(df=None, directory=u'', file_name=u''):
     file_path = directory + file_name
     
     print(u'Saving data to:',file_path)
-    
+    df_copy = df.copy()
     # MW: Name index
-    df['index_column']=df.index
+    df_copy['index_column']=df_copy.index
+#     df['index_column']=df.index
 #    df = df.reset_index(drop=True)
     
     # MW: Index is set when loading via funktion load_data_file
-    df.to_csv(file_path, sep='\t', encoding='cp1252', index=False) 
+    df_copy.to_csv(file_path, sep='\t', encoding='cp1252', index=False) 
 #        df.to_csv(file_path, sep='\t', encoding='cp1252', index=True)
 
 

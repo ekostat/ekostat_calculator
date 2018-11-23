@@ -39,11 +39,8 @@ pd.__version__
 root_directory = 'D:/github/w_vattenstatus/ekostat_calculator'#"../" #os.getcwd()
 workspace_directory = root_directory + '/workspaces' 
 resource_directory = root_directory + '/resources'
-#alias = 'lena'
-user_id = 'test_user' #kanske ska vara off_line user?
-workspace_alias = 'lena_indicator' # kustzonsmodellen_3daydata
-# workspace_alias = 'kustzonsmodellen_3daydata'
 
+user_id = 'test_user' #kanske ska vara off_line user?
 # ## Initiate EventHandler
 print(root_directory)
 paths = {'user_id': user_id, 
@@ -62,7 +59,11 @@ print('-'*50)
 print('Time for request: {}'.format(time.time()-t0))
 ###############################################################################################################################
 # ### Make a new workspace
-# ekos.copy_workspace(source_uuid='default_workspace', target_alias='kustzonsmodellen_3daydata')
+# ekos.copy_workspace(source_uuid='default_workspace', target_alias='satellit')
+# ### set alias etc.
+#alias = 'lena'
+workspace_alias = 'waters_export'#'satellit' # kustzonsmodellen_3daydata
+# workspace_alias = 'kustzonsmodellen_3daydata'
 
 # ### See existing workspaces and choose workspace name to load
 ekos.print_workspaces()
@@ -73,15 +74,14 @@ workspace_alias = ekos.get_alias_for_unique_id(workspace_uuid = workspace_uuid)
 ###############################################################################################################################
 # ### Load existing workspace
 ekos.load_workspace(unique_id = workspace_uuid)
-
 ###############################################################################################################################
 # ### import data
 # ekos.import_default_data(workspace_alias = workspace_alias)
 ###############################################################################################################################
 # ### Load all data in workspace
 # #### if there is old data that you want to remove
-# ekos.get_workspace(workspace_uuid = workspace_uuid).delete_alldata_export()
-# ekos.get_workspace(workspace_uuid = workspace_uuid).delete_all_export_data()
+ekos.get_workspace(workspace_uuid = workspace_uuid).delete_alldata_export()
+ekos.get_workspace(workspace_uuid = workspace_uuid).delete_all_export_data()
 ###############################################################################################################################
 # #### to just load existing data in workspace
 ekos.load_data(workspace_uuid = workspace_uuid)
@@ -102,12 +102,12 @@ w.apply_data_filter(step = 0) # This sets the first level of data filter in the 
 ###############################################################################################################################  
 # # Step 1 
 # ### make new subset
-# w.copy_subset(source_uuid='default_subset', target_alias='test_kustzon') 
+# w.copy_subset(source_uuid='default_subset', target_alias='test_with_sharkdata_only') 
 ###############################################################################################################################
 # ### Choose subset name to load
 # subset_alias = 'test_kustzon'
 # subset_alias = 'period_2007-2012_refvalues_2013'
-subset_alias = 'test_subset'
+subset_alias = 'waters_export'#'test_with_sharkdata_only'#'test_subset'
 subset_uuid = ekos.get_unique_id_for_alias(workspace_alias = workspace_alias, subset_alias = subset_alias)
 print('subset_alias', subset_alias, 'subset_uuid', subset_uuid)
 ###############################################################################################################################
@@ -121,7 +121,9 @@ w.set_data_filter(subset = subset_uuid, step=1,
 # #### waterbody filter
 w.set_data_filter(subset = subset_uuid, step=1, 
                          filter_type='include_list', 
-                         filter_name='viss_eu_cd', data = ['SE581700-113000','SE631610-184500','SE585100-110600','SE584340-174401', 'SE581700-113000', 'SE654470-222700']) #'SE584340-174401', 'SE581700-113000', 'SE654470-222700', 'SE633000-195000', 'SE625180-181655'
+                         filter_name='viss_eu_cd', data = [])
+#['SE581700-113000','SE631610-184500','SE585100-110600','SE584340-174401', 'SE654470-222700', 'SE584340-174401', 'SE633000-195000', 'SE625180-181655']) #'SE584340-174401', 'SE581700-113000', 'SE654470-222700', 'SE633000-195000', 'SE625180-181655'
+
 #                          data=['SE584340-174401', 'SE581700-113000', 'SE654470-222700', 'SE633000-195000', 'SE625180-181655']) 
 #                          wb with no data for din 'SE591400-182320'
   
@@ -149,13 +151,14 @@ w.get_available_indicators(subset= subset_uuid, step=2)
 #list(zip(typeA_list, df_step1.WATER_TYPE_AREA.unique()))
 # indicator_list = ['oxygen','din_winter','ntot_summer', 'ntot_winter', 'dip_winter', 'ptot_summer', 'ptot_winter','bqi', 'biov', 'chl', 'secchi']
 # indicator_list = ['din_winter','ntot_summer', 'ntot_winter', 'dip_winter', 'ptot_summer', 'ptot_winter']
-indicator_list = ['chl','biov']
-# indicator_list = ['bqi', 'biov', 'chl', 'secchi']
+# indicator_list = ['chl','biov']
+# indicator_list = ['secchi']
 #indicator_list = ['bqi', 'secchi'] + ['biov', 'chl'] + ['din_winter']
 # indicator_list = ['din_winter','ntot_summer']
-indicator_list = ['indicator_' + indicator for indicator in indicator_list]
-# indicator_list = w.available_indicators
-###############################################################################################################################  
+# indicator_list = ['indicator_' + indicator for indicator in indicator_list]
+indicator_list = w.available_indicators
+############################################################################################################################### 
+# w.get_data_for_waterstool(step = 3, subset = subset_uuid, indicator_list = indicator_list) 
 # ### Apply indicator data filter
 print('apply indicator data filter to {}'.format(indicator_list))
 for indicator in indicator_list:
@@ -187,6 +190,7 @@ w.get_step_object(step = 3, subset = subset_uuid).calculate_quality_element(qual
  
 # w.get_step_object(step = 3, subset = subset_uuid).calculate_quality_element(subset_unique_id = subset_uuid, quality_element = 'Phytoplankton')
  
+w.get_data_for_waterstool(step = 3, subset = subset_uuid) 
  
 print(10*'*'+'FINISHED'+10*'*')
 

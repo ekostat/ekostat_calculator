@@ -168,7 +168,10 @@ class DataFrameHandler(ColumnDataHandler, RowDataHandler):
                                 self.df['LATIT_DD'].apply(str) + \
                                 ' ' + \
                                 self.df['LONGI_DD'].apply(str)
-    
+                                
+        #TODO:
+        # add if wb_name, MS_CD, VISS_EU_CD; typkod, typnamne, water district not in df.columns add them from vfk-kod kolumn
+        # added this in indicator class instead
     #==========================================================================
     def _add_field(self):
         if self.filter_parameters.add_parameters:
@@ -1125,6 +1128,9 @@ class DataHandler(object):
                     df = self.__getattribute__(dtype).column_data[source] 
                     if not all([item in df.columns for item in mandatory_keys]):
                         raise exceptions.MissingKeyInData(message=os.path.basename(source))
+                    if any(df.columns.duplicated()):
+                        print('duplicates in data from source {} \n duplicate columns {}'.format(source, df[df.columns.duplicated()]))
+                        raise exceptions.MissingKeyInData(message=os.path.basename(source))
                     self.all_data = self.all_data.append(df, 
                                                          ignore_index=True)
         if not len(self.all_data):
@@ -1439,6 +1445,10 @@ class DataHandler(object):
                 exclude_list.append(col)
             elif 'source' in col:
                 exclude_list.append(col) 
+            elif 'DIN' in col:
+                exclude_list.append(col)
+            elif 'DEPH' in col:
+                exclude_list.append(col)
                 
         exclude_index_list = [True if par in exclude_list else False for par in df.columns]
         return np.array(exclude_index_list)
@@ -1482,6 +1492,7 @@ class DataHandler(object):
             #print('df.columns', len(df.columns))
             #print(df.columns)
             new_row = np.array(new_row_series)
+            # sets the other (with Q_flag, DIN and DEPH) parameters to nan
             new_row[exclude_index_array] = np.nan
         
             new_list_to_append.append(list(new_row)) 
