@@ -88,7 +88,7 @@ class IndicatorBase(object):
         self.ref_settings = self.parent_workspace_object.get_step_object(step = 2, subset = self.subset).get_indicator_ref_settings(self.name)
         # To be read from config-file
         # TODO: Add 'ALABO' and 'TEMP'
-        self.meta_columns = ['SDATE', 'YEAR', 'MONTH', 'STATN', 'VISS_EU_CD', 'WATER_BODY_NAME', 'WATER_DISTRICT',
+        self.meta_columns = ['SDATE', 'YEAR', 'MONTH', 'STATN', 'VISS_EU_CD', 'WATER_BODY_NAME', 'WATER_DISTRICT_NAME',
        'WATER_TYPE_AREA']
         self.meta_columns_shark = ['STIME', 'POSITION', 'WADEP']
         self.parameter_list =  [item.strip() for item in self.mapping_objects['quality_element'].indicator_config.loc[self.name]['parameters'].split(', ')] #[item.strip() for item in self.parent_workspace_object.cfg['indicators'].loc[self.name][0].split(', ')]
@@ -151,9 +151,9 @@ class IndicatorBase(object):
     def _add_waterdistrict_to_df(self, df, water_body):
 
         try:
-            df['WATER_DISTRICT'] = self.mapping_objects['water_body'][water_body]['WATER_DISTRICT_CODE']
+            df['WATER_DISTRICT_NAME'] = self.mapping_objects['water_body'][water_body]['WATER_DISTRICT_NAME']
         except AttributeError:
-            df['WATER_DISTRICT'] = 'unknown'
+            df['WATER_DISTRICT_NAME'] = 'unknown'
             print('waterbody matching file does not recognise water body with VISS_EU_CD {}'.format(water_body))
 
         
@@ -1291,7 +1291,7 @@ class IndicatorNutrients(IndicatorBase):
         type_area = self.mapping_objects['water_body'].get_type_area_for_water_body(water_body, include_suffix=True)
         if type_area == None:
             return False, False, False, False
-        waterdistrict = self.mapping_objects['water_body'].get_waterdistrictnamec_for_water_body(water_body)    
+        waterdistrict = self.mapping_objects['water_body'].get_waterdistrictname_for_water_body(water_body)    
         # Add column for winter year for winter indicators and set year_variable
         year_variable = 'YEAR'
         if 'winter' in self.name:
@@ -1357,6 +1357,9 @@ class IndicatorNutrients(IndicatorBase):
         by_date['local_EQR'] = by_date['local_EQR'].apply(set_value_above_one)
         by_date['global_EQR'], by_date['STATUS'] = zip(*by_date['local_EQR'].apply(self._calculate_global_EQR_from_local_EQR, water_body = water_body))
         by_date['WATER_TYPE_AREA_CODE'] = type_area
+        if 'NTOT' in self.indicator_parameter or 'PTOT' in self.indicator_parameter:
+            cols = by_date.columns
+            by_date = by_date[[c for c in cols if c not in self.additional_parameter_list]]
         # Remove occations with not enough samples
         # Or use count as a flag for what to display for the user?
         
@@ -1421,7 +1424,7 @@ class IndicatorNutrients_SCM(IndicatorNutrients):
         self.indicator_parameter = self.parameter_list[0]
         self.salt_parameter = self.parameter_list[-1] 
         # CHANGES from parentclass
-        self.meta_columns = ['SDATE', 'YEAR', 'MONTH', 'STATN', 'VISS_EU_CD', 'WATER_BODY_NAME', 'WATER_DISTRICT',
+        self.meta_columns = ['SDATE', 'YEAR', 'MONTH', 'STATN', 'VISS_EU_CD', 'WATER_BODY_NAME', 'WATER_DISTRICT_NAME',
        'WATER_TYPE_AREA', 'DEPH']
         self.column_list = self.meta_columns + self.parameter_list + self.additional_parameter_list
         
@@ -2205,7 +2208,7 @@ class IndicatorPhytoplankton(IndicatorBase):
         """ 2) Medelvärdet av EK för parametern beräknas för varje år och station.
         """
         agg_dict1 = {'local_EQR': 'mean', indicator_parameter: 'mean', self.salt_parameter: 'mean', 'SDATE': 'count', 
-                     'VISS_EU_CD': 'max', 'WATER_BODY_NAME': 'max', 'WATER_TYPE_AREA': 'max'} 
+                     'VISS_EU_CD': 'max', 'MS_CD': 'max', 'WATER_BODY_NAME': 'max', 'WATER_TYPE_AREA': 'max'} 
         if len(self.additional_parameter_list) > 0:
             agg_dict2 = {key: 'mean' for key in self.additional_parameter_list}
         else: agg_dict2 = {}        
@@ -2218,7 +2221,7 @@ class IndicatorPhytoplankton(IndicatorBase):
         """
         3) Medelvärdet av EK för parametern beräknas för varje år.
         """
-        agg_dict1 = {'local_EQR': 'mean', indicator_parameter: 'mean', self.salt_parameter: 'mean', 'STATN': 'count', 'VISS_EU_CD': 'max', 'WATER_BODY_NAME': 'max', 'WATER_TYPE_AREA': 'max'}       
+        agg_dict1 = {'local_EQR': 'mean', indicator_parameter: 'mean', self.salt_parameter: 'mean', 'STATN': 'count', 'VISS_EU_CD': 'max', 'MS_CD': 'max', 'WATER_BODY_NAME': 'max', 'WATER_TYPE_AREA': 'max'}       
         
         by_year = by_year_pos.groupby(['YEAR']).agg({**agg_dict1}).reset_index() #, **agg_dict2
         by_year.rename(columns={'STATN':'STATN_count'}, inplace=True)
@@ -2231,9 +2234,10 @@ class IndicatorPhytoplankton(IndicatorBase):
         4) Medelvärdet av EK för varje parameter och vattenförekomst (beräknas för minst
         en treårsperiod)
         """
-        agg_dict1 = {'local_EQR': 'mean', indicator_parameter: 'mean', self.salt_parameter: 'mean', 'YEAR': 'count', 'YEAR': 'count', 'WATER_BODY_NAME': 'max', 'WATER_TYPE_AREA': 'max'}       
+        agg_dict1 = {'local_EQR': 'mean', indicator_parameter: 'mean', self.salt_parameter: 'mean', 'YEAR': 'count', 'YEAR': 'count', 'MS_CD': 'max',  'WATER_BODY_NAME': 'max', 'WATER_TYPE_AREA': 'max'}       
         
         by_period = by_year.groupby(['VISS_EU_CD']).agg({**agg_dict1}).reset_index() #, **agg_dict2
+        by_period['YEARS_USED'] = ', '.join(map(str, by_year.YEAR.unique())) 
         by_period.rename(columns={'YEAR':'YEAR_count'}, inplace=True)
         by_period['global_EQR'], by_period['STATUS'] = zip(*by_period['local_EQR'].apply(self._calculate_global_EQR_from_local_EQR, water_body = water_body))
         S = ', '.join(by_year.STATIONS_USED.unique())
@@ -2251,25 +2255,35 @@ class IndicatorPhytoplankton(IndicatorBase):
         by_period['variance'] = np.nan
         by_period['p_ges'] = np.nan
         return surface_df, by_year_pos, by_year, by_period
-                
+    
+###############################################################################                
 class IndicatorPhytplanktonSat(IndicatorPhytoplankton):
     """
     Class inheriting from IndicatorPhytoplankton adopted to chlorophyll from satellite
     """
 
     def __init__(self, subset_uuid, parent_workspace_object, indicator):
-        super().__init__(subset_uuid, parent_workspace_object, indicator) 
+        
+        IndicatorBase.__init__(self, subset_uuid, parent_workspace_object, indicator) 
+        
+        self.column_list = self.meta_columns + self.parameter_list + self.additional_parameter_list + ['MS_CD']
         self.indicator_parameter = self.parameter_list[0]  
-        self.salt_parameter = self.parameter_list[-1]      
+        self.salt_parameter = self.parameter_list[-1]     
+        
         self._set_water_body_indicator_df(water_body = None)
         
     def _get_surface_df(self, df, type_area):
         
         surface_df = df.copy()
+        surface_df['CPHL_SOURCE'] = self.indicator_parameter
         index_list = []
         comment = ''
         
         return surface_df, index_list, comment
+    
+#     def _get_integ_def(self, df, type_area):
+#         
+#         return self._get_surface_df(df, type_area) 
     
 ###############################################################################
 class IndicatorSecchi(IndicatorBase): 
@@ -2314,8 +2328,6 @@ class IndicatorSecchi(IndicatorBase):
         if water_body not in self.water_body_indicator_df.keys():
             return False, False, False, False
         df = self.water_body_indicator_df[water_body]
-        if water_body == 'SE603650-174500':
-            print(df.head())
         if len(df) < 1:
             return False, False, False, False
                
@@ -2338,13 +2350,13 @@ class IndicatorSecchi(IndicatorBase):
 #        agg_dict1 = {self.indicator_parameter: 'mean', self.salt_parameter: 'mean', 'DEPH': 'count', 'VISS_EU_CD': 'max', 'WATER_BODY_NAME': 'max', 'WATER_TYPE_AREA': 'max'}       
         agg_dict1 = {self.indicator_parameter: 'mean', self.salt_parameter: 'mean', 
                      'REFERENCE_VALUE': 'mean', 'HG_VALUE_LIMIT': 'mean', 'GM_VALUE_LIMIT': 'mean', 'MP_VALUE_LIMIT': 'mean', 'PB_VALUE_LIMIT': 'mean', 
-                     'DEPH': 'count', 'VISS_EU_CD': 'max', 'WATER_BODY_NAME': 'max', 'WATER_TYPE_AREA': 'max'}       
+                     'VISS_EU_CD': 'max', 'MS_CD': 'max', 'WATER_BODY_NAME': 'max', 'WATER_TYPE_AREA': 'max', 'WATER_DISTRICT_NAME': 'max'}       
         agg_dict2 = {key: 'mean' for key in self.additional_parameter_list}       
         agg_dict3 = {key: 'max' for key in self.column_list if key not in list(agg_dict1.keys())+list(agg_dict2.keys())+['SDATE', 'YEAR', 'STATN']}       
         
         
         by_date = df.groupby(['SDATE', 'YEAR', 'STATN']).agg({**agg_dict1, **agg_dict2, **agg_dict3}).reset_index()
-        by_date.rename(columns={'DEPH':'DEPH_count'}, inplace=True)
+#         by_date.rename(columns={'DEPH':'DEPH_count'}, inplace=True)
 #        by_date = self._add_reference_value_to_df(df, water_body)
         by_date['local_EQR'] = by_date[self.indicator_parameter]/by_date.REFERENCE_VALUE
 #        by_date['local_EQR'] = by_date['local_EQR'].apply(set_value_above_one)
@@ -2362,15 +2374,16 @@ class IndicatorSecchi(IndicatorBase):
         2) Medelvärdet av local_EQR för varje siktdjup och vattenförekomst (beräknas för minst
         en treårsperiod)
         """
-        agg_dict1 = {'local_EQR': 'mean', self.indicator_parameter: 'mean', 'YEAR': 'nunique', 'WATER_BODY_NAME': 'max', 'WATER_TYPE_AREA': 'max'}       
+        agg_dict1 = {'local_EQR': 'mean', self.indicator_parameter: 'mean', 'YEAR': 'nunique', 'MS_CD': 'max', 'WATER_BODY_NAME': 'max', 'WATER_TYPE_AREA': 'max', 'WATER_DISTRICT_NAME': 'max'}       
         if len(self.additional_parameter_list) > 0:
             agg_dict2 = {key: 'mean' for key in self.additional_parameter_list}
         else: agg_dict2 = {}  
 
         by_period = by_date.groupby(['VISS_EU_CD']).agg({**agg_dict1}).reset_index() #, **agg_dict2
+        by_period['YEARS_USED'] = ', '.join(map(str, by_date.YEAR.unique()))
         by_period.rename(columns={'YEAR':'YEAR_count'}, inplace=True)
         by_period['global_EQR'], by_period['STATUS'] = zip(*by_period['local_EQR'].apply(self._calculate_global_EQR_from_local_EQR, water_body = water_body))
-        by_period['STATIONS_USED'] = ', '.join(by_date.STATN.unique())      	        
+        by_period['STATIONS_USED'] = ', '.join(by_date.STATN.unique())         
         
         min_nr_years = self.tolerance_settings.get_min_nr_years(water_body = water_body) 
         boolean_list = by_period['YEAR_count'] >= min_nr_years
@@ -2381,6 +2394,22 @@ class IndicatorSecchi(IndicatorBase):
         by_period['p_ges'] = np.nan
         return by_date, by_year_pos, by_year, by_period
     
+###############################################################################
+class IndicatorSecchiSat(IndicatorSecchi): 
+    """
+    Class with methods for Secchi indicator. 
+    """
+    
+    def __init__(self, subset_uuid, parent_workspace_object, indicator):
+        
+        IndicatorBase.__init__(self, subset_uuid, parent_workspace_object, indicator) 
+        
+        self.column_list = self.meta_columns + self.parameter_list + self.additional_parameter_list + ['MS_CD']
+        self.indicator_parameter = self.parameter_list[0]  
+        self.salt_parameter = self.parameter_list[-1]     
+        
+        self._set_water_body_indicator_df(water_body = None)  
+        
 ###############################################################################
 if __name__ == '__main__':
     print('='*50)

@@ -1141,7 +1141,8 @@ class WorkSpace(object):
         
         # Set data and index handler
         self.data_handler = core.DataHandler(input_data_directory=self.paths['directory_path_input_data'], 
-                                             resource_directory=self.paths['resource_directory'])
+                                             resource_directory=self.paths['resource_directory'],
+                                             mapping_objects=self.mapping_objects)
         
         self.index_handler = core.IndexHandler(workspace_object=self, 
                                                data_handler_object=self.data_handler)
@@ -1757,6 +1758,9 @@ class WorkSpace(object):
                         elif parameter_list[1] in filtered_data.columns:
                             if len(filtered_data.dropna(subset = [parameter_list[1]])) > 0:
                                 available_indicators.append(indicator)
+                    elif 'sat' in indicator:
+                        if len(filtered_data.dropna(subset = [parameter_list[0]])) > 0: # LV 20181126 
+                            available_indicators.append(indicator)
                     else:
                         filtered_data[parameter_list].apply(pd.to_numeric).dropna(thresh = len(parameter_list)) # MW 20180718 
                         available_indicators.append(indicator)
@@ -1843,8 +1847,6 @@ class WorkSpace(object):
     def initiate_quality_factors(self, ):
         return False
         
-       
-    
     #==========================================================================
     def load_all_data(self, force=False): 
         """ 

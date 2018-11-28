@@ -1517,8 +1517,9 @@ class SettingsRef(SettingsBase):
                     else:
                         get_s = str(s)[0:3]
                     get_s = str(s)
+                    if ref_value not in self.refval_dict.keys():
+                        self.refeq_obj.add_equation(ref_value)
                     if self.refval_dict[ref_value].get(get_s, False):
-                        test = self.refval_dict[ref_value].get(get_s, False)
                         ref_list.append(self.refval_dict[ref_value].get(get_s))
                     else:
                         self.refeq_obj.add_salinities(ref_value, [s])

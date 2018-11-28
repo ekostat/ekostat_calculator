@@ -62,7 +62,7 @@ print('Time for request: {}'.format(time.time()-t0))
 # ekos.copy_workspace(source_uuid='default_workspace', target_alias='satellit')
 # ### set alias etc.
 #alias = 'lena'
-workspace_alias = 'waters_export'#'satellit' # kustzonsmodellen_3daydata
+workspace_alias = 'satellit'#'waters_export' # kustzonsmodellen_3daydata
 # workspace_alias = 'kustzonsmodellen_3daydata'
 
 # ### See existing workspaces and choose workspace name to load
@@ -102,12 +102,12 @@ w.apply_data_filter(step = 0) # This sets the first level of data filter in the 
 ###############################################################################################################################  
 # # Step 1 
 # ### make new subset
-# w.copy_subset(source_uuid='default_subset', target_alias='test_with_sharkdata_only') 
+# w.copy_subset(source_uuid='default_subset', target_alias='satellite_results') 
 ###############################################################################################################################
 # ### Choose subset name to load
 # subset_alias = 'test_kustzon'
 # subset_alias = 'period_2007-2012_refvalues_2013'
-subset_alias = 'waters_export'#'test_with_sharkdata_only'#'test_subset'
+subset_alias = 'satellite_results'#'waters_export'#'test_subset'
 subset_uuid = ekos.get_unique_id_for_alias(workspace_alias = workspace_alias, subset_alias = subset_alias)
 print('subset_alias', subset_alias, 'subset_uuid', subset_uuid)
 ###############################################################################################################################
@@ -152,11 +152,11 @@ w.get_available_indicators(subset= subset_uuid, step=2)
 # indicator_list = ['oxygen','din_winter','ntot_summer', 'ntot_winter', 'dip_winter', 'ptot_summer', 'ptot_winter','bqi', 'biov', 'chl', 'secchi']
 # indicator_list = ['din_winter','ntot_summer', 'ntot_winter', 'dip_winter', 'ptot_summer', 'ptot_winter']
 # indicator_list = ['chl','biov']
-# indicator_list = ['secchi']
+indicator_list = ['secchisat']
 #indicator_list = ['bqi', 'secchi'] + ['biov', 'chl'] + ['din_winter']
 # indicator_list = ['din_winter','ntot_summer']
-# indicator_list = ['indicator_' + indicator for indicator in indicator_list]
-indicator_list = w.available_indicators
+indicator_list = ['indicator_' + indicator for indicator in indicator_list]
+# indicator_list = w.available_indicators
 ############################################################################################################################### 
 # w.get_data_for_waterstool(step = 3, subset = subset_uuid, indicator_list = indicator_list) 
 # ### Apply indicator data filter

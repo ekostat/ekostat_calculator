@@ -237,6 +237,9 @@ class IndexHandler(object):
                 
                 if bool_dict.get('boolean') is not None:
                     # Merge boolean from parent with new boolean from filter_object, filter_object is either DataFilter or SettingsDataFilter
+                    if 'SE' in key:
+                        test = filter_object.get_filter_boolean_for_df(df, water_body = water_body, indicator=indicator, **kwargs)
+                        bool_dict.get('boolean') & test
                     bool_dict[key]['boolean'] = bool_dict.get('boolean') & filter_object.get_filter_boolean_for_df(df, water_body = water_body, indicator=indicator, **kwargs)
                     
                 else:

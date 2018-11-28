@@ -10,7 +10,7 @@ LONGI_DD
 VISS_EU_CD												
 WATER_BODY_NAME												
 SEA_BASIN												
-WATER_DISTRICT												
+WATER_DISTRICT_NAME												
 WATER_TYPE_AREA												
 WLTYP												
 MNDEP												

@@ -18,5 +18,5 @@ MXDEP
 PARAM								
 VALUE								
 QFLAG								
-RLABO
+SLABO
 WADEP

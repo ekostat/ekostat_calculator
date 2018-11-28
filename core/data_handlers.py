@@ -150,9 +150,13 @@ class DataFrameHandler(ColumnDataHandler, RowDataHandler):
         super().__init__()
 
     #==========================================================================
-    def _add_columns(self): 
+    def _add_columns(self):
+        """
+        updated 20181123 by Lena Viktorsson
+        comment: seems not to have been in use before. Now used to add metadata from waterbody matchfile when missing
+        """ 
         print('in _add_columns')
-        self.df['time'] = pd.Series(pd.to_datetime(self.df['SDATE'] + self.df['STIME'], format='%Y-%m-%d%H:%M'))
+#         self.df['time'] = pd.Series(pd.to_datetime(self.df['SDATE'] + self.df['STIME'], format='%Y-%m-%d%H:%M'))
 
 #        df['latit_dec_deg'] = df['LATIT'].apply(utils.decmin_to_decdeg)
 #        df['longi_dec_deg'] = df['LONGI'].apply(utils.decmin_to_decdeg)
@@ -163,15 +167,14 @@ class DataFrameHandler(ColumnDataHandler, RowDataHandler):
             self.df['LONGI_DD'] = self.df['LONGI_DM'].apply(utils.decmin_to_decdeg)
         
         if 'LATIT_DD' in self.df and 'LONGI_DD' in self.df:
-            self.df['profile_key'] = self.df['time'].apply(str) + \
+            self.df['profile_key'] = self.df['SDATE'].apply(str) + \
+                                ' ' + \
+                                self.df['STIME'].apply(str) + \
                                 ' ' + \
                                 self.df['LATIT_DD'].apply(str) + \
                                 ' ' + \
                                 self.df['LONGI_DD'].apply(str)
                                 
-        #TODO:
-        # add if wb_name, MS_CD, VISS_EU_CD; typkod, typnamne, water district not in df.columns add them from vfk-kod kolumn
-        # added this in indicator class instead
     #==========================================================================
     def _add_field(self):
         if self.filter_parameters.add_parameters:
@@ -206,7 +209,36 @@ class DataFrameHandler(ColumnDataHandler, RowDataHandler):
         self.df['origin_dtype'] = dtype
         self.df['origin_file_path'] = os.path.basename(file_path)
 
-    
+    #==========================================================================
+    def _add_waterbody_area_info(self):
+        #TODO:
+        # add if wb_name, MS_CD, VISS_EU_CD; typnamne, water district not in df.columns add them from vfk-kod kolumn
+        wb_id_list = self.column_data[self.source].VISS_EU_CD.tolist()
+        wd_id = self.mapping_objects['water_body'].get_waterdistrictcode_for_water_body(wb_id_list[0])
+        if not 'WATER_DISTRICT_CODE' in self.column_data[self.source]:
+            new_list = []
+            for wb_id in wb_id_list:
+                wd_id = self.mapping_objects['water_body'].get_waterdistrictcode_for_water_body(wb_id)
+                new_list.append(wd_id)
+            self.column_data[self.source]['WATER_DISTRICT_CODE'] = new_list
+        if not 'WATER_DISTRICT_NAME' in self.column_data[self.source]:
+            new_list = []
+            for wb_id in wb_id_list:
+                wd_id = self.mapping_objects['water_body'].get_waterdistrictname_for_water_body(wb_id)
+                new_list.append(wd_id)
+            self.column_data[self.source]['WATER_DISTRICT_NAME'] = new_list
+        if not 'WATER_TYPE_AREA' in self.column_data[self.source]:
+            new_list = []
+            for wb_id in wb_id_list:
+                type_name = self.mapping_objects['water_body'].get_type_area_name_for_water_body(wb_id)
+                new_list.append(type_name)
+            self.column_data[self.source]['WATER_TYPE_AREA'] = new_list
+        if not 'WATER_BODY_NAME' in self.column_data[self.source]:
+            new_list = []
+            for wb_id in wb_id_list:
+                wb_name = self.mapping_objects['water_body'].get_name_for_water_body(wb_id)
+                new_list.append(wb_name)    
+            self.column_data[self.source]['WATER_BODY_NAME'] = new_list
     #==========================================================================
     def _check_nr_of_parameters(self):
         """
@@ -378,11 +410,12 @@ class DataFrameHandler(ColumnDataHandler, RowDataHandler):
         self.df = self.df.loc[boolean,:]
                             
     #==========================================================================
-    def add_column_df(self, add_columns=False):
+    def add_column_df(self, add_columns=True):
         """
         Adds data to the internal data structure. 
         """
         # Add columns (time etc.)
+        # Should always be true?
         if add_columns:
             self._add_columns()
         
@@ -395,6 +428,7 @@ class DataFrameHandler(ColumnDataHandler, RowDataHandler):
         Adds data to the internal data structure. 
         """
         # Add columns (time etc.)
+        # Should always be false?
         if add_columns:
             self._add_columns()
             
@@ -605,13 +639,15 @@ class DataHandlerPhysicalChemical(DataFrameHandler):
                  filter_path=u'',
                  export_directory='',
                  parameter_mapping=None,
-                 no_qflags=False): # no_qflags for data that has no quality flags (model data..)
+                 no_qflags=False,
+                 mapping_objects = None): # no_qflags for data that has no quality flags (model data..)
         
         super().__init__()
         self.dtype = 'physicalchemical'
         self.export_directory = export_directory
         self.read_filter_file(file_path=filter_path)
         self.parameter_mapping = parameter_mapping
+        self.mapping_objects = mapping_objects
         self.no_qflags = no_qflags
         
         self.column_data = {} #pd.DataFrame()
@@ -699,7 +735,40 @@ class DataHandlerPhysicalChemical(DataFrameHandler):
         return ntri, ntra, ntrz, amon
     
     #==========================================================================
+"""
+#==============================================================================
+#==============================================================================
+"""
+class DataHandlerPhysicalChemicalSatellite(DataHandlerPhysicalChemical):   
     
+    def __init__(self, 
+                 filter_path=u'',
+                 export_directory='',
+                 parameter_mapping=None,
+                 no_qflags=False,
+                 mapping_objects = None): # no_qflags for data that has no quality flags (model data..)
+        
+        super().__init__(filter_path=filter_path,
+                 export_directory=export_directory,
+                 parameter_mapping=parameter_mapping,
+                 no_qflags=no_qflags,
+                 mapping_objects = mapping_objects)
+        
+        self.dtype = 'physicalchemicalsatellite'   
+    #==========================================================================
+    def _calculate_data(self):
+        self._set_position()
+        self._add_waterbody_area_info()
+            
+    def _set_position(self):
+        
+#         x=self.column_data[self.source]['VISS_EU_CD'][0]
+#         print(x[2:4],x[4:6],x[6:8],x[9:11],x[11:13],x[13:15])
+#         print(int(x[2:4])+int(x[4:6])/60+int(x[6:8])/3600)
+#         print(int(x[9:11])+int(x[11:13])/60+int(x[13:15])/3600)
+#         lat=int(x[2:4])+float(x[4:6])/60+float(x[6:8])/60
+        self.column_data[self.source]['LATIT_DD'] = self.column_data[self.source]['VISS_EU_CD'].apply(lambda x: int(x[2:4])+int(x[4:6])/60+int(x[6:8])/3600 if 'C' not in x else np.nan)
+        self.column_data[self.source]['LONGI_DD'] = self.column_data[self.source]['VISS_EU_CD'].apply(lambda x: int(x[9:11])+int(x[11:13])/60+int(x[13:15])/3600 if 'C' not in x else np.nan)
 """
 #==============================================================================
 #==============================================================================
@@ -711,13 +780,15 @@ class DataHandlerPhysicalChemicalModel(DataFrameHandler):
                  filter_path=u'',
                  export_directory='',
                  parameter_mapping=None,
-                 no_qflags=False): # no_qflags for data that has no quality flags (model data..)
+                 no_qflags=False,
+                 mapping_objects = None): # no_qflags for data that has no quality flags (model data..)
         
         super().__init__()
         self.dtype = 'physicalchemicalmodel'
         self.export_directory = export_directory
         self.read_filter_file(file_path=filter_path)
         self.parameter_mapping = parameter_mapping
+        self.mapping_objects = mapping_objects
         self.no_qflags = no_qflags
         
         self.column_data = {} #pd.DataFrame()
@@ -736,6 +807,7 @@ class DataHandlerPhysicalChemicalModel(DataFrameHandler):
         else:
             self.calculate_din(ignore_qf_list=['B','S']) 
 
+        self._add_waterbody_area_info()
         
     #==========================================================================
     def calculate_din(self, ignore_qf_list=[]):
@@ -815,13 +887,15 @@ class DataHandlerZoobenthos(DataFrameHandler):
     """
     def __init__(self, filter_path=u'',
                  export_directory='', 
-                 parameter_mapping=None):
+                 parameter_mapping=None,
+                 mapping_objects = None):
         
         super().__init__()
         self.dtype = 'zoobenthos'
         self.export_directory = export_directory
         self.read_filter_file(file_path=filter_path)
         self.parameter_mapping = parameter_mapping
+        self.mapping_objects = mapping_objects
         
         self.column_data = {} #pd.DataFrame()
         self.row_data = {} #pd.DataFrame()
@@ -837,13 +911,15 @@ class DataHandlerChlorophyll(DataFrameHandler):
     """
     def __init__(self, filter_path=u'', 
                  export_directory='',
-                 parameter_mapping=None):
+                 parameter_mapping=None,
+                 mapping_objects = None):
         
         super().__init__()
         self.dtype = 'chlorophyll' # Only Tube samples ? 
         self.export_directory = export_directory
         self.read_filter_file(file_path=filter_path)
         self.parameter_mapping = parameter_mapping
+        self.mapping_objects = mapping_objects
         
         self.column_data = {} #pd.DataFrame()
         self.row_data = {} #pd.DataFrame()
@@ -859,13 +935,15 @@ class DataHandlerPhytoplankton(DataFrameHandler):
     """
     def __init__(self, filter_path=u'', 
                  export_directory='',
-                 parameter_mapping=None):
+                 parameter_mapping=None,
+                 mapping_objects = None):
         
         super().__init__()
         self.dtype = 'phytoplankton'
         self.export_directory = export_directory
         self.read_filter_file(file_path=filter_path)
         self.parameter_mapping = parameter_mapping
+        self.mapping_objects = mapping_objects
         
         self.column_data = {} #pd.DataFrame()
         self.row_data = {} #pd.DataFrame()
@@ -943,7 +1021,8 @@ class DataHandler(object):
     #TODO check dubblett 
     def __init__(self, 
                  input_data_directory=None, 
-                 resource_directory=None): 
+                 resource_directory=None,
+                 mapping_objects=None): 
 #        print(input_data_directory, resource_directory)
         assert all([input_data_directory, resource_directory])
         super().__init__()
@@ -960,6 +1039,7 @@ class DataHandler(object):
 
         path_parameter_mapping = self.resource_directory + '/mappings/mapping_parameter_dynamic_extended.txt'
         path_fields_filter = self.resource_directory + '/filters/'
+        self.mapping_objects = mapping_objects
     
 #        path_parameter_mapping = current_path + u'/test_data/mappings/mapping_parameter_dynamic_extended.txt'
 #        path_fields_filter = current_path + u'/test_data/filters/'        
@@ -968,34 +1048,52 @@ class DataHandler(object):
         self._load_field_mapping(file_path=path_parameter_mapping)
         
         
+        # All datatypes that might include data for setting ecological status
+        self.all_datatypes = [u'chlorophyll',
+                         u'physicalchemical',
+                         u'physicalchemicalsatellite',
+                         u'physicalchemicalmodel',
+                         u'phytoplankton',
+                         u'zoobenthos']
         #TODO lägg in datatypsobject i dict ? seperate sources as keys... 'phyche_source' DONE!
         
         
         self.chlorophyll = DataHandlerChlorophyll(filter_path=path_fields_filter+u'filter_fields_chlorophyll_integrated.txt',
                                                   export_directory=self.export_directory,
-                                                  parameter_mapping=self.parameter_mapping)
+                                                  parameter_mapping=self.parameter_mapping,
+                                                  mapping_objects = self.mapping_objects)
         
         
         self.physicalchemical = DataHandlerPhysicalChemical(filter_path=path_fields_filter+'filter_fields_physical_chemical.txt',
                                                              export_directory=self.export_directory,
-                                                             parameter_mapping=self.parameter_mapping)
+                                                             parameter_mapping=self.parameter_mapping,
+                                                             mapping_objects = self.mapping_objects)
+        
+        self.physicalchemicalsatellite = DataHandlerPhysicalChemicalSatellite(filter_path=path_fields_filter+'filter_fields_physical_chemical_satellite.txt',
+                                                             export_directory=self.export_directory,
+                                                             parameter_mapping=self.parameter_mapping,
+                                                             mapping_objects = self.mapping_objects)
 
         self.physicalchemicalmodel = DataHandlerPhysicalChemicalModel(filter_path=path_fields_filter+'filter_fields_physical_chemical_model.txt',
                                                                    export_directory=self.export_directory,
                                                                    parameter_mapping=self.parameter_mapping,
-                                                                   no_qflags=True)        
+                                                                   no_qflags=True,
+                                                                   mapping_objects = self.mapping_objects)        
         
         self.phytoplankton = DataHandlerPhytoplankton(filter_path=path_fields_filter+u'filter_fields_phytoplankton.txt',
                                                       export_directory=self.export_directory,
-                                                      parameter_mapping=self.parameter_mapping)
+                                                      parameter_mapping=self.parameter_mapping,
+                                                      mapping_objects = self.mapping_objects)
         
         
         self.zoobenthos = DataHandlerZoobenthos(filter_path=path_fields_filter+'filter_fields_zoobenthos.txt',
                                                 export_directory=self.export_directory,
-                                                parameter_mapping=self.parameter_mapping)
+                                                parameter_mapping=self.parameter_mapping,
+                                                mapping_objects = self.mapping_objects)
         
         self.float_parameters = []
-        for data_type in [self.chlorophyll, self.physicalchemical, self.physicalchemicalmodel, self.phytoplankton, self.zoobenthos]:
+        
+        for data_type in [self.__getattribute__(dtype) for dtype in self.all_datatypes]:#[self.chlorophyll, self.physicalchemical, self.physicalchemicalsatellite, self.physicalchemicalmodel, self.phytoplankton, self.zoobenthos]:
             if isinstance(data_type.filter_parameters.use_parameters, str):
                 self.float_parameters = self.float_parameters + [data_type.filter_parameters.use_parameters]
             else:
@@ -1019,6 +1117,8 @@ class DataHandler(object):
         Adds data to the internal data structure. 
         """
         # Add columns (time etc.)
+        # This is never used from here, and should it be? 
+        # This is called from filter_data & add_txt_file, there should be no columns added when filtering arr adding df
         if add_columns:
             self._add_columns(pd_df)
         
@@ -1112,12 +1212,13 @@ class DataHandler(object):
         # All datatypes that might include data for setting ecological status
         all_datatypes = [u'chlorophyll',
                          u'physicalchemical',
+                         u'physicalchemicalsatellite',
                          u'physicalchemicalmodel',
                          u'phytoplankton',
                          u'zoobenthos']
         # TODO: vart ska vi kolla mandatory keys? och vart ska de läsas in?
         mandatory_keys = []#['DEPH']
-        for dtype in all_datatypes:
+        for dtype in self.all_datatypes:
             if dtype in dir(self):
 #                 print(dtype)
 #                 print(self.__getattribute__(dtype).column_data)
@@ -1233,11 +1334,16 @@ class DataHandler(object):
                 #TODO: better way to say which columns should be converted to float and int?
                 self.all_data['MONTH'] = self.all_data['SDATE'].apply(lambda x: int(x[5:7])) 
                 self.all_data['YEAR'] = self.all_data['SDATE'].apply(lambda x: int(x[0:4]))
-                self.all_data['MYEAR'] = self.all_data['MYEAR'].astype(int)
+#                 try:
+#                     self.all_data['MYEAR'] = self.all_data['MYEAR'].astype(int)
+#                 except KeyError:
+                self.all_data['MYEAR'] = self.all_data['YEAR']
 #                self.all_data['YEAR'] = self.all_data['SDATE'].apply(lambda x: int(x[0:4])).astype(int)
-                self.all_data['DEPH'] = self.all_data['DEPH'].apply(lambda x: float(x) if x else np.nan) 
+                self.all_data['DEPH'] = self.all_data['DEPH'].apply(lambda x: float(x) if x else np.nan)
                 self.all_data['POSITION'] = self.all_data.apply(lambda x: '{0:.2f}'.format(float_convert(x.LATIT_DD)) + '_' + '{0:.2f}'.format(float_convert(x.LONGI_DD)), axis = 1)
                 
+                if 'STATN' not in self.all_data.columns:
+                    self.all_data['STATN'] = self.all_data['VISS_EU_CD']    
                 statn = self.all_data.STATN.tolist()
                 pos = self.all_data.POSITION.tolist()
                 for i, x in enumerate(statn): 
@@ -1274,9 +1380,6 @@ class DataHandler(object):
 #                print('-'*50)
 #                #--------------------------------------------------------------
                 
-                
-
-                
 
                 for col in self.all_data.columns:
                     if col.startswith('Q_'): 
@@ -1289,7 +1392,7 @@ class DataHandler(object):
 #                        except ValueError as e:
 #                            self.all_data[par] = self.all_data[par].apply(convert)
                             #TODO: send info to user
-                    elif col in ['DIN', 'CPHL_BTL', 'WADEP', 'MNDEP', 'MXDEP']: 
+                    elif col in ['DIN', 'CPHL_BTL', 'CPHL_SAT','WADEP', 'MNDEP', 'MXDEP']: 
 #                        print(col)
                         self.all_data[col] = self.all_data[col].apply(float_convert)
 #                        try:
@@ -1351,14 +1454,15 @@ class DataHandler(object):
 #                print('-'*50)
 #                #--------------------------------------------------------------
                 
-                if 1:
-                    # MW: Add integrated chlorophyl from CHPL_BTL
+                if 'CPHL_BTL' in self.all_data.columns:
+                    # MW: Add integrated chlorophyll from CHPL_BTL
                     self._add_integrated_calc(use_par='CPHL_BTL', 
                                               new_par='CPHL_INTEG_CALC', 
                                               depth_interval=[0, 10], 
                                               exclude_qf=[u'?',u'B',u'S'], 
                                               min_nr_values=2)
                 
+                self._add_waterbody_area_info()
                 
                 sld_object.save_df(self.all_data, file_name='all_data', force_save_txt=True, only_pkl=False) # 20180525    by Magnus Wenzer
 #                self.df = 
@@ -1431,7 +1535,37 @@ class DataHandler(object):
         
         print('time for _add_prioritized_parameter {} is: {}'.format(new_par, time.time()-t0))
         
-    
+    def _add_waterbody_area_info(self):
+        pass
+        #TODO:
+        # add if wb_name, MS_CD, VISS_EU_CD; typnamne, water district not in df.columns add them from vfk-kod kolumn
+        wb_id_list = self.all_data.VISS_EU_CD.tolist()
+        wd_id = self.mapping_objects['water_body'].get_waterdistrictcode_for_water_body(wb_id_list[0])
+        if not 'WATER_DISTRICT_CODE' in self.all_data:
+            new_list = []
+            for wb_id in wb_id_list:
+                wd_id = self.mapping_objects['water_body'].get_waterdistrictcode_for_water_body(wb_id)
+                new_list.append(wd_id)
+            self.all_data['WATER_DISTRICT_CODE'] = new_list
+        if not 'WATER_DISTRICT_NAME' in self.all_data:
+            new_list = []
+            for wb_id in wb_id_list:
+                wd_id = self.mapping_objects['water_body'].get_waterdistrictname_for_water_body(wb_id)
+                new_list.append(wd_id)
+            self.all_data['WATER_DISTRICT_NAME'] = new_list
+        if not 'WATER_TYPE_AREA' in self.all_data:
+            new_list = []
+            for wb_id in wb_id_list:
+                type_name = self.mapping_objects['water_body'].get_type_area_name_for_water_body(wb_id)
+                new_list.append(type_name)
+            self.all_data['WATER_TYPE_AREA'] = new_list
+        if not 'WATER_BODY_NAME' in self.all_data:
+            new_list = []
+            for wb_id in wb_id_list:
+                wb_name = self.mapping_objects['water_body'].get_name_for_water_body(wb_id)
+                new_list.append(wb_name)    
+            self.all_data['WATER_BODY_NAME'] = new_list
+            
     #===========================================================================
     def get_exclude_index_array(self, df): 
         """

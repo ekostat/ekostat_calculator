@@ -652,14 +652,32 @@ class WaterBody(AttributeDict):
         return self.get(wb).get(key)
     
     #==========================================================================
-    def get_waterdistrictnamec_for_water_body(self, wb, key=u'WATER_DISTRICT_NAME'):
+    def get_type_area_name_for_water_body(self, wb, key='TYPE_AREA_NAME'):
+        if self.get(wb) == None:
+            return None
+        return self.get(wb).get(key)
+    
+    #==========================================================================
+    def get_waterdistrictname_for_water_body(self, wb, key=u'WATER_DISTRICT_NAME'):
+        if self.get(wb) == None:
+            return None
+        return self.get(wb).get(key)
+    
+    #==========================================================================
+    def get_waterdistrictcode_for_water_body(self, wb, key=u'WATER_DISTRICT_CODE'):
+        if self.get(wb) == None:
+            return None
         return self.get(wb).get(key)
     
     #==========================================================================
     def get_eu_cd_for_water_body(self, wb, key=u'EU_CD'):
         return self.get(wb).get(key)
 
-
+    #==========================================================================
+    def get_name_for_water_body(self, wb, key=u'WATERBODY_NAME'):
+        if self.get(wb) == None:
+            return None
+        return self.get(wb).get(key)
     #==========================================================================
     def get_basin_number_for_water_body(self, wb, key=u'BASIN_NUMBER'):
         """
@@ -869,6 +887,7 @@ class DataTypeMapping(object):
         self.info_file_path = '/'.join([self.input_data_directory, self.info_file_name]) 
         
         self.datatype_list = ['physicalchemical', 
+                              'physicalchemicalsatellite',
                               'physicalchemicalmodel', 
                               'chlorophyll', 
                               'phytoplankton', 

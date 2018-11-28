@@ -25,7 +25,9 @@ from .indicators import IndicatorBQI
 from .indicators import IndicatorNutrients
 from .indicators import IndicatorOxygen
 from .indicators import IndicatorPhytoplankton
+from .indicators import IndicatorPhytplanktonSat
 from .indicators import IndicatorSecchi
+from .indicators import IndicatorSecchiSat
 
 #from .indicators_old import IndicatorBase
 #from .indicators_old import IndicatorBQI

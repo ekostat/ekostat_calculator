@@ -1,0 +1,6 @@
+compulsory_fields	fields_index	sort_by_fields	use_parameters	visit_id_key	depth_key	parameter_key	value_key	qflag_key
+SDATE		SDATE	CPHL_SAT	SERNO	DEPH	PARAM	VALUE	QFLAG
+STIME		MS_CD	SECCHI_SAT					
+MS_CD			SALT					
+VISS_EU_CD								
+DEPH
