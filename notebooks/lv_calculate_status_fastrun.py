@@ -80,8 +80,8 @@ ekos.load_workspace(unique_id = workspace_uuid)
 ###############################################################################################################################
 # ### Load all data in workspace
 # #### if there is old data that you want to remove
-ekos.get_workspace(workspace_uuid = workspace_uuid).delete_alldata_export()
-ekos.get_workspace(workspace_uuid = workspace_uuid).delete_all_export_data()
+# ekos.get_workspace(workspace_uuid = workspace_uuid).delete_alldata_export()
+# ekos.get_workspace(workspace_uuid = workspace_uuid).delete_all_export_data()
 ###############################################################################################################################
 # #### to just load existing data in workspace
 ekos.load_data(workspace_uuid = workspace_uuid)
@@ -152,11 +152,11 @@ w.get_available_indicators(subset= subset_uuid, step=2)
 # indicator_list = ['oxygen','din_winter','ntot_summer', 'ntot_winter', 'dip_winter', 'ptot_summer', 'ptot_winter','bqi', 'biov', 'chl', 'secchi']
 # indicator_list = ['din_winter','ntot_summer', 'ntot_winter', 'dip_winter', 'ptot_summer', 'ptot_winter']
 # indicator_list = ['chl','biov']
-indicator_list = ['secchisat']
+# indicator_list = ['secchisat']
 #indicator_list = ['bqi', 'secchi'] + ['biov', 'chl'] + ['din_winter']
 # indicator_list = ['din_winter','ntot_summer']
-indicator_list = ['indicator_' + indicator for indicator in indicator_list]
-# indicator_list = w.available_indicators
+# indicator_list = ['indicator_' + indicator for indicator in indicator_list]
+indicator_list = w.available_indicators
 ############################################################################################################################### 
 # w.get_data_for_waterstool(step = 3, subset = subset_uuid, indicator_list = indicator_list) 
 # ### Apply indicator data filter

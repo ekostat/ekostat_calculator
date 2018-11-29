@@ -2208,7 +2208,7 @@ class IndicatorPhytoplankton(IndicatorBase):
         """ 2) Medelvärdet av EK för parametern beräknas för varje år och station.
         """
         agg_dict1 = {'local_EQR': 'mean', indicator_parameter: 'mean', self.salt_parameter: 'mean', 'SDATE': 'count', 
-                     'VISS_EU_CD': 'max', 'MS_CD': 'max', 'WATER_BODY_NAME': 'max', 'WATER_TYPE_AREA': 'max'} 
+                     'VISS_EU_CD': 'max', 'MS_CD': 'max', 'WATER_BODY_NAME': 'max', 'WATER_TYPE_AREA': 'max', 'WATER_TYPE_AREA_CODE': 'max'} 
         if len(self.additional_parameter_list) > 0:
             agg_dict2 = {key: 'mean' for key in self.additional_parameter_list}
         else: agg_dict2 = {}        
@@ -2221,7 +2221,7 @@ class IndicatorPhytoplankton(IndicatorBase):
         """
         3) Medelvärdet av EK för parametern beräknas för varje år.
         """
-        agg_dict1 = {'local_EQR': 'mean', indicator_parameter: 'mean', self.salt_parameter: 'mean', 'STATN': 'count', 'VISS_EU_CD': 'max', 'MS_CD': 'max', 'WATER_BODY_NAME': 'max', 'WATER_TYPE_AREA': 'max'}       
+        agg_dict1 = {'local_EQR': 'mean', indicator_parameter: 'mean', self.salt_parameter: 'mean', 'STATN': 'count', 'VISS_EU_CD': 'max', 'MS_CD': 'max', 'WATER_BODY_NAME': 'max', 'WATER_TYPE_AREA': 'max', 'WATER_TYPE_AREA_CODE': 'max'}       
         
         by_year = by_year_pos.groupby(['YEAR']).agg({**agg_dict1}).reset_index() #, **agg_dict2
         by_year.rename(columns={'STATN':'STATN_count'}, inplace=True)
@@ -2234,7 +2234,7 @@ class IndicatorPhytoplankton(IndicatorBase):
         4) Medelvärdet av EK för varje parameter och vattenförekomst (beräknas för minst
         en treårsperiod)
         """
-        agg_dict1 = {'local_EQR': 'mean', indicator_parameter: 'mean', self.salt_parameter: 'mean', 'YEAR': 'count', 'YEAR': 'count', 'MS_CD': 'max',  'WATER_BODY_NAME': 'max', 'WATER_TYPE_AREA': 'max'}       
+        agg_dict1 = {'local_EQR': 'mean', indicator_parameter: 'mean', self.salt_parameter: 'mean', 'YEAR': 'count', 'YEAR': 'count', 'MS_CD': 'max',  'WATER_BODY_NAME': 'max', 'WATER_TYPE_AREA': 'max', 'WATER_TYPE_AREA_CODE': 'max'}       
         
         by_period = by_year.groupby(['VISS_EU_CD']).agg({**agg_dict1}).reset_index() #, **agg_dict2
         by_period['YEARS_USED'] = ', '.join(map(str, by_year.YEAR.unique())) 
@@ -2374,7 +2374,7 @@ class IndicatorSecchi(IndicatorBase):
         2) Medelvärdet av local_EQR för varje siktdjup och vattenförekomst (beräknas för minst
         en treårsperiod)
         """
-        agg_dict1 = {'local_EQR': 'mean', self.indicator_parameter: 'mean', 'YEAR': 'nunique', 'MS_CD': 'max', 'WATER_BODY_NAME': 'max', 'WATER_TYPE_AREA': 'max', 'WATER_DISTRICT_NAME': 'max'}       
+        agg_dict1 = {'local_EQR': 'mean', self.indicator_parameter: 'mean', 'YEAR': 'nunique', 'MS_CD': 'max', 'WATER_BODY_NAME': 'max', 'WATER_TYPE_AREA': 'max', 'WATER_TYPE_AREA_CODE': 'max', 'WATER_DISTRICT_NAME': 'max'}       
         if len(self.additional_parameter_list) > 0:
             agg_dict2 = {key: 'mean' for key in self.additional_parameter_list}
         else: agg_dict2 = {}  
