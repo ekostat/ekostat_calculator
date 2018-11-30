@@ -59,11 +59,11 @@ print('-'*50)
 print('Time for request: {}'.format(time.time()-t0))
 ###############################################################################################################################
 # ### Make a new workspace
-# ekos.copy_workspace(source_uuid='default_workspace', target_alias='satellit')
+# ekos.copy_workspace(source_uuid='default_workspace', target_alias='kustzon_selection')
 # ### set alias etc.
 #alias = 'lena'
-workspace_alias = 'satellit'#'waters_export' # kustzonsmodellen_3daydata
-# workspace_alias = 'kustzonsmodellen_3daydata'
+# workspace_alias = 'satellit'#'waters_export' # kustzonsmodellen_3daydata
+workspace_alias = 'kustzon_selection'
 
 # ### See existing workspaces and choose workspace name to load
 ekos.print_workspaces()
@@ -80,8 +80,8 @@ ekos.load_workspace(unique_id = workspace_uuid)
 ###############################################################################################################################
 # ### Load all data in workspace
 # #### if there is old data that you want to remove
-# ekos.get_workspace(workspace_uuid = workspace_uuid).delete_alldata_export()
-# ekos.get_workspace(workspace_uuid = workspace_uuid).delete_all_export_data()
+ekos.get_workspace(workspace_uuid = workspace_uuid).delete_alldata_export()
+ekos.get_workspace(workspace_uuid = workspace_uuid).delete_all_export_data()
 ###############################################################################################################################
 # #### to just load existing data in workspace
 ekos.load_data(workspace_uuid = workspace_uuid)
@@ -102,12 +102,12 @@ w.apply_data_filter(step = 0) # This sets the first level of data filter in the 
 ###############################################################################################################################  
 # # Step 1 
 # ### make new subset
-# w.copy_subset(source_uuid='default_subset', target_alias='satellite_results') 
+w.copy_subset(source_uuid='default_subset', target_alias='SE1_selection') 
 ###############################################################################################################################
 # ### Choose subset name to load
 # subset_alias = 'test_kustzon'
 # subset_alias = 'period_2007-2012_refvalues_2013'
-subset_alias = 'satellite_results'#'waters_export'#'test_subset'
+subset_alias = 'SE1_selection'#'satellite_results'#'waters_export'#'test_subset'
 subset_uuid = ekos.get_unique_id_for_alias(workspace_alias = workspace_alias, subset_alias = subset_alias)
 print('subset_alias', subset_alias, 'subset_uuid', subset_uuid)
 ###############################################################################################################################

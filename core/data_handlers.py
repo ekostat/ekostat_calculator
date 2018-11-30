@@ -196,7 +196,7 @@ class DataFrameHandler(ColumnDataHandler, RowDataHandler):
     #==========================================================================
     def _calculate_data(self):
         """ Can be overwritten from child """
-        pass
+        self._add_waterbody_area_info()
     
     #==========================================================================
     def _add_origin_columns(self, dtype='', file_path=''):
@@ -239,6 +239,12 @@ class DataFrameHandler(ColumnDataHandler, RowDataHandler):
                 wb_name = self.mapping_objects['water_body'].get_name_for_water_body(wb_id)
                 new_list.append(wb_name)    
             self.column_data[self.source]['WATER_BODY_NAME'] = new_list
+        if not 'MS_CD' in self.column_data[self.source]:
+            new_list = []
+            for wb_id in wb_id_list:
+                ms_cd_code = self.mapping_objects['water_body'].get_mscd_for_water_body(wb_id)
+                new_list.append(ms_cd_code)    
+            self.column_data[self.source]['MS_CD'] = new_list
     #==========================================================================
     def _check_nr_of_parameters(self):
         """
@@ -660,6 +666,7 @@ class DataHandlerPhysicalChemical(DataFrameHandler):
         If there are no quality flags in data self.no_qflags is initialized 
         as True
         """
+        self._add_waterbody_area_info()
 #        print('_calculate_data')
         if self.no_qflags:
             self.calculate_din()
@@ -1503,12 +1510,17 @@ class DataHandler(object):
             if all([True if item in self.all_data.columns else False \
                     for item in [primary_par, secondary_par]]): 
                 print('both parameters {} and {} in data but no q_flags'.format(primary_par, secondary_par))
-            elif primary_par in self.all_data.columns:
-                self.all_data[new_par] = self.all_data.loc[primary_par]
+            elif primary_par in self.all_data.columns and secondary_par not in self.all_data.columns:
+                self.all_data[new_par] = self.all_data[primary_par].copy()
                 self.all_data[source_new_par] = primary_par
+                return True
+            elif secondary_par in self.all_data.columns and primary_par not in self.all_data.columns:
+                self.all_data[new_par] = self.all_data[secondary_par].copy()
+                self.all_data[source_new_par] = secondary_par
+                return True
             else:
                 return False
-        
+
         self.all_data[new_par] = np.nan
         self.all_data[q_new_par] = ''
         self.all_data[source_new_par] = ''

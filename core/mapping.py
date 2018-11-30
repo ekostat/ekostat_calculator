@@ -672,7 +672,11 @@ class WaterBody(AttributeDict):
     #==========================================================================
     def get_eu_cd_for_water_body(self, wb, key=u'EU_CD'):
         return self.get(wb).get(key)
-
+    #==========================================================================
+    def get_mscd_for_water_body(self, wb, key=u'MS_CD'):
+        if self.get(wb) == None:
+            return None
+        return self.get(wb).get(key)
     #==========================================================================
     def get_name_for_water_body(self, wb, key=u'WATERBODY_NAME'):
         if self.get(wb) == None:

@@ -89,7 +89,7 @@ class IndicatorBase(object):
         # To be read from config-file
         # TODO: Add 'ALABO' and 'TEMP'
         self.meta_columns = ['SDATE', 'YEAR', 'MONTH', 'STATN', 'VISS_EU_CD', 'WATER_BODY_NAME', 'WATER_DISTRICT_NAME',
-       'WATER_TYPE_AREA']
+       'WATER_TYPE_AREA', 'MS_CD']
         self.meta_columns_shark = ['STIME', 'POSITION', 'WADEP']
         self.parameter_list =  [item.strip() for item in self.mapping_objects['quality_element'].indicator_config.loc[self.name]['parameters'].split(', ')] #[item.strip() for item in self.parent_workspace_object.cfg['indicators'].loc[self.name][0].split(', ')]
         self.additional_parameter_list = []
@@ -1251,7 +1251,8 @@ class IndicatorNutrients(IndicatorBase):
         super().__init__(subset_uuid, parent_workspace_object, indicator)  
         self.indicator_parameter = self.parameter_list[0]
         self.salt_parameter = self.parameter_list[-1] 
-        [self.column_list.append(c) for c in ['DEPH', 'RLABO'] if c not in self.column_list]
+#         [self.column_list.append(c) for c in ['DEPH', 'RLABO'] if c not in self.column_list]
+        [self.column_list.append(c) for c in ['DEPH'] if c not in self.column_list]
         # Set dataframe to use        
         self._set_water_body_indicator_df(water_body = None)
         
@@ -1445,13 +1446,11 @@ class IndicatorOxygen(IndicatorBase):
         super().__init__(subset_uuid, parent_workspace_object, indicator)  
         self.indicator_parameter = self.parameter_list[0]
         self.Hypsographs = self.mapping_objects['hypsographs']         
-        [self.column_list.append(c) for c in ['DEPH', 'RLABO', 'source_DOXY'] if c not in self.column_list]
+#         [self.column_list.append(c) for c in ['DEPH', 'RLABO', 'source_DOXY'] if c not in self.column_list]
+        [self.column_list.append(c) for c in ['DEPH'] if c not in self.column_list]
         self.deficiency_limit = 3.5
         self.tol_BW = 5
         # Set dataframe to use   
-        if 'source_DOXY' not in self.get_filtered_data(subset = self.subset, step = 'step_2').columns:
-            # TODO: add here source_DOXy here if not in data?
-            pass
         self._set_water_body_indicator_df(water_body = None)
         
     ############################################################################### 
@@ -1894,7 +1893,8 @@ class IndicatorPhytoplankton(IndicatorBase):
     
     def __init__(self, subset_uuid, parent_workspace_object, indicator):
         super().__init__(subset_uuid, parent_workspace_object, indicator)
-        [self.column_list.append(c) for c in ['MNDEP', 'MXDEP', 'DEPH', 'RLABO'] if c not in self.column_list]
+#         [self.column_list.append(c) for c in ['MNDEP', 'MXDEP', 'DEPH', 'RLABO'] if c not in self.column_list]
+        [self.column_list.append(c) for c in ['MNDEP', 'MXDEP', 'DEPH'] if c not in self.column_list]
         if self.name == 'indicator_chl':
             if all(x in self.get_filtered_data(subset = self.subset, step = 'step_2').columns for x in self.parameter_list[0:-1]):
                 # if data is available for all parameters, use all except SALT
@@ -2266,7 +2266,7 @@ class IndicatorPhytplanktonSat(IndicatorPhytoplankton):
         
         IndicatorBase.__init__(self, subset_uuid, parent_workspace_object, indicator) 
         
-        self.column_list = self.meta_columns + self.parameter_list + self.additional_parameter_list + ['MS_CD']
+        self.column_list = self.meta_columns + self.parameter_list + self.additional_parameter_list# + ['MS_CD']
         self.indicator_parameter = self.parameter_list[0]  
         self.salt_parameter = self.parameter_list[-1]     
         
@@ -2295,7 +2295,8 @@ class IndicatorSecchi(IndicatorBase):
         super().__init__(subset_uuid, parent_workspace_object, indicator) 
         self.indicator_parameter = self.parameter_list[0]  
         self.salt_parameter = self.parameter_list[-1]
-        [self.column_list.append(c) for c in ['DEPH', 'RLABO'] if c not in self.column_list]
+#         [self.column_list.append(c) for c in ['DEPH', 'RLABO'] if c not in self.column_list]
+        [self.column_list.append(c) for c in ['DEPH'] if c not in self.column_list]
         # Set dataframe to use        
         self._set_water_body_indicator_df(water_body = None)
         
@@ -2404,7 +2405,7 @@ class IndicatorSecchiSat(IndicatorSecchi):
         
         IndicatorBase.__init__(self, subset_uuid, parent_workspace_object, indicator) 
         
-        self.column_list = self.meta_columns + self.parameter_list + self.additional_parameter_list + ['MS_CD']
+        self.column_list = self.meta_columns + self.parameter_list + self.additional_parameter_list# + ['MS_CD']
         self.indicator_parameter = self.parameter_list[0]  
         self.salt_parameter = self.parameter_list[-1]     
         
