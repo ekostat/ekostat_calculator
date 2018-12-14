@@ -815,7 +815,19 @@ class DataHandlerPhysicalChemicalModel(DataFrameHandler):
             self.calculate_din(ignore_qf_list=['B','S']) 
 
         self._add_waterbody_area_info()
+        self._set_position()
         
+    #==========================================================================    
+    def _set_position(self):
+        
+#         x=self.column_data[self.source]['VISS_EU_CD'][0]
+#         print(x[2:4],x[4:6],x[6:8],x[9:11],x[11:13],x[13:15])
+#         print(int(x[2:4])+int(x[4:6])/60+int(x[6:8])/3600)
+#         print(int(x[9:11])+int(x[11:13])/60+int(x[13:15])/3600)
+#         lat=int(x[2:4])+float(x[4:6])/60+float(x[6:8])/60
+        self.column_data[self.source]['LATIT_DD'] = self.column_data[self.source]['VISS_EU_CD'].apply(lambda x: int(x[2:4])+int(x[4:6])/60+int(x[6:8])/3600 if 'C' not in x else np.nan)
+        self.column_data[self.source]['LONGI_DD'] = self.column_data[self.source]['VISS_EU_CD'].apply(lambda x: int(x[9:11])+int(x[11:13])/60+int(x[13:15])/3600 if 'C' not in x else np.nan)
+                
     #==========================================================================
     def calculate_din(self, ignore_qf_list=[]):
         """ 
@@ -1363,7 +1375,8 @@ class DataHandler(object):
                     self.all_data['MXDEP'] = np.nan
                 
                 # MW: Add visit_id
-                self.all_data['visit_id_str'] = self.all_data['POSITION'] + \
+                self.all_data['visit_id_str'] = self.all_data['VISS_EU_CD'] + \
+                                                self.all_data['POSITION'] + \
                                                 self.all_data['SDATE'] + \
                                                 self.all_data['STIME']
 #                self.all_data['visit_id_str'] = self.all_data['LATIT_DD'] + \

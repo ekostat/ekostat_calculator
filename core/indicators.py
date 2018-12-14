@@ -333,7 +333,10 @@ class IndicatorBase(object):
             return global_EQR, status
         
         if value < 0:
-            raise('Error: _calculate_global_EQR_from_indicator_value: {} value below 0.'.format(value))
+            if self.name == 'indicator_oxygen':
+                value = 1e-10
+            else:
+                raise('Error: _calculate_global_EQR_from_indicator_value: {} value below 0.'.format(value))
         # Get EQR-class limits for the type area to be able to calculate the weighted numerical class
         def select_source(kwargs, key):
             if key in kwargs.keys():
@@ -361,6 +364,7 @@ class IndicatorBase(object):
 #        if self.name == 'BQI'  or self.name.lower() == 'oxygen':
         if HG_VALUE_LIMIT - GM_VALUE_LIMIT > 0:
             slope = 0.2
+            # When lower value means lower status (decreasing)
             if value > HG_VALUE_LIMIT: 
                 status = 'HIGH'
                 global_low = 0.8 
@@ -427,7 +431,7 @@ class IndicatorBase(object):
                 high_value = HG_VALUE_LIMIT 
                 low_value = 0
                 if value < 0:
-                    value = 0
+                    value = 1e-10
             #global_EQR = global_low + (ek - ek_low)/(ek_high-ek_low)*-0.2      
                     
 #        print('******',REF_VALUE,'******')
@@ -460,7 +464,7 @@ class IndicatorBase(object):
             status = ''
             return global_EQR, status
         if local_EQR < 0:
-            raise Exception('Error: _calculate_global_EQR_from_indicator_value: {} local_EQR value below 0.'.format(local_EQR))
+            raise Exception('Error: _calculate_global_EQR_from_local_EQR: {} local_EQR value below 0.'.format(local_EQR))
         
         # Get EQR-class limits for the type area to be able to calculate the weighted numerical class
         HG_EQR_LIMIT = self.ref_settings.get_value(variable = 'HG_EQR_LIMIT', water_body = water_body)
@@ -1544,6 +1548,8 @@ class IndicatorOxygen(IndicatorBase):
             test1_ok = True
         else:
             test1_ok = False
+        if result < 0:
+            pass
         return result, no_yr, month_list, test1_ok
     
     ###############################################################################    
@@ -1942,12 +1948,12 @@ class IndicatorPhytoplankton(IndicatorBase):
                 try:
                     [p for p in ['CPHL_INTEG','BIOV_CONC_ALL'] if p in indicator_list][0]   
                 except IndexError:
-                    print(indicator_list, df['VISS_EU_CD'].unique())
+                    print('indexerror no indicators',indicator_list, df['VISS_EU_CD'].unique())
                     return False
                 param = [p for p in ['CPHL_INTEG','BIOV_CONC_ALL'] if p in indicator_list][0]
                 if param in indicator_cols:
                     if len(df) > 1:
-                        print(df.STATN, df[param])
+                        print('length of df > 1',df.STATN, df[param])
                     MXD = df.MXDEP.values[0]
                     MND = df.MNDEP.values[0]
                     if MXD <= max_surf_deph:
@@ -1968,7 +1974,7 @@ class IndicatorPhytoplankton(IndicatorBase):
             else:
                 add_df[self.indicator_parameter] = value
             if len(df) > 1:
-                print(add_df)  
+                print('length of add_df > 1',add_df)
             return add_df
         #-----------------------------------------------------------------------------------        
         def get_integ_sample(df):
@@ -1994,11 +2000,11 @@ class IndicatorPhytoplankton(IndicatorBase):
 #                     MXD = float(MXD)
 #                     MND = float(MND)
                 if len(MXD) > 1:  
-                    print((MND <= start_deph_max).any(), (MXD <= end_deph_max).any(), (MXD >= end_deph_min).all())
+                    print('length of MXD > 1',(MND <= start_deph_max).any(), (MXD <= end_deph_max).any(), (MXD >= end_deph_min).all())
                     if (MND <= start_deph_max).all() and (MXD <= end_deph_max).all() and (MXD >= end_deph_min).all():
                         value = df.loc[df.MXDEP == MXD[0], param]
                         if len(df[param]) != len(value.values):
-                            print(df[param], value.values)
+                            print('df and value does not match', df[param], value.values)
                         add_df = df.loc[df[param] == value.values,].copy()
     #                     add_df = df.loc[df[param] == value.values[0],].copy()
     # #                     print('number of values: ',len(value.values))
@@ -2009,12 +2015,12 @@ class IndicatorPhytoplankton(IndicatorBase):
     #                         return False
                     elif (MND <= start_deph_max).any() and (MXD <= end_deph_max).any() and (MXD >= end_deph_min).all():
 #                         valid_MXD = MXD.where(MXD <= end_deph_max) MXD[np.where(MXD <= end_deph_max)]
-                        print(np.where(MXD <= end_deph_max))
+#                         print(np.where(MXD <= end_deph_max))
                         valid_MXD = MXD[np.where(MXD <= end_deph_max)]
                         value = df.loc[df.MXDEP == valid_MXD[0], param]
-                        print(value.values, len(value.values))
+                        # print(value.values, len(value.values))
                         if len(df[param]) != len(value.values):
-                            print(df[param], value.values)
+                            print('df and value does not match', df[param], value.values)
                         add_df = df.loc[df[param] == value.values[0],].copy()
                     else:
                         return False
@@ -2024,7 +2030,7 @@ class IndicatorPhytoplankton(IndicatorBase):
                     if MND <= start_deph_max and MXD <= end_deph_max and MXD >= end_deph_min:
                         value = df.loc[df.MXDEP == MXD[0], param]
                         if len(df[param]) != len(value.values):
-                            print(df[param], value.values)
+                            print('df and value does not match', df[param], value.values)
                         add_df = df.loc[df[param] == value.values,].copy()
     #                     add_df = df.loc[df[param] == value.values[0],].copy()
     # #                     print('number of values: ',len(value.values))
@@ -2043,14 +2049,14 @@ class IndicatorPhytoplankton(IndicatorBase):
             else:
                 add_df[self.indicator_parameter] = value
                 
-            if len(df) > 1:
+            # if len(df) > 1:
                 # TODO: if this is turned on later concat of surface_df and add_df does not work, why?
 #                 temp_df = self.sld.load_df(self.name+'_replicas')
 #                 if isinstance(temp_df, pd.DataFrame):
 #                     self.sld.save_df(pd.concat([temp_df, add_df]), self.name+'_replicas', force_save_txt = True)
 #                 else:
 #                     self.sld.save_df(add_df, self.name+'_replicas', force_save_txt = True)
-                print(add_df, add_df.STATN)    
+#                 print(add_df, add_df.STATN)
             return add_df
         #-----------------------------------------------------------------------------------
         
@@ -2079,12 +2085,9 @@ class IndicatorPhytoplankton(IndicatorBase):
                         add_df['SALT'] = s
                     elif np.isnan(add_df.SALT.tolist()[0]):
                         try:
-                            print(name[1])
-                            print(name[0])
-                            print(add_df.VISS_EU_CD.values)
                             s = self.get_closest_matching_salinity(name[1], name[0], add_df.VISS_EU_CD.values[0], deph_max = self.end_deph_max)
                         except KeyError:
-                            print(add_df)
+                            print('cant get closest matching salinity', add_df)
                             break
                         add_df['SALT'] = s
                     surface_df = pd.concat([surface_df, add_df])
@@ -2165,13 +2168,12 @@ class IndicatorPhytoplankton(IndicatorBase):
             TO BE UPDATED TO local_EQR for mean of nutrient conc and salinity 0-10 m.
         """
         surface_df, index_list, comment = self._get_surface_df(df, type_area)
+        # save the selected indices from df to a txt file
         save_df = df.loc[index_list].copy()
         save_df['COMMENT'] = comment
         if not save_df.empty:
             if os.path.exists(self.sld.directory + self.name + '_changed_indices.txt'):
                 temp_df = self.sld.load_df(self.name + '_changed_indices')
-                print(temp_df.columns)
-                print(save_df.columns)
                 self.sld.save_df(pd.concat([temp_df, save_df]), self.name + '_changed_indices')
             else:
                 self.sld.save_df(save_df, self.name + '_changed_indices')

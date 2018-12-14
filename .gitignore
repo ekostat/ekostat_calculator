@@ -3,6 +3,7 @@
 .spyproject/vcs.ini
 .spyproject/encoding.ini
 .spyproject/codestyle.ini
+.idea*
 **/__pycache__/*
 *.pyc
 workspaces/*
