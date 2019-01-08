@@ -1973,8 +1973,6 @@ class IndicatorPhytoplankton(IndicatorBase):
                 add_df['CPHL_SOURCE'] = param
             else:
                 add_df[self.indicator_parameter] = value
-            if len(df) > 1:
-                print('length of add_df > 1',add_df)
             return add_df
         #-----------------------------------------------------------------------------------        
         def get_integ_sample(df):
