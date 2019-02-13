@@ -238,6 +238,7 @@ class IndexHandler(object):
                 if bool_dict.get('boolean') is not None:
                     # Merge boolean from parent with new boolean from filter_object, filter_object is either DataFilter or SettingsDataFilter
                     if 'SE' in key:
+                        # TODO: I do not understand what this does, it seems to have no effect
                         test = filter_object.get_filter_boolean_for_df(df, water_body = water_body, indicator=indicator, **kwargs)
                         bool_dict.get('boolean') & test
                     bool_dict[key]['boolean'] = bool_dict.get('boolean') & filter_object.get_filter_boolean_for_df(df, water_body = water_body, indicator=indicator, **kwargs)
@@ -523,10 +524,6 @@ class IndexHandler(object):
             raise exceptions.MissingInputVariable('subset missing') 
         
         try:
-#            print()
-#            print()
-#            print('-'*120)
-#            print('step_0', 'subset', 'step_1', 'step_2', 'water_body', 'indicator')
             boolean = self._get_boolean(step_0, subset, step_1, step_2, water_body, indicator)
         except:
             raise exceptions.BooleanNotFound

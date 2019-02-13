@@ -1695,12 +1695,34 @@ class WorkSpace(object):
         indicator_filelist = [f for f in os.listdir(result_directory) if '-by_date.pkl' in f]
         sld = core.SaveLoadDelete(result_directory) 
         indicator_dict = {}
+        datatype_dict = {'physchem': [], 'phytoplankton': [], 'chlorophyll': [], 'zoobenthos': []}
+        # TODO put this in config file
+        indicator2datatype = {'ntot_winter': 'physchem', 'ptot_winter': 'physchem',
+                              'din_winter': 'physchem', 'dip_winter': 'physchem',
+                              'ntot_summer': 'physchem', 'ptot_summer': 'physchem',
+                              'secchi': 'physchem', 'oxygen': 'physchem',
+                              'biov': 'phytoplankton', 'chl': 'chlorophyll',
+                              'bqi': 'zoobenthos'}
         for indicator in indicator_filelist:
 #             if not os.path.exists(sld.directory + indicator + '-by_date.pkl') or not os.path.exists(sld.directory +indicator + '-by_date.txt'):
 #                 pass #self.indicator_dict[indicator] = False
 #             else:
+            datatype = indicator2datatype[indicator.split('-')[0][10:]]
+            datatype_dict[datatype].append(sld.load_df(file_name = indicator))
             indicator_dict[indicator] = sld.load_df(file_name = indicator) # + '-by_date'
-                
+        column_mapping = pd.read_csv(self.paths['resource_directory'] + '/mappings/waters_column_mapping.txt',
+                                     sep='\t', encoding='cp1252')
+        c = {key: value[0] for key, value in column_mapping.to_dict('list').items()}
+        remove_cols = ['REFERENCE_VALUE', 'HG_VALUE_LIMIT', 'GM_VALUE_LIMIT', 'MP_VALUE_LIMIT', 'PB_VALUE_LIMIT',
+                       'global_EQR', 'local_EQR']
+        for key, item in datatype_dict.items():
+            df_list = item
+            df = pd.concat(df_list)
+            df = df.rename(columns=c)
+            col_list = df.columns
+            col_list = [c for c in col_list if c not in remove_cols]
+            sld.save_df(df[col_list], 'WATERS_export_'+key, force_save_txt=True)
+
         df_list = list(indicator_dict.values())
         all_df = pd.concat(df_list)
         column_mapping = pd.read_csv(self.paths['resource_directory'] + '/mappings/waters_column_mapping.txt', sep='\t', encoding='cp1252')

@@ -35,7 +35,7 @@ print(core.__file__)
 pd.__version__
 ###############################################################################################################################
 # ### Load directories
-root_directory = 'D:/github/w_vattenstatus/ekostat_calculator'  # "../" #os.getcwd()
+root_directory = 'C:/github/w_vattenstatus/ekostat_calculator'  # "../" #os.getcwd()
 workspace_directory = root_directory + '/workspaces'
 resource_directory = root_directory + '/resources'
 
@@ -45,9 +45,9 @@ print(root_directory)
 paths = {'user_id': user_id,
          'workspace_directory': root_directory + '/workspaces',
          'resource_directory': root_directory + '/resources',
-         'log_directory': 'D:/github' + '/log',
-         'test_data_directory': 'D:/github' + '/test_data',
-         'cache_directory': 'D:/github/w_vattenstatus/cache'}
+         'log_directory': 'C:/github' + '/log',
+         'test_data_directory': 'C:/github' + '/test_data',
+         'cache_directory': 'C:/github/w_vattenstatus/cache'}
 
 t0 = time.time()
 ekos = EventHandler(**paths)
@@ -58,9 +58,9 @@ print('-' * 50)
 print('Time for request: {}'.format(time.time() - t0))
 ###############################################################################################################################
 # ### set alias etc.
-workspace_alias = 'klassning_Amanda'  # 'kustzon_selection'
+workspace_alias = 'test1'  # 'kustzon_selection'
 # ### Make a new workspace
-# ekos.copy_workspace(source_uuid='default_workspace', target_alias=workspace_alias)
+#ekos.copy_workspace(source_uuid='default_workspace', target_alias=workspace_alias)
 # ### See existing workspaces and choose workspace name to load
 ekos.print_workspaces()
 workspace_uuid = ekos.get_unique_id_for_alias(workspace_alias=workspace_alias)  # 'kuszonsmodellen' lena_indicator

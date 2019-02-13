@@ -23,5 +23,5 @@ SIZCL
 PARAM												
 VALUE												
 QFLAG												
-RLABO
-WADEP
+RLABO												
+WADEP												

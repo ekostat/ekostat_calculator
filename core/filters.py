@@ -80,12 +80,7 @@ class DataFilter(object):
         value_list = self.get_include_list_filter(parameter)
         if not value_list:
             return False
-#        print('¤¤¤¤¤¤¤¤¤¤¤¤¤¤¤¤¤')
-#        print('\n'*5)
-#        print(parameter)
-#        print(value_list)
-#        print('\n'*5) 
-
+        # TODO: add check that this works for both strings and floats (not used for floats currently)
         boolean = df[parameter].astype(str).isin(value_list)
         
         # If parameter is MYEAR we want to include also some month before to be
@@ -95,15 +90,15 @@ class DataFilter(object):
             stop_date = datetime.datetime(int(value_list[0])-1, 12, 31) # Include nov and dec 
             date_boolean = df['date'].between(start_date, stop_date) 
             boolean = boolean | date_boolean
+        # here the boolean for include list filters is returned
         return boolean
-    
     
         
     #==========================================================================
     def get_filter_boolean_for_df(self, df=None, **kwargs): 
         """
         Get boolean tuple to use for filtering. 
-        kwargs here so that all methods named get_filter_boolean_for_df can be treeted the same way. 
+        kwargs here so that all methods named get_filter_boolean_for_df can be treated the same way.
         """
         combined_boolean = ()
         
@@ -1507,6 +1502,9 @@ class SettingsRef(SettingsBase):
             else:
                 max_s = self.get_value(variable = 'SALINITY_MAX', type_area = type_area)
             if isinstance(salinity, (list, tuple, np.ndarray)):
+                # TODO RuntimeWarning: invalid value encountered in less salinity[salinity < 2] = 2
+                # TODO RuntimeWarning: invalid value encountered in greater salinity[salinity > max_s] = max_s
+                # caused by nan in the list, returns False so no real problem except the printing of the warning
                 salinity[salinity < 2] = 2
                 salinity[salinity > max_s] = max_s
                 ref_list = []

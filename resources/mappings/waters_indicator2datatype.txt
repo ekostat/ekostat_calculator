@@ -1,0 +1,5 @@
+datatype	indicators
+physchem	ntot_winter, ptot_winter, din_winter, dip_winter, ntot_summer, ptot_summer, secchi, oxygen
+phytoplankton	biov
+chlorophyll	chl
+zoobenthos	bqi
