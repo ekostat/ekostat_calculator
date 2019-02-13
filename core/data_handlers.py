@@ -152,8 +152,8 @@ class DataFrameHandler(ColumnDataHandler, RowDataHandler):
     #==========================================================================
     def _add_columns(self):
         """
-        updated 20181123 by Lena Viktorsson
-        comment: seems not to have been in use before. Now used to add metadata from waterbody matchfile when missing
+        updated 20190123 by Lena Viktorsson
+        added sample_id column
         """ 
         print('in _add_columns')
 #         self.df['time'] = pd.Series(pd.to_datetime(self.df['SDATE'] + self.df['STIME'], format='%Y-%m-%d%H:%M'))
@@ -174,6 +174,16 @@ class DataFrameHandler(ColumnDataHandler, RowDataHandler):
                                 self.df['LATIT_DD'].apply(str) + \
                                 ' ' + \
                                 self.df['LONGI_DD'].apply(str)
+        if 'SHARKID_MD5' in self.df.columns:
+            # use sharkid_md for sample id for biological datatypes
+            self.df['SAMPLE_ID'] = self.df.SHARKID_MD5
+        else:
+            # use year_seriesno_shipcod for sample_id for phys/chem datatype
+            self.df['SAMPLE_ID'] = self.df['MYEAR'].apply(str) + \
+                                    '_' + \
+                                   self.df['SERNO'] + \
+                                    '_' + \
+                                   self.df['SHIPC']
                                 
     #==========================================================================
     def _add_field(self):
@@ -245,6 +255,7 @@ class DataFrameHandler(ColumnDataHandler, RowDataHandler):
                 ms_cd_code = self.mapping_objects['water_body'].get_mscd_for_water_body(wb_id)
                 new_list.append(ms_cd_code)    
             self.column_data[self.source]['MS_CD'] = new_list
+
     #==========================================================================
     def _check_nr_of_parameters(self):
         """
@@ -659,7 +670,7 @@ class DataHandlerPhysicalChemical(DataFrameHandler):
         self.column_data = {} #pd.DataFrame()
         self.row_data = {} #pd.DataFrame()
 
-    #==========================================================================
+    # ==========================================================================
     def _calculate_data(self):
         """ 
         Rewritten from parent
@@ -671,8 +682,7 @@ class DataHandlerPhysicalChemical(DataFrameHandler):
         if self.no_qflags:
             self.calculate_din()
         else:
-            self.calculate_din(ignore_qf_list=['B','S']) 
-
+            self.calculate_din(ignore_qf_list=['B','S'])
         
     #==========================================================================
     def calculate_din(self, ignore_qf_list=[]):
@@ -918,7 +928,17 @@ class DataHandlerZoobenthos(DataFrameHandler):
         
         self.column_data = {} #pd.DataFrame()
         self.row_data = {} #pd.DataFrame()
-        
+
+    #==========================================================================
+
+    def _calculate_data(self):
+        """
+        Rewritten from parent
+        If there are no quality flags in data self.no_qflags is initialized
+        as True
+        """
+        self._add_waterbody_area_info()
+        #self._add_obspoint()
     #==========================================================================    
         
 """
@@ -942,9 +962,18 @@ class DataHandlerChlorophyll(DataFrameHandler):
         
         self.column_data = {} #pd.DataFrame()
         self.row_data = {} #pd.DataFrame()
-        
-    #==========================================================================   
 
+    #==========================================================================
+
+    def _calculate_data(self):
+        """
+        Rewritten from parent
+        If there are no quality flags in data self.no_qflags is initialized
+        as True
+        """
+        self._add_waterbody_area_info()
+
+    #==========================================================================
 """
 #==============================================================================
 #==============================================================================
@@ -966,15 +995,25 @@ class DataHandlerPhytoplankton(DataFrameHandler):
         
         self.column_data = {} #pd.DataFrame()
         self.row_data = {} #pd.DataFrame()
-    
-    #==========================================================================
+
+    # ==========================================================================
     def _additional_filter(self):
         self._delete_columns_from_df(columns=self.filter_parameters.extra_fields + [self.filter_parameters.value_key])
         self._drop_duplicates(based_on_column='SHARKID_MD5')
         # TODO: check if this overwrites earlier info and then why
         self.filter_parameters.use_parameters = 'BIOV_CONC_ALL'
 
-    #==========================================================================
+    # ==========================================================================
+
+    def _calculate_data(self):
+        """
+        Rewritten from parent
+        If there are no quality flags in data self.no_qflags is initialized
+        as True
+        """
+        self._add_waterbody_area_info()
+    # ==========================================================================
+
     def _extended_filter_for_phytoplanton_data(self):     
         """
         Selects parameters and TROPHIC-status according to 
@@ -1341,7 +1380,7 @@ class DataHandler(object):
                 print('all_data loaded from pickle')
             except (FileNotFoundError, UnboundLocalError) as e: 
                 # UnboundLocalError is for when df was not created in sld_object.load_df()
-                print('MMMMMMMMM')
+                print('setting up all_data all_data_raw.pkl')
                 try: 
                     self.all_data = sld_object.load_df('all_data_raw', load_txt=False) # 20180525    by Magnus Wenzer
 #                    self.all_data = pickle.load(open(self.export_directory + "/all_data_raw.pickle", "rb"))
@@ -1368,57 +1407,28 @@ class DataHandler(object):
                 for i, x in enumerate(statn): 
                     if x == "":
                         statn[i] = pos[i]
-                self.all_data['STATN'] = statn
+                # set all station names to uppercase to limit number of synonyms
+                self.all_data['STATN'] = [s.upper() for s in statn]
                 
                 if 'MNDEP' not in self.all_data.columns: 
                     self.all_data['MNDEP'] = np.nan
                     self.all_data['MXDEP'] = np.nan
                 
                 # MW: Add visit_id
+                # TODO: in all places where this is used change to use sample_id instead and remove this
                 self.all_data['visit_id_str'] = self.all_data['VISS_EU_CD'] + \
                                                 self.all_data['POSITION'] + \
                                                 self.all_data['SDATE'] + \
                                                 self.all_data['STIME']
-#                self.all_data['visit_id_str'] = self.all_data['LATIT_DD'] + \
-#                                                self.all_data['LONGI_DD'] + \
-#                                                self.all_data['SDATE'] + \
-#                                                self.all_data['STIME']
-#                depth_interval=[0, 10]           
-#                #--------------------------------------------------------------
-#                par_boolean = ~self.all_data['CPHL_BTL'].isnull() 
-#        
-#                depth_boolean = (self.all_data['DEPH'] >= depth_interval[0]) & \
-#                                (self.all_data['DEPH'] <= depth_interval[1])
-#                par_boolean = par_boolean & depth_boolean
-#                
-#                visit_boolean = self.all_data['visit_id_str'] == '58.9113311.187502017-08-0111:40'
-#                
-#                print('='*50)
-#                print('BEFORE')
-#                print('='*50)
-#                print(self.all_data.loc[visit_boolean & par_boolean, ['index_column', 'DEPH', 'CPHL_BTL', 'Q_CPHL_BTL']])
-#                print('-'*50)
-#                #--------------------------------------------------------------
-                
 
                 for col in self.all_data.columns:
                     if col.startswith('Q_'): 
                         par = col[2:]
-#                        print(par)
                         self.all_data[par] = self.all_data[par].apply(float_convert)
                         self.all_data[col] = self.all_data[col].apply(str_convert)
-#                        try:
-#                            self.all_data[par] = self.all_data[par].apply(lambda x: float(x) if x else np.nan) 
-#                        except ValueError as e:
-#                            self.all_data[par] = self.all_data[par].apply(convert)
-                            #TODO: send info to user
-                    elif col in ['DIN', 'CPHL_BTL', 'CPHL_SAT','WADEP', 'MNDEP', 'MXDEP']: 
-#                        print(col)
+                            # TODO: send info to user
+                    elif col in ['DIN', 'CPHL_BTL', 'CPHL_SAT','WADEP', 'MNDEP', 'MXDEP']:
                         self.all_data[col] = self.all_data[col].apply(float_convert)
-#                        try:
-#                            self.all_data[par] = self.all_data[par].apply(lambda x: float(x) if x else np.nan) 
-#                        except ValueError as e:
-#                            self.all_data[par] = self.all_data[par].apply(convert)
                     elif col in self.float_parameters:
                         self.all_data[col] = self.all_data[col].apply(float_convert)
                     elif col == 'VISS_EU_CD':
@@ -1442,12 +1452,6 @@ class DataHandler(object):
                     sld_object.save_df(self.all_data.iloc[remove_index], 'removed__before_saving_all_data')
                     self.all_data.drop(remove_index, inplace = True)
                     self.all_data['date'] = pd.to_datetime(self.all_data['SDATE'])
-                    
-#                # MW: Add visit_id
-#                self.all_data['visit_id_str'] = self.all_data['LATIT_DD'] + \
-#                                                self.all_data['LONGI_DD'] + \
-#                                                self.all_data['SDATE'] + \
-#                                                self.all_data['STIME']
                 
                 # MW: Add prioritized salinity 
                 self._add_prioritized_parameter('SALT', 'SALT_BTL', 'SALT_CTD')
@@ -1457,22 +1461,6 @@ class DataHandler(object):
                 
                 # MW: Add prioritized oxygen 
                 self._add_prioritized_parameter('DOXY', 'DOXY_BTL', 'DOXY_CTD')
-                
-#                #--------------------------------------------------------------
-#                par_boolean = ~self.all_data['CPHL_BTL'].isnull() 
-#        
-#                depth_boolean = (self.all_data['DEPH'] >= depth_interval[0]) & \
-#                                (self.all_data['DEPH'] <= depth_interval[1])
-#                par_boolean = par_boolean & depth_boolean
-#                
-#                visit_boolean = self.all_data['visit_id_str'] == '58.9113311.187502017-08-0111:40'
-#                
-#                print('='*50)
-#                print('AFTER')
-#                print('='*50)
-#                print(self.all_data.loc[visit_boolean & par_boolean, ['index_column', 'DEPH', 'CPHL_BTL', 'Q_CPHL_BTL']])
-#                print('-'*50)
-#                #--------------------------------------------------------------
                 
                 if 'CPHL_BTL' in self.all_data.columns:
                     # MW: Add integrated chlorophyll from CHPL_BTL
@@ -1485,12 +1473,6 @@ class DataHandler(object):
                 self._add_waterbody_area_info()
                 
                 sld_object.save_df(self.all_data, file_name='all_data', force_save_txt=True, only_pkl=False) # 20180525    by Magnus Wenzer
-#                self.df = 
-#                with open(self.export_directory + "/all_data.pkl", "rb") as fid:
-#                    pickle.dump(self.all_data, fid, "wb")
-#                core.load.save_data_file(df=self.all_data, 
-#                               directory=self.export_directory, 
-#                               file_name='all_data.txt')
                 filetype = 'txt'
                 print('all_data loaded from txt and new parameters added')
             return True, filetype
