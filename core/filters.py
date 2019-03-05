@@ -355,7 +355,7 @@ class DataFilter(object):
 ###############################################################################
 class DataFilterFile(object):
     """
-    Get and write information to data filet file. 
+    Get and write information to data filter file.
     """
     def __init__(self, file_path=None, directory=None, file_name=None, string_in_file='ekostat'): 
         if file_path:
@@ -392,10 +392,9 @@ class DataFilterFile(object):
             return False
         elif not os.path.exists(self.file_path): 
             return []
-        
-        data_list = []
-        with codecs.open(self.file_path, 'r', encoding='cp1252') as fid: 
-            data_list.append(fid.readline().strip())
+
+        with codecs.open(self.file_path, 'r', encoding='cp1252') as fid:
+            data_list = [statn.strip('\n') for statn in fid.readlines()]
         return data_list 
     
     #==========================================================================
@@ -530,8 +529,17 @@ class SettingsFile(object):
         self.df['TYPE_AREA_SUFFIX'] = suffix_list
         # Oklart med dtype här. Battre inlasning kravs! MW
 #        self.type_area_list = list(self.df['TYPE_AREA_NUMBER'])
-        
-        
+        for col in self.str_columns:
+            self._set_nan2str(col=col)
+
+    # ==========================================================================
+    def _set_nan2str(self, col=None):
+        """
+        Have not figured out how to set pandas column to string and get empty rows as empty string instead of nan
+        :param col: columns that should be dtype str
+        :return: change all isnull rows to empty string
+        """
+        self.df[col].loc[self.df[col].isnull()] = ''
         
     #==========================================================================
     def change_path(self, new_file_path):
@@ -1009,9 +1017,12 @@ class SettingsFile(object):
         Get boolean tuple to use for filtering
         """
         combined_boolean = pd.Series(np.ones(len(df), dtype=bool)) 
-        if water_body:
-            combined_boolean = df['VISS_EU_CD'] == water_body
-        else:
+        #if water_body:
+            # TODO: this overwrites waterbody filter set to boolean in previous steps, remove? Or how to make sure
+            # indicator settings filters are applied according to type area?
+        #    combined_boolean = df['VISS_EU_CD'] == water_body
+        #else:
+        if not bool(water_body):
             raise exceptions.MissingInputVariable
 #            raise InputError('In SettingsFile get_filter_boolean_for_df','Must provide water_body for settings filter')
             
@@ -1780,13 +1791,16 @@ class WaterBodyFilter(object):
     water_body is given as VISS_EU_CD string
     and df is the pandas dataframe for which to return the boolean 
     """
-        
+
+    def __init__(self):
+        self.water_body_parameter = 'VISS_EU_CD'
+
     def get_filter_boolean_for_df(self, df = None, water_body = None, **kwargs):
        """
        get boolean for given water_body, must be given as a VISS_EU_CD string
        """
        
-       boolean = df['VISS_EU_CD'] == water_body
+       boolean = df[self.water_body_parameter] == water_body
             
        return boolean                    
                                  
@@ -1826,11 +1840,11 @@ class WaterBodyStationFilter(object):
     def get_list(self, include=True, water_body=None): 
         
         key, file_path = self._get_file_path(wb=water_body, include=include)
-        filter_object = DataFilterFile(file_path=file_path, string_in_file='wb_') 
+        filter_object = DataFilterFile(file_path=file_path, string_in_file='wb_')
         return filter_object.get_filter()
         
     #==========================================================================
-    def get_filter_boolean_for_df(self, df=None, water_body=None): 
+    def get_filter_boolean_for_df(self, df=None, water_body=None, **kwargs):
         """
         Get boolean tuple to use for filtering on "area". 
         Boolean is true for matching water_body excluding the stations in the wb exclude list. 
@@ -1839,21 +1853,27 @@ class WaterBodyStationFilter(object):
         # Check include and exclude list
         include_stations = self.get_list(include=True, water_body=water_body)
         exclude_stations = self.get_list(include=False, water_body=water_body)
-        print(include_stations)
-        print(exclude_stations)
+        print('include stations {}'.format(include_stations))
+        print('exclude stations {}'.format(exclude_stations))
+        if len(include_stations) == 2:
+            water_body_outside = include_stations[1]
         # self.water_body_parameter is set above. Could be name or number...
-        boolean = ((df[self.water_body_parameter] == water_body) | \
-                  (df['STATN'].isin(include_stations))) & \
-                  (~df['STATN'].isin(exclude_stations ))
+        # Gets boolean with True for all rows with wb match OR station match
+        boolean = (df[self.water_body_parameter] == water_body) | \
+                  ((df['STATN'].isin(include_stations)) & \
+                  (~df['STATN'].isin(exclude_stations)))
         print(set(df['STATN'][boolean]))
+        print(set(df['WATER_BODY_NAME'][boolean]))
         return boolean
         
         
     #==========================================================================
-    def include_stations_in_water_body(self, station_list=None, water_body=None): 
+    def include_stations_in_water_body(self, station_list=[], water_body=None):
         """
         Adds information on which stations to include in the given water_body. 
-        """ 
+        """
+        # set stations to upper case
+        station_list = [s.upper() for s in station_list]
         key, file_path = self._get_file_path(wb=water_body, include=True)
         filter_object = DataFilterFile(file_path=file_path, string_in_file='wb_') 
         filter_object.set_filter(station_list)
@@ -1861,9 +1881,11 @@ class WaterBodyStationFilter(object):
     #==========================================================================
     def exclude_stations_in_water_body(self, station_list=None, water_body=None): 
         """
-        Adds information on which stations to excludeclude in the given water_body. 
-        This is probably nopt used. Instead this can be filterd in step_1 data filter. 
-        """ 
+        Adds information on which stations to exclude in the given water_body.
+        This is probably not used. Instead this can be filtered in step_1 data filter.
+        """
+        # set stations to upper case
+        station_list = [s.upper() for s in station_list]
         key, file_path = self._get_file_path(wb=water_body, include=False)
         filter_object = DataFilterFile(file_path=file_path, string_in_file='wb_') 
         filter_object.set_filter(station_list)

@@ -123,9 +123,13 @@ w.set_data_filter(subset=subset_uuid, step=1,
 ########################################################################################################################
 # #### waterbody filter
 w.set_data_filter(subset=subset_uuid, step=1,
-                         filter_type='include_list', 
-                         filter_name='viss_eu_cd',
-                         data=[])
+                  filter_type='include_list',
+                  filter_name='viss_eu_cd',
+                  data=[])
+# Long term ox def ['SE581740-114820', 'SE581260-113220', 'SE581700-113000', 'SE582000-115270', 'SE563000-123351',
+#                         'SE561030-122821', 'SE562450-122751', 'SE562000-123800', 'SE555545-124332', 'SE592000-184700',
+#                         'SE658352-163189', 'SE591800-181360', 'SE592290-181600']
+# Onsala kustvatten och GBG s Skärgård 'SE573300-113801', 'SE572540-114801'
 # Släggö: SE646775-124345, Omnefjärden: SE625710-183000, Hargsviken: 'SE601070-182870', Rånefjärden: 'SE654820-222660'
 #'SE631840-191130','SE581700-113000','SE654820-222660','SE581700-113000','SE631610-184500','SE585100-110600','SE584340-174401', 'SE654470-222700', 'SE584340-174401', 'SE633000-195000', 'SE625180-181655'
 #['SE581700-113000','SE631610-184500','SE585100-110600','SE584340-174401', 'SE654470-222700', 'SE584340-174401', 'SE633000-195000', 'SE625180-181655'])
@@ -148,21 +152,23 @@ filtered_data = w.get_filtered_data(step=1, subset=subset_uuid)
 # Step 2
 # Load indicator settings filter
 w.get_step_object(step=2, subset=subset_uuid).load_indicator_settings_filters()
+#w.get_step_object(step=2, subset=subset_uuid).set_water_body_station_filter(
+#    water_body='SE573300-113801', include=True, station_list=['Valö', 'Dana fjord'])
 ########################################################################################################################
 # set available indicators
-w.get_available_indicators(subset= subset_uuid, step=2)
+w.get_available_indicators(subset=subset_uuid, step=2)
  
 ########################################################################################################################
 # ### choose indicators
 #list(zip(typeA_list, df_step1.WATER_TYPE_AREA.unique()))
 # indicator_list = ['oxygen','din_winter','ntot_summer', 'ntot_winter', 'dip_winter', 'ptot_summer', 'ptot_winter', 'secchi']
 # indicator_list = ['din_winter','ntot_summer', 'ntot_winter', 'dip_winter', 'ptot_summer', 'ptot_winter']
-indicator_list = ['chl', 'biov']
-# indicator_list = ['secchisat']
+# indicator_list = ['chl', 'biov']
+# indicator_list = ['oxygen']
 # indicator_list = ['bqi', 'secchi']
 # indicator_list = ['din_winter','ntot_summer']
-indicator_list = ['indicator_' + indicator for indicator in indicator_list]
-# indicator_list = w.available_indicators
+# indicator_list = ['indicator_' + indicator for indicator in indicator_list]
+indicator_list = w.available_indicators
 ########################################################################################################################
 # w.get_data_for_waterstool(step = 3, subset = subset_uuid, indicator_list = indicator_list)
 # ### Apply indicator data filter
@@ -175,7 +181,9 @@ for indicator in indicator_list:
     #print(w.mapping_objects['water_body'][wb])
     #print('*************************************')
    
-# df = w.get_filtered_data(subset = subset_uuid, step = 'step_2', water_body = 'SE625180-181655', indicator = 'indicator_din_winter').dropna(subset = ['DIN'])
+df = w.get_filtered_data(subset=subset_uuid, step='step_2', water_body='SE573300-113801', indicator='indicator_din_winter').dropna(subset=['DIN'])
+df = w.get_filtered_data(subset=subset_uuid, step='step_2', water_body='SE573300-113801', indicator='indicator_ntot_summer').dropna(subset=['NTOT'])
+
 ########################################################################################################################
 # # Step 3 
    

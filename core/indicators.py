@@ -618,6 +618,7 @@ class IndicatorBase(object):
         self.tolerance_settings
         self.indicator_ref_settings
         """
+
         # type_area = self.mapping_objects['water_body'].get_type_area_for_water_body(water_body, include_suffix=True)
         if water_body:
             filtered_data = self.get_filtered_data(subset=self.subset, step='step_2', water_body=water_body,
@@ -631,13 +632,12 @@ class IndicatorBase(object):
         else:
             water_body_list = self.get_filtered_data(subset=self.subset, step='step_2').dropna(
                 subset=[self.indicator_parameter], how='all').VISS_EU_CD.unique()
-        #        if water_body:
-        #        print('self.column_list', self.column_list)
-        #        print(water_body_list)
+
+        water_body_list = self.get_filtered_data(subset=self.subset, step='step_2').VISS_EU_CD.unique()
+
         for water_body in dict.fromkeys(water_body_list, True):
-            filtered_data = \
-            self.get_filtered_data(subset=self.subset, step='step_2', water_body=water_body, indicator=self.name)[
-                self.column_list].copy()
+            filtered_data = self.get_filtered_data(subset=self.subset, step='step_2',
+                                   water_body=water_body, indicator=self.name)[self.column_list].copy()
 
             if filtered_data.empty:
                 self.water_body_indicator_df[water_body] = filtered_data.copy()
@@ -647,7 +647,7 @@ class IndicatorBase(object):
             except AttributeError:
                 self.water_body_indicator_df[water_body] = filtered_data.copy()
                 continue
-            if len(filtered_data.VISS_EU_CD.unique()) > 1 or filtered_data.VISS_EU_CD.unique() != water_body:
+            if (len(filtered_data.VISS_EU_CD.unique()) > 1) or (filtered_data.VISS_EU_CD.unique() != water_body):
                 warnings.warn(message='Warning: get_filtered_data() returns {} waterbody. Input waterbody is {}'.format(
                     filtered_data.VISS_EU_CD.unique(), water_body))
                 raise Exception('Error: get_filtered_data() returns {} waterbody. Input waterbody is {}'.format(df.VISS_EU_CD.unique(), water_body))
@@ -1602,7 +1602,7 @@ class IndicatorOxygen(IndicatorBase):
             minimum_deficiency_depth = maxD
             affected_area_fraction = 0
         else:
-            minimum_deficiency_depth = critical_depth
+            minimum_deficiency_depth = np.floor(critical_depth)
             if minimum_deficiency_depth > maxD:
                 minimum_deficiency_depth = maxD
             affected_area_fraction = self.Hypsographs.get_area_fraction_at_depth(water_body=water_body,
@@ -1823,7 +1823,7 @@ class IndicatorOxygen(IndicatorBase):
             by_period['variance'] = np.nan
             by_period['p_ges'] = np.nan
 
-        return by_date_deep, False, False, by_period
+        return by_date, False, False, by_period
 
     ############################################################################### 
     def old_calculate_status(self, water_body):

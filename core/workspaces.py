@@ -352,7 +352,10 @@ class WorkStep(object):
     def get_water_body_filter_object(self):
         
         return self.water_body_filter
-    
+
+    # ==========================================================================
+    def get_water_body_station_filter_object(self):
+        return self.water_body_station_filter
     
     #==========================================================================
     def get_indicator_data_filter_settings(self, indicator): 
@@ -381,9 +384,9 @@ class WorkStep(object):
             return False
         return self.indicator_ref_settings.get(indicator, False)
     
-    #==========================================================================
-    def get_water_body_station_filter(self): 
-        return self.water_body_station_filter
+    # #==========================================================================
+    # def get_water_body_station_filter(self):
+    #     return self.water_body_station_filter
         
     #==========================================================================
     def get_indicator_settings_name_list(self):
@@ -460,9 +463,15 @@ class WorkStep(object):
         """
         Load filter object for waterbodies
         """
-        self.water_body_filter = core.WaterBodyFilter()        
-        
-        
+        self.water_body_filter = core.WaterBodyFilter()
+
+    # ==========================================================================
+    def load_water_body_station_filter(self):
+        #        print('load_water_body_station_filter')
+        self.water_body_station_filter = core.WaterBodyStationFilter(
+            water_body_settings_directory=self.paths['directory_paths']['water_body_station_filter'],
+            mapping_objects=self.mapping_objects)
+
     #==========================================================================
     def load_indicator_settings_filters(self): 
         """
@@ -497,13 +506,6 @@ class WorkStep(object):
         self.indicator_tolerance_settings = {} 
         for indicator, obj in self._indicator_setting_files.items():
             self.indicator_tolerance_settings[indicator.lower()] = core.SettingsTolerance(obj)
-            
-    #==========================================================================
-    def load_water_body_station_filter(self):
-#        print('load_water_body_station_filter')
-        self.water_body_station_filter = core.WaterBodyStationFilter(water_body_settings_directory=self.paths['directory_paths']['water_body_station_filter'], 
-                                                                     mapping_objects=self.mapping_objects)
-        
     
     #==========================================================================
     def get_results(self, force_loading_txt=False, **kwargs): 
@@ -1353,47 +1355,98 @@ class WorkSpace(object):
         kwargs['remove_data_before_year'] = min(df['MYEAR'])
         
         # Get subset and step objects
+        step_nr = step
         step = get_step_name(step)
         subset_object = self.get_subset_object(subset) 
-            # Indicator_settings are linked to step 2 by default
+        # Indicator_settings are linked to step 2 by default
         step_object = subset_object.get_step_object(step) 
         step_object.load_water_body_filter_object()
         # Get filter objects
         water_body_filter_object = step_object.get_water_body_filter_object()
+        water_body_station_filter_object = step_object.get_water_body_station_filter_object()
         indicator = indicator.lower()
         settings_filter_object = step_object.get_indicator_data_filter_settings(indicator)
+        if step not in self.index_handler.booleans['step_0'][subset]['step_1'].keys():
+            # If step_2 filter has not been added, add this now.
+            self.apply_data_filter(step=step_nr, subset=subset)
+            # self.index_handler.add_filter(filter_object=water_body_filter_object, step=step, subset=subset, **kwargs)
+            # TODO: should water_body be None above and should this not be moved outside the water_body loop?
+            # Also it is wrong that the filter object here is water_body_filter_object
+
         #set filters for all indicator in all waterbodies and if no key in boolean dict for waterbody add waterbody filter
         for water_body in dict.fromkeys(water_body_list, True):
-            if step not in self.index_handler.booleans['step_0'][subset]['step_1'].keys():
-                self.index_handler.add_filter(filter_object=water_body_filter_object, step=step, subset=subset, water_body=water_body, **kwargs)
-            
+
             if water_body not in self.index_handler.booleans['step_0'][subset]['step_1']['step_2'].keys():
-                self.index_handler.add_filter(filter_object=water_body_filter_object, step=step, subset=subset, water_body=water_body, **kwargs)
-                
-            self.index_handler.add_filter(filter_object=settings_filter_object, step=step, subset=subset, indicator=indicator, water_body=water_body, **kwargs)
-        
+            # If a filter for the waterbody has not been added, add this now
+                if bool(water_body_station_filter_object.get_list(water_body=water_body)) | \
+                        bool(water_body_station_filter_object.get_list(include=False, water_body=water_body)):
+                    # station filter for waterbody
+                    self.apply_water_body_station_filter(subset=subset, water_body=water_body, **kwargs)
+                else:
+                    # no station filter for waterbody
+                    self.apply_water_body_filter(subset=subset, water_body=water_body, **kwargs)
+
+                    # self.index_handler.add_filter(filter_object=water_body_filter_object, step=step, subset=subset,
+                    #                               water_body=water_body, **kwargs)
+            # index_handler should have filters for step and waterbody, now add filter for the indicator from
+            # the filter object for settings
+            self.index_handler.add_filter(filter_object=settings_filter_object, step=step, subset=subset,
+                                          indicator=indicator, water_body=water_body, **kwargs)
+            # temp_df_1 = self.get_filtered_data(step=2, subset=subset, water_body=water_body)
+            # temp_df_2 = self.get_filtered_data(step=2, subset=subset, indicator=indicator, water_body=water_body)
+            # print(temp_df_2['WATER_BODY_NAME'].unique(), temp_df_2['STATN'].unique())
         time_total = time.time() - t_tot
         print('-'*50)
         print('Total time to apply data filters for indicator {}:'.format(indicator), time_total)
         print('-'*50)
-        
-    #==========================================================================
-    def apply_water_body_station_filter(self, subset=None, water_body=None): 
+
+    # ==========================================================================
+    def apply_water_body_filter(self, subset=None, water_body=None, **kwargs):
+        """
+        set boolean for waterbody key in boolean dict. Should look in all relevant filterobjects for the waterbody
+        filterobjects currently used: WaterBodyFilter, WaterBodyStationFilter
+        use or between filters to get boolean
+        :param subset:
+        :param waterbody:
+        :return: no return
+        """
+        step = 2
+        if subset not in self.get_subset_list():
+            self._logger.debug('Provides subset "{}" not in subset list'.format(subset))
+            return False
+        else:
+            # Get subset and step objects
+            step = get_step_name(step)
+            subset_object = self.get_subset_object(subset)
+            step_object = subset_object.get_step_object(step)
+            # Get filter objects
+            water_body_filter_object = step_object.get_water_body_filter_object()
+
+        all_ok = self.index_handler.add_filter(filter_object=water_body_filter_object, step=step,
+                                               subset=subset, water_body=water_body, **kwargs)
+        return all_ok
+
+
+    # ==========================================================================
+    def apply_water_body_station_filter(self, subset=None, water_body=None, **kwargs):
         """
         Filter is applied in step 2. 
         """
         step = 2
         if subset not in self.get_subset_list(): 
-            self._logger.debug('Provides subset "{}" not in subset list'.format(subset))
+            self._logger.debug('Provided subset "{}" not in subset list'.format(subset))
             return False
         else:
             step = get_step_name(step)
             subset_object = self.get_subset_object(subset) 
             # Indicator_settings are linked to step 2 by default
             step_object = subset_object.get_step_object(step) 
-            filter_object = step_object.get_water_body_station_filter() 
+            filter_object = step_object.get_water_body_station_filter_object()
         
-        all_ok = self.index_handler.add_filter(filter_object=filter_object, step=step, subset=subset, water_body=water_body)
+        all_ok = self.index_handler.add_filter(filter_object=filter_object, step=step,
+                                               subset=subset, water_body=water_body, **kwargs)
+        temp_df = self.get_filtered_data(step=2, subset=subset)
+        temp_df = self.get_filtered_data(step=2, subset=subset, water_body=water_body)
         return all_ok
         
         
@@ -1670,7 +1723,7 @@ class WorkSpace(object):
     
     
     #==========================================================================
-    def get_water_body_station_filter(self, subset=None): 
+    def get_water_body_station_filter_object(self, subset=None):
         step = 2
         step_object = self.get_step_object(step=step, subset=subset)
         if not step_object:
@@ -1784,7 +1837,7 @@ class WorkSpace(object):
                         if len(filtered_data.dropna(subset = [parameter_list[0]])) > 0: # LV 20181126 
                             available_indicators.append(indicator)
                     else:
-                        filtered_data[parameter_list].apply(pd.to_numeric).dropna(thresh = len(parameter_list)) # MW 20180718 
+                        filtered_data[parameter_list].apply(pd.to_numeric).dropna(thresh = len(parameter_list)) # MW 20180718
                         available_indicators.append(indicator)
                 except KeyError as e:
                     #TODO: lägga till felmeddelande i log?

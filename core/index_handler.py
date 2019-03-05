@@ -89,7 +89,7 @@ class new_IndexHandler(object):
         Created 20180717    by Magnus Wenzer 
         """ 
         if key not in self.levels:
-            raise
+            raise Exception
             
         if key == self.levels[0]: 
             self.booleans = self._get_filter_level(key)
@@ -239,14 +239,23 @@ class IndexHandler(object):
                     # Merge boolean from parent with new boolean from filter_object, filter_object is either DataFilter or SettingsDataFilter
                     if 'SE' in key:
                         # TODO: I do not understand what this does, it seems to have no effect
-                        test = filter_object.get_filter_boolean_for_df(df, water_body = water_body, indicator=indicator, **kwargs)
+                        test = filter_object.get_filter_boolean_for_df(df, water_body = water_body,
+                                                                       indicator=indicator, **kwargs)
                         bool_dict.get('boolean') & test
-                    bool_dict[key]['boolean'] = bool_dict.get('boolean') & filter_object.get_filter_boolean_for_df(df, water_body = water_body, indicator=indicator, **kwargs)
+                    if key == 'step_2':
+                        # If we do not have a boolean for this key we copy from key before
+                        if bool_dict[key].get('boolean') is None:
+                            bool_dict[key]['boolean'] = bool_dict.get('boolean').copy()
+                    else:
+                        bool_dict[key]['boolean'] = bool_dict.get('boolean') & \
+                                                filter_object.get_filter_boolean_for_df(df,
+                                                    water_body=water_body, indicator=indicator, **kwargs)
                     
                 else:
                     # No boolean from parent, use new boolean from filter_object
                     # This one should only be possible from 'step_0' due to else-sats below..
-                    bool_dict[key]['boolean'] = filter_object.get_filter_boolean_for_df(df, water_body = water_body, indicator=indicator, **kwargs)
+                    bool_dict[key]['boolean'] = filter_object.get_filter_boolean_for_df(df,
+                                                    water_body = water_body, indicator=indicator, **kwargs)
                 break
             
             else:
@@ -514,7 +523,9 @@ class IndexHandler(object):
         
         
         if any([water_body, indicator]) and not all([water_body, indicator]):
-            raise exceptions.MissingInputVariable
+            # TODO remove pass, just temporary to see result for wb without indicator
+            pass
+            #raise exceptions.MissingInputVariable
         elif all([water_body, indicator]) and not subset:
             raise exceptions.MissingInputVariable('subset missing')
             
