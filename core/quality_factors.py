@@ -59,6 +59,7 @@ class QualityElementBase(object):
         self.mapping_objects = self.parent_workspace_object.mapping_objects
         self.index_handler = self.parent_workspace_object.index_handler
         self.step_object = self.parent_workspace_object.get_step_object(step = 3, subset = self.subset)
+        self.wb_id_header = self.parent_workspace_object.wb_id_header
         #paths and saving
         self.result_directory = self.step_object.paths['step_directory']+'/output/results/'
         self.sld = core.SaveLoadDelete(self.result_directory)
@@ -128,7 +129,7 @@ class QualityElementBase(object):
             # - outer: use union of keys from both frames, similar to a SQL full outer join; sort keys lexicographically
             # - inner: use intersection of keys from both frames, similar to a SQL inner join; preserve the order of the left keys
         # TODO: replace merge by join? 
-        merge_on = ['VISS_EU_CD', 'WATER_BODY_NAME', 'WATER_TYPE_AREA']
+        merge_on = [self.wb_id_header, 'WATER_BODY_NAME', 'WATER_TYPE_AREA']
         def mean_of_indicators(indicator_name):
             parameters = self.mapping_objects['quality_element'].indicator_config.loc[indicator_name]['parameters'].split(', ') 
             if 'indicator_' not in parameters[0]: 
@@ -137,32 +138,49 @@ class QualityElementBase(object):
             if not all([par in self.indicator_dict.keys() for par in parameters]):
                 return False
             if len(parameters) == 2:
-                mean_of_indicators = self.indicator_dict[parameters[0]].merge(self.indicator_dict[parameters[1]], on = merge_on, how = 'inner', copy=True, suffixes = ['_' + par for par in parameters])
-                mean_of_indicators['ok_'+indicator_name] = mean_of_indicators['ok_' + parameters[0]] | mean_of_indicators['ok_' + parameters[1]]
-                mean_of_indicators['global_EQR_'+indicator_name] = mean_of_indicators[['global_EQR' + '_' + parameters[0],'global_EQR' +'_' + parameters[1]]].mean(axis = 1, skipna = False)
-                mean_of_indicators['STATUS_'+indicator_name] = mean_of_indicators['global_EQR_'+indicator_name].apply(lambda x: self.get_status_from_global_EQR(x))
+                mean_of_indicators = self.indicator_dict[parameters[0]].\
+                    merge(self.indicator_dict[parameters[1]], on=merge_on, how='inner', copy=True,
+                          suffixes=['_' + par for par in parameters])
+                mean_of_indicators['ok_'+indicator_name] = \
+                    mean_of_indicators['ok_' + parameters[0]] | mean_of_indicators['ok_' + parameters[1]]
+                mean_of_indicators['global_EQR_'+indicator_name] = \
+                    mean_of_indicators[['global_EQR' + '_' +parameters[0], 'global_EQR' + '_' +
+                                        parameters[1]]].mean(axis=1, skipna=False)
+                mean_of_indicators['STATUS_'+indicator_name] = \
+                    mean_of_indicators['global_EQR_'+indicator_name].apply(lambda x: self.get_status_from_global_EQR(x))
                 self.indicator_dict[indicator_name] = mean_of_indicators
             if len(parameters) == 4:
-                mean_of_indicators1 = self.indicator_dict[parameters[0]].merge(self.indicator_dict[parameters[1]], on = merge_on, how = 'inner', copy=True, suffixes = ['_' + par for par in parameters[:2]])
-                mean_of_indicators2 = self.indicator_dict[parameters[2]].merge(self.indicator_dict[parameters[3]], on = merge_on, how = 'inner', copy=True, suffixes = ['_' + par for par in parameters[2:]])
-                mean_of_indicators = mean_of_indicators1.merge(mean_of_indicators2, on = merge_on, how = 'inner', copy = True)
-                mean_of_indicators['ok_'+indicator_name] = mean_of_indicators['ok_' + parameters[0]] | mean_of_indicators['ok_' + parameters[1]] | mean_of_indicators['ok_' + parameters[2]] | mean_of_indicators['ok_' + parameters[3]]
-                mean_of_indicators['global_EQR_'+indicator_name] = mean_of_indicators[['global_EQR' + '_' + parameters[0],'global_EQR' +'_' + parameters[1], 'global_EQR' + '_' + parameters[2],'global_EQR' +'_' + parameters[3]]].mean(axis = 1, skipna = False)
-                mean_of_indicators['STATUS_'+indicator_name] = mean_of_indicators['global_EQR_'+indicator_name].apply(lambda x: self.get_status_from_global_EQR(x))
+                mean_of_indicators1 = self.indicator_dict[parameters[0]].\
+                    merge(self.indicator_dict[parameters[1]], on=merge_on, how='inner', copy=True,
+                          suffixes=['_' + par for par in parameters[:2]])
+                mean_of_indicators2 = self.indicator_dict[parameters[2]].\
+                    merge(self.indicator_dict[parameters[3]], on=merge_on, how='inner', copy=True,
+                          suffixes = ['_' + par for par in parameters[2:]])
+                mean_of_indicators = mean_of_indicators1.merge(mean_of_indicators2, on=merge_on, how='inner', copy=True)
+                mean_of_indicators['ok_'+indicator_name] = \
+                    mean_of_indicators['ok_' + parameters[0]] | \
+                    mean_of_indicators['ok_' + parameters[1]] | \
+                    mean_of_indicators['ok_' + parameters[2]] | mean_of_indicators['ok_' + parameters[3]]
+                mean_of_indicators['global_EQR_'+indicator_name] = \
+                    mean_of_indicators[['global_EQR' + '_' + parameters[0],'global_EQR' +'_' +
+                                        parameters[1], 'global_EQR' + '_' + parameters[2],'global_EQR' + '_' + parameters[3]]].mean(axis = 1, skipna = False)
+                mean_of_indicators['STATUS_'+indicator_name] = \
+                    mean_of_indicators['global_EQR_'+indicator_name].apply(lambda x: self.get_status_from_global_EQR(x))
                 self.indicator_dict[indicator_name] = mean_of_indicators
             elif len(parameters) == 1:
                 col_list = list(self.indicator_dict[parameters[0]].columns)
                 [col_list.remove(r) for r in merge_on]
                 {k: k+'_'+parameters[0] for k in col_list}
-                self.indicator_dict[indicator_name] = self.indicator_dict[parameters[0]].rename(columns = {k: k+'_'+indicator_name for k in col_list})
+                self.indicator_dict[indicator_name] = self.indicator_dict[parameters[0]].\
+                    rename(columns={k: k+'_'+indicator_name for k in col_list})
             return True
                 
         def cut_results(df, indicator_name):
             #pick out columns for only this indicator
             these_cols = [col for col in df.columns if re.search(indicator_name + r'$', col)]
 #            return df[these_cols + merge_on].rename(columns = {col: col.strip(indicator_name) for col in these_cols})
-            return df[these_cols + merge_on].rename(columns = {col: col.replace('_'+indicator_name,'') for col in these_cols})
-    
+            return df[these_cols + merge_on].rename(columns={col: col.replace('_'+indicator_name, '') for col in these_cols})
+
         for indicator in self.mapping_objects['quality_element'].indicator_config.index:
             if self.mapping_objects['quality_element'].indicator_config.loc[indicator]['quality element'] == self.name:
                 # calculate mean for the included sub-indicators

@@ -148,7 +148,7 @@ class DataFrameHandler(ColumnDataHandler, RowDataHandler):
     """
     def __init__(self):
         super().__init__()
-
+        self.wb_id_header = 'MS_CD'
     #==========================================================================
     def _add_columns(self):
         """
@@ -222,39 +222,56 @@ class DataFrameHandler(ColumnDataHandler, RowDataHandler):
     #==========================================================================
     def _add_waterbody_area_info(self):
         #TODO:
-        # add if wb_name, MS_CD, VISS_EU_CD; typnamne, water district not in df.columns add them from vfk-kod kolumn
-        wb_id_list = self.column_data[self.source].VISS_EU_CD.tolist()
-        wd_id = self.mapping_objects['water_body'].get_waterdistrictcode_for_water_body(wb_id_list[0])
-        if not 'WATER_DISTRICT_CODE' in self.column_data[self.source]:
+        # add if VISS_EU_CD not in df.columns add them from vfk-kod kolumn
+        wb_id_list = self.column_data[self.source][self.wb_id_header].tolist()
+        # wd_id = self.mapping_objects['water_body'].get_waterdistrictcode_for_water_body(wb_id_list[0])
+        # TODO: remove this when fixed problem with WA-code for Inre Idefjorden
+        if 'WA28238367' in wb_id_list:
+            # Inre Idefjorden
+            self.column_data[self.source].loc[
+                self.column_data[self.source][self.wb_id_header] == 'WA28238367', self.wb_id_header] = 'WA24081564'
+            wb_id_list = self.column_data[self.source][self.wb_id_header].tolist()
+        if 'WA36808071' in wb_id_list:
+            # Idefjorden
+            self.column_data[self.source].loc[
+                self.column_data[self.source][self.wb_id_header] == 'WA36808071', self.wb_id_header] = 'WA18466637'
+            wb_id_list = self.column_data[self.source][self.wb_id_header].tolist()
+        if 'WATER_DISTRICT_CODE' not in self.column_data[self.source]:
             new_list = []
             for wb_id in wb_id_list:
                 wd_id = self.mapping_objects['water_body'].get_waterdistrictcode_for_water_body(wb_id)
                 new_list.append(wd_id)
             self.column_data[self.source]['WATER_DISTRICT_CODE'] = new_list
-        if not 'WATER_DISTRICT_NAME' in self.column_data[self.source]:
+        if 'WATER_DISTRICT_NAME' not in self.column_data[self.source]:
             new_list = []
             for wb_id in wb_id_list:
-                wd_id = self.mapping_objects['water_body'].get_waterdistrictname_for_water_body(wb_id)
-                new_list.append(wd_id)
+                wd_name = self.mapping_objects['water_body'].get_waterdistrictname_for_water_body(wb_id)
+                new_list.append(wd_name)
             self.column_data[self.source]['WATER_DISTRICT_NAME'] = new_list
-        if not 'WATER_TYPE_AREA' in self.column_data[self.source]:
+        if 'WATER_TYPE_AREA' not in self.column_data[self.source]:
             new_list = []
             for wb_id in wb_id_list:
                 type_name = self.mapping_objects['water_body'].get_type_area_name_for_water_body(wb_id)
                 new_list.append(type_name)
             self.column_data[self.source]['WATER_TYPE_AREA'] = new_list
-        if not 'WATER_BODY_NAME' in self.column_data[self.source]:
+        if 'WATER_BODY_NAME' not in self.column_data[self.source]:
             new_list = []
             for wb_id in wb_id_list:
                 wb_name = self.mapping_objects['water_body'].get_name_for_water_body(wb_id)
                 new_list.append(wb_name)    
             self.column_data[self.source]['WATER_BODY_NAME'] = new_list
-        if not 'MS_CD' in self.column_data[self.source]:
+        if 'MS_CD' not in self.column_data[self.source]:
             new_list = []
             for wb_id in wb_id_list:
                 ms_cd_code = self.mapping_objects['water_body'].get_mscd_for_water_body(wb_id)
                 new_list.append(ms_cd_code)    
             self.column_data[self.source]['MS_CD'] = new_list
+        if 'VISS_EU_CD' not in self.column_data[self.source]:
+            new_list = []
+            for wb_id in wb_id_list:
+                eu_cd_code = self.mapping_objects['water_body'].get_visseucd_for_water_body(wb_id)
+                new_list.append(eu_cd_code)
+            self.column_data[self.source]['VISS_EU_CD'] = new_list
 
     #==========================================================================
     def _check_nr_of_parameters(self):
@@ -778,7 +795,10 @@ class DataHandlerPhysicalChemicalSatellite(DataHandlerPhysicalChemical):
         self._add_waterbody_area_info()
             
     def _set_position(self):
-        
+        """
+        set position of waterbody based on VISS_EU_CD code, this information is not available in MS_CD so should not be self.wb_id_header
+        :return:
+        """
 #         x=self.column_data[self.source]['VISS_EU_CD'][0]
 #         print(x[2:4],x[4:6],x[6:8],x[9:11],x[11:13],x[13:15])
 #         print(int(x[2:4])+int(x[4:6])/60+int(x[6:8])/3600)
@@ -829,7 +849,10 @@ class DataHandlerPhysicalChemicalModel(DataFrameHandler):
         
     #==========================================================================    
     def _set_position(self):
-        
+        """
+        set position of waterbody based on VISS_EU_CD code, this information is not available in MS_CD so should not be self.wb_id_header
+        :return:
+        """
 #         x=self.column_data[self.source]['VISS_EU_CD'][0]
 #         print(x[2:4],x[4:6],x[6:8],x[9:11],x[11:13],x[13:15])
 #         print(int(x[2:4])+int(x[4:6])/60+int(x[6:8])/3600)
@@ -1080,7 +1103,8 @@ class DataHandler(object):
     def __init__(self, 
                  input_data_directory=None, 
                  resource_directory=None,
-                 mapping_objects=None): 
+                 mapping_objects=None,
+                 wb_id_header=None):
 #        print(input_data_directory, resource_directory)
         assert all([input_data_directory, resource_directory])
         super().__init__()
@@ -1098,6 +1122,7 @@ class DataHandler(object):
         path_parameter_mapping = self.resource_directory + '/mappings/mapping_parameter_dynamic_extended.txt'
         path_fields_filter = self.resource_directory + '/filters/'
         self.mapping_objects = mapping_objects
+        self.wb_id_header = wb_id_header
     
 #        path_parameter_mapping = current_path + u'/test_data/mappings/mapping_parameter_dynamic_extended.txt'
 #        path_fields_filter = current_path + u'/test_data/filters/'        
@@ -1249,6 +1274,7 @@ class DataHandler(object):
         Returns a pandas dataframe that contains all data in column format. 
         boolean_filter is a pd.Series. If not given the whole df is returned. 
         """
+        # TODO: what do we return when boolean_filter is False because no filter har been set for the key given?
         if len(boolean_filter): 
             # TODO: Check length
             return self.all_data.loc[boolean_filter, :]
@@ -1268,12 +1294,12 @@ class DataHandler(object):
         self.all_data = pd.DataFrame()
         
         # All datatypes that might include data for setting ecological status
-        all_datatypes = [u'chlorophyll',
-                         u'physicalchemical',
-                         u'physicalchemicalsatellite',
-                         u'physicalchemicalmodel',
-                         u'phytoplankton',
-                         u'zoobenthos']
+        # all_datatypes = [u'chlorophyll',
+        #                  u'physicalchemical',
+        #                  u'physicalchemicalsatellite',
+        #                  u'physicalchemicalmodel',
+        #                  u'phytoplankton',
+        #                  u'zoobenthos']
         # TODO: vart ska vi kolla mandatory keys? och vart ska de läsas in?
         mandatory_keys = []#['DEPH']
         for dtype in self.all_datatypes:
@@ -1401,7 +1427,7 @@ class DataHandler(object):
                 self.all_data['POSITION'] = self.all_data.apply(lambda x: '{0:.2f}'.format(float_convert(x.LATIT_DD)) + '_' + '{0:.2f}'.format(float_convert(x.LONGI_DD)), axis = 1)
                 
                 if 'STATN' not in self.all_data.columns:
-                    self.all_data['STATN'] = self.all_data['VISS_EU_CD']    
+                    self.all_data['STATN'] = self.all_data[self.wb_id_header]
                 statn = self.all_data.STATN.tolist()
                 pos = self.all_data.POSITION.tolist()
                 for i, x in enumerate(statn): 
@@ -1416,7 +1442,7 @@ class DataHandler(object):
                 
                 # MW: Add visit_id
                 # TODO: in all places where this is used change to use sample_id instead and remove this
-                self.all_data['visit_id_str'] = self.all_data['VISS_EU_CD'] + \
+                self.all_data['visit_id_str'] = self.all_data[self.wb_id_header] + \
                                                 self.all_data['POSITION'] + \
                                                 self.all_data['SDATE'] + \
                                                 self.all_data['STIME']
@@ -1431,8 +1457,10 @@ class DataHandler(object):
                         self.all_data[col] = self.all_data[col].apply(float_convert)
                     elif col in self.float_parameters:
                         self.all_data[col] = self.all_data[col].apply(float_convert)
-                    elif col == 'VISS_EU_CD':
+                    elif self.wb_id_header == 'VISS_EU_CD' and col == self.wb_id_header:
                         self.all_data[col] = self.all_data[col].apply(lambda x: 'SE' + x if 'SE' not in x else x)
+                    else:
+                        pass
                         
                 
                 self.all_data['STIME'] = self.all_data['STIME'].apply(lambda x: x[:5])
@@ -1544,35 +1572,36 @@ class DataHandler(object):
         
     def _add_waterbody_area_info(self):
         pass
+        # This is done in DataFrameHandler, but why not here?
         #TODO:
-        # add if wb_name, MS_CD, VISS_EU_CD; typnamne, water district not in df.columns add them from vfk-kod kolumn
-        wb_id_list = self.all_data.VISS_EU_CD.tolist()
-        wd_id = self.mapping_objects['water_body'].get_waterdistrictcode_for_water_body(wb_id_list[0])
-        if not 'WATER_DISTRICT_CODE' in self.all_data:
-            new_list = []
-            for wb_id in wb_id_list:
-                wd_id = self.mapping_objects['water_body'].get_waterdistrictcode_for_water_body(wb_id)
-                new_list.append(wd_id)
-            self.all_data['WATER_DISTRICT_CODE'] = new_list
-        if not 'WATER_DISTRICT_NAME' in self.all_data:
-            new_list = []
-            for wb_id in wb_id_list:
-                wd_id = self.mapping_objects['water_body'].get_waterdistrictname_for_water_body(wb_id)
-                new_list.append(wd_id)
-            self.all_data['WATER_DISTRICT_NAME'] = new_list
-        if not 'WATER_TYPE_AREA' in self.all_data:
-            new_list = []
-            for wb_id in wb_id_list:
-                type_name = self.mapping_objects['water_body'].get_type_area_name_for_water_body(wb_id)
-                new_list.append(type_name)
-            self.all_data['WATER_TYPE_AREA'] = new_list
-        if not 'WATER_BODY_NAME' in self.all_data:
-            new_list = []
-            for wb_id in wb_id_list:
-                wb_name = self.mapping_objects['water_body'].get_name_for_water_body(wb_id)
-                new_list.append(wb_name)    
-            self.all_data['WATER_BODY_NAME'] = new_list
-            
+        # add if MS_CD, VISS_EU_CD; not in df.columns add them from vfk-kod kolumn
+        # wb_id_list = self.all_data[self.wb_id_header].tolist()
+        # # wd_id = self.mapping_objects['water_body'].get_waterdistrictcode_for_water_body(wb_id_list[0])
+        # if 'WATER_DISTRICT_CODE' not in self.all_data:
+        #     new_list = []
+        #     for wb_id in wb_id_list:
+        #         wd_id = self.mapping_objects['water_body'].get_waterdistrictcode_for_water_body(wb_id)
+        #         new_list.append(wd_id)
+        #     self.all_data['WATER_DISTRICT_CODE'] = new_list
+        # if 'WATER_DISTRICT_NAME' not in self.all_data:
+        #     new_list = []
+        #     for wb_id in wb_id_list:
+        #         wd_name = self.mapping_objects['water_body'].get_waterdistrictname_for_water_body(wb_id)
+        #         new_list.append(wd_name)
+        #     self.all_data['WATER_DISTRICT_NAME'] = new_list
+        # if 'WATER_TYPE_AREA' not in self.all_data:
+        #     new_list = []
+        #     for wb_id in wb_id_list:
+        #         type_name = self.mapping_objects['water_body'].get_type_area_name_for_water_body(wb_id)
+        #         new_list.append(type_name)
+        #     self.all_data['WATER_TYPE_AREA'] = new_list
+        # if 'WATER_BODY_NAME' not in self.all_data:
+        #     new_list = []
+        #     for wb_id in wb_id_list:
+        #         wb_name = self.mapping_objects['water_body'].get_name_for_water_body(wb_id)
+        #         new_list.append(wb_name)
+        #     self.all_data['WATER_BODY_NAME'] = new_list
+
     #===========================================================================
     def get_exclude_index_array(self, df): 
         """

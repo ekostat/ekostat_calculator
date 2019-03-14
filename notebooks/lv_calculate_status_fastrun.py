@@ -56,11 +56,11 @@ print('-'*50)
 print('Time for request: {}'.format(time.time()-t0))
 ########################################################################################################################
 # ### Make a new workspace
-# ekos.copy_workspace(source_uuid='default_workspace', target_alias='waters_export_test2')
+# ekos.copy_workspace(source_uuid='default_workspace', target_alias='waters_export_march2019_1')
 # ### set alias etc.
 #alias = 'lena'
 # workspace_alias = 'satellit'#'waters_export' # kustzonsmodellen_3daydata
-workspace_alias = 'waters_export_test2'#'kustzon_selection'
+workspace_alias = 'waters_export_march2019_1'#'kustzon_selection'
 
 # ### See existing workspaces and choose workspace name to load
 ekos.print_workspaces()
@@ -78,13 +78,13 @@ ekos.load_workspace(unique_id=workspace_uuid)
 # ### Load all data in workspace
 # #### if there is old data that you want to remove
 # while True:
-#     answer = input('do you want to delete all_data in workspace {\? Then type y'.format(workspace_alias))
+#     answer = input('do you want to delete all_data in workspace {}? Then type y'.format(workspace_alias))
 #     if answer == 'y':
 #         break
 #     else:
 #         raise Exception('not allowed to continue with deleting data in workspace {}'.format(workspace_alias))
-# ekos.get_workspace(workspace_uuid = workspace_uuid).delete_alldata_export()
-# ekos.get_workspace(workspace_uuid = workspace_uuid).delete_all_export_data()
+# ekos.get_workspace(workspace_uuid=workspace_uuid).delete_alldata_export()
+# ekos.get_workspace(workspace_uuid=workspace_uuid).delete_all_export_data()
 ########################################################################################################################
 # #### to just load existing data in workspace
 ekos.load_data(workspace_uuid=workspace_uuid)
@@ -101,16 +101,17 @@ for subset_uuid in w.get_subset_list():
 print(w.data_handler.all_data.columns)
 ########################################################################################################################
 # ### Apply first data filter 
-w.apply_data_filter(step = 0) # This sets the first level of data filter in the IndexHandler 
+w.apply_data_filter(step = 0) # This sets the first level of data filter in the IndexHandler
+filtered_data = w.get_filtered_data(step=0)
 ########################################################################################################################
 # # Step 1 
 # ### make new subset
-# w.copy_subset(source_uuid='default_subset', target_alias='waters_bugsearch')
+# w.copy_subset(source_uuid='default_subset', target_alias='waters_MS_CD_test')
 ########################################################################################################################
 # ### Choose subset name to load
 # subset_alias = 'test_kustzon'
 # subset_alias = 'period_2007-2012_refvalues_2013'
-subset_alias = 'waters_bugsearch'#'SE1_selection'#'satellite_results'#'waters_export'#'test_subset'
+subset_alias = 'waters_MS_CD_test'#'SE1_selection'#'satellite_results'#'waters_export'#'test_subset'
 subset_uuid = ekos.get_unique_id_for_alias(workspace_alias = workspace_alias, subset_alias = subset_alias)
 print('subset_alias', subset_alias, 'subset_uuid', subset_uuid)
 ########################################################################################################################
@@ -124,12 +125,15 @@ w.set_data_filter(subset=subset_uuid, step=1,
 # #### waterbody filter
 w.set_data_filter(subset=subset_uuid, step=1,
                   filter_type='include_list',
-                  filter_name='viss_eu_cd',
+                  filter_name='ms_cd',
                   data=[])
-# Long term ox def ['SE581740-114820', 'SE581260-113220', 'SE581700-113000', 'SE582000-115270', 'SE563000-123351',
+# Long term ox def 'WA46670058' ['SE581740-114820', 'SE581260-113220', 'SE581700-113000', 'SE582000-115270', 'SE563000-123351',
 #                         'SE561030-122821', 'SE562450-122751', 'SE562000-123800', 'SE555545-124332', 'SE592000-184700',
 #                         'SE658352-163189', 'SE591800-181360', 'SE592290-181600']
-# Onsala kustvatten och GBG s Skärgård 'SE573300-113801', 'SE572540-114801'
+# Bohuskusten med incl wb ['WA97301629', 'WA64137885', 'WA66632205', 'WA51265873', 'WA83017720', 'WA55040263',
+#                         'WA80466205', 'WA25351289', 'WA69972288', 'WA28341915', 'WA46670058', 'WA64759536', 'WA22406332',
+#                         'WA21122787', 'WA14398448', 'WA98945765', 'WA11443142']
+# Onsala kustvatten och GBG s Skärgård 'WA66632205', 'WA64137885' / 'SE573300-113801', 'SE572540-114801'
 # Släggö: SE646775-124345, Omnefjärden: SE625710-183000, Hargsviken: 'SE601070-182870', Rånefjärden: 'SE654820-222660'
 #'SE631840-191130','SE581700-113000','SE654820-222660','SE581700-113000','SE631610-184500','SE585100-110600','SE584340-174401', 'SE654470-222700', 'SE584340-174401', 'SE633000-195000', 'SE625180-181655'
 #['SE581700-113000','SE631610-184500','SE585100-110600','SE584340-174401', 'SE654470-222700', 'SE584340-174401', 'SE633000-195000', 'SE625180-181655'])
@@ -152,11 +156,11 @@ filtered_data = w.get_filtered_data(step=1, subset=subset_uuid)
 # Step 2
 # Load indicator settings filter
 w.get_step_object(step=2, subset=subset_uuid).load_indicator_settings_filters()
-#w.get_step_object(step=2, subset=subset_uuid).set_water_body_station_filter(
-#    water_body='SE573300-113801', include=True, station_list=['Valö', 'Dana fjord'])
+# w.get_step_object(step=2, subset=subset_uuid).set_water_body_station_filter(
+#    water_body='WA66632205', include=True, station_list=['Valö', 'Dana fjord'])
 ########################################################################################################################
 # set available indicators
-w.get_available_indicators(subset=subset_uuid, step=2)
+w.get_available_indicators(subset=subset_uuid, step=1)
  
 ########################################################################################################################
 # ### choose indicators
@@ -181,8 +185,8 @@ for indicator in indicator_list:
     #print(w.mapping_objects['water_body'][wb])
     #print('*************************************')
    
-df = w.get_filtered_data(subset=subset_uuid, step='step_2', water_body='SE573300-113801', indicator='indicator_din_winter').dropna(subset=['DIN'])
-df = w.get_filtered_data(subset=subset_uuid, step='step_2', water_body='SE573300-113801', indicator='indicator_ntot_summer').dropna(subset=['NTOT'])
+# df = w.get_filtered_data(subset=subset_uuid, step='step_2', water_body='WA66632205', indicator='indicator_din_winter').dropna(subset=['DIN'])
+# df = w.get_filtered_data(subset=subset_uuid, step='step_2', water_body='WA66632205', indicator='indicator_ntot_summer').dropna(subset=['NTOT'])
 
 ########################################################################################################################
 # # Step 3 

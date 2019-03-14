@@ -61,6 +61,7 @@ class WorkStep(object):
         self.paths['step_directory'] = '/'.join([self.paths['parent_directory'], self.name]) 
         self.parent_workspace_object = parent_workspace_object
         self.parent_subset_object = parent_subset_object
+        self.wb_id_header = self.parent_workspace_object.wb_id_header
         
         """ 
         Input argument mapping_objects is a dictionary since there might be several mapping objects in the future. 
@@ -198,7 +199,10 @@ class WorkStep(object):
             return False
         
         if water_body_list == None:
+            # TODO remove old line
             water_body_list = self.parent_workspace_object.get_filtered_data(step='step_2', subset = self.parent_subset_object.unique_id).VISS_EU_CD.unique()
+            water_body_list = self.parent_workspace_object.get_filtered_data(step='step_2',
+                                                                             subset=self.parent_subset_object.unique_id)[self.wb_id_header].unique()
         if not len(water_body_list):
             #raise Error?
             print('no waterbodies in filtered data')
@@ -208,13 +212,13 @@ class WorkStep(object):
         def concat_df(df, save_df, filename, water_body, indicator_object):
             #concatenate results
             if type(save_df) is pd.DataFrame:
-                if water_body in save_df.VISS_EU_CD.unique():
-                    save_df.drop(save_df.loc[save_df.VISS_EU_CD == water_body].index, inplace = True)
+                if water_body in save_df[self.wb_id_header].unique():
+                    save_df.drop(save_df.loc[save_df[self.wb_id_header] == water_body].index, inplace = True)
                 save_df = pd.concat([save_df, df])
             elif os.path.exists(indicator_object.result_directory + filename + '.txt'):
                 save_df = indicator_object.sld.load_df(file_name = filename)
-                if water_body in save_df.VISS_EU_CD.unique():
-                    save_df.drop(save_df.loc[save_df.VISS_EU_CD == water_body].index, inplace = True)
+                if water_body in save_df[self.wb_id_header].unique():
+                    save_df.drop(save_df.loc[save_df[self.wb_id_header] == water_body].index, inplace = True)
                 save_df = pd.concat([save_df, df])
             else:
                 save_df = df
@@ -280,21 +284,29 @@ class WorkStep(object):
             print('-'*50)    
             
             if type(status_by_date) is not bool:  
-                status_by_date['new_index'] = [str(ix) +'_' + wb for ix, wb in zip(status_by_date.index, status_by_date.VISS_EU_CD)]
+                status_by_date['new_index'] = [str(ix) + '_' + wb for ix, wb in zip(status_by_date.index,
+                                                                                   status_by_date[self.wb_id_header])]
                 status_by_date.set_index(keys = 'new_index')                                
-                self.indicator_objects[indicator].sld.save_df(status_by_date, file_name = indicator_name + '-by_date', force_save_txt=True)
+                self.indicator_objects[indicator].sld.save_df(status_by_date, file_name = indicator_name + '-by_date',
+                                                              force_save_txt=True)
             if type(status_by_year_pos) is not bool:
-                status_by_year_pos['new_index'] = [str(ix) +'_' + wb for ix, wb in zip(status_by_year_pos.index, status_by_year_pos.VISS_EU_CD)]
+                status_by_year_pos['new_index'] = [str(ix) + '_' + wb for ix, wb in zip(status_by_year_pos.index,
+                                                                                       status_by_year_pos[self.wb_id_header])]
                 status_by_year_pos.set_index(keys = 'new_index')
-                self.indicator_objects[indicator].sld.save_df(status_by_year_pos, file_name = indicator_name + '-by_year_pos', force_save_txt=True)
+                self.indicator_objects[indicator].sld.save_df(status_by_year_pos, file_name = indicator_name + '-by_year_pos',
+                                                              force_save_txt=True)
             if type(status_by_year) is not bool:
-                status_by_year['new_index'] = [str(ix) +'_' + wb for ix, wb in zip(status_by_year.index, status_by_year.VISS_EU_CD)]
+                status_by_year['new_index'] = [str(ix) + '_' + wb for ix, wb in zip(status_by_year.index,
+                                                                                   status_by_year[self.wb_id_header])]
                 status_by_year.set_index(keys = 'new_index')                                
-                self.indicator_objects[indicator].sld.save_df(status_by_year, file_name = indicator_name + '-by_year', force_save_txt=True)
+                self.indicator_objects[indicator].sld.save_df(status_by_year, file_name = indicator_name + '-by_year',
+                                                              force_save_txt=True)
             if type(status_by_period) is not bool:
-                status_by_period['new_index'] = [str(ix) +'_' + wb for ix, wb in zip(status_by_period.index, status_by_period.VISS_EU_CD)]
+                status_by_period['new_index'] = [str(ix) + '_' + wb for ix, wb in zip(status_by_period.index,
+                                                                                     status_by_period[self.wb_id_header])]
                 status_by_period.set_index(keys = 'new_index')                                
-                self.indicator_objects[indicator].sld.save_df(status_by_period, file_name = indicator_name + '-by_period', force_save_txt=True)
+                self.indicator_objects[indicator].sld.save_df(status_by_period, file_name = indicator_name + '-by_period',
+                                                              force_save_txt=True)
         
         
     #==========================================================================
@@ -667,7 +679,7 @@ class Subset(object):
         self.paths['subset_directory'] = '/'.join([self.paths['parent_directory'], self.unique_id]) 
         self.parent_workspace_object = parent_workspace_object
         self.paths['directory_path_log'] = self.parent_workspace_object.paths['directory_path_log']
-         
+        self.wb_id_header = self.parent_workspace_object.wb_id_header
         
         self.mapping_objects = mapping_objects
         
@@ -977,6 +989,7 @@ class WorkSpace(object):
         self.unique_id = unique_id
         self.user_id = user_id
         self.mapping_objects = mapping_objects
+        self.wb_id_header = 'MS_CD'
         
         self.all_status = ['editable', 'readable', 'deleted']
 
@@ -1144,7 +1157,8 @@ class WorkSpace(object):
         # Set data and index handler
         self.data_handler = core.DataHandler(input_data_directory=self.paths['directory_path_input_data'], 
                                              resource_directory=self.paths['resource_directory'],
-                                             mapping_objects=self.mapping_objects)
+                                             mapping_objects=self.mapping_objects,
+                                             wb_id_header=self.wb_id_header)
         
         self.index_handler = core.IndexHandler(workspace_object=self, 
                                                data_handler_object=self.data_handler)
@@ -1339,7 +1353,7 @@ class WorkSpace(object):
         """
         t_tot = time.time()
         if not water_body_list:
-            water_body_list = self.get_filtered_data(step=step, subset=subset).VISS_EU_CD.unique()
+            water_body_list = self.get_filtered_data(step='step_1', subset=subset)[self.wb_id_header].unique()
         if not len(water_body_list):
             #raise Error?
             self._logger.warning('No waterbodies in filtered data')
@@ -1392,8 +1406,12 @@ class WorkSpace(object):
             # the filter object for settings
             self.index_handler.add_filter(filter_object=settings_filter_object, step=step, subset=subset,
                                           indicator=indicator, water_body=water_body, **kwargs)
-            # temp_df_1 = self.get_filtered_data(step=2, subset=subset, water_body=water_body)
-            # temp_df_2 = self.get_filtered_data(step=2, subset=subset, indicator=indicator, water_body=water_body)
+            temp_df_1 = self.get_filtered_data(step=2, subset=subset, water_body=water_body)
+            temp_df_2 = self.get_filtered_data(step=2, subset=subset, indicator=indicator, water_body=water_body)
+            if len(temp_df_2['WATER_BODY_NAME'].unique()) > 1:
+                print('waterbodies after station filter and {} filter {}'.format(indicator, temp_df_2['WATER_BODY_NAME'].unique()))
+                print('statn after filters {}'.format(temp_df_2['STATN'].unique()))
+                print('-'*50)
             # print(temp_df_2['WATER_BODY_NAME'].unique(), temp_df_2['STATN'].unique())
         time_total = time.time() - t_tot
         print('-'*50)
@@ -1442,7 +1460,7 @@ class WorkSpace(object):
             # Indicator_settings are linked to step 2 by default
             step_object = subset_object.get_step_object(step) 
             filter_object = step_object.get_water_body_station_filter_object()
-        
+
         all_ok = self.index_handler.add_filter(filter_object=filter_object, step=step,
                                                subset=subset, water_body=water_body, **kwargs)
         temp_df = self.get_filtered_data(step=2, subset=subset)
@@ -1780,12 +1798,15 @@ class WorkSpace(object):
         all_df = pd.concat(df_list)
         column_mapping = pd.read_csv(self.paths['resource_directory'] + '/mappings/waters_column_mapping.txt', sep='\t', encoding='cp1252')
         c = {key: value[0] for key, value in column_mapping.to_dict('list').items()}
-        all_df = all_df.rename(columns = c)
+        all_df = all_df.rename(columns=c)
         
         col_list = all_df.columns
-        remove_cols = ['REFERENCE_VALUE','HG_VALUE_LIMIT','GM_VALUE_LIMIT','MP_VALUE_LIMIT','PB_VALUE_LIMIT','global_EQR','local_EQR']
+        remove_cols = ['STATUS', 'REFERENCE_VALUE', 'HG_VALUE_LIMIT', 'GM_VALUE_LIMIT', 'MP_VALUE_LIMIT', 'PB_VALUE_LIMIT',
+                       'global_EQR', 'local_EQR', 'POSITION', 'index_column', 'new_index', 'B']
         col_list = [c for c in col_list if not c in remove_cols]
-        
+        test = all_df[col_list]
+        print(test.columns)
+
         sld.save_df(all_df[col_list], 'WATERS_export', force_save_txt=True)
         
     #==========================================================================
@@ -1815,7 +1836,7 @@ class WorkSpace(object):
             return False
         
         available_indicators = []
-        filtered_data = self.get_filtered_data(step = step, subset = subset) # MW 20180718 Moved here
+        filtered_data = self.get_filtered_data(step=step, subset=subset) # MW 20180718 Moved here
         if len(filtered_data): # 20180611, MW added if, LV 20181012 moved outside loop
             #for indicator, parameters in self.cfg['indicators'].items():
             for indicator, row in self.mapping_objects['quality_element'].indicator_config.iterrows():

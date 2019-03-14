@@ -48,7 +48,7 @@ print('Time for request: {}'.format(time.time()-t0))
 ########################################################################################################################
 # ### See existing workspaces and choose workspace name to load
 ekos.print_workspaces()
-workspace_alias = 'waters_export_test2'#'kustzon_selection'
+workspace_alias = 'waters_export_march2019_1'#'kustzon_selection'
 workspace_uuid = ekos.get_unique_id_for_alias(workspace_alias = workspace_alias) #'kuszonsmodellen' lena_indicator
 print(workspace_uuid)
 workspace_alias = ekos.get_alias_for_unique_id(workspace_uuid = workspace_uuid)
@@ -57,7 +57,7 @@ workspace_alias = ekos.get_alias_for_unique_id(workspace_uuid = workspace_uuid)
 ekos.load_workspace(unique_id=workspace_uuid)
 ########################################################################################################################
 # ### Choose subset name to load
-subset_alias = 'waters_bugsearch'#'SE1_selection'#'satellite_results'#'waters_export'#'test_subset'
+subset_alias = 'waters_MS_CD_test'#'SE1_selection'#'satellite_results'#'waters_export'#'test_subset'
 subset_uuid = ekos.get_unique_id_for_alias(workspace_alias = workspace_alias, subset_alias = subset_alias)
 print('subset_alias', subset_alias, 'subset_uuid', subset_uuid)
 ########################################################################################################################

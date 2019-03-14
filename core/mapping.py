@@ -433,7 +433,7 @@ class WaterBody(AttributeDict):
         """
         super().__init__()
         self.column_name = {}
-        self.column_name['water_body'] = {'internal': 'VISS_EU_CD', 
+        self.column_name['water_body'] = {'internal': 'MS_CD',
                                           'display': 'WATERBODY_NAME'}
         
         self.column_name['type_area'] = {'internal': 'TYPE_AREA_CODE', 
@@ -670,7 +670,7 @@ class WaterBody(AttributeDict):
         return self.get(wb).get(key)
     
     #==========================================================================
-    def get_eu_cd_for_water_body(self, wb, key=u'EU_CD'):
+    def get_visseucd_for_water_body(self, wb, key=u'VISS_EU_CD'):
         return self.get(wb).get(key)
     #==========================================================================
     def get_mscd_for_water_body(self, wb, key=u'MS_CD'):

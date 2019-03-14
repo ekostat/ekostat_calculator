@@ -176,7 +176,7 @@ class SaveLoadDelete(object):
         
     
     #==========================================================================
-    def save_df(self, df, file_name='df_data', force_save_txt=False, only_pkl=False): 
+    def save_df(self, df, file_name='df_data', force_save_txt=False, only_pkl=False, **kwargs):
         """
         Created:        20180522     by Magnus
         Last modified:  20180525     by Magnus 
@@ -197,7 +197,7 @@ class SaveLoadDelete(object):
         elif force_save_txt or not os.path.exists(txt_file_path): 
             save_data_file(df=df, 
                            directory=self.directory, 
-                           file_name=self._txt_file_name(file_name))
+                           file_name=self._txt_file_name(file_name), **kwargs)
             
         
         # Save pickle file 
@@ -279,7 +279,7 @@ class SaveLoadDelete(object):
         
         
 #==========================================================================
-def save_data_file(df=None, directory=u'', file_name=u''):
+def save_data_file(df=None, directory=u'', file_name=u'', **kwargs):
     """
     Last modified:  20181105    by Lena Viktorsson
     20181105 by Lena: added the index_column to a copy of df and saves that df
@@ -295,7 +295,7 @@ def save_data_file(df=None, directory=u'', file_name=u''):
     print(u'Saving data to:',file_path)
     df_copy = df.copy()
     # MW: Name index
-    df_copy['index_column']=df_copy.index
+    df_copy['index_column'] = df_copy.index
 #     df['index_column']=df.index
 #    df = df.reset_index(drop=True)
     

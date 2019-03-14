@@ -446,7 +446,9 @@ class SettingsFile(object):
         self.connected_to_filter_settings_object = False
         self.connected_to_ref_settings_object = False
         self.connected_to_tolerance_settings_object = False
-        
+
+        self.water_body_parameter = 'MS_CD'
+
         self._prefix_list = ['FILTER', 'REF', 'TOLERANCE', 'LEVEL'] 
         self._suffix_list = ['INT', 'EQ', 'FLOAT', 'STR']
         
@@ -556,8 +558,8 @@ class SettingsFile(object):
         Created:        20180612     by Magnus
         Last modified:  
         """
-        
-        self._remove_viss_eu_cd_matching_type_area()
+
+        self._remove_wb_id_matching_type_area()
         
         if not file_path:
             file_path = self.file_path
@@ -622,7 +624,7 @@ class SettingsFile(object):
         Created     20180611    by Magnus Wenzer
         Updated     
         """
-        return sorted([item for item in self.df['VISS_EU_CD'] if item != 'unspecified'])
+        return sorted([item for item in self.df[self.water_body_parameter] if item != 'unspecified'])
     
     
     #==========================================================================
@@ -643,11 +645,11 @@ class SettingsFile(object):
             try:
                 type_area = self.mapping_water_body.get_type_area_for_water_body(water_body, include_suffix=True)
                 if type_area == None:
-                    print('waterbody matching file does not recognise water body with VISS_EU_CD {}'.format(water_body))
+                    print('waterbody matching file does not recognise water body with {} {}'.format(self.water_body_parameter, water_body))
                     return False
             except AttributeError as e:
                 print(e)
-                print('waterbody matching file does not recognise water body with VISS_EU_CD {}'.format(water_body))
+                print('waterbody matching file does not recognise water body with self.water_body_parameter {}'.format(self.water_body_parameter, water_body))
                 return False
         num, suf = get_type_area_parts(type_area)
         
@@ -659,7 +661,7 @@ class SettingsFile(object):
             var = self.df.columns
         
         if water_body:
-            value_series = self.df.loc[(self.df['VISS_EU_CD']==water_body), var]
+            value_series = self.df.loc[(self.df[self.water_body_parameter]==water_body), var]
 #            print(water_body)
 #            print(self.df['VISS_EU_CD'].unique())
 #            print('. . . . .')
@@ -670,23 +672,23 @@ class SettingsFile(object):
                 if suf and suf in self.df.loc[(self.df['TYPE_AREA_NUMBER']==num), 'TYPE_AREA_SUFFIX'].values:
                     value_series = self.df.loc[(self.df['TYPE_AREA_NUMBER']==num) & \
                                                (self.df['TYPE_AREA_SUFFIX']==suf) & \
-                                               (self.df['VISS_EU_CD'] == 'unspecified'), var]
+                                               (self.df[self.water_body_parameter] == 'unspecified'), var]
                 else:
                     value_series = self.df.loc[(self.df['TYPE_AREA_NUMBER']==num) & \
-                                               (self.df['VISS_EU_CD'] == 'unspecified'), var]
+                                               (self.df[self.water_body_parameter] == 'unspecified'), var]
         else:
             # 20180615 MW: added (self.df['VISS_EU_CD'] == 'unspecified')
             if suf:
                 value_series = self.df.loc[(self.df['TYPE_AREA_NUMBER']==num) & \
                                            (self.df['TYPE_AREA_SUFFIX']==suf) & \
-                                           (self.df['VISS_EU_CD'] == 'unspecified'), var]
+                                           (self.df[self.water_body_parameter] == 'unspecified'), var]
             else:
 # KONFLIKT OSÄKER PÅ VILKEN value_series som är korrekt
                 #value_series = self.df.loc[(self.df['TYPE_AREA_NUMBER']==num), var]
         
 
                 value_series = self.df.loc[(self.df['TYPE_AREA_NUMBER']==num) & \
-                                           (self.df['VISS_EU_CD'] == 'unspecified'), var]
+                                           (self.df[self.water_body_parameter] == 'unspecified'), var]
         self.suf = suf
         self.num = num
 
@@ -747,7 +749,7 @@ class SettingsFile(object):
     
     
     #==========================================================================
-    def set_value(self, type_area=None, variable=None, value=None, viss_eu_cd=None): 
+    def set_value(self, type_area=None, variable=None, value=None, wb_id=None):
         """
         Updated     20180621   by Magnus Wenzer
         
@@ -761,7 +763,7 @@ class SettingsFile(object):
         """
         if not all([variable, value]):
             return False
-        if not any([type_area, viss_eu_cd]):
+        if not any([type_area, wb_id]):
             return False
         
 #        print('value'.upper(), value, type(value))
@@ -793,11 +795,11 @@ class SettingsFile(object):
             else:
                 self.df.loc[self.df['TYPE_AREA_NUMBER']==num, variable] = new_value
             
-        elif viss_eu_cd: 
-            if viss_eu_cd not in self.df['VISS_EU_CD'].values:
-                self._add_new_rows_for_viss_eu_cd(viss_eu_cd=viss_eu_cd)
-            print('Value to set for water body (viss_eu_cd) "{}" and variable "{}": {}'.format(viss_eu_cd, variable, new_value))
-            self.df.loc[self.df['VISS_EU_CD']==viss_eu_cd, variable] = new_value
+        elif wb_id:
+            if wb_id not in self.df[self.water_body_parameter].values:
+                self._add_new_rows_for_viss_eu_cd(viss_eu_cd=wb_id)
+            print('Value to set for water body (viss_eu_cd) "{}" and variable "{}": {}'.format(wb_id, variable, new_value))
+            self.df.loc[self.df[self.water_body_parameter]==wb_id, variable] = new_value
         
         return True
          
@@ -826,7 +828,7 @@ class SettingsFile(object):
         
         
         # Change VISS_EU_CD and name in series
-        series['VISS_EU_CD'] = viss_eu_cd
+        series[self.water_body_parameter] = viss_eu_cd
         series['WATERBODY_NAME'] = water_body_name
         
         
@@ -839,30 +841,30 @@ class SettingsFile(object):
         
     
     #==========================================================================
-    def _remove_viss_eu_cd_matching_type_area(self): 
+    def _remove_wb_id_matching_type_area(self):
         """
         Created     20180612   by Magnus Wenzer
         Updated     20180615   by Magnus Wenzer
         
-        Removes all lines for a viss_eu_cd if data in te corresponding type_area is the same. 
+        Removes all lines for a viss_eu_cd if data in the corresponding type_area is the same.
         
         """
         
-        for viss_eu_cd in set(self.df['VISS_EU_CD']):
-            if viss_eu_cd =='unspecified':
+        for wb_id in set(self.df[self.water_body_parameter]):
+            if wb_id =='unspecified':
                 continue 
             type_area = self.mapping_objects['water_body'].get_type_area_for_water_body(viss_eu_cd, include_suffix=True).replace('-', '')
             type_area_series = get_matching_rows_in_indicator_settings(type_area=type_area, df=self.df)
             
-            viss_eu_cd_boolean = self.df['VISS_EU_CD']==viss_eu_cd
-            viss_eu_cd_series = self.df.loc[viss_eu_cd_boolean, :] 
+            wb_id_boolean = self.df[self.water_body_parameter]==wb_id
+            wb_id_series = self.df.loc[wb_id_boolean, :]
             
             # Compare. If all values are the same remove viss_eu_cd lines 
             equal_list = []
             for col in self.match_columns_list:
-                if col not in viss_eu_cd_series.columns:
+                if col not in wb_id_series.columns:
                     continue
-                if list(viss_eu_cd_series[col].values) == list(type_area_series[col].values): 
+                if list(wb_id_series[col].values) == list(type_area_series[col].values):
 #                    print('='*50)
 #                    print(viss_eu_cd_series[col].values)
 #                    print()
@@ -873,11 +875,8 @@ class SettingsFile(object):
                     equal_list.append(False)
             
             if all(equal_list):
-                self.df = self.df.drop(np.where(viss_eu_cd_boolean)[0])
-                self.df.reset_index(inplace=True, drop=True) 
-                
-            
-        
+                self.df = self.df.drop(np.where(wb_id_boolean)[0])
+                self.df.reset_index(inplace=True, drop=True)
         
         
     #==========================================================================
@@ -905,18 +904,18 @@ class SettingsFile(object):
                 if area in (self.df['TYPE_AREA_NUMBER'].astype(str) + self.df['TYPE_AREA_SUFFIX']).values:
                     print('1')
                     # Area is type_area which should always be present in settings file 
-                    if not self.set_value(type_area=area, variable=variable, value=value_list, viss_eu_cd=None):
+                    if not self.set_value(type_area=area, variable=variable, value=value_list, wb_id=None):
                         all_ok = False
-                elif area in self.df['VISS_EU_CD'].values:
+                elif area in self.df[self.water_body_parameter].values:
                     print('2')
                     # Area is VISS_EU_CD and present in settings file
-                    if not self.set_value(type_area=None, variable=variable, value=value_list, viss_eu_cd=area):
+                    if not self.set_value(type_area=None, variable=variable, value=value_list, wb_id=area):
                         all_ok = False
                 else:
                     print('3333333333')
                     # Area is new VISS_EU_CD NOT present in settings file
                     self._add_new_rows_for_viss_eu_cd(viss_eu_cd=area)
-                    if not self.set_value(type_area=None, variable=variable, value=value_list, viss_eu_cd=area):
+                    if not self.set_value(type_area=None, variable=variable, value=value_list, wb_id=area):
                         all_ok = False
         return all_ok
     
@@ -945,7 +944,6 @@ class SettingsFile(object):
             item = self._convert(item.strip(), variable)
             return_list.append(item)
         return tuple(return_list)
-    
     
     #==========================================================================
     def _get_interval_from_string(self, value, variable): 
@@ -1074,7 +1072,7 @@ class SettingsFile(object):
         combined_boolean = ()
         if water_body:
             type_area = self.mapping_water_body.get_type_area_for_water_body(water_body, include_suffix=True)
-            combined_boolean = df['VISS_EU_CD'] == water_body
+            combined_boolean = df[self.water_body_parameter] == water_body
         else:
             combined_boolean = ()
             
@@ -1229,10 +1227,9 @@ class SettingsFile(object):
         
 #        print('RESULT', result)
 #        print(len(result))
-        
-        
+
         if type(result) is tuple or result is False:
-            if not result:
+            if (not result) | ((len(result) == 1) and (result[0] is '')):
                 return False
             value_list = result
         else:
@@ -1369,12 +1366,12 @@ class ReferenceEquations(object):
 class SettingsBase(object): 
     
     #==========================================================================
-    def set_value(self, type_area=None, variable=None, value=None, viss_eu_cd=None): 
+    def set_value(self, type_area=None, variable=None, value=None, wb_id=None):
         """
         Created     20180620    by Magnus Wenzer
         """
         
-        self.settings.set_value(type_area=type_area, variable=variable, value=value, viss_eu_cd=viss_eu_cd)
+        self.settings.set_value(type_area=type_area, variable=variable, value=value, wb_id=wb_id)
         self.settings.save_file()
         
         
@@ -1793,7 +1790,7 @@ class WaterBodyFilter(object):
     """
 
     def __init__(self):
-        self.water_body_parameter = 'VISS_EU_CD'
+        self.water_body_parameter = 'MS_CD'
 
     def get_filter_boolean_for_df(self, df = None, water_body = None, **kwargs):
        """
@@ -1826,7 +1823,7 @@ class WaterBodyStationFilter(object):
             self.mapping_objects = mapping_objects
             self.mapping_water_body = mapping_objects['water_body']
             
-        self.water_body_parameter = 'VISS_EU_CD'
+        self.water_body_parameter = 'MS_CD'
         
     #==========================================================================
     def clear_filter(self): 
@@ -1853,8 +1850,6 @@ class WaterBodyStationFilter(object):
         # Check include and exclude list
         include_stations = self.get_list(include=True, water_body=water_body)
         exclude_stations = self.get_list(include=False, water_body=water_body)
-        print('include stations {}'.format(include_stations))
-        print('exclude stations {}'.format(exclude_stations))
         if len(include_stations) == 2:
             water_body_outside = include_stations[1]
         # self.water_body_parameter is set above. Could be name or number...
@@ -1862,8 +1857,13 @@ class WaterBodyStationFilter(object):
         boolean = (df[self.water_body_parameter] == water_body) | \
                   ((df['STATN'].isin(include_stations)) & \
                   (~df['STATN'].isin(exclude_stations)))
-        print(set(df['STATN'][boolean]))
-        print(set(df['WATER_BODY_NAME'][boolean]))
+        if len(df['WATER_BODY_NAME'][boolean].unique()) > 1:
+            print('-' * 50)
+            print('waterbody {} {}'.format(water_body, self.mapping_water_body.get_name_for_water_body(water_body)))
+            print('include stations {}'.format(include_stations))
+            print('exclude stations {}'.format(exclude_stations))
+            print('stations in df after station filter \n{}'.format(set(df['STATN'][boolean])))
+            print('in waterbody {}'.format(df['WATER_BODY_NAME'][boolean].unique()))
         return boolean
         
         

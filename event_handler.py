@@ -1038,7 +1038,7 @@ class EventHandler(object):
             settings_filter_object.set_value(type_area=type_area, 
                                               variable=settings_item, 
                                               value=value, 
-                                              viss_eu_cd=viss_eu_cd)
+                                              wb_id=viss_eu_cd)
 #            print('IFIFIFIFIFIFIFI')
             return request
         
@@ -3938,7 +3938,7 @@ class EventHandler(object):
         settings_filter_object.set_value(type_area=type_area, 
                                           variable=settings_item, 
                                           value=value, 
-                                          viss_eu_cd=viss_eu_cd)
+                                          wb_id=viss_eu_cd)
             
     
     #==========================================================================

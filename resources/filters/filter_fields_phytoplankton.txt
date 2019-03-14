@@ -7,7 +7,7 @@ SHARKID_MD5												TROPHIC
 STATN												
 LATIT_DD												
 LONGI_DD												
-VISS_EU_CD												
+MS_CD												
 WATER_BODY_NAME												
 SEA_BASIN												
 WATER_DISTRICT_NAME												

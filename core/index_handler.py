@@ -323,6 +323,10 @@ class IndexHandler(object):
 #            print('{}{}\t{}'.format('\t'*k, key, bool_dict.keys()))
             if key and key in bool_dict:
                 bool_dict = bool_dict[key]
+            elif key not in bool_dict and key != None:
+                # if the given key is not in the dictionary then the filter has not been set
+                # if it is sent in args as None means that the filter level was not asked for.
+                return False
             else:
                 break
 #        print(key)
@@ -537,6 +541,8 @@ class IndexHandler(object):
         try:
             boolean = self._get_boolean(step_0, subset, step_1, step_2, water_body, indicator)
         except:
+            raise exceptions.BooleanNotFound
+        if isinstance(boolean, bool):
             raise exceptions.BooleanNotFound
         
         return self.data_handler_object.get_all_column_data_df(boolean_filter=boolean)
