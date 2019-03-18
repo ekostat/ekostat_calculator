@@ -671,6 +671,8 @@ class WaterBody(AttributeDict):
     
     #==========================================================================
     def get_visseucd_for_water_body(self, wb, key=u'VISS_EU_CD'):
+        if self.get(wb) == None:
+            print(wb)
         return self.get(wb).get(key)
     #==========================================================================
     def get_mscd_for_water_body(self, wb, key=u'MS_CD'):

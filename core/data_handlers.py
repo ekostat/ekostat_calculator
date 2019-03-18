@@ -227,15 +227,17 @@ class DataFrameHandler(ColumnDataHandler, RowDataHandler):
         # wd_id = self.mapping_objects['water_body'].get_waterdistrictcode_for_water_body(wb_id_list[0])
         # TODO: remove this when fixed problem with WA-code for Inre Idefjorden
         if 'WA28238367' in wb_id_list:
-            # Inre Idefjorden
-            self.column_data[self.source].loc[
-                self.column_data[self.source][self.wb_id_header] == 'WA28238367', self.wb_id_header] = 'WA24081564'
-            wb_id_list = self.column_data[self.source][self.wb_id_header].tolist()
+            # norska delen av Inre Idefjorden
+            pass
+            # self.column_data[self.source].loc[
+            #     self.column_data[self.source][self.wb_id_header] == 'WA28238367', self.wb_id_header] = 'WA24081564'
+            # wb_id_list = self.column_data[self.source][self.wb_id_header].tolist()
         if 'WA36808071' in wb_id_list:
-            # Idefjorden
-            self.column_data[self.source].loc[
-                self.column_data[self.source][self.wb_id_header] == 'WA36808071', self.wb_id_header] = 'WA18466637'
-            wb_id_list = self.column_data[self.source][self.wb_id_header].tolist()
+            # Idefjorden, norska delen?
+            pass
+            # self.column_data[self.source].loc[
+            #    self.column_data[self.source][self.wb_id_header] == 'WA36808071', self.wb_id_header] = 'WA18466637'
+            # wb_id_list = self.column_data[self.source][self.wb_id_header].tolist()
         if 'WATER_DISTRICT_CODE' not in self.column_data[self.source]:
             new_list = []
             for wb_id in wb_id_list:
@@ -1465,7 +1467,8 @@ class DataHandler(object):
                 
                 self.all_data['STIME'] = self.all_data['STIME'].apply(lambda x: x[:5])
                 
-                # MW 20180716 
+                # MW 20180716
+                # TODO: Speed up, problem here areaf ew data with day 00. Maybe find those and exclude and then do pd.to_datetime
                 try: 
                     self.all_data['date'] = pd.to_datetime(self.all_data['SDATE'])
                 except ValueError:

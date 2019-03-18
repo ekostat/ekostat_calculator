@@ -56,11 +56,11 @@ print('-'*50)
 print('Time for request: {}'.format(time.time()-t0))
 ########################################################################################################################
 # ### Make a new workspace
-# ekos.copy_workspace(source_uuid='default_workspace', target_alias='waters_export_march2019_1')
+# ekos.copy_workspace(source_uuid='default_workspace', target_alias='waters_export_march2019_2')
 # ### set alias etc.
 #alias = 'lena'
 # workspace_alias = 'satellit'#'waters_export' # kustzonsmodellen_3daydata
-workspace_alias = 'waters_export_march2019_1'#'kustzon_selection'
+workspace_alias = 'waters_export_march2019_2'#'kustzon_selection'
 
 # ### See existing workspaces and choose workspace name to load
 ekos.print_workspaces()
@@ -106,12 +106,12 @@ filtered_data = w.get_filtered_data(step=0)
 ########################################################################################################################
 # # Step 1 
 # ### make new subset
-# w.copy_subset(source_uuid='default_subset', target_alias='waters_MS_CD_test')
+# w.copy_subset(source_uuid='default_subset', target_alias='waters_export')
 ########################################################################################################################
 # ### Choose subset name to load
 # subset_alias = 'test_kustzon'
 # subset_alias = 'period_2007-2012_refvalues_2013'
-subset_alias = 'waters_MS_CD_test'#'SE1_selection'#'satellite_results'#'waters_export'#'test_subset'
+subset_alias = 'waters_export'#'SE1_selection'#'satellite_results'#'waters_export'#'test_subset'
 subset_uuid = ekos.get_unique_id_for_alias(workspace_alias = workspace_alias, subset_alias = subset_alias)
 print('subset_alias', subset_alias, 'subset_uuid', subset_uuid)
 ########################################################################################################################
@@ -127,6 +127,7 @@ w.set_data_filter(subset=subset_uuid, step=1,
                   filter_type='include_list',
                   filter_name='ms_cd',
                   data=[])
+# 'WA88179174', 'WA97301629'
 # Long term ox def 'WA46670058' ['SE581740-114820', 'SE581260-113220', 'SE581700-113000', 'SE582000-115270', 'SE563000-123351',
 #                         'SE561030-122821', 'SE562450-122751', 'SE562000-123800', 'SE555545-124332', 'SE592000-184700',
 #                         'SE658352-163189', 'SE591800-181360', 'SE592290-181600']
@@ -168,7 +169,7 @@ w.get_available_indicators(subset=subset_uuid, step=1)
 # indicator_list = ['oxygen','din_winter','ntot_summer', 'ntot_winter', 'dip_winter', 'ptot_summer', 'ptot_winter', 'secchi']
 # indicator_list = ['din_winter','ntot_summer', 'ntot_winter', 'dip_winter', 'ptot_summer', 'ptot_winter']
 # indicator_list = ['chl', 'biov']
-# indicator_list = ['oxygen']
+# indicator_list = ['ntot_winter']
 # indicator_list = ['bqi', 'secchi']
 # indicator_list = ['din_winter','ntot_summer']
 # indicator_list = ['indicator_' + indicator for indicator in indicator_list]

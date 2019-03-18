@@ -1,4 +1,4 @@
-Type_Area_number	Type_Area_suffix	VISS_EU_CD	tolerance_MIN_NR_YEARS_int	tolerance_MIN_NR_VALUES_int	tolerance_TIME_DELTA_TOLERANCE	tolerance_POS_RADIUS_TOLERANCE	filter_MONTH_LIST_int	ref_ref_value_limit_eq	ref_HG_value_limit	ref_GM_value_limit	ref_MP_value_limit	ref_PB_value_limit	ref_HG_EQR_limit_float	ref_GM_EQR_limit_float	ref_MP_EQR_limit_float	ref_PB_EQR_limit_float	ref_Salinity_max_int
+Type_Area_number	Type_Area_suffix	MS_CD	tolerance_MIN_NR_YEARS_int	tolerance_MIN_NR_VALUES_int	tolerance_TIME_DELTA_TOLERANCE	tolerance_POS_RADIUS_TOLERANCE	filter_MONTH_LIST_int	ref_ref_value_limit_eq	ref_HG_value_limit	ref_GM_value_limit	ref_MP_value_limit	ref_PB_value_limit	ref_HG_EQR_limit_float	ref_GM_EQR_limit_float	ref_MP_EQR_limit_float	ref_PB_EQR_limit_float	ref_Salinity_max_int
 1	n	unspecified	3	3	3	0.1	6;7;8	0.8					0.67	0.52	0.26	0.13	27
 1	s	unspecified	3	3	3	0.1	6;7;8	0.9					0.69	0.53	0.27	0.14	20
 2		unspecified	3	3	3	0.1	6;7;8	1.35					0.68	0.45	0.3	0.17	27

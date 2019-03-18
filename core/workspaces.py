@@ -1389,7 +1389,9 @@ class WorkSpace(object):
 
         #set filters for all indicator in all waterbodies and if no key in boolean dict for waterbody add waterbody filter
         for water_body in dict.fromkeys(water_body_list, True):
-
+            type_area = self.mapping_objects['water_body'].get_type_area_for_water_body(water_body, include_suffix=True)
+            if type_area == '':
+                continue
             if water_body not in self.index_handler.booleans['step_0'][subset]['step_1']['step_2'].keys():
             # If a filter for the waterbody has not been added, add this now
                 if bool(water_body_station_filter_object.get_list(water_body=water_body)) | \
@@ -2096,7 +2098,7 @@ class WorkSpace(object):
             save filter:    option to save text file. default is true
         """
         
-        assert filter_type in ['include_list','exclude_list'], 'filter_type must be include_list or exclude_list'
+        assert filter_type in ['include_list', 'exclude_list'], 'filter_type must be include_list or exclude_list'
         if not self._change_ok():
             return False
         

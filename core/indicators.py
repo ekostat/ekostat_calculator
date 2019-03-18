@@ -1439,6 +1439,8 @@ class IndicatorNutrients(IndicatorBase):
                      key not in list(agg_dict1.keys()) + list(agg_dict2.keys()) + ['SDATE', 'YEAR', 'STATN']}
 
         # YEAR included in groupby to get both original year and winter year in results when it is a winter indicator
+        if water_body == 'WA88179174':
+            print(water_body)
         by_date = df.groupby(['SDATE', 'YEAR', 'STATN']).agg({**agg_dict1, **agg_dict2, **agg_dict3}).reset_index()
         by_date.rename(columns={'DEPH': 'DEPH_count'}, inplace=True)
         check_par = False
@@ -1452,8 +1454,10 @@ class IndicatorNutrients(IndicatorBase):
             if check_par:
                 by_date['highest_' + check_par] = False
                 for name, group in by_date.groupby(['winter_YEAR', 'STATN']):
-                    group[check_par].idxmax()
-                    by_date.loc[group[check_par].idxmax(), 'highest_' + check_par] = True
+                    idmax = group[check_par].idxmax()
+                    if np.isnan(idmax):
+                        continue
+                    by_date.loc[idmax, 'highest_' + check_par] = True
                 # print(by_date['highest_'+check_par])
             # selects only the rows where highest_check_par is True
             # by_date = by_date[by_date['highest_'+check_par]]
@@ -1488,6 +1492,11 @@ class IndicatorNutrients(IndicatorBase):
         by_year.rename(columns={'SDATE': 'DATE_count'}, inplace=True)
         by_year['global_EQR'], by_year['STATUS'] = zip(
             *by_year['local_EQR'].apply(self._calculate_global_EQR_from_local_EQR, water_body=water_body))
+        try:
+            by_year['STATIONS_USED'] = ', '.join(by_date.STATN.unique())
+        except TypeError:
+            print(by_date.STATN.unique())
+            print([str(s) for s in by_date.STATN.unique()])
         by_year['STATIONS_USED'] = ', '.join(by_date.STATN.unique())
 
         """

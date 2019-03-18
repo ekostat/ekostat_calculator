@@ -651,6 +651,8 @@ class SettingsFile(object):
                 print(e)
                 print('waterbody matching file does not recognise water body with self.water_body_parameter {}'.format(self.water_body_parameter, water_body))
                 return False
+        if type_area == '':
+            print(water_body)
         num, suf = get_type_area_parts(type_area)
         
         var = variable 
@@ -1931,6 +1933,11 @@ def get_type_area_parts(type_area):
     Returns a tuple like (type_area_number, type_area_suffix)
     """
     type_area = str(type_area)
+    try:
+        type_area[-1].isalpha()
+    except IndexError:
+        print(type_area)
+
     if type_area[-1].isalpha():
         suf = type_area[-1] 
     else:

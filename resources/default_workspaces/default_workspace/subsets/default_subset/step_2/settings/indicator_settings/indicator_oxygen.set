@@ -1,4 +1,4 @@
-Type_Area_number	Type_Area_suffix	VISS_EU_CD	WATERBODY_NAME	filter_STATN_LIST_str	tolerance_MIN_NR_YEARS_int	tolerance_BOTTOM_WATER_int	MONTH_LIST_int	ref_ref_value_limit_float	ref_HG_value_limit_float	ref_GM_value_limit_float	ref_MP_value_limit_float	ref_PB_value_limit_float	ref_deficiency_type_str	WATERBODY_NAME_FROM_FS
+Type_Area_number	Type_Area_suffix	MS_CD	WATERBODY_NAME	filter_STATN_LIST_str	tolerance_MIN_NR_YEARS_int	tolerance_BOTTOM_WATER_int	MONTH_LIST_int	ref_ref_value_limit_float	ref_HG_value_limit_float	ref_GM_value_limit_float	ref_MP_value_limit_float	ref_PB_value_limit_float	ref_deficiency_type_str	WATERBODY_NAME_FROM_FS
 1	s	unspecified			3	10	1;2;3;4;5;6;7;8;9;10;11;12	3.5	3.5	2.1	1	0	seasonal	
 1	n	unspecified			3	10	1;2;3;4;5;6;7;8;9;10;11;12	3.5	3.5	2.1	1	0	seasonal	
 2		unspecified			3	10	1;2;3;4;5;6;7;8;9;10;11;12	3.5	3.5	2.1	1	0	seasonal	
