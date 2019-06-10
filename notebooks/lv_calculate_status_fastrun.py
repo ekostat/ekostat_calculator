@@ -55,19 +55,19 @@ ekos = EventHandler(**paths)
 print('-'*50)
 print('Time for request: {}'.format(time.time()-t0))
 ########################################################################################################################
+workspace_alias = 'WATERS_2019_MAY_1' #'waters_export_march2019_2'#'kustzon_selection'
 # ### Make a new workspace
-# ekos.copy_workspace(source_uuid='default_workspace', target_alias='waters_export_march2019_2')
+# ekos.copy_workspace(source_uuid='default_workspace', target_alias=workspace_alias)
 # ### set alias etc.
 #alias = 'lena'
 # workspace_alias = 'satellit'#'waters_export' # kustzonsmodellen_3daydata
-workspace_alias = 'waters_export_march2019_2'#'kustzon_selection'
 
 # ### See existing workspaces and choose workspace name to load
 ekos.print_workspaces()
-workspace_uuid = ekos.get_unique_id_for_alias(workspace_alias = workspace_alias) #'kuszonsmodellen' lena_indicator 
+workspace_uuid = ekos.get_unique_id_for_alias(workspace_alias=workspace_alias) #'kuszonsmodellen' lena_indicator
 print(workspace_uuid)
 
-workspace_alias = ekos.get_alias_for_unique_id(workspace_uuid = workspace_uuid)
+workspace_alias = ekos.get_alias_for_unique_id(workspace_uuid=workspace_uuid)
 ########################################################################################################################
 # ### Load existing workspace
 ekos.load_workspace(unique_id=workspace_uuid)
@@ -90,7 +90,7 @@ ekos.load_workspace(unique_id=workspace_uuid)
 ekos.load_data(workspace_uuid=workspace_uuid)
 ########################################################################################################################
 # ### check workspace data length
-w = ekos.get_workspace(workspace_uuid = workspace_uuid)
+w = ekos.get_workspace(workspace_uuid=workspace_uuid)
 len(w.data_handler.get_all_column_data_df())
 ########################################################################################################################
 # ### see subsets in data  
@@ -101,17 +101,17 @@ for subset_uuid in w.get_subset_list():
 print(w.data_handler.all_data.columns)
 ########################################################################################################################
 # ### Apply first data filter 
-w.apply_data_filter(step = 0) # This sets the first level of data filter in the IndexHandler
+w.apply_data_filter(step=0)  # This sets the first level of data filter in the IndexHandler
 filtered_data = w.get_filtered_data(step=0)
 ########################################################################################################################
-# # Step 1 
+# # Step 1
+subset_alias = 'WATERS_1' #'SE1_selection'#'satellite_results'#'waters_export'#'test_subset'
 # ### make new subset
-# w.copy_subset(source_uuid='default_subset', target_alias='waters_export')
+# w.copy_subset(source_uuid='default_subset', target_alias='WATERS_1')
 ########################################################################################################################
 # ### Choose subset name to load
 # subset_alias = 'test_kustzon'
 # subset_alias = 'period_2007-2012_refvalues_2013'
-subset_alias = 'waters_export'#'SE1_selection'#'satellite_results'#'waters_export'#'test_subset'
 subset_uuid = ekos.get_unique_id_for_alias(workspace_alias = workspace_alias, subset_alias = subset_alias)
 print('subset_alias', subset_alias, 'subset_uuid', subset_uuid)
 ########################################################################################################################
@@ -209,7 +209,7 @@ w.get_step_object(step = 3, subset = subset_uuid).calculate_quality_element(qual
 #
 # w.get_step_object(step = 3, subset = subset_uuid).calculate_quality_element(subset_unique_id = subset_uuid, quality_element = 'Phytoplankton')
  
-w.get_data_for_waterstool(step = 3, subset = subset_uuid)
+# w.get_data_for_waterstool(step = 3, subset = subset_uuid)
  
 print(10*'*'+'FINISHED'+10*'*')
 

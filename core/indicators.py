@@ -1775,7 +1775,12 @@ class IndicatorOxygen(IndicatorBase):
             by_date[self.indicator_parameter] < self.deficiency_limit].STATN.unique().tolist()
         stations_below_limit_str = ', '.join(stations_below_limit)
         # TODO: set 10 as self.limitBW
-        by_date_deep = by_date.loc[by_date.DEPH >= (self.maxD[water_body] - 10)].copy()
+        if water_body == 'WA23971566':
+            # TODO: add possibility from GUI to set shallowest depth to use for BW
+            # this includes oxygen data from Koljöfjord from 39 m and deeper, commen max sample depth is 40 .
+            by_date_deep = by_date.loc[by_date.DEPH >= 39].copy()
+        else:
+            by_date_deep = by_date.loc[by_date.DEPH >= (self.maxD[water_body] - 10)].copy()
         if by_date_deep.empty:
             by_period = False
         else:
@@ -2062,7 +2067,7 @@ class IndicatorOxygen(IndicatorBase):
 ###############################################################################
 class IndicatorPhytoplankton(IndicatorBase):
     """
-    Class with methods incommon for Phytoplankton indicators. 
+    Class with methods incommon for Phytoplankton indicators.
     """
 
     def __init__(self, subset_uuid, parent_workspace_object, indicator):
@@ -2094,6 +2099,8 @@ class IndicatorPhytoplankton(IndicatorBase):
 
     # ==================================================================================================================
     def _get_surface_df(self, df, type_area):
+        # TODO: This is now very slow since it has to look at each measurement. Can be written much faster.
+        # For a start you can turn of all the if-statements and just take discrete sample or integrated.
         """
         First step before calculating EQR values and status. Collect the surface data that should be used.
 

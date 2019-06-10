@@ -665,6 +665,18 @@ class WaterBody(AttributeDict):
     
     #==========================================================================
     def get_waterdistrictcode_for_water_body(self, wb, key=u'WATER_DISTRICT_CODE'):
+        #TODO: fix what happens if wb_id is a list or get(wb) is a list
+        # print(wb)
+        # print(self.get(wb))
+        # if wb == '':
+        #     print(self.get(wb))
+        #     print(wb)
+        # if isinstance(self, list):
+        #     print(self)
+        #     print(wb)
+        # if isinstance(self.get(wb), list):
+        #     print(self.get(wb))
+        #     print(wb)
         if self.get(wb) == None:
             return None
         return self.get(wb).get(key)

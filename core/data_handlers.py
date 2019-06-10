@@ -113,6 +113,9 @@ class RowDataHandler(object):
     #==========================================================================
     def filter_row_data(self, data_filter_object=None, map_object=None):
         """
+        filters row data using
+        _one_parameter_df_adjustment() when self.one_parameter = True
+        _merge_df_string_columns() when self.one_parameter = False
         """
         if self.one_parameter:
             self._one_parameter_df_adjustments()
@@ -177,13 +180,15 @@ class DataFrameHandler(ColumnDataHandler, RowDataHandler):
         if 'SHARKID_MD5' in self.df.columns:
             # use sharkid_md for sample id for biological datatypes
             self.df['SAMPLE_ID'] = self.df.SHARKID_MD5
-        else:
+        elif ('SERNO' in self.df.columns) and ('SHIPC' in self.df.columns):
             # use year_seriesno_shipcod for sample_id for phys/chem datatype
             self.df['SAMPLE_ID'] = self.df['MYEAR'].apply(str) + \
                                     '_' + \
                                    self.df['SERNO'] + \
                                     '_' + \
                                    self.df['SHIPC']
+        else:
+            self.df['SAMPLE_ID'] = self.df['SDATE'] + '_SCM'
                                 
     #==========================================================================
     def _add_field(self):
@@ -198,9 +203,13 @@ class DataFrameHandler(ColumnDataHandler, RowDataHandler):
     #==========================================================================
     def _apply_field_filter(self):
         """
+        Selects columns from dataframe
+        Adds a columns for the origin of the dataframe (filepath)
+        Organize the data format
         """
         self._select_columns_from_df() # use only default fields 
         self._add_origin_columns(dtype=self.dtype, file_path=self.source) # MW
+        self._rename_param('No species in sample', self.filter_parameters.use_parameters)
         self._organize_data_format()
     
     #==========================================================================
@@ -221,11 +230,15 @@ class DataFrameHandler(ColumnDataHandler, RowDataHandler):
 
     #==========================================================================
     def _add_waterbody_area_info(self):
+        print('in _add_waterbody_area_info')
         #TODO:
         # add if VISS_EU_CD not in df.columns add them from vfk-kod kolumn
         wb_id_list = self.column_data[self.source][self.wb_id_header].tolist()
         # wd_id = self.mapping_objects['water_body'].get_waterdistrictcode_for_water_body(wb_id_list[0])
-        # TODO: remove this when fixed problem with WA-code for Inre Idefjorden
+        # TODO: remove this when fixed problem with WA-code for Inre Idefjordens
+        if '' in wb_id_list:
+            # utanför svensk EEZ
+            pass
         if 'WA28238367' in wb_id_list:
             # norska delen av Inre Idefjorden
             pass
@@ -330,6 +343,8 @@ class DataFrameHandler(ColumnDataHandler, RowDataHandler):
     #==========================================================================
     def _handle_row_data(self, append_row_data=True):
         """
+        Handles row data
+        Selects parameters
         """
         
         self._select_parameters()
@@ -370,11 +385,13 @@ class DataFrameHandler(ColumnDataHandler, RowDataHandler):
         
         # TODO: for rowdata this row results in None type calling unique()
         p_map = self.parameter_mapping.get_parameter_mapping(self.df.get(self.filter_parameters.parameter_key).unique())
-        return p_map, list(p for p in p_map if p_map[p] in self.filter_parameters.use_parameters)
+        p_list = list(p for p in p_map if p_map[p] in self.filter_parameters.use_parameters)
+        return p_map, p_list
 
     #==========================================================================
     def _organize_data_format(self):
         """
+        organize the data based on raw data format, either row or column data
         """
         if self.raw_data_format == 'row':
             self._handle_row_data()
@@ -385,7 +402,8 @@ class DataFrameHandler(ColumnDataHandler, RowDataHandler):
     #==========================================================================
     def _recognize_format(self):
         """
-        recognize row or column format and sets raw_data attribute
+        recognize row or column format based on if there is a parameter_key specified in the filter filer for the datatype
+        Then sets raw_data attribute to 'row' or 'column'
         """
         # TODO why is parameter_key attribute a list for rowdata?
 #        print(self.filter_parameters.parameter_key)
@@ -398,20 +416,38 @@ class DataFrameHandler(ColumnDataHandler, RowDataHandler):
 
     #==========================================================================        
     def _remap_header(self):
+        """
+        remaps header in file according to parameter_mapping file
+        :return:
+        """
 #        for k in self.df.columns.values:
 #            print(k)
         map_dict = self.parameter_mapping.get_parameter_mapping(self.df.columns.values)
         self._rename_columns_of_DataFrame(map_dict)
-        
+
+
     #==========================================================================
+
     def _rename_columns_of_DataFrame(self, mapping_dict):
         """
         """
         self.df = self.df.rename(index=str, columns=mapping_dict)
-        
+
+    # ==========================================================================
+
+    def _rename_param(self, original_name, new_name):
+        """
+        overwritten in dataframehandler for zoobenthos
+        """
+        print('what?!')
+        pass
+
+
     #==========================================================================
+
     def _select_columns_from_df(self):
         """
+        Keeps only the columns specified in compulsory fields in the datatypes filter file
         """
         if self.raw_data_format == 'row':
             self._delete_columns_from_df(columns=list(x for x in \
@@ -428,6 +464,8 @@ class DataFrameHandler(ColumnDataHandler, RowDataHandler):
     def _select_parameters(self):
         """
         Can be rewritten in child-class, eg. DataHandlerPhytoplankton
+        First checks number of parameters that should be used and stores as a boolean attribute in self.one_parameter
+        for later formatting to columns format in ...
         """
         self._check_nr_of_parameters()
         p_map, p_list = self._map_parameter_list()
@@ -435,7 +473,7 @@ class DataFrameHandler(ColumnDataHandler, RowDataHandler):
 
         for para in p_list:
             # Change parameter name according to parameter codelist
-            self.df[self.filter_parameters.parameter_key] = np.where(self.df[self.filter_parameters.parameter_key]==para, 
+            self.df[self.filter_parameters.parameter_key] = np.where(self.df[self.filter_parameters.parameter_key]==para,
                                                                      p_map[para], 
                                                                      self.df[self.filter_parameters.parameter_key])
 
@@ -696,13 +734,37 @@ class DataHandlerPhysicalChemical(DataFrameHandler):
         If there are no quality flags in data self.no_qflags is initialized 
         as True
         """
+        #self.check_waterbody_id()
         self._add_waterbody_area_info()
 #        print('_calculate_data')
         if self.no_qflags:
             self.calculate_din()
         else:
             self.calculate_din(ignore_qf_list=['B','S'])
-        
+
+    # ==========================================================================
+
+    def check_waterbody_id(self):
+        """
+        Checks for columns without waterbody id and tries to find waterbody id from waterbodyname
+        :return: nothing
+        """
+        #TODO: this was started when trying to use data from outside the Swedish EEZ
+        # that does not have a wb_id but a wb_name. Problem the wb_name has more then one wb_id
+        wb_name_list = self.df.loc[self.df[self.wb_id_header] == '', "WATER_BODY_NAME"].unique()
+        for wb_name in wb_name_list:
+            temp_df = self.mapping_objects['water_body'].get('water_bodies')
+            wb_id = temp_df.loc[(temp_df["WATERBODY_NAME"] == wb_name) & (temp_df["WB"] == 'Y'), self.wb_id_header]
+            wb_id_df = temp_df.loc[(temp_df["WATERBODY_NAME"] == wb_name) & (temp_df["WB"] == 'Y')]
+            if len(wb_id) == 1:
+                wb_id = wb_id.values[0]
+            else:
+                wb_id = wb_id.values[0]
+                #raise Exception('more than one wb id exists for the waterbody name {}'.format(wb_name))
+            self.df[self.wb_id_header] == ''
+            self.df['WATER_BODY_NAME'] == wb_name
+            self.df.loc[(self.df[self.wb_id_header] == '') & (self.df['WATER_BODY_NAME'] == wb_name),
+                               self.wb_id_header] = wb_id
     #==========================================================================
     def calculate_din(self, ignore_qf_list=[]):
         """ 
@@ -833,6 +895,22 @@ class DataHandlerPhysicalChemicalModel(DataFrameHandler):
         self.column_data = {} #pd.DataFrame()
         self.row_data = {} #pd.DataFrame()
 
+    # ==========================================================================
+    def _add_serno(self):
+        """
+        adds date as serno
+        :return:
+        """
+        self.column_data[self.source]['SERNO'] = self.column_data[self.source]['SDATE'].copy()
+
+    # ==========================================================================
+    def _add_shipc(self):
+        """
+        adds SCM as shipcode
+        :return:
+        """
+        self.column_data[self.source]['SHIPC'] = 'SCM'
+
     #==========================================================================
     def _calculate_data(self):
         """ 
@@ -849,7 +927,7 @@ class DataHandlerPhysicalChemicalModel(DataFrameHandler):
         self._add_waterbody_area_info()
         self._set_position()
         
-    #==========================================================================    
+    #==========================================================================
     def _set_position(self):
         """
         set position of waterbody based on VISS_EU_CD code, this information is not available in MS_CD so should not be self.wb_id_header
@@ -964,8 +1042,23 @@ class DataHandlerZoobenthos(DataFrameHandler):
         """
         self._add_waterbody_area_info()
         #self._add_obspoint()
+
     #==========================================================================    
-        
+
+    def _rename_param(self, original_name, new_name):
+        """
+        renames row with original_nam to new_name parameter_key column
+        :param original_name: the parameter name that should be changed
+        :param new_name: the new name for the parameter
+        :return:
+        """
+        print('hello')
+        mapping_dict = self.parameter_mapping.get_parameter_mapping([self.filter_parameters.rename_parameter])
+        temp = self.df.loc[self.df[self.filter_parameters.parameter_key] == original_name,
+                           self.filter_parameters.parameter_key]
+        self.df.loc[self.df[self.filter_parameters.parameter_key] == original_name,
+                    self.filter_parameters.parameter_key] = new_name
+
 """
 #==============================================================================
 #==============================================================================
@@ -1425,6 +1518,7 @@ class DataHandler(object):
 #                 except KeyError:
                 self.all_data['MYEAR'] = self.all_data['YEAR']
 #                self.all_data['YEAR'] = self.all_data['SDATE'].apply(lambda x: int(x[0:4])).astype(int)
+                # TODO: does not work with only datatypes that does not have column DEPH, example zoobenthos
                 self.all_data['DEPH'] = self.all_data['DEPH'].apply(lambda x: float(x) if x else np.nan)
                 self.all_data['POSITION'] = self.all_data.apply(lambda x: '{0:.2f}'.format(float_convert(x.LATIT_DD)) + '_' + '{0:.2f}'.format(float_convert(x.LONGI_DD)), axis = 1)
                 
