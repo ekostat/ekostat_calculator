@@ -1539,6 +1539,7 @@ class IndicatorOxygen(IndicatorBase):
     def __init__(self, subset_uuid, parent_workspace_object, indicator):
         super().__init__(subset_uuid, parent_workspace_object, indicator)
         self.indicator_parameter = self.parameter_list[0]
+        # TODO: this indicator need information about waterbodies hypsographs (resources/mappings/hypsographs.txt)
         self.Hypsographs = self.mapping_objects['hypsographs']
         #         [self.column_list.append(c) for c in ['DEPH', 'RLABO', 'source_DOXY'] if c not in self.column_list]
         [self.column_list.append(c) for c in ['DEPH'] if c not in self.column_list]
