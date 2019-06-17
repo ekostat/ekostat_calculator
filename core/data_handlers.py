@@ -769,7 +769,8 @@ class DataHandlerPhysicalChemical(DataFrameHandler):
     def calculate_din(self, ignore_qf_list=[]):
         """ 
         Returns a vector calculated DIN. 
-        If NO3 is not present, value is np.nan 
+        If NO3 is not present, value is np.nan
+        TODO: add take qflags into consideration?
         """
         din_list = []
         

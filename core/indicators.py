@@ -33,44 +33,6 @@ def timer(func):
 
 
 ###############################################################################
-class ClassificationResult(dict):
-    """
-    Class to hold result from a classification.
-    Not used, do we need this?
-    """
-    # TODO: remove this class?
-    def __init__(self):
-        super().__init__()
-
-        self['parameter'] = None
-        self['salt_parameter'] = None
-        self['indicator'] = None
-        self['all_data'] = None
-        self['all_ok'] = False
-        self['status_by_date'] = None  # pd.DataFrame(columns = ['VISS_EU_CD', 'WATER_TYPE_AREA','SDATE', 'STATUS', 'REF VALUE', 'local_EQR','global_EQR'])
-        self['status_by_year'] = None  # pd.DataFrame(columns = ['VISS_EU_CD', 'WATER_TYPE_AREA','YEAR', 'STATUS', 'REF VALUE', 'local_EQR', 'global_EQR', 'Number of DATES', 'MONTHS INCLUDED'])
-        self['status_by_period'] = None  # pd.DataFrame(columns = ['VISS_EU_CD', 'WATER_TYPE_AREA','PERIOD', 'STATUS', 'global_EQR', 'Number of YEARS', 'YEARS INCLUDED'])
-
-        self._set_attributes()
-
-    # ==========================================================================
-    def _set_attributes(self):
-        for key in self.keys():
-            setattr(self, key, self[key])
-
-    # ==========================================================================
-    def add_info(self, key, value):
-        try:
-            existing_value = getattr(self, key)
-        #            if getattr(self, key) != value:
-        #                raise('Error: Trying to set new value to existing attribute. new value {} does not match old value {} for attribute {}'.format(value, existing_value, key))
-        except AttributeError:
-            # Varför både nyckel och attribut?
-            self[key] = value
-            setattr(self, key, value)
-
-
-###############################################################################
 class IndicatorBase(object):
     """
     Class to calculate status for a specific indicator. 
@@ -79,6 +41,7 @@ class IndicatorBase(object):
     def __init__(self, subset_uuid, parent_workspace_object, indicator):
         """
         setup indicator class attributes based on subset, parent workspace object and indicator name
+
         """
         self.name = indicator.lower()
         print('****INITIATING INDICATOR OBJECT FOR****')
@@ -94,6 +57,7 @@ class IndicatorBase(object):
         self.subset_object = self.parent_workspace_object.get_subset_object(subset=self.subset)
         self.wb_id_header = self.parent_workspace_object.wb_id_header
         # from SettingsFile
+        # TODO: this is now accessed via workspace object, should be sent in via config arg. Settings now read and changed via objects in settings.py
         self.tolerance_settings = self.parent_workspace_object.get_step_object(step=2,
                                                                                subset=self.subset).get_indicator_tolerance_settings(
             self.name)
@@ -105,6 +69,8 @@ class IndicatorBase(object):
         self.meta_columns = ['SDATE', 'YEAR', 'MONTH', 'STATN', 'LATIT_DD', 'LONGI_DD', self.wb_id_header,
                              'WATER_BODY_NAME', 'WATER_DISTRICT_NAME', 'WATER_TYPE_AREA', 'VISS_EU_CD']
         self.meta_columns_shark = ['STIME', 'POSITION', 'WADEP', 'SAMPLE_ID']
+        # TODO: the config for which parameters are used for each quality element is not in file Quality_Elements.cfg (a textfile) under resources.
+        #  I want to have this in a config file and not hardcoded because it is something that I want to be able to change easily when testing new paremeters or quality elements.
         self.parameter_list = [item.strip() for item in
                                self.mapping_objects['quality_element'].indicator_config.loc[self.name][
                                    'parameters'].split(
