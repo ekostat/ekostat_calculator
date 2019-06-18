@@ -199,8 +199,6 @@ class WorkStep(object):
             return False
         
         if water_body_list == None:
-            # TODO remove old line
-            water_body_list = self.parent_workspace_object.get_filtered_data(step='step_2', subset = self.parent_subset_object.unique_id).VISS_EU_CD.unique()
             water_body_list = self.parent_workspace_object.get_filtered_data(step='step_2',
                                                                              subset=self.parent_subset_object.unique_id)[self.wb_id_header].unique()
         if not len(water_body_list):
@@ -245,6 +243,12 @@ class WorkStep(object):
 #                t_wb = time.time()
                 if water_body not in self.indicator_objects[indicator].water_body_indicator_df.keys():
                     continue
+                #TODO:  Here is the main calculate status call.
+                # - I have thought about to put the loop over waterbodies in the IndicatorBase class.
+                # - the result in by_date is really a combination of the dataframe with original data and "results" for each date.
+                #   It might be better to get the data part in a dataframe separately and the add the results later. I would like to discuss this.
+                # - for the user (web interface at least) it is only the bu_date and by_period results that are relevant.
+                #   The other steps are good if I can access when developing with the calculation code but should not be needed for the regular user
                 by_date, by_year_pos, by_year, by_period = self.indicator_objects[indicator].calculate_status(water_body = water_body)
 #                time_wb = time.time() - t_wb
 #                print('-'*50)
@@ -262,21 +266,7 @@ class WorkStep(object):
                 if type(by_period) is not bool:
                     status_by_period = concat_df(by_period, status_by_period, 'indicator_' + indicator_name + '-by_period',
                           water_body, self.indicator_objects[indicator])
-                
-                
-#                if type(by_date) is not bool:
-#                    #SAVE by_date results
-#                    if type(status_by_date) is pd.DataFrame:
-#                        if water_body in status_by_date.VISS_EU_CD.unique():
-#                            status_by_date.drop(status_by_date.loc[status_by_date.VISS_EU_CD == water_body].index, inplace = True)
-#                        status_by_date = pd.concat([status_by_date, by_date])
-#                    elif os.path.exists(self.indicator_objects[indicator].result_directory + indicator_name + '_by_date.txt'):
-#                        status_by_date = self.indicator_objects[indicator].sld.load_df(file_name = indicator_name + '_by_date')
-#                        if water_body in status_by_date.VISS_EU_CD.unique():
-#                            status_by_date.drop(status_by_date.loc[status_by_date.VISS_EU_CD == water_body].index, inplace = True)
-#                        status_by_date = pd.concat([status_by_date, by_date])
-#                    else:
-#                        status_by_date = by_date 
+
             
             time_ind = time.time() - t_ind
             print('-'*50)
