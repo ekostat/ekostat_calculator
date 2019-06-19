@@ -33,44 +33,6 @@ def timer(func):
 
 
 ###############################################################################
-class ClassificationResult(dict):
-    """
-    Class to hold result from a classification.
-    Not used, do we need this?
-    """
-    # TODO: remove this class?
-    def __init__(self):
-        super().__init__()
-
-        self['parameter'] = None
-        self['salt_parameter'] = None
-        self['indicator'] = None
-        self['all_data'] = None
-        self['all_ok'] = False
-        self['status_by_date'] = None  # pd.DataFrame(columns = ['VISS_EU_CD', 'WATER_TYPE_AREA','SDATE', 'STATUS', 'REF VALUE', 'local_EQR','global_EQR'])
-        self['status_by_year'] = None  # pd.DataFrame(columns = ['VISS_EU_CD', 'WATER_TYPE_AREA','YEAR', 'STATUS', 'REF VALUE', 'local_EQR', 'global_EQR', 'Number of DATES', 'MONTHS INCLUDED'])
-        self['status_by_period'] = None  # pd.DataFrame(columns = ['VISS_EU_CD', 'WATER_TYPE_AREA','PERIOD', 'STATUS', 'global_EQR', 'Number of YEARS', 'YEARS INCLUDED'])
-
-        self._set_attributes()
-
-    # ==========================================================================
-    def _set_attributes(self):
-        for key in self.keys():
-            setattr(self, key, self[key])
-
-    # ==========================================================================
-    def add_info(self, key, value):
-        try:
-            existing_value = getattr(self, key)
-        #            if getattr(self, key) != value:
-        #                raise('Error: Trying to set new value to existing attribute. new value {} does not match old value {} for attribute {}'.format(value, existing_value, key))
-        except AttributeError:
-            # Varför både nyckel och attribut?
-            self[key] = value
-            setattr(self, key, value)
-
-
-###############################################################################
 class IndicatorBase(object):
     """
     Class to calculate status for a specific indicator. 
@@ -79,6 +41,7 @@ class IndicatorBase(object):
     def __init__(self, subset_uuid, parent_workspace_object, indicator):
         """
         setup indicator class attributes based on subset, parent workspace object and indicator name
+
         """
         self.name = indicator.lower()
         print('****INITIATING INDICATOR OBJECT FOR****')
@@ -88,12 +51,23 @@ class IndicatorBase(object):
         self.step = 'step_3'
         # from workspace
         self.parent_workspace_object = parent_workspace_object
+        # TODO: mapping_objects holds objects with information about:
+        # - municipalities, waterdistrikt, type areas etc for each waterbody - information from latest SVAR
+        # - hypsography for each waterbody
+        # - structure of quality elements (parameters connected to quality elements)
         self.mapping_objects = self.parent_workspace_object.mapping_objects
+        # TODO: the index handler contains information used to with get_filtered_data.
+        #  So if we instead send data as one of the arguments to this class this should be superfluous
         self.index_handler = self.parent_workspace_object.index_handler
+        # TODO: step_object is used to get information about the settings for each indicator/parameter and to get directory to save results in.
+        # the textfiles that contains these settings are located in workspaces/your_workspace/subsets/your_subset/step_2/settings/indicator_settings
         self.step_object = self.parent_workspace_object.get_step_object(step=3, subset=self.subset)
+        # TODO: subset object seems to not be used in this class.
         self.subset_object = self.parent_workspace_object.get_subset_object(subset=self.subset)
+
         self.wb_id_header = self.parent_workspace_object.wb_id_header
-        # from SettingsFile
+        # from SettingsFile class
+        # TODO: this is now accessed via workspace object, should be sent in via config arg. Settings now read and changed via objects in settings.py
         self.tolerance_settings = self.parent_workspace_object.get_step_object(step=2,
                                                                                subset=self.subset).get_indicator_tolerance_settings(
             self.name)
@@ -105,6 +79,8 @@ class IndicatorBase(object):
         self.meta_columns = ['SDATE', 'YEAR', 'MONTH', 'STATN', 'LATIT_DD', 'LONGI_DD', self.wb_id_header,
                              'WATER_BODY_NAME', 'WATER_DISTRICT_NAME', 'WATER_TYPE_AREA', 'VISS_EU_CD']
         self.meta_columns_shark = ['STIME', 'POSITION', 'WADEP', 'SAMPLE_ID']
+        # TODO: the config for which parameters are used for each quality element is not in file Quality_Elements.cfg (a textfile) under resources.
+        #  I want to have this in a config file and not hardcoded because it is something that I want to be able to change easily when testing new paremeters or quality elements.
         self.parameter_list = [item.strip() for item in
                                self.mapping_objects['quality_element'].indicator_config.loc[self.name][
                                    'parameters'].split(
@@ -118,13 +94,18 @@ class IndicatorBase(object):
                                                   ', ')]  # [item.strip() for item in self.parent_workspace_object.cfg['indicators'].loc[self.name][0].split(', ')]
         else:
             self.additional_parameter_list = []
+        # TODO: information from the config file for quality elements about if status gets better when the value of the parameter increases or decreases
         self.direction_good = self.mapping_objects['quality_element'].indicator_config.loc[self.name]['direction_good']
+        # TODO: This now works for sharkdata, but when I run modeldata or satellite data I need to change this since they do not have the meta_columns_shark
         self.column_list = self.meta_columns + self.parameter_list + self.additional_parameter_list + self.meta_columns_shark
         if len(self.column_list) != len(set(self.column_list)):
             raise Exception('Duplicates in self.column_list, check and remove!')
         # print(self.column_list)
         self.indicator_parameter = self.parameter_list[0]
         # attributes that will be calculated
+        # TODO: There is a method (_set_water_body_indicator_df) that creates this dataframe by first getting a dataframe using .get_filtered_data() this is called last in the init of each subclass.
+        #  It needs information about the name of the parameters to use and some more things that should prabably be in config.
+        #  I would like to discuss how much of this we could/should do outside this class
         self.water_body_indicator_df = {}
         #        self.classification_results = ClassificationResult()
         # perform checks before continuing
@@ -249,78 +230,9 @@ class IndicatorBase(object):
                 df.loc[:, 'MP_VALUE_LIMIT'] = [item / MP_EQR_LIMIT for item in ref_list]
                 df.loc[:, 'PB_VALUE_LIMIT'] = [item / PB_EQR_LIMIT for item in ref_list]
             # print('ref_value is str')
-        #            df.loc[:,'REFERENCE_VALUE'] = np.nan
-        #             reference_values = []
-        #             hg_values = []
-        #             gm_values = []
-        #             mp_values = []
-        #             pb_values = []
-        #             print('this is where the SettingWithCopyWarning i raised')
-        #             df.loc[:,'REFERENCE_VALUE'] = df[[self.salt_parameter, 'VISS_EU_CD']].apply(lambda x: self.get_boundarie(water_body = x['VISS_EU_CD'], salinity = x[self.salt_parameter], variable = 'REF_VALUE_LIMIT'), axis=1)
-        #             df.loc[:,'HG_VALUE_LIMIT'] = df[[self.salt_parameter, 'VISS_EU_CD']].apply(lambda x: self.get_boundarie(water_body = x['VISS_EU_CD'], salinity = x[self.salt_parameter], variable = 'HG_VALUE_LIMIT'), axis=1)
-        #             df.loc[:,'GM_VALUE_LIMIT'] = df[[self.salt_parameter, 'VISS_EU_CD']].apply(lambda x: self.get_boundarie(water_body = x['VISS_EU_CD'], salinity = x[self.salt_parameter], variable = 'GM_VALUE_LIMIT'), axis=1)
-        #             df.loc[:,'MP_VALUE_LIMIT'] = df[[self.salt_parameter, 'VISS_EU_CD']].apply(lambda x: self.get_boundarie(water_body = x['VISS_EU_CD'], salinity = x[self.salt_parameter], variable = 'MP_VALUE_LIMIT'), axis=1)
-        #             df.loc[:,'PB_VALUE_LIMIT'] = df[[self.salt_parameter, 'VISS_EU_CD']].apply(lambda x: self.get_boundarie(water_body = x['VISS_EU_CD'], salinity = x[self.salt_parameter], variable = 'PB_VALUE_LIMIT'), axis=1)
-
-        #             if self.direction_good == 'positive':
-        #                 df.loc[:,'HG_VALUE_LIMIT'] = df[['REFERENCE_VALUE', 'VISS_EU_CD']].apply(lambda x: x['REFERENCE_VALUE']*self.ref_settings.get_value(variable = 'HG_EQR_LIMIT', water_body = x['VISS_EU_CD']), axis=1)
-        #                 df.loc[:,'GM_VALUE_LIMIT'] = df[['REFERENCE_VALUE', 'VISS_EU_CD']].apply(lambda x: x['REFERENCE_VALUE']*self.ref_settings.get_value(variable = 'GM_EQR_LIMIT', water_body = x['VISS_EU_CD']), axis=1)
-        #                 df.loc[:,'MP_VALUE_LIMIT'] = df[['REFERENCE_VALUE', 'VISS_EU_CD']].apply(lambda x: x['REFERENCE_VALUE']*self.ref_settings.get_value(variable = 'MP_EQR_LIMIT', water_body = x['VISS_EU_CD']), axis=1)
-        #                 df.loc[:,'PB_VALUE_LIMIT'] = df[['REFERENCE_VALUE', 'VISS_EU_CD']].apply(lambda x: x['REFERENCE_VALUE']*self.ref_settings.get_value(variable = 'PB_EQR_LIMIT', water_body = x['VISS_EU_CD']), axis=1)
-        #             elif self.direction_good == 'negative':
-        #                 df.loc[:,'HG_VALUE_LIMIT'] = df[['REFERENCE_VALUE', 'VISS_EU_CD']].apply(lambda x: x['REFERENCE_VALUE']/self.ref_settings.get_value(variable = 'HG_EQR_LIMIT', water_body = x['VISS_EU_CD']), axis=1)
-        #                 df.loc[:,'GM_VALUE_LIMIT'] = df[['REFERENCE_VALUE', 'VISS_EU_CD']].apply(lambda x: x['REFERENCE_VALUE']/self.ref_settings.get_value(variable = 'GM_EQR_LIMIT', water_body = x['VISS_EU_CD']), axis=1)
-        #                 df.loc[:,'MP_VALUE_LIMIT'] = df[['REFERENCE_VALUE', 'VISS_EU_CD']].apply(lambda x: x['REFERENCE_VALUE']/self.ref_settings.get_value(variable = 'MP_EQR_LIMIT', water_body = x['VISS_EU_CD']), axis=1)
-        #                 df.loc[:,'PB_VALUE_LIMIT'] = df[['REFERENCE_VALUE', 'VISS_EU_CD']].apply(lambda x: x['REFERENCE_VALUE']/self.ref_settings.get_value(variable = 'PB_EQR_LIMIT', water_body = x['VISS_EU_CD']), axis=1)
-
-        #             df.loc[:,'HG_BOUNDARIE_VALUE'] = df[['REFERENCE_VALUE', 'VISS_EU_CD']].apply(lambda x: x['REFERENCE_VALUE']*self.ref_settings.get_value(variable = 'HG_EQR_LIMIT', water_body = x['VISS_EU_CD']), axis=1)
-        #             df.loc[:,'GM_BOUNDARIE_VALUE'] = df[['REFERENCE_VALUE', 'VISS_EU_CD']].apply(lambda x: x['REFERENCE_VALUE']*self.ref_settings.get_value(variable = 'GM_EQR_LIMIT', water_body = x['VISS_EU_CD']), axis=1)
-        #             df.loc[:,'MP_BOUNDARIE_VALUE'] = df[['REFERENCE_VALUE', 'VISS_EU_CD']].apply(lambda x: x['REFERENCE_VALUE']*self.ref_settings.get_value(variable = 'MP_EQR_LIMIT', water_body = x['VISS_EU_CD']), axis=1)
-        #             df.loc[:,'PB_BOUNDARIE_VALUE'] = df[['REFERENCE_VALUE', 'VISS_EU_CD']].apply(lambda x: x['REFERENCE_VALUE']*self.ref_settings.get_value(variable = 'PB_EQR_LIMIT', water_body = x['VISS_EU_CD']), axis=1)
-
-        #             df.loc[:,'GM_BOUNDARIE'] = pd.Series(gm_values, index = df.index)
-        #             df.loc[:,'MP_BOUNDARIE'] = pd.Series(mp_values, index = df.index)
-        #             df.loc[:,'PB_BOUNDARIE'] = pd.Series(pb_values, index = df.index)
-        #             for ix in df.index:
-        #                 salinity = df[self.salt_parameter][ix]
-        # #                #print(repr(salinity))
-        # #                #if np.isnan(salinity):
-        # #                #    df['REFERENCE_VALUE'].loc[ix] = np.nan
-        # #                #else:
-        #                 ref_value = self.get_boundarie(water_body = water_body, salinity = salinity, variable = 'REF_VALUE_LIMIT')
-        #                 reference_values.append(ref_value)
-        #                 hg_values.append(ref_value*self.ref_settings.get_value(variable = 'HG_EQR_LIMIT', water_body = water_body))
-        #                 gm_values.append(ref_value*self.ref_settings.get_value(variable = 'GM_EQR_LIMIT', water_body = water_body))
-        #                 mp_values.append(ref_value*self.ref_settings.get_value(variable = 'MP_EQR_LIMIT', water_body = water_body))
-        #                 pb_values.append(ref_value*self.ref_settings.get_value(variable = 'PB_EQR_LIMIT', water_body = water_body))
-        # #                hg_values.append(self.get_boundarie(water_body = water_body, salinity = salinity, variable = 'HG_VALUE_LIMIT'))
-        # #                gm_values.append(self.get_boundarie(water_body = water_body, salinity = salinity, variable = 'GM_VALUE_LIMIT'))
-        # #                mp_values.append(self.get_boundarie(water_body = water_body, salinity = salinity, variable = 'MP_VALUE_LIMIT'))
-        # #                pb_values.append(self.get_boundarie(water_body = water_body, salinity = salinity, variable = 'PB_VALUE_LIMIT'))
-        # #                df['REFERENCE_VALUE'].loc[ix] = self.get_ref_value(water_body = water_body, salinity = salinity)
-        # #            df['REFERENCE_VALUE'] = reference_values
-        #             df.loc[:,'REFERENCE_VALUE'] = pd.Series(reference_values, index = df.index)
-        #             df.loc[:,'HG_BOUNDARIE'] = pd.Series(hg_values, index = df.index)
-        #             df.loc[:,'GM_BOUNDARIE'] = pd.Series(gm_values, index = df.index)
-        #             df.loc[:,'MP_BOUNDARIE'] = pd.Series(mp_values, index = df.index)
-        #             df.loc[:,'PB_BOUNDARIE'] = pd.Series(pb_values, index = df.index)
         else:
             ref_value = self.get_ref_value(water_body=water_body, variable='REF_VALUE_LIMIT')
             df.loc[:, 'REFERENCE_VALUE'] = ref_value
-            #             df.loc[:,'HG_BOUNDARIE_VALUE'] = self.ref_settings.get_value(variable = 'HG_EQR_LIMIT', water_body = water_body)
-            #             df.loc[:,'GM_BOUNDARIE_VALUE'] = self.ref_settings.get_value(variable = 'GM_EQR_LIMIT', water_body = water_body)
-            #             df.loc[:,'MP_BOUNDARIE_VALUE'] = self.ref_settings.get_value(variable = 'MP_EQR_LIMIT', water_body = water_body)
-            #             df.loc[:,'PB_BOUNDARIE_VALUE'] = self.ref_settings.get_value(variable = 'PB_EQR_LIMIT', water_body = water_body)
-            #             if self.direction_good == 'positive':
-            #                 df.loc[:,'HG_VALUE_LIMIT'] = ref_value*self.get_boundarie(water_body, variable = 'HG_VALUE_LIMIT')
-            #                 df.loc[:,'GM_VALUE_LIMIT'] = ref_value*self.get_boundarie(water_body, variable = 'GM_VALUE_LIMIT')
-            #                 df.loc[:,'MP_VALUE_LIMIT'] = ref_value*self.get_boundarie(water_body, variable = 'MP_VALUE_LIMIT')
-            #                 df.loc[:,'PB_VALUE_LIMIT'] = ref_value*self.get_boundarie(water_body, variable = 'PB_VALUE_LIMIT')
-            #             elif self.direction_good == 'negative':
-            #                 df.loc[:,'HG_VALUE_LIMIT'] = ref_value/self.get_boundarie(water_body, variable = 'HG_VALUE_LIMIT')
-            #                 df.loc[:,'GM_VALUE_LIMIT'] = ref_value/self.get_boundarie(water_body, variable = 'GM_VALUE_LIMIT')
-            #                 df.loc[:,'MP_VALUE_LIMIT'] = ref_value/self.get_boundarie(water_body, variable = 'MP_VALUE_LIMIT')
-            #                 df.loc[:,'PB_VALUE_LIMIT'] = ref_value/self.get_boundarie(water_body, variable = 'PB_VALUE_LIMIT')
             if self.direction_good == 'positive':
                 df.loc[:, 'HG_VALUE_LIMIT'] = ref_value * HG_EQR_LIMIT
                 df.loc[:, 'GM_VALUE_LIMIT'] = ref_value * GM_EQR_LIMIT
@@ -462,9 +374,6 @@ class IndicatorBase(object):
 
         return global_EQR, status
 
-    #        self.classification_results[water_body].add_info('global_EQR', global_EQR)
-    #        self.classification_results[water_body].add_info('status', status)
-
     # ==========================================================================
     def _calculate_global_EQR_from_local_EQR(self, local_EQR, water_body):
         """
@@ -472,11 +381,7 @@ class IndicatorBase(object):
         Boundaries for all classes are read from RefSettings object
         boundarie_variable is used to retrieve class boundaries from settings file and must match the type of local_EQR_variable
         """
-        #        if not local_EQR:
-        #            local_EQR = getattr(self.classification_results[water_body], 'local_EQR')
-        #        else:
-        #            self.classification_results[water_body].add_info('local_EQR', local_EQR)
-        #
+
         if np.isnan(local_EQR):
             global_EQR = np.nan
             status = ''
@@ -573,33 +478,7 @@ class IndicatorBase(object):
         # Weighted numerical class
         global_EQR = global_low + (ek - ek_low) / (ek_high - ek_low) * 0.2
         return global_EQR, status
-        # self.classification_results[water_body].add_info('global_EQR', global_EQR)
-        # self.classification_results[water_body].add_info('status', status)
 
-        # OLD
-
-    #        if local_EQR >= indicator_EQR_REF_limit: #indicator_EQR_REF_limit:
-    #            EQR = 1
-    #            status = 'High'
-    #        elif local_EQR >= HG_EQR_LIMIT: #indicator_EQR_HG_limit
-    #            EQR = 0.2*((local_EQR-HG_EQR_LIMIT)/(indicator_EQR_REF_limit-HG_EQR_LIMIT)) + 0.8
-    #            status = 'High'
-    #        elif local_EQR >= GM_EQR_LIMIT: #indicator_EQR_GM_limit
-    #            EQR = 0.2*((local_EQR-GM_EQR_LIMIT)/(HG_EQR_LIMIT-GM_EQR_LIMIT)) + 0.6
-    #            status = 'Good'
-    #        elif local_EQR >= MP_EQR_LIMIT: #indicator_EQR_MP_limit
-    #            EQR = 0.2*((local_EQR-MP_EQR_LIMIT)/(GM_EQR_LIMIT-MP_EQR_LIMIT)) + 0.4
-    #            status = 'local_EQR'
-    #        elif local_EQR >= PB_EQR_LIMIT: #indicator_EQR_PB_limit
-    #            EQR = 0.2*((local_EQR-PB_EQR_LIMIT)/(MP_EQR_LIMIT-PB_EQR_LIMIT)) + 0.2
-    #            status = 'Poor'
-    #        elif local_EQR < PB_EQR_LIMIT: #indicator_EQR_PB_limit
-    #            EQR = 0.2*((local_EQR-0)/(indicator_EQR_PB_limit-0))
-    #            status = 'Bad'
-    #        else:
-    #            raise('Error: numeric class: {} incorrect.'.format(local_EQR))
-    #
-    #        return EQR, status
 
     @timer
     # ==========================================================================
@@ -1124,8 +1003,6 @@ class IndicatorBQI(IndicatorBase):
 
         wb_name = self.mapping_objects['water_body'][water_body]['WATERBODY_NAME']
 
-        #        by_year = False
-
         def bootstrap(value_list, n):
             result2 = []
             for i in range(1, n):
@@ -1134,11 +1011,6 @@ class IndicatorBQI(IndicatorBase):
                     result1.append(value_list[random.randrange(0, len(value_list) - 1)])
                 result2.append(np.mean(result1))
             return result2
-
-        #        by_year_pos = df.groupby(['VISS_EU_CD','YEAR', 'STATN'])[self.indicator_parameter].agg(['count', 'min', 'max', 'mean']).reset_index()
-        #        by_year_pos.rename(columns={'mean':'position_mean', 'count': 'station_count', 'min': 'station_min', 'max': 'station_max'}, inplace=True)
-        #
-        #        by_year = by_year_pos.groupby(['VISS_EU_CD','YEAR']).position_mean.agg(['count', 'min', 'max', 'mean']).reset_index()
 
         # Random selection with replacement of as many values as there are station means (frac = 1)
         # TODO: spead-up! Is it possible more efficient way to get the list from the map object?
@@ -1150,7 +1022,6 @@ class IndicatorBQI(IndicatorBase):
         df['DEPH'] = df[['MXDEP','MNDEP']].mean(axis=1)
         df['WATER_TYPE_AREA_CODE'] = type_area
         self._add_wb_name_to_df(df, water_body)
-        # df[self.wb_id_header + '_original'] = df[self.wb_id_header].copy(deep=True)
         df.rename(columns={self.wb_id_header: self.wb_id_header + '_original'}, inplace=True)
         df[self.wb_id_header] = water_body
         year_list = df.YEAR.unique()
@@ -1168,19 +1039,7 @@ class IndicatorBQI(IndicatorBase):
             gm_value = station_values.GM_VALUE_LIMIT.unique()[0]
             mp_value = station_values.MP_VALUE_LIMIT.unique()[0]
             pb_value = station_values.PB_VALUE_LIMIT.unique()[0]
-            # get station depths
-            #            mxdep_list = [self.float_convert(p) for p in station_values.MXDEP.unique()]
-            #            mndep_list = [self.float_convert(p) for p in station_values.MNDEP.unique()]
-            #            print(mndep_list)
-            #            print(df)
-            #            if np.isnan(min(mxdep_list)):
-            #                mxdep_list = [self.float_convert(p) for p in station_values.WADEP.unique()]
-            #            # get ref and boundaries
-            #            ref_value = self._get_value(water_body = water_body, variable = 'REF_VALUE_LIMIT', MXDEP_list = mxdep_list, MNDEP_list = mndep_list)
-            #            hg_value = self._get_value(water_body = water_body, variable = 'HG_VALUE_LIMIT', MXDEP_list = mxdep_list, MNDEP_list = mndep_list)
-            #            gm_value = self._get_value(water_body = water_body, variable = 'GM_VALUE_LIMIT', MXDEP_list = mxdep_list, MNDEP_list = mndep_list)
-            #            mp_value = self._get_value(water_body = water_body, variable = 'MP_VALUE_LIMIT', MXDEP_list = mxdep_list, MNDEP_list = mndep_list)
-            #            pb_value = self._get_value(water_body = water_body, variable = 'PB_VALUE_LIMIT', MXDEP_list = mxdep_list, MNDEP_list = mndep_list)
+
             ##### CALCLUTE MEAN BQI & EQR FOR EACH STATION  EACH YEAR #####
             station_mean_list = []
             for year in year_list:
@@ -1256,82 +1115,6 @@ class IndicatorBQI(IndicatorBase):
         by_period['p_ges'] = np.nan
         return df, by_year_pos, by_pos, by_period
 
-    # ==================================================================================================================
-    def old_calculate_status(self, water_body):
-        """
-        Calculates indicatotr EQR for BQI values using bootstrap method described in HVMFS 2013:19
-        """
-        # Set up result class
-        self.classification_results.add_info('parameter', self.indicator_parameter)
-
-        # Set dataframe to use        
-        self._set_water_body_indicator_df(water_body)
-        # get data to be used for status calculation
-        df = self.water_body_indicator_df[water_body].copy(deep=True)
-        #        year_list = df.YEAR.unique()
-        # Get type area and return False if there is not match for the given waterbody    
-        type_area = self.mapping_objects['water_body'].get_type_area_for_water_body(water_body, include_suffix=True)
-        if type_area == None:
-            return False, False, False, False
-
-        wb_name = self.mapping_objects['water_body'][water_body]['WATERBODY_NAME']
-
-        by_date = False
-
-        by_year_pos = df.groupby([self.wb_id_header, 'YEAR', 'POSITION'])[self.indicator_parameter].agg(
-            ['count', 'min', 'max', 'mean']).reset_index()
-        by_year_pos.rename(
-            columns={'mean': 'position_mean', 'count': 'position_count', 'min': 'position_min', 'max': 'station_max'},
-            inplace=True)
-
-        by_year = by_year_pos.groupby([self.wb_id_header, 'YEAR']).position_mean.agg(
-            ['count', 'min', 'max', 'mean']).reset_index()
-
-        # Random selection with replacement of as many values as there are station means (frac = 1)
-        # TODO: spead-up! Is it possible more efficient way to get the list from the map object?
-        def old_bootstrap(df):
-            return df.sample(frac=1, replace=True).mean()
-
-        def bootstrap(value_list, n):
-            result2 = []
-            for i in range(1, n):
-                result1 = []
-                for j in range(1, len(value_list)):
-                    result1.append(value_list[random.randrange(0, len(value_list) - 1)])
-                result2.append(np.mean(result1))
-            return result2
-
-        n = 9999
-        BQIsim_year = []
-        for ix, year in by_year.YEAR.items():
-            #            print('number of stations in year ({}): {}'.format(year,len(by_year_pos.loc[by_year_pos.YEAR == year]['position_mean'])))
-            #            print(by_year_pos.loc[by_year_pos.YEAR == year]['position_mean'])
-            #            df_list = [by_year_pos.loc[by_year_pos.YEAR == year]['position_mean'].dropna()]*n
-            df_list = by_year_pos.loc[by_year_pos.YEAR == year]['position_mean'].dropna().tolist()
-            no_stns = len(df_list)
-            #            print(df_list)
-            #            print(water_body)
-            if no_stns > 1:
-                BQIsim = bootstrap(df_list, n)
-            else:
-                BQIsim = df_list
-            #            BQIsim = [*map(bootstrap, df_list)]
-            #            BQIsim = []
-            #            for x in range(n):
-            #                BQIsim.append(by_year_pos.loc[by_year_pos.YEAR == year]['position_mean'].sample(frac = 1, replace = True).mean())
-            percentile = np.percentile(BQIsim, 0.2)
-            #            print(percentile)
-            BQIsim_year.append(percentile)
-        #        print(BQIsim_year)
-        BQI_by_period = np.mean(BQIsim_year)
-
-        by_period = pd.DataFrame(
-            {self.wb_id_header: [water_body], 'WATER_BODY_NAME': [wb_name], 'WATER_TYPE_AREA': [type_area],
-             'BQI': [BQI_by_period]})
-        # 'GLOBAL_EQR': [global_EQR],  'STATUS': [status], })
-
-        # TODO: Add BQImax to settingsfile (from handbok or ask Mats L). Call _calculate_global_EQR and add results to resul class
-        return by_date, by_year_pos, by_year, by_period
 
 
 ###############################################################################
@@ -1378,7 +1161,6 @@ class IndicatorNutrients(IndicatorBase):
         if 'winter_YEAR' in self.column_list:
             self.column_list.remove('winter_YEAR')
 
-        # self._set_water_body_indicator_df(water_body)
         # get data to be used for status calculation
         if water_body not in self.water_body_indicator_df.keys():
             return False, False, False, False
@@ -1573,6 +1355,7 @@ class IndicatorOxygen(IndicatorBase):
     def __init__(self, subset_uuid, parent_workspace_object, indicator):
         super().__init__(subset_uuid, parent_workspace_object, indicator)
         self.indicator_parameter = self.parameter_list[0]
+        # TODO: this indicator need information about waterbodies hypsographs (resources/mappings/hypsographs.txt)
         self.Hypsographs = self.mapping_objects['hypsographs']
         #         [self.column_list.append(c) for c in ['DEPH', 'RLABO', 'source_DOXY'] if c not in self.column_list]
         [self.column_list.append(c) for c in ['DEPH'] if c not in self.column_list]
@@ -1583,30 +1366,7 @@ class IndicatorOxygen(IndicatorBase):
         self.maxD = {}
 
     ############################################################################### 
-    def _deprecated_get_status_from_classboundaries(self, value, water_body):
-        """
-        get status for given value and waterbody from classboundarie values (not EQR)
-        """
 
-        HG_VALUE_LIMIT = self.ref_settings.get_value(variable='HG_VALUE_LIMIT', water_body=water_body)
-        GM_VALUE_LIMIT = self.ref_settings.get_value(variable='GM_VALUE_LIMIT', water_body=water_body)
-        MP_VALUE_LIMIT = self.ref_settings.get_value(variable='MP_VALUE_LIMIT', water_body=water_body)
-        PB_VALUE_LIMIT = self.ref_settings.get_value(variable='PB_VALUE_LIMIT', water_body=water_body)
-
-        if value > HG_VALUE_LIMIT:
-            status = 'HIGH'
-        elif value > GM_VALUE_LIMIT:
-            status = 'GOOD'
-        elif value > MP_VALUE_LIMIT:
-            status = 'MODERATE'
-        elif value > PB_VALUE_LIMIT:
-            status = 'POOR'
-        else:
-            status = 'BAD'
-
-        return status, value, GM_VALUE_LIMIT
-
-        ###############################################################################
 
     def _get_affected_area_fraction(self, df, water_body, eucd):
 
@@ -1856,212 +1616,7 @@ class IndicatorOxygen(IndicatorBase):
         return by_date_deep, by_date, False, by_period
 
     ############################################################################### 
-    def old_calculate_status(self, water_body):
-        """
-        Created     20180619    by Lena Viktorsson
-        Updated     20180619    by Lena Viktorsson
-        Method to calculate status for oxygen indicator
-        """
-        #### reset results
-        #         self.test1_result = np.nan
-        #         self.test1_no_yr = np.nan
-        #         self.test2_result = np.nan
-        #         self.test2_no_yr = np.nan
-        #         self.test2_ok = False
-        #         self.maxD = self.Hypsographs.get_max_depth_of_water_body(water_body)
-        #         self.minimum_deficiency_depth = np.nan
 
-        # Set up result class
-        #        self.classification_results.add_info('parameter', self.indicator_parameter)
-
-        #        # Set dataframe to use
-        #        self._set_water_body_indicator_df(water_body)
-        # get data to be used for status calculation
-        df = self.water_body_indicator_df[water_body].copy(deep=True)
-        #         self.no_yr = len(df['YEAR'].unique())
-        #         self.month_list = df['MONTH'].unique()
-
-        # if no data        
-        if len(df) < 1:
-            return False, False, False, False
-        # if more than one water body in dataframe, raise error      
-        # if len(df[self.wb_id_header].unique()) > 1:
-        #     # TODO hur ska vi hantera detta om vi tillåter val av stationer i angränsande waterbody?
-        #     raise Exception('more than one waterbody in dataframe')
-            # Get type area and return False if there is not match for the given waterbody
-        type_area = self.mapping_objects['water_body'].get_type_area_for_water_body(water_body, include_suffix=True)
-        if type_area == None:
-            return False, False, False, False
-
-        wb_name = self.mapping_objects['water_body'][water_body]['WATERBODY_NAME']
-        by_year_pos, by_year = False, False
-        by_date = df
-        comment = ''
-        maxD = self.Hypsographs.get_max_depth_of_water_body(water_body)
-        wb_max_wadep_ix = df.WADEP.idxmax()
-        if not np.isnan(wb_max_wadep_ix):
-            wb_maxdepth = df.loc[wb_max_wadep_ix, 'WADEP']
-            deepest_statns = df.loc[df.WADEP >= wb_maxdepth - 5].STATN.unique().tolist()
-            deepest_statn = df.loc[df.WADEP.idxmax(), 'STATN']
-        else:
-            wb_maxdepth = df.loc[df.DEPH.idxmax(), 'WADEP']
-            deepest_statns = df.loc[df.WADEP >= wb_maxdepth - 5].STATN.unique().tolist()
-            deepest_statn = df.loc[df.DEPH.idxmax(), 'STATN']
-        if wb_maxdepth < maxD - 15:
-            comment = 'no deep station in waterbody (deepest station is {} and waterbody maxdepth is {})'.format(
-                wb_maxdepth, maxD)
-            deficiency_type = ''
-            status = ''
-            global_EQR = np.nan
-
-        #         deepest_statn = df.loc[df.WADEP.idxmax(),'STATN']
-        area_fraction_value = np.nan
-        minimum_deficiency_depth = np.nan
-
-        wb_depth = df.WADEP.max()
-        if maxD < wb_depth:
-            maxD = wb_depth
-
-        ######## ------------------ CALCULATIONS ------------------########
-        ######## TEST 1 checks if the waterbody suffers from oxygen deficiency or not jan-dec #######################
-        # deficiency, deficiency_limit, no_yr =
-        #         test1_result, test1_no_yr, test1_month_list, test1_ok = self._test1(group, water_body)
-        ######## TEST 2 checks if the waterbody suffers from oxygen deficiency or not jan-maj #######################
-        #         test2_result, test2_no_yr, test2_month_list, test2_ok = self._test2(group, water_body)
-        ######## AREA FRACTION WITHI LOW OXYGEN #######
-
-        result_dict = {}
-        stations_below_limit = []
-        for name, group in df.groupby('STATN'):
-            ######## ------------------ CALCULATIONS ------------------########
-            ######## TEST 1 checks if the waterbody suffers from oxygen deficiency or not jan-dec #######################
-            # deficiency, deficiency_limit, no_yr =
-            test1_result, test1_no_yr, test1_month_list, test1_ok = self._test1(group, water_body)
-            ######## TEST 2 checks if the waterbody suffers from oxygen deficiency or not jan-maj #######################
-            test2_result, test2_no_yr, test2_month_list, test2_ok = self._test2(group, water_body)
-            ######## AREA FRACTION WITHI LOW OXYGEN #######
-            result_dict[name] = {'test1_result': test1_result, 'test1_no_yr': test1_no_yr,
-                                 'test1_month_list': test1_month_list, 'test1_ok': test1_ok,
-                                 'test2_result': test2_result, 'test2_no_yr': test2_no_yr,
-                                 'test2_month_list': test2_month_list, 'test2_ok': test2_ok}
-            if test1_result <= self.deficiency_limit:
-                stations_below_limit.append(name)
-
-        deepest_df = df.loc[df.STATN.isin(deepest_statns)].copy()
-        # deficiency, deficiency_limit, no_yr =
-        test1_result, test1_no_yr, test1_month_list, test1_ok = self._test1(deepest_df, water_body)
-        ######## TEST 2 checks if the waterbody suffers from oxygen deficiency or not jan-maj #######################
-        test2_result, test2_no_yr, test2_month_list, test2_ok = self._test2(deepest_df, water_body)
-
-        if not test1_ok:
-            deficiency_type = ''
-            status = ''
-            global_EQR = np.nan
-            comment = 'not enough data for test1 (jan-dec)'
-        elif test1_result > self.deficiency_limit:
-            deficiency_type = 'no_deficiency'
-            status = 'HIGH'
-            global_EQR = 1
-        #            area_fraction_value = np.nan
-        elif test1_result <= self.deficiency_limit:
-            ######### TEST 2 tests the type of oxygen deficiency if status was not 'High'. ######################
-            if not test2_ok:
-                deficiency_type = ''
-                status = ''
-                global_EQR = np.nan
-                comment = 'not enough data for test2 (jan-may)'
-            elif test2_result > self.deficiency_limit or np.isnan(test2_result):
-                #### METHOD 1 ####
-                deficiency_type = 'seasonal'
-                global_EQR, status = self._calculate_global_EQR_from_indicator_value(water_body=water_body,
-                                                                                     value=test1_result, max_value=100)
-            elif test2_result <= self.deficiency_limit:
-                affected_area_fraction, minimum_deficiency_depth = self._get_affected_area_fraction(deepest_df,
-                                                                                                    water_body)
-                area_fraction_value = affected_area_fraction * 100
-                deficiency_type = 'longterm'
-                if self.ref_settings.get_value(variable=self.wb_id_header, water_body=water_body) == water_body:
-                    #### METHOD 2 ####
-                    global_EQR, status = self._calculate_global_EQR_from_indicator_value(water_body=water_body,
-                                                                                         value=area_fraction_value,
-                                                                                         max_value=100)
-                else:
-                    #### METHOD 1 #####
-                    comment = 'no classboundaries defined for longterm deficieny in this waterbody, using definition of seasonal deficiency'
-                    global_EQR, status = self._calculate_global_EQR_from_indicator_value(value=test1_result,
-                                                                                         water_body=water_body)
-        else:
-            return False, False, False, False
-
-        #        print(wb_name)
-        #        print(deficiency_type, 'test1_result {}'.format(self.test1_result))
-
-        #        comment = ''
-        #
-        #        if deficiency == 'no_deficiency':
-        #            conc_value = self.test1_result
-        #            deficiency_type = 'no_deficiency'
-        #            no_yr = no_yr
-        #            status = 'HIGH'
-        #            global_EQR = 1
-        #            area_fraction_value = np.nan
-        #        elif deficiency == 'deficiency':
-        #            ######### TEST 2 tests the type of oxygen deficiency if status was not 'High'. ######################
-        #            conc_value, area_fraction_value, deficiency_type, deficiency_limit, no_yr = self._test2(df, water_body)
-        #            print('conc value {} \t{} limit {}'.format(conc_value, deficiency_type, deficiency_limit))
-        #            if deficiency_type in ['longterm']:
-        #                if self.ref_settings.get_value(variable = 'VISS_EU_CD', water_body = water_body) == water_body:
-        #                    deficiency_limit = self.ref_settings.get_ref_value(water_body = water_body)
-        #                    print(water_body, self.ref_settings.get_value(variable = 'VISS_EU_CD', water_body = water_body), wb_name)
-        #                else:
-        #                    deficiency_type = 'longterm (method 1)'
-        #                    #conc_value, area_fraction_value, deficiency_type, deficiency_limit, no_yr = self._test2(df, water_body, skip_longterm = True)
-        #                    comment = 'no classboundaries defined for longterm deficieny in this waterbody, using definition of seasonal deficiency'
-        #        else:
-        #            return False, False, False, False
-        ##        else:
-        ##            value, deficiency_type, deficiency_limit, no_yr = None, None, None, None
-        #        if deficiency_type == 'longterm':
-        #            print('###################################################')
-        #            global_EQR, status = self._calculate_global_EQR_from_indicator_value(value = area_fraction_value, water_body = water_body, max_value = 100)
-        #        elif deficiency_type is not 'no_deficiency':
-        #            global_EQR, status = self._calculate_global_EQR_from_indicator_value(value = conc_value, water_body = water_body)
-        #        else:
-        #            print('deficiency type {}'.format(deficiency_type))
-
-        #        print(deficiency_type)
-        #        print('test1_result {}'.format(self.test1_result))
-        #        print('test2_result {}'.format(self.test2_result))
-        #        print('area_fraction_value {} minimum_deficiency_depth {} \t{} limit {}'.format(area_fraction_value, self.minimum_deficiency_depth, deficiency_type, self.deficiency_limit))
-        #        print('global EQR {} status {}'.format(global_EQR, status)      )
-        #       global_EQR, status = self._calculate_global_EQR_from_indicator_value(water_body = 'unspecified', value = value)
-
-        #         test1_result = result_dict[deepest_statn]['test1_result']
-        #         test1_ok = result_dict[deepest_statn]['test1_ok']
-        #         test1_month_list = result_dict[deepest_statn]['test1_month_list']
-        #         test2_result = result_dict[deepest_statn]['test2_result']
-        #         test2_ok = result_dict[deepest_statn]['test2_ok']
-        #         test2_month_list = result_dict[deepest_statn]['test2_month_list']
-        stations_below_limit_str = ', '.join(stations_below_limit)
-        deepest_statns_str = ', '.join(deepest_statns)
-
-        by_period = pd.DataFrame(
-            {self.wb_id_header: [water_body], 'WATER_BODY_NAME': [wb_name], 'WATER_TYPE_AREA': [type_area],
-             'GLOBAL_EQR': [global_EQR], 'STATUS': [status], 'DEEPEST_STATNS': deepest_statns_str,
-             'STATN_MAX_WADEP': wb_maxdepth,
-             'O2 conc test1': [test1_result], 'O2 conc test2': [test2_result],
-             '% Area below conc limit': [area_fraction_value], 'Depth of conc limit': [minimum_deficiency_depth],
-             'max depth': [maxD],
-             'test1_ok': [test1_ok], 'test1_month_list': [test1_month_list], 'test1_no_yr': [test1_no_yr],
-             'test2_ok': [test2_ok], 'test2_month_list': [test2_month_list], 'test2_no_yr': [test2_no_yr],
-             'DEFICIENCY_TYPE': [deficiency_type], 'CONC_LIMIT': [self.deficiency_limit],
-             'COMMENT': [comment], 'STATNS_below_limit': stations_below_limit_str})
-
-        #        by_period = by_period[['VISS_EU_CD', 'WATER_BODY_NAME', 'WATER_TYPE_AREA', 'GLOBAL_EQR', 'STATUS', 'O2 min conc test1', 'Area below limit %', 'DEFICIENCY_TYPE', 'LIMIT',	'NUMBER OF YEARS', 'COMMENT']]
-
-        by_period['variance'] = np.nan
-        by_period['p_ges'] = np.nan
-        return by_date, by_year_pos, by_year, by_period
 
 
 ###############################################################################
