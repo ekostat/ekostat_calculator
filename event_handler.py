@@ -2144,7 +2144,7 @@ class EventHandler(object):
                 invalid_keys.append(key)
                 
         if invalid_keys:
-            exceptions.InvalidUserInput
+            raise exceptions.InvalidUserInput('Invalid args: %s' % invalid_keys)
           
 #        data_params['datatype'] = 'Harbour Porpoise'
 #        data_params['sample_table_view'] = 'sample_col_harbourporpoise'
