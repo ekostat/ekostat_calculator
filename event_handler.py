@@ -132,6 +132,7 @@ class EventHandler(object):
     
     
     #==========================================================================
+    # TODO: Remove this bogus function, only used in notebooks/mw_requests(_flow).ipynb
     @timer
     def test_timer(self):
         for _ in range(10000000):
