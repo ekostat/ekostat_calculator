@@ -929,7 +929,7 @@ class EventHandler(object):
                                                                            filter_type='data')
         if not settings_data_filter_object:
             self._logger.debug('Could not load data filter object for indicator "{}"'.format(indicator))
-            return {}
+            return []
         
         
         settings_tolerance_filter_object = self.get_settings_filter_object(workspace_uuid=workspace_uuid, 
