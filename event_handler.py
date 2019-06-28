@@ -157,8 +157,7 @@ class EventHandler(object):
             self._logger.debug('Loading mapping files from original files.')
             # Mapping objects
             self.mapping_objects = {}
-            self.mapping_objects['water_body'] = core.WaterBody(file_path=os.path.join(self.resource_directory, 'mappings/water_body_match_Havsomr_SVAR_2016_3b.txt'))
-#             self.mapping_objects['water_body'] = core.WaterBody(file_path=os.path.join(self.resource_directory, 'mappings/water_body_match_sharkweb_SVAR_2012_2_extended_new.txt'))
+            self.mapping_objects['water_body'] = core.WaterBody(file_path=os.path.join(self.resource_directory, 'mappings/water_body_match.txt'))
             self.mapping_objects['quality_element'] = core.QualityElement(file_path=os.path.join(self.resource_directory, 'Quality_Elements.cfg'))
             self.mapping_objects['hypsographs'] = core.Hypsograph(file_path=os.path.join(self.resource_directory, 'mappings/hypsographs.txt'))
             
