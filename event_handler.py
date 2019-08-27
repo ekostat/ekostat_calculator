@@ -19,8 +19,6 @@ import re
 import pandas as pd
 import pickle
 
-import logging
-import importlib
 # TODO: Move this!
 
 #current_path = os.path.dirname(os.path.dirname(os.path.dirname(os.path.realpath(__file__))))
@@ -134,6 +132,7 @@ class EventHandler(object):
     
     
     #==========================================================================
+    # TODO: Remove this bogus function, only used in notebooks/mw_requests(_flow).ipynb
     @timer
     def test_timer(self):
         for _ in range(10000000):
@@ -929,7 +928,7 @@ class EventHandler(object):
                                                                            filter_type='data')
         if not settings_data_filter_object:
             self._logger.debug('Could not load data filter object for indicator "{}"'.format(indicator))
-            return {}
+            return []
         
         
         settings_tolerance_filter_object = self.get_settings_filter_object(workspace_uuid=workspace_uuid, 
@@ -2144,7 +2143,7 @@ class EventHandler(object):
                 invalid_keys.append(key)
                 
         if invalid_keys:
-            exceptions.InvalidUserInput
+            raise exceptions.InvalidUserInput('Invalid args: %s' % invalid_keys)
           
 #        data_params['datatype'] = 'Harbour Porpoise'
 #        data_params['sample_table_view'] = 'sample_col_harbourporpoise'
@@ -4752,92 +4751,4 @@ def get_list_from_interval(input_interval):
 def print_json(data): 
     json_string = json.dumps(data, indent=2, sort_keys=True)
     print(json_string)
-        
-   
-#"""
-#===============================================================================
-#===============================================================================
-#===============================================================================
-#"""     
-if __name__ == '__main__':
-#    root_path = os.path.dirname(os.path.dirname(os.path.os.path.abspath(os.path.realpath(__file__))))
-    root_path = os.path.dirname(os.path.os.path.abspath(os.path.realpath(__file__)))
-    user_id_1 = 'user_1'
-    user_id_2 = 'user_2'
-    ekos = EventHandler(root_path)
-    user_1_ws_1 = 'mw1'
-    
-    if 0:
-        ekos.copy_workspace(user_id_1, source_alias='default_workspace', target_alias=user_1_ws_1)
-        ekos.copy_workspace(user_id_1, source_alias='default_workspace', target_alias='mw2')
-        
-        ekos.copy_workspace(user_id_2, source_alias='default_workspace', target_alias='test1')
-        ekos.copy_workspace(user_id_2, source_alias='default_workspace', target_alias='test2')
-    
-    ekos.load_test_requests()
-    
-    if 0:
-        # Request workspace list 
-        request = ekos.test_requests['request_workspace_list']
-        response = ekos.request_workspace_list(request) 
-        ekos.write_test_response('request_workspace_list', response)
-        
-        # Request subset list 
-        request = ekos.test_requests['request_subset_list']
-        response_subset_list = ekos.request_subset_list(request)
-        ekos.write_test_response('request_subset_list', response_subset_list)
-        
-        # Load default data
-        request = ekos.test_requests['request_workspace_load_default_data']
-        ekos.request_workspace_load_default_data(request)
-        
-        # Add new subset 
-        request = ekos.test_requests['request_subset_add']
-        response_subset_add = ekos.request_subset_add(request)
-        ekos.write_test_response('request_subset_add', response_subset_add)
-        
-        # Edit subset 
-        request = ekos.test_requests['request_subset_edit']
-        response_subset_edit = ekos.request_subset_edit(request)
-        ekos.write_test_response('request_subset_edit', response_subset_edit)
-    
-    
-    
-    
-    
-    w_id = '335af11c-a7d4-4edf-bc21-d90ffb762c70'
-    s_id = '1bdd7eb5-2f2a-44f6-bd7e-c26bf09ce047'
-    
-    ekos.apply_data_filter(user_id=user_id_1,  
-                           workspace_uuid=w_id,
-                           subset_uuid=s_id,
-                           step='step_1')
-    
-    
-#    w = ekos.get_workspace(user_id=user_id_1, alias='mw1')
-#    
-#    wb_mapping = ekos.mapping_objects['water_body']
-    
-    
-    
-    
-    
-##    ekos.load_all_workspaces_for_user()
-#    
-#    ekos.copy_workspace(user_id, source_alias='default_workspace', target_alias='mw1')
-#    ekos.copy_workspace(user_id, source_alias='default_workspace', target_alias='mw2')
-#    ekos.copy_workspace(user_id, source_alias='default_workspace', target_alias='mw3')
-#    
-#    
-#    
-#    ekos.copy_subset(user_id, workspace_source_alias='mw2', subset_source_alias='default_subset', subset_target_alias='test_subset_1')
-#    ekos.copy_subset(user_id, workspace_source_alias='mw2', subset_source_alias='default_subset', subset_target_alias='test_subset_2')
-#    ekos.copy_subset(user_id, workspace_source_alias='mw2', subset_source_alias='default_subset', subset_target_alias='test_subset_3')
-#    ekos.copy_subset(user_id, workspace_source_alias='mw3', subset_source_alias='default_subset', subset_target_alias='test_subset_4')
-#    
-#    ekos.delete_subset(user_id, workspace_alias='mw2', subset_alias='test_subset_2')
-#    # default_workspace
-##    default_workspace = ekos.get_workspace('default')
-    
-
         
